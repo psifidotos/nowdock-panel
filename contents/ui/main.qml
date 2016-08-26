@@ -468,8 +468,8 @@ DragDrop.DropArea {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
 
-        // rowSpacing: 0
-        // columnSpacing: 0
+        rowSpacing: 0
+        columnSpacing: 0
         //  rowSpacing: units.smallSpacing
         //  columnSpacing: units.smallSpacing
 
