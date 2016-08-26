@@ -82,7 +82,6 @@ DragDrop.DropArea {
             LayoutManager.insertBefore(dndSpacer, container);
             dndSpacer.parent = root;
             return;
-
             // If the provided position is valid, use it.
         } else if (x >= 0 && y >= 0) {
             var index = LayoutManager.insertAtCoordinates(container, x , y);
@@ -287,7 +286,7 @@ DragDrop.DropArea {
           //  hoverEnabled: applet.pluginName === "org.kdelook.nowdock" ? false : true
             hoverEnabled: plasmoid.immutable ? true : false
 
-            property Item nowDock: applet.pluginName === "org.kdelook.nowdock" ? children[2].children[0] : undefined
+            property Item nowDock: applet && (applet.pluginName === "org.kdelook.nowdock") ? children[2].children[0] : null
 
             //when the applet moves caused by its resize, don't animate.
             //this is completely heuristic, but looks way less "jumpy"
@@ -312,12 +311,12 @@ DragDrop.DropArea {
 
             //Layout.preferredWidth: (currentLayout.isLayoutHorizontal ? (applet && applet.Layout.preferredWidth > 0 ? applet.Layout.preferredWidth : root.height) : root.width)
             // Layout.preferredHeight: (!currentLayout.isLayoutHorizontal ? (applet && applet.Layout.preferredHeight > 0 ? applet.Layout.preferredHeight : root.width) : root.height)
-            Layout.maximumWidth: applet.Layout.maximumWidth
-            Layout.maximumHeight: applet.Layout.maximumHeight
+            Layout.maximumWidth: applet ? applet.Layout.maximumWidth : Layout.preferredWidth
+            Layout.maximumHeight: applet ? applet.Layout.maximumHeight : Layout.preferredHeight
             Layout.preferredWidth: nowDock ? nowDock.tasksWidth : (showZoomed ? 90 : 48)
             Layout.preferredHeight: nowDock ? nowDock.tasksHeight : (showZoomed ? 90 : 48)
-            Layout.minimumWidth: nowDock ? applet.Layout.minimumWidth : Layout.preferredWidth
-            Layout.minimumHeight: nowDock ? applet.Layour.minimumHeight : Layout.preferredHeight
+            Layout.minimumWidth: nowDock && applet ? applet.Layout.minimumWidth : Layout.preferredWidth
+            Layout.minimumHeight: nowDock && applet ? applet.Layour.minimumHeight : Layout.preferredHeight
 
             //  Layout.maximumWidth: (currentLayout.isLayoutHorizontal ? (applet && applet.Layout.maximumWidth > 0 ? applet.Layout.maximumWidth : (Layout.fillWidth ? root.width : root.height)) : root.height)
             //   Layout.maximumHeight: (!currentLayout.isLayoutHorizontal ? (applet && applet.Layout.maximumHeight > 0 ? applet.Layout.maximumHeight : (Layout.fillHeight ? root.height : root.width)) : root.width)
@@ -443,17 +442,24 @@ DragDrop.DropArea {
 
     Item {
         id: dndSpacer
-        //      Layout.preferredWidth: width
-        //     Layout.preferredHeight: height
-        //     width: (plasmoid.formFactor == PlasmaCore.Types.Vertical) ? currentLayout.width : theme.mSize(theme.defaultFont).width * 10
-        //     height: (plasmoid.formFactor == PlasmaCore.Types.Vertical) ?  theme.mSize(theme.defaultFont).width * 10 : currentLayout.height
+        Layout.preferredWidth: width
+        Layout.preferredHeight: height
+        width: (plasmoid.formFactor == PlasmaCore.Types.Vertical) ? currentLayout.width : theme.mSize(theme.defaultFont).width * 10
+        height: (plasmoid.formFactor == PlasmaCore.Types.Vertical) ?  theme.mSize(theme.defaultFont).width * 10 : currentLayout.height
 
         Rectangle{
             anchors.fill: parent
             color: "transparent"
-            border.color: "yellow"
+            border.color: "blue"
             border.width: 1
         }
+    }
+
+    Rectangle{
+        anchors.fill: currentLayout
+        color: "transparent"
+        border.color: "yellow"
+        border.width: 2
     }
 
     GridLayout {
@@ -467,12 +473,7 @@ DragDrop.DropArea {
         //  rowSpacing: units.smallSpacing
         //  columnSpacing: units.smallSpacing
 
-        Rectangle{
-            anchors.fill: parent
-            color: "transparent"
-            border.color: "yellow"
-            border.width: 2
-        }
+
         /* Layout.preferredWidth: {
             var width = 0;
             for (var i = 0; i < currentLayout.children.length; ++i) {
