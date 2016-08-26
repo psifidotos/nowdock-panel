@@ -292,6 +292,7 @@ DragDrop.DropArea {
             //when the applet moves caused by its resize, don't animate.
             //this is completely heuristic, but looks way less "jumpy"
             property bool movingForResize: false
+            property bool showZoomed: false
 
             //   Layout.fillWidth: applet && applet.Layout.fillWidth
        /*     Layout.onFillWidthChanged: {
@@ -313,8 +314,8 @@ DragDrop.DropArea {
             // Layout.preferredHeight: (!currentLayout.isLayoutHorizontal ? (applet && applet.Layout.preferredHeight > 0 ? applet.Layout.preferredHeight : root.width) : root.height)
             Layout.maximumWidth: applet.Layout.maximumWidth
             Layout.maximumHeight: applet.Layout.maximumHeight
-            Layout.preferredWidth: nowDock ? nowDock.tasksWidth : 48
-            Layout.preferredHeight: nowDock ? nowDock.tasksHeight : 48
+            Layout.preferredWidth: nowDock ? nowDock.tasksWidth : (showZoomed ? 90 : 48)
+            Layout.preferredHeight: nowDock ? nowDock.tasksHeight : (showZoomed ? 90 : 48)
             Layout.minimumWidth: nowDock ? applet.Layout.minimumWidth : Layout.preferredWidth
             Layout.minimumHeight: nowDock ? applet.Layour.minimumHeight : Layout.preferredHeight
 

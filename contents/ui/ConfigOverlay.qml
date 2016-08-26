@@ -39,6 +39,7 @@ MouseArea {
     property bool isResizingLeft: false
     property bool isResizingRight: false
     property Item currentApplet
+    property Item previousCurrentApplet
 
     property int lastX
     property int lastY
@@ -52,17 +53,17 @@ MouseArea {
 
     onPositionChanged: {
         if (currentApplet && currentApplet.applet &&
-            currentApplet.applet.pluginName == "org.kde.plasma.panelspacer") {
+                currentApplet.applet.pluginName == "org.kde.plasma.panelspacer") {
             if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
                 if ((mouse.y - handle.y) < spacerHandleSize ||
-                    (mouse.y - handle.y) > (handle.height - spacerHandleSize)) {
+                        (mouse.y - handle.y) > (handle.height - spacerHandleSize)) {
                     configurationArea.cursorShape = Qt.SizeVerCursor;
                 } else {
                     configurationArea.cursorShape = Qt.ArrowCursor;
                 }
             } else {
                 if ((mouse.x - handle.x) < spacerHandleSize ||
-                    (mouse.x - handle.x) > (handle.width - spacerHandleSize)) {
+                        (mouse.x - handle.x) > (handle.width - spacerHandleSize)) {
                     configurationArea.cursorShape = Qt.SizeHorCursor;
                 } else {
                     configurationArea.cursorShape = Qt.ArrowCursor;
@@ -73,7 +74,8 @@ MouseArea {
         }
 
         if (pressed) {
-            if (currentApplet && currentApplet.applet.pluginName == "org.kde.plasma.panelspacer") {
+            if (currentApplet && currentApplet.applet &&
+                    currentApplet.applet.pluginName == "org.kde.plasma.panelspacer") {
 
                 if (isResizingLeft) {
                     if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
@@ -103,7 +105,7 @@ MouseArea {
 
             var padding = units.gridUnit * 3;
             if (currentApplet && (mouse.x < -padding || mouse.y < -padding ||
-                mouse.x > width + padding || mouse.y > height + padding)) {
+                                  mouse.x > width + padding || mouse.y > height + padding)) {
                 var newCont = plasmoid.containmentAt(mouse.x, mouse.y);
 
                 if (newCont && newCont != plasmoid) {
@@ -114,12 +116,15 @@ MouseArea {
                 }
             }
 
-            if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
-                currentApplet.y += (mouse.y - lastY);
-                handle.y = currentApplet.y;
-            } else {
-                currentApplet.x += (mouse.x - lastX);
-                handle.x = currentApplet.x;
+            if(currentApplet){
+
+                if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
+                    currentApplet.y += (mouse.y - lastY);
+                    handle.y = currentApplet.y;
+                } else {
+                    currentApplet.x += (mouse.x - lastX);
+                    handle.x = currentApplet.x;
+                }
             }
 
             lastX = mouse.x;
@@ -135,7 +140,7 @@ MouseArea {
                 var posInItem = mapToItem(item, mouse.x, mouse.y);
 
                 if ((plasmoid.formFactor === PlasmaCore.Types.Vertical && posInItem.y < item.height/2) ||
-                    (plasmoid.formFactor !== PlasmaCore.Types.Vertical && posInItem.x < item.width/2)) {
+                        (plasmoid.formFactor !== PlasmaCore.Types.Vertical && posInItem.x < item.width/2)) {
                     root.layoutManager.insertBefore(item, placeHolder);
                 } else {
                     root.layoutManager.insertAfter(item, placeHolder);
@@ -163,10 +168,19 @@ MouseArea {
     onExited: hideTimer.restart();
 
     onCurrentAppletChanged: {
+        if(previousCurrentApplet && previousCurrentApplet.showZoomed)
+            previousCurrentApplet.showZoomed = false;
+
+        previousCurrentApplet = currentApplet;
+
         if (!currentApplet || !root.dragOverlay.currentApplet) {
             hideTimer.start();
             return;
         }
+
+        if(currentApplet.showZoomed !== undefined)
+            currentApplet.showZoomed = true;
+
         var relevantLayout = mapFromItem(currentLayout, 0, 0);
 
         handle.x = relevantLayout.x + currentApplet.x;
@@ -228,10 +242,12 @@ MouseArea {
             return;
         }
 
-        if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
-            currentApplet.applet.configuration.length = handle.height;
-        } else {
-            currentApplet.applet.configuration.length = handle.width;
+        if(currentApplet && currentApplet.applet){
+            if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
+                currentApplet.applet.configuration.length = handle.height;
+            } else {
+                currentApplet.applet.configuration.length = handle.width;
+            }
         }
 
         configurationArea.isResizingLeft = false;
@@ -259,7 +275,7 @@ MouseArea {
 
     Timer {
         id: hideTimer
-        interval: units.longDuration * 3
+        interval: units.longDuration * 5
         onTriggered: tooltip.visible = false;
     }
 
@@ -367,7 +383,7 @@ MouseArea {
         location: plasmoid.location
 
         onVisualParentChanged: {
-            if (visualParent) {
+            if (visualParent && currentApplet && currentApplet.applet) {
                 configureButton.visible = currentApplet.applet.action("configure") && currentApplet.applet.action("configure").enabled;
                 closeButton.visible = currentApplet.applet.action("remove") && currentApplet.applet.action("remove").enabled;
                 label.text = currentApplet.applet.title;
@@ -406,7 +422,8 @@ MouseArea {
                     iconSource: "window-close"
                     onClicked: {
                         tooltip.visible = false;
-                        currentApplet.applet.action("remove").trigger();
+                        if(currentApplet && currentApplet.applet)
+                            currentApplet.applet.action("remove").trigger();
                     }
                 }
             }
