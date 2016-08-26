@@ -120,10 +120,10 @@ MouseArea {
 
                 if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
                     currentApplet.y += (mouse.y - lastY);
-                    handle.y = currentApplet.y;
+              //      handle.y = currentApplet.y;
                 } else {
                     currentApplet.x += (mouse.x - lastX);
-                    handle.x = currentApplet.x;
+             //       handle.x = currentApplet.x;
                 }
             }
 
@@ -231,9 +231,9 @@ MouseArea {
         placeHolder.width = currentApplet.width;
         placeHolder.height = currentApplet.height;
         root.layoutManager.insertBefore(currentApplet, placeHolder);
+        currentApplet.parent = root;
         currentApplet.x = lastX-appletX;
         currentApplet.y = lastY-appletY;
-        currentApplet.parent = root;
         currentApplet.z = 900;
     }
 
@@ -281,8 +281,16 @@ MouseArea {
 
     Connections {
         target: currentApplet
-        onXChanged: handle.x = currentApplet.x
-        onYChanged: handle.y = currentApplet.y
+        onXChanged: {
+            var transformChoords = root.mapFromItem(currentApplet, 0, 0)
+            handle.x = transformChoords.x;
+            //handle.x = currentApplet.x
+        }
+        onYChanged: {
+            var transformChoords = root.mapFromItem(currentApplet, 0, 0)
+            handle.y = transformChoords.y;
+            //handle.y = currentApplet.y
+        }
         onWidthChanged: handle.width = currentApplet.width
         onHeightChanged: handle.height = currentApplet.height
     }
@@ -293,6 +301,7 @@ MouseArea {
         color: theme.backgroundColor
         radius: 3
         opacity: currentApplet ? 0.5 : 0
+
         PlasmaCore.IconItem {
             source: "transform-move"
             width: Math.min(parent.width, parent.height)

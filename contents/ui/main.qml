@@ -216,7 +216,7 @@ DragDrop.DropArea {
         var flexibleFound = false;
         for (var i = 0; i < currentLayout.children.length; ++i) {
             var applet = currentLayout.children[i].applet;
-            if (((root.isHorizontal && applet.Layout.fillWidth) ||
+            if (applet && ((root.isHorizontal && applet.Layout.fillWidth) ||
                  (!root.isHorizontal && applet.Layout.fillHeight)) &&
                     applet.visible) {
                 flexibleFound = true;
