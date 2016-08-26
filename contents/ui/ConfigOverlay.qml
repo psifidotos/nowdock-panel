@@ -29,8 +29,7 @@ MouseArea {
     z: 1000
 
     anchors {
-        //fill: parent
-        fill: currentLayout
+        fill: parent
         rightMargin: (plasmoid.formFactor !== PlasmaCore.Types.Vertical) ? toolBox.width : 0
         bottomMargin: (plasmoid.formFactor === PlasmaCore.Types.Vertical) ? toolBox.height : 0
     }
@@ -52,7 +51,7 @@ MouseArea {
     onWidthChanged: tooltip.visible = false;
 
     onPositionChanged: {
-     /*   if (currentApplet && currentApplet.applet &&
+        if (currentApplet && currentApplet.applet &&
             currentApplet.applet.pluginName == "org.kde.plasma.panelspacer") {
             if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
                 if ((mouse.y - handle.y) < spacerHandleSize ||
@@ -71,10 +70,10 @@ MouseArea {
             }
         } else {
             configurationArea.cursorShape = Qt.ArrowCursor;
-        }*/
+        }
 
         if (pressed) {
-           /* if (currentApplet && currentApplet.applet.pluginName == "org.kde.plasma.panelspacer") {
+            if (currentApplet && currentApplet.applet.pluginName == "org.kde.plasma.panelspacer") {
 
                 if (isResizingLeft) {
                     if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
@@ -100,9 +99,9 @@ MouseArea {
                     lastY = mouse.y;
                     return;
                 }
-            }*/
+            }
 
-            /*var padding = units.gridUnit * 3;
+            var padding = units.gridUnit * 3;
             if (currentApplet && (mouse.x < -padding || mouse.y < -padding ||
                 mouse.x > width + padding || mouse.y > height + padding)) {
                 var newCont = plasmoid.containmentAt(mouse.x, mouse.y);
@@ -113,34 +112,21 @@ MouseArea {
                     root.dragOverlay.currentApplet = null;
                     return;
                 }
-            }*/
-
-            var relPos = root.mapFromItem(currentLayout,0,0);
-            var relPosApplet = currentLayout.mapFromItem(currentApplet,0,0);
-
-          //  smallDiffsY = mouse.y - relPosApplet.y;
-           // smallDiffsX = mouse.x - relPosApplet.x;
+            }
 
             if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
-                currentApplet.y += ( (relPos.y+mouse.y-appletY) - lastY);
-                //currentApplet.y += (relPosApplet.y - lastY);
+                currentApplet.y += (mouse.y - lastY);
                 handle.y = currentApplet.y;
             } else {
-                currentApplet.x += ( (relPos.x+mouse.x-appletX) - lastX);
-              //  currentApplet.x += (relPosApplet.x - lastX);
+                currentApplet.x += (mouse.x - lastX);
                 handle.x = currentApplet.x;
             }
 
-//            var relPosApplet = currentLayout.mapFromItem(currentApplet,0,0);
+            lastX = mouse.x;
+            lastY = mouse.y;
 
-            //lastX = mouse.x;
-            //lastY = mouse.y;
-            lastX = relPos.x + mouse.x;
-            lastY = relPos.y + mouse.y;
-            appletX = 0;
-            appletY = 0;
-
-            var item = currentLayout.childAt(mouse.x, mouse.y);
+            var relevantLayout = mapFromItem(currentLayout, 0, 0);
+            var item = currentLayout.childAt(mouse.x-relevantLayout.x, mouse.y-relevantLayout.y);
 
             if (item && item !== placeHolder) {
                 placeHolder.width = item.width;
@@ -157,10 +143,11 @@ MouseArea {
             }
 
         } else {
-            var item = currentLayout.childAt(mouse.x, mouse.y);
+            var relevantLayout = mapFromItem(currentLayout,0,0);
+
+            var item = currentLayout.childAt(mouse.x-relevantLayout.x, mouse.y-relevantLayout.y);
             if (root.dragOverlay && item && item !== lastSpacer) {
                 root.dragOverlay.currentApplet = item;
-
             } else {
                 root.dragOverlay.currentApplet = null;
             }
@@ -180,8 +167,10 @@ MouseArea {
             hideTimer.start();
             return;
         }
-        handle.x = currentApplet.x;
-        handle.y = currentApplet.y;
+        var relevantLayout = mapFromItem(currentLayout, 0, 0);
+
+        handle.x = relevantLayout.x + currentApplet.x;
+        handle.y = relevantLayout.y + currentApplet.y;
         handle.width = currentApplet.width;
         handle.height = currentApplet.height;
     }
@@ -191,7 +180,8 @@ MouseArea {
             return;
         }
 
-       /* if (currentApplet.applet.pluginName == "org.kde.plasma.panelspacer") {
+        /*
+        if (currentApplet.applet.pluginName == "org.kde.plasma.panelspacer") {
             if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
                 if ((mouse.y - handle.y) < spacerHandleSize) {
                     configurationArea.isResizingLeft = true;
@@ -217,20 +207,19 @@ MouseArea {
                 }
             }
         }*/
-        var relPos = root.mapFromItem(currentLayout,0,0);
-        var relPosApplet = currentLayout.mapFromItem(currentApplet,0,0);
 
-        lastX = relPos.x + relPosApplet.x;
-        lastY = relPos.y + relPosApplet.y;
-        appletX = mouse.x - relPosApplet.x;
-        appletY = mouse.y - relPosApplet.y;
+        var relevantApplet = mapFromItem(currentApplet, 0, 0);
+        appletX = mouse.x - relevantApplet.x;
+        appletY = mouse.y - relevantApplet.y;
 
+        lastX = mouse.x;
+        lastY = mouse.y;
         placeHolder.width = currentApplet.width;
         placeHolder.height = currentApplet.height;
         root.layoutManager.insertBefore(currentApplet, placeHolder);
+        currentApplet.x = lastX-appletX;
+        currentApplet.y = lastY-appletY;
         currentApplet.parent = root;
-        currentApplet.x = lastX;
-        currentApplet.y = lastY;
         currentApplet.z = 900;
     }
 
@@ -252,8 +241,10 @@ MouseArea {
         placeHolder.parent = configurationArea;
         currentApplet.z = 1;
 
-        handle.x = currentApplet.x;
-        handle.y = currentApplet.y;
+        var relevantLayout = mapFromItem(currentLayout, 0, 0);
+
+        handle.x = relevantLayout.x + currentApplet.x;
+        handle.y = relevantLayout.y + currentApplet.y;
         handle.width = currentApplet.width;
         handle.height = currentApplet.height;
         root.layoutManager.save();
