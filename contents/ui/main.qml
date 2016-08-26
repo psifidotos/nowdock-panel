@@ -30,9 +30,9 @@ import "LayoutManager.js" as LayoutManager
 DragDrop.DropArea {
     id: root
     width: 640
-    height: 48
+    height: 90
 
-//BEGIN properties
+    //BEGIN properties
     Layout.minimumWidth: fixedWidth > 0 ? fixedWidth : (currentLayout.Layout.minimumWidth + (isHorizontal && toolBox ? toolBox.width : 0))
     Layout.maximumWidth: fixedWidth > 0 ? fixedWidth : (currentLayout.Layout.maximumWidth + (isHorizontal && toolBox ? toolBox.width : 0))
     Layout.preferredWidth: fixedWidth > 0 ? fixedWidth : (currentLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
@@ -51,118 +51,117 @@ DragDrop.DropArea {
     property int fixedWidth: 0
     property int fixedHeight: 0
 
-//END properties
-   Rectangle{
-       anchors.fill: parent
-       color: "transparent"
-       border.color: "red"
-       border.width: 1
-   }
+    //END properties
+    Rectangle{
+        anchors.fill: parent
+        color: "transparent"
+        border.color: "red"
+        border.width: 1
+    }
 
-//BEGIN functions
-function addApplet(applet, x, y) {
-    var container = appletContainerComponent.createObject(root)
+    //BEGIN functions
+    function addApplet(applet, x, y) {
+        var container = appletContainerComponent.createObject(root)
 
-    var appletWidth = applet.width;
-    var appletHeight = applet.height;
-    applet.parent = container;
-    container.applet = applet;
-    applet.anchors.fill = container;
+        var appletWidth = applet.width;
+        var appletHeight = applet.height;
+        applet.parent = container;
+        container.applet = applet;
+        applet.anchors.fill = container;
 
-    applet.visible = true;
+        applet.visible = true;
 
-    // don't show applet if it choses to be hidden but still make it
-    // accessible in the panelcontroller
-    container.visible = Qt.binding(function() {
-        return applet.status !== PlasmaCore.Types.HiddenStatus || (!plasmoid.immutable && plasmoid.userConfiguring)
-    })
+        // don't show applet if it choses to be hidden but still make it
+        // accessible in the panelcontroller
+        container.visible = Qt.binding(function() {
+            return applet.status !== PlasmaCore.Types.HiddenStatus || (!plasmoid.immutable && plasmoid.userConfiguring)
+        })
 
-    // Is there a DND placeholder? Replace it!
-    if (dndSpacer.parent === currentLayout) {
-        LayoutManager.insertBefore(dndSpacer, container);
-        dndSpacer.parent = root;
-        return;
+        // Is there a DND placeholder? Replace it!
+        if (dndSpacer.parent === currentLayout) {
+            LayoutManager.insertBefore(dndSpacer, container);
+            dndSpacer.parent = root;
+            return;
 
-    // If the provided position is valid, use it.
-    } else if (x >= 0 && y >= 0) {
-        var index = LayoutManager.insertAtCoordinates(container, x , y);
+            // If the provided position is valid, use it.
+        } else if (x >= 0 && y >= 0) {
+            var index = LayoutManager.insertAtCoordinates(container, x , y);
 
-    // Fall through to determining an appropriate insert position.
-    } else {
-        var before = null;
-        container.animationsEnabled = false;
-
-        if (lastSpacer.parent === currentLayout) {
-            before = lastSpacer;
-        }
-
-        // Insert icons to the left of whatever is at the center (usually a Task Manager),
-        // if it exists.
-        // FIXME TODO: This is a real-world fix to produce a sensible initial position for
-        // launcher icons added by launcher menu applets. The basic approach has been used
-        // since Plasma 1. However, "add launcher to X" is a generic-enough concept and
-        // frequent-enough occurence that we'd like to abstract it further in the future
-        // and get rid of the uglyness of parties external to the containment adding applets
-        // of a specific type, and the containment caring about the applet type. In a better
-        // system the containment would be informed of requested launchers, and determine by
-        // itself what it wants to do with that information.
-        if (!startupTimer.running && applet.pluginName == "org.kde.plasma.icon") {
-            var middle = currentLayout.childAt(root.width / 2, root.height / 2);
-
-            if (middle) {
-                before = middle;
-            }
-
-        // Otherwise if lastSpacer is here, enqueue before it.
-        } 
-
-        if (before) {
-            LayoutManager.insertBefore(before, container);
-
-        // Fall through to adding at the end.
+            // Fall through to determining an appropriate insert position.
         } else {
-            container.parent = currentLayout;
+            var before = null;
+            container.animationsEnabled = false;
+
+            if (lastSpacer.parent === currentLayout) {
+                before = lastSpacer;
+            }
+
+            // Insert icons to the left of whatever is at the center (usually a Task Manager),
+            // if it exists.
+            // FIXME TODO: This is a real-world fix to produce a sensible initial position for
+            // launcher icons added by launcher menu applets. The basic approach has been used
+            // since Plasma 1. However, "add launcher to X" is a generic-enough concept and
+            // frequent-enough occurence that we'd like to abstract it further in the future
+            // and get rid of the uglyness of parties external to the containment adding applets
+            // of a specific type, and the containment caring about the applet type. In a better
+            // system the containment would be informed of requested launchers, and determine by
+            // itself what it wants to do with that information.
+            if (!startupTimer.running && applet.pluginName == "org.kde.plasma.icon") {
+                var middle = currentLayout.childAt(root.width / 2, root.height / 2);
+
+                if (middle) {
+                    before = middle;
+                }
+
+                // Otherwise if lastSpacer is here, enqueue before it.
+            }
+
+            if (before) {
+                LayoutManager.insertBefore(before, container);
+
+                // Fall through to adding at the end.
+            } else {
+                container.parent = currentLayout;
+            }
+
+            //event compress the enable of animations
+            startupTimer.restart();
         }
 
-        //event compress the enable of animations
-        startupTimer.restart();
+        if (applet.Layout.fillWidth) {
+            lastSpacer.parent = root;
+        }
     }
 
-    if (applet.Layout.fillWidth) {
-        lastSpacer.parent = root;
-    }
-}
 
+    function checkLastSpacer() {
+        lastSpacer.parent = root
 
-function checkLastSpacer() {
-    lastSpacer.parent = root
+        var expands = false;
 
-    var expands = false;
-
-    if (isHorizontal) {
-        for (var container in currentLayout.children) {
-            var item = currentLayout.children[container];
-            if (item.Layout && item.Layout.fillWidth) {
-                expands = true;
+        if (isHorizontal) {
+            for (var container in currentLayout.children) {
+                var item = currentLayout.children[container];
+                if (item.Layout && item.Layout.fillWidth) {
+                    expands = true;
+                }
+            }
+        } else {
+            for (var container in currentLayout.children) {
+                var item = currentLayout.children[container];
+                if (item.Layout && item.Layout.fillHeight) {
+                    expands = true;
+                }
             }
         }
-    } else {
-        for (var container in currentLayout.children) {
-            var item = currentLayout.children[container];
-            if (item.Layout && item.Layout.fillHeight) {
-                expands = true;
-            }
+        if (!expands) {
+            lastSpacer.parent = currentLayout
         }
     }
-    if (!expands) {
-        lastSpacer.parent = currentLayout
-    }
 
-}
+    //END functions
 
-//END functions
-
-//BEGIN connections
+    //BEGIN connections
     Component.onCompleted: {
         currentLayout.isLayoutHorizontal = isHorizontal
         LayoutManager.plasmoid = plasmoid;
@@ -219,8 +218,8 @@ function checkLastSpacer() {
         for (var i = 0; i < currentLayout.children.length; ++i) {
             var applet = currentLayout.children[i].applet;
             if (((root.isHorizontal && applet.Layout.fillWidth) ||
-                (!root.isHorizontal && applet.Layout.fillHeight)) &&
-                applet.visible) {
+                 (!root.isHorizontal && applet.Layout.fillHeight)) &&
+                    applet.visible) {
                 flexibleFound = true;
                 break
             }
@@ -275,41 +274,52 @@ function checkLastSpacer() {
             startupTimer.restart();
         }
     }
-//END connections
+    //END connections
 
-//BEGIN components
+    //BEGIN components
     Component {
         id: appletContainerComponent
-        Item {
+        MouseArea {
             id: container
             visible: false
+            anchors.right: parent.right
             property bool animationsEnabled: true
+          //  hoverEnabled: applet.pluginName === "org.kdelook.nowdock" ? false : true
+            hoverEnabled: plasmoid.immutable ? true : false
+
+            property Item nowDock: applet.pluginName === "org.kdelook.nowdock" ? children[2].children[0] : undefined
 
             //when the applet moves caused by its resize, don't animate.
             //this is completely heuristic, but looks way less "jumpy"
             property bool movingForResize: false
 
-            Layout.fillWidth: applet && applet.Layout.fillWidth
-            Layout.onFillWidthChanged: {
+            //   Layout.fillWidth: applet && applet.Layout.fillWidth
+       /*     Layout.onFillWidthChanged: {
                 if (plasmoid.formFactor != PlasmaCore.Types.Vertical) {
                     checkLastSpacer();
                 }
             }
-            Layout.fillHeight: applet && applet.Layout.fillHeight
+            //      Layout.fillHeight: applet && applet.Layout.fillHeight
             Layout.onFillHeightChanged: {
                 if (plasmoid.formFactor == PlasmaCore.Types.Vertical) {
                     checkLastSpacer();
                 }
-            }
+            }*/
 
-            Layout.minimumWidth: (currentLayout.isLayoutHorizontal ? (applet && applet.Layout.minimumWidth > 0 ? applet.Layout.minimumWidth : root.height) : root.width)
-            Layout.minimumHeight: (!currentLayout.isLayoutHorizontal ? (applet && applet.Layout.minimumHeight > 0 ? applet.Layout.minimumHeight : root.width) : root.height)
+            //    Layout.minimumWidth: (currentLayout.isLayoutHorizontal ? (applet && applet.Layout.minimumWidth > 0 ? applet.Layout.minimumWidth : root.height) : root.width)
+            //    Layout.minimumHeight: (!currentLayout.isLayoutHorizontal ? (applet && applet.Layout.minimumHeight > 0 ? applet.Layout.minimumHeight : root.width) : root.height)
 
-            Layout.preferredWidth: (currentLayout.isLayoutHorizontal ? (applet && applet.Layout.preferredWidth > 0 ? applet.Layout.preferredWidth : root.height) : root.width)
-            Layout.preferredHeight: (!currentLayout.isLayoutHorizontal ? (applet && applet.Layout.preferredHeight > 0 ? applet.Layout.preferredHeight : root.width) : root.height)
+            //Layout.preferredWidth: (currentLayout.isLayoutHorizontal ? (applet && applet.Layout.preferredWidth > 0 ? applet.Layout.preferredWidth : root.height) : root.width)
+            // Layout.preferredHeight: (!currentLayout.isLayoutHorizontal ? (applet && applet.Layout.preferredHeight > 0 ? applet.Layout.preferredHeight : root.width) : root.height)
+            Layout.maximumWidth: applet.Layout.maximumWidth
+            Layout.maximumHeight: applet.Layout.maximumHeight
+            Layout.preferredWidth: nowDock ? nowDock.tasksWidth : 48
+            Layout.preferredHeight: nowDock ? nowDock.tasksHeight : 48
+            Layout.minimumWidth: nowDock ? applet.Layout.minimumWidth : Layout.preferredWidth
+            Layout.minimumHeight: nowDock ? applet.Layour.minimumHeight : Layout.preferredHeight
 
-            Layout.maximumWidth: (currentLayout.isLayoutHorizontal ? (applet && applet.Layout.maximumWidth > 0 ? applet.Layout.maximumWidth : (Layout.fillWidth ? root.width : root.height)) : root.height)
-            Layout.maximumHeight: (!currentLayout.isLayoutHorizontal ? (applet && applet.Layout.maximumHeight > 0 ? applet.Layout.maximumHeight : (Layout.fillHeight ? root.height : root.width)) : root.width)
+            //  Layout.maximumWidth: (currentLayout.isLayoutHorizontal ? (applet && applet.Layout.maximumWidth > 0 ? applet.Layout.maximumWidth : (Layout.fillWidth ? root.width : root.height)) : root.height)
+            //   Layout.maximumHeight: (!currentLayout.isLayoutHorizontal ? (applet && applet.Layout.maximumHeight > 0 ? applet.Layout.maximumHeight : (Layout.fillHeight ? root.height : root.width)) : root.width)
 
             property int oldX: x
             property int oldY: y
@@ -320,6 +330,33 @@ function checkLastSpacer() {
                     destroy();
                 }
             }
+
+            onContainsMouseChanged: {
+                if (containsMouse){
+                    if(applet.pluginName !== "org.kdelook.nowdock"){
+                        Layout.preferredHeight = 90;
+                        Layout.preferredWidth = 90;
+                    }
+                }
+                else{
+                    if(applet.pluginName !== "org.kdelook.nowdock"){
+                        Layout.preferredHeight = 48;
+                        Layout.preferredWidth = 48;
+                    }
+                }
+           //     if(applet.pluginName === "org.kdelook.nowdock"){
+                  //  console.log(children[2].children[0].tasksHeight);
+             //   }
+            }
+
+            Behavior on Layout.preferredWidth {
+                NumberAnimation{duration:150}
+            }
+
+            Behavior on Layout.preferredHeight {
+                NumberAnimation{duration:150}
+            }
+
 
             Layout.onMinimumWidthChanged: movingForResize = true;
             Layout.onMinimumHeightChanged: movingForResize = true;
@@ -334,7 +371,15 @@ function checkLastSpacer() {
                 width: Math.min(parent.width, parent.height)
                 height: width
             }
-            onXChanged: {
+
+            Rectangle{
+                anchors.fill: parent
+                color: "transparent"
+                border.color: "green"
+                border.width: 1
+            }
+
+         /*   onXChanged: {
                 if (movingForResize) {
                     movingForResize = false;
                     return;
@@ -363,8 +408,8 @@ function checkLastSpacer() {
                 translAnim.running = true
                 oldX = x
                 oldY = y
-            }
-            transform: Translate {
+            }*/
+         /*   transform: Translate {
                 id: translation
             }
             NumberAnimation {
@@ -374,35 +419,60 @@ function checkLastSpacer() {
                 target: translation
                 properties: "x,y"
                 to: 0
-            }
+            }*/
         }
     }
-//END components
+    //END components
 
-//BEGIN UI elements
+    //BEGIN UI elements
     Item {
         id: lastSpacer
         parent: currentLayout
 
-        Layout.fillWidth: true
-        Layout.fillHeight: true
+            Layout.fillWidth: true
+           Layout.fillHeight: true
+
+        Rectangle{
+            anchors.fill: parent
+            color: "transparent"
+            border.color: "green"
+            border.width: 1
+        }
     }
 
     Item {
         id: dndSpacer
-        Layout.preferredWidth: width
-        Layout.preferredHeight: height
-        width: (plasmoid.formFactor == PlasmaCore.Types.Vertical) ? currentLayout.width : theme.mSize(theme.defaultFont).width * 10
-        height: (plasmoid.formFactor == PlasmaCore.Types.Vertical) ?  theme.mSize(theme.defaultFont).width * 10 : currentLayout.height
+        //      Layout.preferredWidth: width
+        //     Layout.preferredHeight: height
+        //     width: (plasmoid.formFactor == PlasmaCore.Types.Vertical) ? currentLayout.width : theme.mSize(theme.defaultFont).width * 10
+        //     height: (plasmoid.formFactor == PlasmaCore.Types.Vertical) ?  theme.mSize(theme.defaultFont).width * 10 : currentLayout.height
+
+        Rectangle{
+            anchors.fill: parent
+            color: "transparent"
+            border.color: "yellow"
+            border.width: 1
+        }
     }
 
     GridLayout {
         id: currentLayout
         property bool isLayoutHorizontal
-        rowSpacing: units.smallSpacing
-        columnSpacing: units.smallSpacing
+        anchors.right: parent.right
+        anchors.verticalCenter: parent.verticalCenter
 
-        Layout.preferredWidth: {
+        // rowSpacing: 0
+        // columnSpacing: 0
+        //  rowSpacing: units.smallSpacing
+        //  columnSpacing: units.smallSpacing
+
+        Rectangle{
+            anchors.fill: parent
+            color: "transparent"
+            border.color: "yellow"
+            border.width: 2
+        }
+        /* Layout.preferredWidth: {
             var width = 0;
             for (var i = 0; i < currentLayout.children.length; ++i) {
                 if (currentLayout.children[i].Layout) {
@@ -419,7 +489,9 @@ function checkLastSpacer() {
                 }
             }
             return height;
-        }
+        }*/
+
+        //Layout.preferredHeight: 140
         rows: 1
         columns: 1
         //when horizontal layout top-to-bottom, this way it will obey our limit of one row and actually lay out left to right
@@ -447,8 +519,8 @@ function checkLastSpacer() {
             dndSpacer.parent = root;
             currentLayout.x = (Qt.application.layoutDirection === Qt.RightToLeft && !plasmoid.immutable) ? toolBox.width : 0;
             currentLayout.y = 0
-            currentLayout.width = root.width - (isHorizontal && toolBox && !plasmoid.immutable ? toolBox.width : 0)
-            currentLayout.height = root.height - (!isHorizontal && toolBox && !plasmoid.immutable ? toolBox.height : 0)
+            /*   currentLayout.width = root.width - (isHorizontal && toolBox && !plasmoid.immutable ? toolBox.width : 0)
+            currentLayout.height = root.height - (!isHorizontal && toolBox && !plasmoid.immutable ? toolBox.height : 0) */
             currentLayout.isLayoutHorizontal = isHorizontal
         }
     }
@@ -465,5 +537,5 @@ function checkLastSpacer() {
             }
         }
     }
-//END UI elements
+    //END UI elements
 }

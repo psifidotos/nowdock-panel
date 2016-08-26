@@ -29,7 +29,8 @@ MouseArea {
     z: 1000
 
     anchors {
-        fill: parent
+        //fill: parent
+        fill: currentLayout
         rightMargin: (plasmoid.formFactor !== PlasmaCore.Types.Vertical) ? toolBox.width : 0
         bottomMargin: (plasmoid.formFactor === PlasmaCore.Types.Vertical) ? toolBox.height : 0
     }
@@ -42,6 +43,8 @@ MouseArea {
 
     property int lastX
     property int lastY
+    property int appletX
+    property int appletY
 
     readonly property int spacerHandleSize: units.smallSpacing
 
@@ -49,7 +52,7 @@ MouseArea {
     onWidthChanged: tooltip.visible = false;
 
     onPositionChanged: {
-        if (currentApplet && currentApplet.applet &&
+     /*   if (currentApplet && currentApplet.applet &&
             currentApplet.applet.pluginName == "org.kde.plasma.panelspacer") {
             if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
                 if ((mouse.y - handle.y) < spacerHandleSize ||
@@ -68,10 +71,10 @@ MouseArea {
             }
         } else {
             configurationArea.cursorShape = Qt.ArrowCursor;
-        }
+        }*/
 
         if (pressed) {
-            if (currentApplet && currentApplet.applet.pluginName == "org.kde.plasma.panelspacer") {
+           /* if (currentApplet && currentApplet.applet.pluginName == "org.kde.plasma.panelspacer") {
 
                 if (isResizingLeft) {
                     if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
@@ -97,9 +100,9 @@ MouseArea {
                     lastY = mouse.y;
                     return;
                 }
-            }
+            }*/
 
-            var padding = units.gridUnit * 3;
+            /*var padding = units.gridUnit * 3;
             if (currentApplet && (mouse.x < -padding || mouse.y < -padding ||
                 mouse.x > width + padding || mouse.y > height + padding)) {
                 var newCont = plasmoid.containmentAt(mouse.x, mouse.y);
@@ -110,18 +113,32 @@ MouseArea {
                     root.dragOverlay.currentApplet = null;
                     return;
                 }
-            }
+            }*/
+
+            var relPos = root.mapFromItem(currentLayout,0,0);
+            var relPosApplet = currentLayout.mapFromItem(currentApplet,0,0);
+
+          //  smallDiffsY = mouse.y - relPosApplet.y;
+           // smallDiffsX = mouse.x - relPosApplet.x;
 
             if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
-                currentApplet.y += (mouse.y - lastY);
+                currentApplet.y += ( (relPos.y+mouse.y-appletY) - lastY);
+                //currentApplet.y += (relPosApplet.y - lastY);
                 handle.y = currentApplet.y;
             } else {
-                currentApplet.x += (mouse.x - lastX);
+                currentApplet.x += ( (relPos.x+mouse.x-appletX) - lastX);
+              //  currentApplet.x += (relPosApplet.x - lastX);
                 handle.x = currentApplet.x;
             }
 
-            lastX = mouse.x;
-            lastY = mouse.y;
+//            var relPosApplet = currentLayout.mapFromItem(currentApplet,0,0);
+
+            //lastX = mouse.x;
+            //lastY = mouse.y;
+            lastX = relPos.x + mouse.x;
+            lastY = relPos.y + mouse.y;
+            appletX = 0;
+            appletY = 0;
 
             var item = currentLayout.childAt(mouse.x, mouse.y);
 
@@ -143,6 +160,7 @@ MouseArea {
             var item = currentLayout.childAt(mouse.x, mouse.y);
             if (root.dragOverlay && item && item !== lastSpacer) {
                 root.dragOverlay.currentApplet = item;
+
             } else {
                 root.dragOverlay.currentApplet = null;
             }
@@ -173,7 +191,7 @@ MouseArea {
             return;
         }
 
-        if (currentApplet.applet.pluginName == "org.kde.plasma.panelspacer") {
+       /* if (currentApplet.applet.pluginName == "org.kde.plasma.panelspacer") {
             if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
                 if ((mouse.y - handle.y) < spacerHandleSize) {
                     configurationArea.isResizingLeft = true;
@@ -198,14 +216,21 @@ MouseArea {
                     configurationArea.isResizingRight = false;
                 }
             }
-        }
+        }*/
+        var relPos = root.mapFromItem(currentLayout,0,0);
+        var relPosApplet = currentLayout.mapFromItem(currentApplet,0,0);
 
-        lastX = mouse.x;
-        lastY = mouse.y;
+        lastX = relPos.x + relPosApplet.x;
+        lastY = relPos.y + relPosApplet.y;
+        appletX = mouse.x - relPosApplet.x;
+        appletY = mouse.y - relPosApplet.y;
+
         placeHolder.width = currentApplet.width;
         placeHolder.height = currentApplet.height;
         root.layoutManager.insertBefore(currentApplet, placeHolder);
         currentApplet.parent = root;
+        currentApplet.x = lastX;
+        currentApplet.y = lastY;
         currentApplet.z = 900;
     }
 
