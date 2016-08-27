@@ -9,13 +9,14 @@ import org.kde.kquickcontrolsaddons 2.0
 Item {
     id: container
     anchors.right: parent.right
+
     anchors.rightMargin: nowDock || (showZoomed && !plasmoid.immutable) ? 0 : 10
     visible: false
 
-    // Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+    //Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
 
-    Layout.maximumWidth: applet ? applet.Layout.maximumWidth : Layout.preferredWidth
-    Layout.maximumHeight: applet ? applet.Layout.maximumHeight : Layout.preferredHeight
+    Layout.maximumWidth: nowDock && applet ? applet.Layout.maximumWidth : Layout.preferredWidth
+    Layout.maximumHeight: nowDock && applet ? applet.Layout.maximumHeight : Layout.preferredHeight
     // Layout.preferredWidth: nowDock ? nowDock.tasksWidth : computeWidth
     // Layout.preferredHeight: nowDock ? nowDock.tasksHeight : computeHeight
     Layout.preferredWidth: computeWidth
@@ -150,7 +151,7 @@ Item {
 
             visible: (container.index === 0)
 
-            property real nHiddenSize: (nScale > 0) ? (root.realSize * nScale) : 0
+            property int nHiddenSize: (nScale > 0) ? (root.realSize * nScale) : 0
             property real nScale: 0
 
             Behavior on nScale {
@@ -170,9 +171,11 @@ Item {
         Item{
             id: wrapper
 
-            width: nowDock ? ((container.showZoomed && root.isVertical) ? container.maxWidth : nowDock.tasksWidth) : zoomScale * root.iconSize
-            height: nowDock ? ((container.showZoomed && root.isHorizontal) ? container.maxHeight : nowDock.tasksHeight ): zoomScale * root.iconSize
+            width: nowDock ? ((container.showZoomed && root.isVertical) ? container.maxWidth : nowDock.tasksWidth) : scaledWidth
+            height: nowDock ? ((container.showZoomed && root.isHorizontal) ? container.maxHeight : nowDock.tasksHeight ): scaledHeight
 
+            property int scaledWidth: zoomScale * root.iconSize
+            property int scaledHeight: zoomScale * root.iconSize
 
             property real center: Math.floor(width / 2)
             property real zoomScale: 1
@@ -223,7 +226,7 @@ Item {
                         leftScale = bigNeighbourZoom;
                     }
 
-                    //  console.debug(leftScale + "  " + rightScale + " " + index);
+                    //console.debug(leftScale + "  " + rightScale + " " + index);
 
 
                     //activate messages to update the the neighbour scales
@@ -279,7 +282,7 @@ Item {
 
             visible: (container.index === currentLayout.count - 1)
 
-            property real nHiddenSize: (nScale > 0) ? (root.realSize * nScale) : 0
+            property int nHiddenSize: (nScale > 0) ? (root.realSize * nScale) : 0
             property real nScale: 0
 
             Behavior on nScale {

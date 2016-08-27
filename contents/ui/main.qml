@@ -365,7 +365,6 @@ DragDrop.DropArea {
              }
 
              if(lostMouse){
-                 //  console.log("Restore state....");
                  currentLayout.currentSpot = -1000;
                  currentLayout.hoveredIndex = -1;
              }
