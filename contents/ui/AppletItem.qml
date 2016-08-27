@@ -9,7 +9,7 @@ import org.kde.kquickcontrolsaddons 2.0
 Item {
     id: container
     anchors.right: parent.right
-    anchors.rightMargin: nowDock ? 0 : 12
+    anchors.rightMargin: nowDock || (showZoomed && !plasmoid.immutable) ? 0 : 10
     visible: false
 
    // Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
@@ -45,8 +45,6 @@ Item {
     property Item applet
     property Item nowDock: applet && (applet.pluginName === "org.kdelook.nowdock") ? applet.children[0] : null
     property Item appletWrapper: wrapper
-
-
 
     /// BEGIN functions
     function checkIndex(){
@@ -147,8 +145,9 @@ Item {
         Item{
             id: wrapper
 
-            width: nowDock ? nowDock.tasksWidth : zoomScale * root.iconSize;
-            height: nowDock ? nowDock.tasksHeight : zoomScale * root.iconSize
+            width: nowDock ? ((container.showZoomed && root.isVertical) ? container.maxWidth : nowDock.tasksWidth) : zoomScale * root.iconSize
+            height: nowDock ? ((container.showZoomed && root.isHorizontal) ? container.maxHeight : nowDock.tasksHeight ): zoomScale * root.iconSize
+
 
             property real center: Math.floor(width / 2)
             property real zoomScale: 1
@@ -231,7 +230,6 @@ Item {
                         zoomScale = nScale + step;
                     else
                         zoomScale = scale + step;
-                    //     console.log(index+ ", "+scale);
                 }
             }
 

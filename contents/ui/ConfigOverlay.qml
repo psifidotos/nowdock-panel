@@ -117,13 +117,12 @@ MouseArea {
             }
 
             if(currentApplet){
-
                 if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
                     currentApplet.y += (mouse.y - lastY);
-              //      handle.y = currentApplet.y;
+                    //    handle.y = currentApplet.y;
                 } else {
                     currentApplet.x += (mouse.x - lastX);
-             //       handle.x = currentApplet.x;
+                    //     handle.x = currentApplet.x;
                 }
             }
 
@@ -187,6 +186,8 @@ MouseArea {
         handle.y = relevantLayout.y + currentApplet.y;
         handle.width = currentApplet.width;
         handle.height = currentApplet.height;
+
+        repositionHandler.start();
     }
 
     onPressed: {
@@ -273,9 +274,26 @@ MouseArea {
         Layout.fillHeight: currentApplet ? currentApplet.Layout.fillHeight : false
     }
 
+    //Because of the animations for the applets the handler can not catch up to
+    //reposition itself when the currentApplet changes. This timer fixes that
+    Timer {
+        id: repositionHandler
+        interval: 90
+        onTriggered:{
+            if(currentApplet){
+                var relevantLayout = mapFromItem(currentLayout, 0, 0);
+
+                handle.x = relevantLayout.x + currentApplet.x;
+                handle.y = relevantLayout.y + currentApplet.y;
+                handle.width = currentApplet.width;
+                handle.height = currentApplet.height;
+            }
+        }
+    }
+
     Timer {
         id: hideTimer
-        interval: units.longDuration * 5
+        interval: units.longDuration * 4
         onTriggered: tooltip.visible = false;
     }
 
@@ -291,8 +309,14 @@ MouseArea {
             handle.y = transformChoords.y;
             //handle.y = currentApplet.y
         }
-        onWidthChanged: handle.width = currentApplet.width
-        onHeightChanged: handle.height = currentApplet.height
+        onWidthChanged: {
+            if (currentApplet)
+                handle.width = currentApplet.width;
+        }
+        onHeightChanged: {
+            if (currentApplet)
+                handle.height = currentApplet.height;
+        }
     }
 
     Rectangle {
