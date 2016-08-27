@@ -41,23 +41,35 @@ DragDrop.DropArea {
     Layout.maximumHeight: fixedHeight > 0 ? fixedHeight : (currentLayout.Layout.maximumHeight + (!isHorizontal && toolBox ? toolBox.height : 0))
     Layout.preferredHeight: fixedHeight > 0 ? fixedHeight : (currentLayout.Layout.preferredHeight + (!isHorizontal && toolBox? toolBox.height : 0))
 
-    property Item toolBox
-    property var layoutManager: LayoutManager
-
-
-    property Item dragOverlay
-
     property bool isHorizontal: plasmoid.formFactor != PlasmaCore.Types.Vertical
+    property bool isVertical: !isHorizontal
+
     property int fixedWidth: 0
     property int fixedHeight: 0
 
+    property var layoutManager: LayoutManager
+
+    property Item dragOverlay
+    property Item nowDock
+    property Item toolBox
+
+    signal updateIndexes();
     //END properties
-    Rectangle{
+
+    ///BEGIN properties from nowDock
+    property bool showBarLine: nowDock ? nowDock.showBarLine : false
+    property int iconSize: nowDock ? nowDock.iconSize : 48
+    property int iconMargin: nowDock ? nowDock.iconMargin : 5
+    property int realSize: iconSize + iconMargin
+    property real zoomFactor: nowDock ? nowDock.zoomFactor : 1.7
+
+    ///END properties from nowDock
+    /*  Rectangle{
         anchors.fill: parent
         color: "transparent"
         border.color: "red"
         border.width: 1
-    }
+    } */
 
     //BEGIN functions
     function addApplet(applet, x, y) {
@@ -65,9 +77,11 @@ DragDrop.DropArea {
 
         var appletWidth = applet.width;
         var appletHeight = applet.height;
-        applet.parent = container;
+        //applet.parent = container;
+        applet.parent = container.appletWrapper;
         container.applet = applet;
-        applet.anchors.fill = container;
+        //applet.anchors.fill = container;
+        applet.anchors.fill = container.appletWrapper;
 
         applet.visible = true;
 
@@ -130,6 +144,8 @@ DragDrop.DropArea {
         if (applet.Layout.fillWidth) {
             lastSpacer.parent = root;
         }
+
+        updateIndexes();
     }
 
 
@@ -217,7 +233,7 @@ DragDrop.DropArea {
         for (var i = 0; i < currentLayout.children.length; ++i) {
             var applet = currentLayout.children[i].applet;
             if (applet && ((root.isHorizontal && applet.Layout.fillWidth) ||
-                 (!root.isHorizontal && applet.Layout.fillHeight)) &&
+                           (!root.isHorizontal && applet.Layout.fillHeight)) &&
                     applet.visible) {
                 flexibleFound = true;
                 break
@@ -265,6 +281,10 @@ DragDrop.DropArea {
         containmentSizeSyncTimer.restart();
         plasmoid.action("configure").visible = !plasmoid.immutable;
         plasmoid.action("configure").enabled = !plasmoid.immutable;
+
+        if(plasmoid.immutable){
+            updateIndexes();
+        }
     }
 
     onToolBoxChanged: {
@@ -278,203 +298,96 @@ DragDrop.DropArea {
     //BEGIN components
     Component {
         id: appletContainerComponent
-        MouseArea {
-            id: container
-            visible: false
-            anchors.right: parent.right
-            property bool animationsEnabled: true
-          //  hoverEnabled: applet.pluginName === "org.kdelook.nowdock" ? false : true
-            hoverEnabled: plasmoid.immutable ? true : false
-
-            property Item nowDock: applet && (applet.pluginName === "org.kdelook.nowdock") ? children[2].children[0] : null
-
-            //when the applet moves caused by its resize, don't animate.
-            //this is completely heuristic, but looks way less "jumpy"
-            property bool movingForResize: false
-            property bool showZoomed: false
-
-            //   Layout.fillWidth: applet && applet.Layout.fillWidth
-       /*     Layout.onFillWidthChanged: {
-                if (plasmoid.formFactor != PlasmaCore.Types.Vertical) {
-                    checkLastSpacer();
-                }
-            }
-            //      Layout.fillHeight: applet && applet.Layout.fillHeight
-            Layout.onFillHeightChanged: {
-                if (plasmoid.formFactor == PlasmaCore.Types.Vertical) {
-                    checkLastSpacer();
-                }
-            }*/
-
-            //    Layout.minimumWidth: (currentLayout.isLayoutHorizontal ? (applet && applet.Layout.minimumWidth > 0 ? applet.Layout.minimumWidth : root.height) : root.width)
-            //    Layout.minimumHeight: (!currentLayout.isLayoutHorizontal ? (applet && applet.Layout.minimumHeight > 0 ? applet.Layout.minimumHeight : root.width) : root.height)
-
-            //Layout.preferredWidth: (currentLayout.isLayoutHorizontal ? (applet && applet.Layout.preferredWidth > 0 ? applet.Layout.preferredWidth : root.height) : root.width)
-            // Layout.preferredHeight: (!currentLayout.isLayoutHorizontal ? (applet && applet.Layout.preferredHeight > 0 ? applet.Layout.preferredHeight : root.width) : root.height)
-            Layout.maximumWidth: applet ? applet.Layout.maximumWidth : Layout.preferredWidth
-            Layout.maximumHeight: applet ? applet.Layout.maximumHeight : Layout.preferredHeight
-            Layout.preferredWidth: nowDock ? nowDock.tasksWidth : (showZoomed ? 90 : 48)
-            Layout.preferredHeight: nowDock ? nowDock.tasksHeight : (showZoomed ? 90 : 48)
-            Layout.minimumWidth: nowDock && applet ? applet.Layout.minimumWidth : Layout.preferredWidth
-            Layout.minimumHeight: nowDock && applet ? applet.Layour.minimumHeight : Layout.preferredHeight
-
-            //  Layout.maximumWidth: (currentLayout.isLayoutHorizontal ? (applet && applet.Layout.maximumWidth > 0 ? applet.Layout.maximumWidth : (Layout.fillWidth ? root.width : root.height)) : root.height)
-            //   Layout.maximumHeight: (!currentLayout.isLayoutHorizontal ? (applet && applet.Layout.maximumHeight > 0 ? applet.Layout.maximumHeight : (Layout.fillHeight ? root.height : root.width)) : root.width)
-
-            property int oldX: x
-            property int oldY: y
-
-            property Item applet
-            onAppletChanged: {
-                if (!applet) {
-                    destroy();
-                }
-            }
-
-            onContainsMouseChanged: {
-                if (containsMouse){
-                    if(applet.pluginName !== "org.kdelook.nowdock"){
-                        Layout.preferredHeight = 90;
-                        Layout.preferredWidth = 90;
-                    }
-                }
-                else{
-                    if(applet.pluginName !== "org.kdelook.nowdock"){
-                        Layout.preferredHeight = 48;
-                        Layout.preferredWidth = 48;
-                    }
-                }
-           //     if(applet.pluginName === "org.kdelook.nowdock"){
-                  //  console.log(children[2].children[0].tasksHeight);
-             //   }
-            }
-
-            Behavior on Layout.preferredWidth {
-                NumberAnimation{duration:150}
-            }
-
-            Behavior on Layout.preferredHeight {
-                NumberAnimation{duration:150}
-            }
-
-
-            Layout.onMinimumWidthChanged: movingForResize = true;
-            Layout.onMinimumHeightChanged: movingForResize = true;
-            Layout.onMaximumWidthChanged: movingForResize = true;
-            Layout.onMaximumHeightChanged: movingForResize = true;
-
-            PlasmaComponents.BusyIndicator {
-                z: 1000
-                visible: applet && applet.busy
-                running: visible
-                anchors.centerIn: parent
-                width: Math.min(parent.width, parent.height)
-                height: width
-            }
-
-            Rectangle{
-                anchors.fill: parent
-                color: "transparent"
-                border.color: "green"
-                border.width: 1
-            }
-
-         /*   onXChanged: {
-                if (movingForResize) {
-                    movingForResize = false;
-                    return;
-                }
-                if (!animationsEnabled) {
-                    startupTimer.restart();
-                    return;
-                }
-                translation.x = oldX - x
-                translation.y = oldY - y
-                translAnim.running = true
-                oldX = x
-                oldY = y
-            }
-            onYChanged: {
-                if (movingForResize) {
-                    movingForResize = false;
-                    return;
-                }
-                if (!animationsEnabled) {
-                    startupTimer.restart();
-                    return;
-                }
-                translation.x = oldX - x
-                translation.y = oldY - y
-                translAnim.running = true
-                oldX = x
-                oldY = y
-            }*/
-         /*   transform: Translate {
-                id: translation
-            }
-            NumberAnimation {
-                id: translAnim
-                duration: units.longDuration
-                easing.type: Easing.InOutQuad
-                target: translation
-                properties: "x,y"
-                to: 0
-            }*/
-        }
+        AppletItem{}
     }
     //END components
 
     //BEGIN UI elements
-    Item {
+     Item {
         id: lastSpacer
         parent: currentLayout
 
-            Layout.fillWidth: true
-           Layout.fillHeight: true
+        Layout.fillWidth: true
+        Layout.fillHeight: true
 
         Rectangle{
             anchors.fill: parent
             color: "transparent"
-            border.color: "green"
+            border.color: "yellow"
             border.width: 1
         }
     }
 
-    Item {
+     Item {
         id: dndSpacer
         Layout.preferredWidth: width
         Layout.preferredHeight: height
         width: (plasmoid.formFactor == PlasmaCore.Types.Vertical) ? currentLayout.width : theme.mSize(theme.defaultFont).width * 10
         height: (plasmoid.formFactor == PlasmaCore.Types.Vertical) ?  theme.mSize(theme.defaultFont).width * 10 : currentLayout.height
 
-        Rectangle{
+       /* Rectangle{
             anchors.fill: parent
             color: "transparent"
             border.color: "blue"
             border.width: 1
-        }
+        }*/
     }
 
-    Rectangle{
+    /* Rectangle{
         anchors.fill: currentLayout
         color: "transparent"
         border.color: "yellow"
         border.width: 2
-    }
+    } */
+
+     //Timer to check if the mouse is still inside the ListView
+     Timer{
+         id:checkListHovered
+         repeat:false;
+         interval:60;
+
+         onTriggered: {
+             var applets = currentLayout.children;
+             var lostMouse = true;
+
+             //  console.debug("---------");
+             for(var i=0; i<applets.length-1; ++i){
+                 var applet = applets[i];
+
+             //    console.log(i+", "+applet.containsMouse);
+                 if(applet && applet.containsMouse){
+                         lostMouse = false;
+                         break;
+                 }
+             }
+
+             if(lostMouse){
+                 //  console.log("Restore state....");
+                 currentLayout.currentSpot = -1000;
+                 currentLayout.hoveredIndex = -1;
+             }
+
+             interval = 60;
+         }
+     }
+
 
     GridLayout {
         id: currentLayout
-        property bool isLayoutHorizontal
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
 
         rowSpacing: 0
         columnSpacing: 0
-        //  rowSpacing: units.smallSpacing
-        //  columnSpacing: units.smallSpacing
 
+        property bool isLayoutHorizontal
+        property int count: children.length
+        property int currentSpot: -1000
+        property int hoveredIndex: -1
 
-        /* Layout.preferredWidth: {
+        signal updateScale(int delegateIndex, real newScale, real step)
+
+        Layout.preferredWidth: {
             var width = 0;
             for (var i = 0; i < currentLayout.children.length; ++i) {
                 if (currentLayout.children[i].Layout) {
@@ -491,7 +404,7 @@ DragDrop.DropArea {
                 }
             }
             return height;
-        }*/
+        }
 
         //Layout.preferredHeight: 140
         rows: 1
