@@ -61,6 +61,7 @@ DragDrop.DropArea {
     property int iconSize: nowDock ? nowDock.iconSize : 48
     property int iconMargin: nowDock ? nowDock.iconMargin : 5
     property int realSize: iconSize + iconMargin
+    property int tasksCount: nowDock ? nowDock.tasksCount : 0
     property real zoomFactor: nowDock ? nowDock.zoomFactor : 1.7
 
     ///END properties from nowDock
@@ -141,9 +142,11 @@ DragDrop.DropArea {
             startupTimer.restart();
         }
 
-        if (applet.Layout.fillWidth) {
-            lastSpacer.parent = root;
-        }
+        //if (applet.Layout.fillWidth) {
+        //Important, removes the first children of the currentLayout after the first
+        //applet has been added
+        lastSpacer.parent = root;
+      //  }
 
         updateIndexes();
     }

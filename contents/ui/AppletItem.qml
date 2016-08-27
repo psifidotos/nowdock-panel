@@ -12,12 +12,12 @@ Item {
     anchors.rightMargin: nowDock || (showZoomed && !plasmoid.immutable) ? 0 : 10
     visible: false
 
-   // Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+    // Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
 
     Layout.maximumWidth: applet ? applet.Layout.maximumWidth : Layout.preferredWidth
     Layout.maximumHeight: applet ? applet.Layout.maximumHeight : Layout.preferredHeight
-   // Layout.preferredWidth: nowDock ? nowDock.tasksWidth : computeWidth
-   // Layout.preferredHeight: nowDock ? nowDock.tasksHeight : computeHeight
+    // Layout.preferredWidth: nowDock ? nowDock.tasksWidth : computeWidth
+    // Layout.preferredHeight: nowDock ? nowDock.tasksHeight : computeHeight
     Layout.preferredWidth: computeWidth
     Layout.preferredHeight: computeHeight
     Layout.minimumWidth: nowDock && applet ? applet.Layout.minimumWidth : Layout.preferredWidth
@@ -56,17 +56,34 @@ Item {
                 break;
             }
         }
+
+        if(container.nowDock){
+            if(index>0)
+                nowDock.disableLeftSpacer = true;
+            else
+                nowDock.disableLeftSpacer = false;
+
+            if(index<currentLayout.count-1)
+                nowDock.disableRightSpacer = true;
+            else
+                nowDock.disableRightSpacer = false;
+        }
     }
+
+    //this functions gets the signal from the plasmoid, it can be used for signal items
+    //outside the NowDock Plasmoid
+    function interceptNowDockUpdateScale(dIndex, newScale, step){
+        if(dIndex == -1){
+            currentLayout.updateScale(index-1,newScale, step);
+        }
+        else if(dIndex == root.tasksCount){
+            currentLayout.updateScale(index+1,newScale, step);
+        }
+    }
+
     ///END functions
 
     //BEGIN connections
-    Binding{
-        target: root
-        property: "nowDock"
-        when: applet && (applet.pluginName === "org.kdelook.nowdock")
-        value: nowDock
-    }
-
     onAppletChanged: {
         if (!applet) {
             destroy();
@@ -76,6 +93,14 @@ Item {
     onHoveredIndexChanged:{
         if ( (Math.abs(hoveredIndex-index) > 1)||(hoveredIndex == -1) )
             wrapper.zoomScale = 1;
+    }
+
+    onNowDockChanged: {
+        if(container.nowDock){
+            root.nowDock = container.nowDock;
+            nowDock.forceHidePanel = true;
+            nowDock.updateScale.connect(interceptNowDockUpdateScale);
+        }
     }
 
     onShowZoomedChanged: {
@@ -207,7 +232,6 @@ Item {
                     currentLayout.updateScale(index-2, 1, 0);
                     currentLayout.updateScale(index+2, 1, 0);
 
-
                     //Left hiddenSpacer
                     if((index === 0 )&&(currentLayout.count > 1)){
                         hiddenSpacerLeft.nScale = leftScale - 1;
@@ -225,11 +249,19 @@ Item {
 
 
             function signalUpdateScale(nIndex, nScale, step){
-                if (index === nIndex){
-                    if(nScale >= 0)
-                        zoomScale = nScale + step;
-                    else
-                        zoomScale = scale + step;
+                if(container.index === nIndex){
+                    if(!container.nowDock){
+                        if(nScale >= 0)
+                            zoomScale = nScale + step;
+                        else
+                            zoomScale = scale + step;
+                    }
+                    else{
+                        if(currentLayout.hoveredIndex<container.index)
+                            nowDock.updateScale(0, nScale, step);
+                        else if(currentLayout.hoveredIndex>container.index)
+                            nowDock.updateScale(root.tasksCount-1, nScale, step);
+                    }
                 }
             }
 
@@ -245,7 +277,6 @@ Item {
             width: root.isHorizontal ? nHiddenSize : wrapper.width
             height: root.isHorizontal ? wrapper.height : nHiddenSize
 
-            ///there is one more item in the currentLayout ????
             visible: (container.index === currentLayout.count - 1)
 
             property real nHiddenSize: (nScale > 0) ? (root.realSize * nScale) : 0
@@ -271,7 +302,7 @@ Item {
         id: appletMouseArea
         anchors.fill: parent
         enabled: (!nowDock)
-        hoverEnabled: plasmoid.immutable && (!nowDock) ? true : false
+        hoverEnabled: plasmoid.immutable && (!container.nowDock) ? true : false
         propagateComposedEvents: true
 
         onContainsMouseChanged: {
