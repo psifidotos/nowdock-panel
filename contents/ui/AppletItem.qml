@@ -15,14 +15,14 @@ Item {
 
     //Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
 
-    Layout.maximumWidth: nowDock && applet ? applet.Layout.maximumWidth : Layout.preferredWidth
-    Layout.maximumHeight: nowDock && applet ? applet.Layout.maximumHeight : Layout.preferredHeight
+    Layout.maximumWidth: nowDock && applet ? applet.Layout.maximumWidth : maxWidth //Layout.preferredWidth
+    Layout.maximumHeight: nowDock && applet ? applet.Layout.maximumHeight : maxHeight //Layout.preferredHeight
     // Layout.preferredWidth: nowDock ? nowDock.tasksWidth : computeWidth
     // Layout.preferredHeight: nowDock ? nowDock.tasksHeight : computeHeight
     Layout.preferredWidth: computeWidth
     Layout.preferredHeight: computeHeight
-    Layout.minimumWidth: nowDock && applet ? applet.Layout.minimumWidth : Layout.preferredWidth
-    Layout.minimumHeight: nowDock && applet ? applet.Layout.minimumHeight : Layout.preferredHeight
+    Layout.minimumWidth: nowDock && applet ? applet.Layout.minimumWidth : root.iconSize //Layout.preferredWidth
+    Layout.minimumHeight: nowDock && applet ? applet.Layout.minimumHeight : root.iconSize //Layout.preferredHeight
 
     property bool animationsEnabled: true
     property bool containsMouse: appletMouseArea.containsMouse
@@ -151,7 +151,7 @@ Item {
 
             visible: (container.index === 0)
 
-            property int nHiddenSize: (nScale > 0) ? (root.realSize * nScale) : 0
+            property real nHiddenSize: (nScale > 0) ? (root.realSize * nScale) : 0
             property real nScale: 0
 
             Behavior on nScale {
@@ -174,17 +174,36 @@ Item {
             width: nowDock ? ((container.showZoomed && root.isVertical) ? container.maxWidth : nowDock.tasksWidth) : scaledWidth
             height: nowDock ? ((container.showZoomed && root.isHorizontal) ? container.maxHeight : nowDock.tasksHeight ): scaledHeight
 
-            property int scaledWidth: zoomScale * root.iconSize
-            property int scaledHeight: zoomScale * root.iconSize
+            property real scaledWidth: zoomScale * root.realSize
+            property real scaledHeight: zoomScale * root.realSize
 
-            property real center: Math.floor(width / 2)
+            property real center: width / 2
             property real zoomScale: 1
 
             property alias index: container.index
 
-            Behavior on zoomScale {
-                NumberAnimation { duration: container.animationTime }
+          /* Item{
+                id:wrapperContainer
+                anchors.fill: parent
+                anchors.margins: root.iconMargin
+                anchors.centerIn: parent
+            } */
+
+            onHeightChanged: {
+                if ((index == 1)|| (index==3)){
+                    console.log("H: "+index+" ("+zoomScale+"). "+currentLayout.children[1].height+" - "+currentLayout.children[3].height+" - "+(currentLayout.children[1].height+currentLayout.children[3].height));
+                }
             }
+
+            onZoomScaleChanged:{
+                if ((index == 1)|| (index==3)){
+                    console.log(index+" ("+zoomScale+"). "+currentLayout.children[1].height+" - "+currentLayout.children[3].height+" - "+(currentLayout.children[1].height+currentLayout.children[3].height));
+                }
+            }
+
+         /*   Behavior on zoomScale {
+                NumberAnimation { duration: container.animationTime }
+            }*/
 
             function calculateScales( currentMousePosition ){
                 var distanceFromHovered = Math.abs(index - currentLayout.hoveredIndex);
@@ -226,12 +245,12 @@ Item {
                         leftScale = bigNeighbourZoom;
                     }
 
-                    //console.debug(leftScale + "  " + rightScale + " " + index);
 
-
+                    console.log("--------------")
+                    console.debug(leftScale + "  " + rightScale + " " + index);
                     //activate messages to update the the neighbour scales
-                    currentLayout.updateScale(index+1, rightScale, 0);
                     currentLayout.updateScale(index-1, leftScale, 0);
+                    currentLayout.updateScale(index+1, rightScale, 0);
                     currentLayout.updateScale(index-2, 1, 0);
                     currentLayout.updateScale(index+2, 1, 0);
 
@@ -257,7 +276,7 @@ Item {
                         if(nScale >= 0)
                             zoomScale = nScale + step;
                         else
-                            zoomScale = scale + step;
+                            zoomScale = zoomScale + step;
                     }
                     else{
                         if(currentLayout.hoveredIndex<container.index)
@@ -282,7 +301,7 @@ Item {
 
             visible: (container.index === currentLayout.count - 1)
 
-            property int nHiddenSize: (nScale > 0) ? (root.realSize * nScale) : 0
+            property real nHiddenSize: (nScale > 0) ? (root.realSize * nScale) : 0
             property real nScale: 0
 
             Behavior on nScale {
