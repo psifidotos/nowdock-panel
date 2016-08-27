@@ -172,7 +172,7 @@ Item {
             id: wrapper
 
             width: nowDock ? ((container.showZoomed && root.isVertical) ? container.maxWidth : nowDock.tasksWidth) : scaledWidth
-            height: nowDock ? ((container.showZoomed && root.isHorizontal) ? container.maxHeight : nowDock.tasksHeight ): scaledHeight
+            height: nowDock ? ((container.showZoomed && root.isHorizontal) ? container.maxHeight : nowDock.tasksHeight ): scaledWidth
 
             property real scaledWidth: zoomScale * root.realSize
             property real scaledHeight: zoomScale * root.realSize
@@ -182,12 +182,13 @@ Item {
 
             property alias index: container.index
 
-          /* Item{
+           Item{
                 id:wrapperContainer
-                anchors.fill: parent
-                anchors.margins: root.iconMargin
+                width: parent.zoomScale * root.iconSize
+                height: width
+
                 anchors.centerIn: parent
-            } */
+            }
 
             onHeightChanged: {
                 if ((index == 1)|| (index==3)){
@@ -201,9 +202,9 @@ Item {
                 }
             }
 
-         /*   Behavior on zoomScale {
+            Behavior on zoomScale {
                 NumberAnimation { duration: container.animationTime }
-            }*/
+            }
 
             function calculateScales( currentMousePosition ){
                 var distanceFromHovered = Math.abs(index - currentLayout.hoveredIndex);
