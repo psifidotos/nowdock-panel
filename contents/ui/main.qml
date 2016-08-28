@@ -410,14 +410,6 @@ DragDrop.DropArea {
     GridLayout {
         id: currentLayout
 
-        anchors.bottom: (plasmoid.location === PlasmaCore.Types.BottomEdge) ? parent.bottom : undefined
-        anchors.top: (plasmoid.location === PlasmaCore.Types.TopEdge) ? parent.top : undefined
-        anchors.left: (plasmoid.location === PlasmaCore.Types.LeftEdge) ? parent.left : undefined
-        anchors.right: (plasmoid.location === PlasmaCore.Types.RightEdge) ? parent.right : undefined
-
-        anchors.horizontalCenter: root.isHorizontal ? parent.horizontalCenter : undefined
-        anchors.verticalCenter: root.isVertical ? parent.verticalCenter : undefined
-
         rowSpacing: 0
         columnSpacing: 0
 
@@ -496,4 +488,45 @@ DragDrop.DropArea {
         }
     }
     //END UI elements
+
+    //BEGIN states
+    states: [
+        State {
+            name: "left"
+            when: plasmoid.location === PlasmaCore.Types.LeftEdge
+
+            AnchorChanges {
+                target: currentLayout
+                anchors{ top:undefined; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
+            }
+        },
+        State {
+            name: "right"
+            when: plasmoid.location === PlasmaCore.Types.RightEdge
+
+            AnchorChanges {
+                target: currentLayout
+                anchors{ top:undefined; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
+            }
+        },
+        State {
+            name: "bottom"
+            when: plasmoid.location === PlasmaCore.Types.BottomEdge
+
+            AnchorChanges {
+                target: currentLayout
+                anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
+            }
+        },
+        State {
+            name: "top"
+            when: plasmoid.location === PlasmaCore.Types.TopEdge
+
+            AnchorChanges {
+                target: currentLayout
+                anchors{ top:parent.top; bottom:undefined; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
+            }
+        }
+    ]
+    //END states
 }

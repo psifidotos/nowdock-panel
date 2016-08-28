@@ -9,10 +9,10 @@ import org.kde.kquickcontrolsaddons 2.0
 Item {
     id: container
 
-    anchors.bottom: (plasmoid.location === PlasmaCore.Types.BottomEdge) ? parent.bottom : undefined
+ /*   anchors.bottom: (plasmoid.location === PlasmaCore.Types.BottomEdge) ? parent.bottom : undefined
     anchors.top: (plasmoid.location === PlasmaCore.Types.TopEdge) ? parent.top : undefined
     anchors.left: (plasmoid.location === PlasmaCore.Types.LeftEdge) ? parent.left : undefined
-    anchors.right: (plasmoid.location === PlasmaCore.Types.RightEdge) ? parent.right : undefined
+    anchors.right: (plasmoid.location === PlasmaCore.Types.RightEdge) ? parent.right : undefined */
 
     anchors.rightMargin: (nowDock || (showZoomed && !plasmoid.immutable)) ||
                          (plasmoid.location !== PlasmaCore.Types.RightEdge) ? 0 : appletMargin
@@ -411,5 +411,46 @@ Item {
 
         onClicked: mouse.accepted = false;
     }
+
+    //BEGIN states
+    states: [
+        State {
+            name: "left"
+            when: plasmoid.location === PlasmaCore.Types.LeftEdge
+
+            AnchorChanges {
+                target: container
+                anchors{ top:undefined; bottom:undefined; left:parent.left; right:undefined;}
+            }
+        },
+        State {
+            name: "right"
+            when: plasmoid.location === PlasmaCore.Types.RightEdge
+
+            AnchorChanges {
+                target: container
+                anchors{ top:undefined; bottom:undefined; left:undefined; right:parent.right;}
+            }
+        },
+        State {
+            name: "bottom"
+            when: plasmoid.location === PlasmaCore.Types.BottomEdge
+
+            AnchorChanges {
+                target: container
+                anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:undefined;}
+            }
+        },
+        State {
+            name: "top"
+            when: plasmoid.location === PlasmaCore.Types.TopEdge
+
+            AnchorChanges {
+                target: container
+                anchors{ top:parent.top; bottom:undefined; left:undefined; right:undefined;}
+            }
+        }
+    ]
+    //END states
 
 }

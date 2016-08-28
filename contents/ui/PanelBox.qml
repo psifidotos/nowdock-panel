@@ -14,14 +14,6 @@ Component{
         parent: root
         z:0
 
-        anchors.bottom: (plasmoid.location === PlasmaCore.Types.BottomEdge) ? parent.bottom : undefined
-        anchors.top: (plasmoid.location === PlasmaCore.Types.TopEdge) ? parent.top : undefined
-        anchors.left: (plasmoid.location === PlasmaCore.Types.LeftEdge) ? parent.left : undefined
-        anchors.right: (plasmoid.location === PlasmaCore.Types.RightEdge) ? parent.right : undefined
-
-        anchors.horizontalCenter: root.isHorizontal ? parent.horizontalCenter : undefined
-        anchors.verticalCenter: root.isVertical ? parent.verticalCenter : undefined
-
         width: root.isHorizontal ? currentLayout.width + spacing : smallSize
         height: root.isVertical ? currentLayout.height + spacing : smallSize
 
@@ -57,25 +49,12 @@ Component{
 
             width: (plasmoid.location === PlasmaCore.Types.LeftEdge) ? shadowsSvgItem.margins.left : shadowsSvgItem.margins.right
             height: (plasmoid.location === PlasmaCore.Types.BottomEdge)? shadowsSvgItem.margins.bottom : shadowsSvgItem.margins.top
-
-            anchors.top: (plasmoid.location === PlasmaCore.Types.BottomEdge) ? parent.bottom : undefined
-            anchors.bottom: (plasmoid.location === PlasmaCore.Types.TopEdge) ? parent.top : undefined
-            anchors.right: (plasmoid.location === PlasmaCore.Types.LeftEdge) ? parent.left : undefined
-            anchors.left: (plasmoid.location === PlasmaCore.Types.RightEdge) ? parent.right : undefined
         }
 
 
         /// the current theme's panel
         PlasmaCore.FrameSvgItem{
             id: shadowsSvgItem
-
-            anchors.bottom: (plasmoid.location === PlasmaCore.Types.BottomEdge) ? belower.bottom : undefined
-            anchors.top: (plasmoid.location === PlasmaCore.Types.TopEdge) ? belower.top : undefined
-            anchors.left: (plasmoid.location === PlasmaCore.Types.LeftEdge) ? belower.left : undefined
-            anchors.right: (plasmoid.location === PlasmaCore.Types.RightEdge) ? belower.right : undefined
-
-            anchors.horizontalCenter: root.isHorizontal ? parent.horizontalCenter : undefined
-            anchors.verticalCenter: root.isVertical ? parent.verticalCenter : undefined
 
             width: root.isVertical ? panelSize + margins.left + margins.right: parent.width
             height: root.isVertical ? parent.height : panelSize + margins.top + margins.bottom
@@ -103,5 +82,78 @@ Component{
                                                    "widgets/panel-background"
             }
         }
+
+        //BEGIN states
+        states: [
+            State {
+                name: "left"
+                when: plasmoid.location === PlasmaCore.Types.LeftEdge
+
+                AnchorChanges {
+                    target: barLine
+                    anchors{ top:undefined; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
+                }
+                AnchorChanges {
+                    target: belower
+                    anchors{ top:undefined; bottom:undefined; left:undefined; right:parent.left}
+                }
+                AnchorChanges {
+                    target: shadowsSvgItem
+                    anchors{ top:undefined; bottom:undefined; left:belower.left; right:undefined; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
+                }
+            },
+            State {
+                name: "right"
+                when: plasmoid.location === PlasmaCore.Types.RightEdge
+
+                AnchorChanges {
+                    target: barLine
+                    anchors{ top:undefined; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
+                }
+                AnchorChanges {
+                    target: belower
+                    anchors{ top:undefined; bottom:undefined; left:parent.right; right:undefined}
+                }
+                AnchorChanges {
+                    target: shadowsSvgItem
+                    anchors{ top:undefined; bottom:undefined; left:undefined; right:belower.right; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
+                }
+            },
+            State {
+                name: "bottom"
+                when: plasmoid.location === PlasmaCore.Types.BottomEdge
+
+                AnchorChanges {
+                    target: barLine
+                    anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
+                }
+                AnchorChanges {
+                    target: belower
+                    anchors{ top:parent.bottom; bottom:undefined; left:undefined; right:undefined}
+                }
+                AnchorChanges {
+                    target: shadowsSvgItem
+                    anchors{ top:undefined; bottom:belower.bottom; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
+                }
+            },
+            State {
+                name: "top"
+                when: plasmoid.location === PlasmaCore.Types.TopEdge
+
+                AnchorChanges {
+                    target: barLine
+                    anchors{ top:parent.top; bottom:undefined; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
+                }
+                AnchorChanges {
+                    target: belower
+                    anchors{ top:undefined; bottom:parent.top; left:undefined; right:undefined}
+                }
+                AnchorChanges {
+                    target: shadowsSvgItem
+                    anchors{ top:belower.top; bottom:undefined; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
+                }
+            }
+        ]
+        //END states
     }
 }
