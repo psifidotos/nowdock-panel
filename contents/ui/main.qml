@@ -409,8 +409,14 @@ DragDrop.DropArea {
 
     GridLayout {
         id: currentLayout
-        anchors.right: parent.right
-        anchors.verticalCenter: parent.verticalCenter
+
+        anchors.bottom: (plasmoid.location === PlasmaCore.Types.BottomEdge) ? parent.bottom : undefined
+        anchors.top: (plasmoid.location === PlasmaCore.Types.TopEdge) ? parent.top : undefined
+        anchors.left: (plasmoid.location === PlasmaCore.Types.LeftEdge) ? parent.left : undefined
+        anchors.right: (plasmoid.location === PlasmaCore.Types.RightEdge) ? parent.right : undefined
+
+        anchors.horizontalCenter: root.isHorizontal ? parent.horizontalCenter : undefined
+        anchors.verticalCenter: root.isVertical ? parent.verticalCenter : undefined
 
         rowSpacing: 0
         columnSpacing: 0

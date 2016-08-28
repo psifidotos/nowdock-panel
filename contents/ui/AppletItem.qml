@@ -8,8 +8,20 @@ import org.kde.kquickcontrolsaddons 2.0
 
 Item {
     id: container
-    anchors.right: parent.right
-    anchors.rightMargin: nowDock || (showZoomed && !plasmoid.immutable) ? 0 : appletMargin
+
+    anchors.bottom: (plasmoid.location === PlasmaCore.Types.BottomEdge) ? parent.bottom : undefined
+    anchors.top: (plasmoid.location === PlasmaCore.Types.TopEdge) ? parent.top : undefined
+    anchors.left: (plasmoid.location === PlasmaCore.Types.LeftEdge) ? parent.left : undefined
+    anchors.right: (plasmoid.location === PlasmaCore.Types.RightEdge) ? parent.right : undefined
+
+    anchors.rightMargin: (nowDock || (showZoomed && !plasmoid.immutable)) ||
+                         (plasmoid.location !== PlasmaCore.Types.RightEdge) ? 0 : appletMargin
+    anchors.leftMargin: (nowDock || (showZoomed && !plasmoid.immutable)) ||
+                        (plasmoid.location !== PlasmaCore.Types.LeftEdge) ? 0 : appletMargin
+    anchors.topMargin: (nowDock || (showZoomed && !plasmoid.immutable)) ||
+                       (plasmoid.location !== PlasmaCore.Types.TopEdge)? 0 : appletMargin
+    anchors.bottomMargin: (nowDock || (showZoomed && !plasmoid.immutable)) ||
+                          (plasmoid.location !== PlasmaCore.Types.BottomEdge) ? 0 : appletMargin
 
     visible: false
 
@@ -142,12 +154,12 @@ Item {
         height: width
     }
 
-    Rectangle{
+    /*Rectangle{
         anchors.fill: parent
         color: "transparent"
         border.color: "green"
         border.width: 1
-    }
+    }*/
 
     Flow{
         width: parent.width
@@ -170,14 +182,14 @@ Item {
                 NumberAnimation { duration: container.animationTime }
             }
 
-            Rectangle{
+           /* Rectangle{
                 width: 1
                 height: parent.height
                 x: parent.width/2
                 border.width: 1
                 border.color: "red"
                 color: "transparent"
-            }
+            } */
         }
 
         Item{
@@ -321,14 +333,14 @@ Item {
                 NumberAnimation { duration: container.animationTime }
             }
 
-            Rectangle{
+            /*Rectangle{
                 width: 1
                 height: parent.height
                 x:parent.width / 2
                 border.width: 1
                 border.color: "red"
                 color: "transparent"
-            }
+            }*/
         }
 
     }// Flow with hidden spacers inside
