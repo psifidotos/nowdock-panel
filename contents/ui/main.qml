@@ -41,7 +41,7 @@ DragDrop.DropArea {
     Layout.maximumHeight: fixedHeight > 0 ? fixedHeight : (currentLayout.Layout.maximumHeight + (!isHorizontal && toolBox ? toolBox.height : 0))
     Layout.preferredHeight: fixedHeight > 0 ? fixedHeight : (currentLayout.Layout.preferredHeight + (!isHorizontal && toolBox? toolBox.height : 0))
 
-    property bool isHorizontal: plasmoid.formFactor != PlasmaCore.Types.Vertical
+    property bool isHorizontal: plasmoid.formFactor == PlasmaCore.Types.Horizontal
     property bool isVertical: !isHorizontal
 
     property int fixedWidth: 0

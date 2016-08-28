@@ -15,8 +15,8 @@ Item {
 
     //Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
 
-    Layout.maximumWidth: nowDock && applet ? applet.Layout.maximumWidth : maxWidth //Layout.preferredWidth
-    Layout.maximumHeight: nowDock && applet ? applet.Layout.maximumHeight : maxHeight //Layout.preferredHeight
+    Layout.maximumWidth: nowDock && applet ? applet.Layout.maximumWidth : Layout.preferredWidth
+    Layout.maximumHeight: nowDock && applet ? applet.Layout.maximumHeight : Layout.preferredHeight
     // Layout.preferredWidth: nowDock ? nowDock.tasksWidth : computeWidth
     // Layout.preferredHeight: nowDock ? nowDock.tasksHeight : computeHeight
     Layout.preferredWidth: computeWidth
@@ -36,17 +36,22 @@ Item {
 
     //property real animationStep: root.iconSize / 8
     property real animationStep: 6
-    property real computeWidth: !root.isHorizontal ? wrapper.width :
-                                                     hiddenSpacerLeft.width+wrapper.width+hiddenSpacerRight.width
+    property real computeWidth: root.isVertical ? wrapper.width :
+                                                  hiddenSpacerLeft.width+wrapper.width+hiddenSpacerRight.width
 
-    property real computeHeight: !root.isHorizontal ? hiddenSpacerLeft.height + wrapper.height + hiddenSpacerRight.height :
-                                                      wrapper.height
+    property real computeHeight: root.isVertical ? hiddenSpacerLeft.height + wrapper.height + hiddenSpacerRight.height :
+                                                   wrapper.height
 
     property Item applet
     property Item nowDock: applet && (applet.pluginName === "org.kdelook.nowdock") ? applet.children[0] : null
     property Item appletWrapper: wrapper
 
     property alias containsMouse: appletMouseArea.containsMouse
+
+    onComputeHeightChanged: {
+        if(index==0)
+            console.log(computeHeight);
+    }
 
     /// BEGIN functions
     function checkIndex(){
@@ -189,7 +194,7 @@ Item {
 
             property alias index: container.index
 
-           Item{
+            Item{
                 id:wrapperContainer
                 width: parent.zoomScale * root.iconSize
                 height: width
@@ -197,7 +202,7 @@ Item {
                 anchors.centerIn: parent
             }
 
-         /*   onHeightChanged: {
+            /*   onHeightChanged: {
                 if ((index == 1)|| (index==3)){
                     console.log("H: "+index+" ("+zoomScale+"). "+currentLayout.children[1].height+" - "+currentLayout.children[3].height+" - "+(currentLayout.children[1].height+currentLayout.children[3].height));
                 }
@@ -254,8 +259,8 @@ Item {
                     }
 
 
-                 //   console.log("--------------")
-                  //  console.debug(leftScale + "  " + rightScale + " " + index);
+                    //   console.log("--------------")
+                    //  console.debug(leftScale + "  " + rightScale + " " + index);
                     //activate messages to update the the neighbour scales
                     currentLayout.updateScale(index-1, leftScale, 0);
                     currentLayout.updateScale(index+1, rightScale, 0);
