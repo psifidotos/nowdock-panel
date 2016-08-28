@@ -25,7 +25,6 @@ Item {
     Layout.minimumHeight: nowDock && applet ? applet.Layout.minimumHeight : root.iconSize //Layout.preferredHeight
 
     property bool animationsEnabled: true
-    property bool containsMouse: appletMouseArea.containsMouse
     property bool showZoomed: false
 
     property int animationTime: 70
@@ -46,6 +45,8 @@ Item {
     property Item applet
     property Item nowDock: applet && (applet.pluginName === "org.kdelook.nowdock") ? applet.children[0] : null
     property Item appletWrapper: wrapper
+
+    property alias containsMouse: appletMouseArea.containsMouse
 
     /// BEGIN functions
     function checkIndex(){
@@ -82,6 +83,10 @@ Item {
         }
     }
 
+    function clearZoom(){
+        wrapper.zoomScale = 1;
+    }
+
     ///END functions
 
     //BEGIN connections
@@ -99,6 +104,7 @@ Item {
     onNowDockChanged: {
         if(container.nowDock){
             root.nowDock = container.nowDock;
+            nowDock.nowDockPanel = root;
             nowDock.forceHidePanel = true;
             nowDock.updateScale.connect(interceptNowDockUpdateScale);
         }
@@ -117,6 +123,7 @@ Item {
     Component.onCompleted: {
         checkIndex();
         root.updateIndexes.connect(checkIndex);
+        root.clearZoomSignal.connect(clearZoom);
     }
     ///END connections
 
@@ -190,7 +197,7 @@ Item {
                 anchors.centerIn: parent
             }
 
-            onHeightChanged: {
+         /*   onHeightChanged: {
                 if ((index == 1)|| (index==3)){
                     console.log("H: "+index+" ("+zoomScale+"). "+currentLayout.children[1].height+" - "+currentLayout.children[3].height+" - "+(currentLayout.children[1].height+currentLayout.children[3].height));
                 }
@@ -200,7 +207,7 @@ Item {
                 if ((index == 1)|| (index==3)){
                     console.log(index+" ("+zoomScale+"). "+currentLayout.children[1].height+" - "+currentLayout.children[3].height+" - "+(currentLayout.children[1].height+currentLayout.children[3].height));
                 }
-            }
+            }*/
 
             Behavior on zoomScale {
                 NumberAnimation { duration: container.animationTime }
@@ -247,8 +254,8 @@ Item {
                     }
 
 
-                    console.log("--------------")
-                    console.debug(leftScale + "  " + rightScale + " " + index);
+                 //   console.log("--------------")
+                  //  console.debug(leftScale + "  " + rightScale + " " + index);
                     //activate messages to update the the neighbour scales
                     currentLayout.updateScale(index-1, leftScale, 0);
                     currentLayout.updateScale(index+1, rightScale, 0);

@@ -50,9 +50,9 @@ DragDrop.DropArea {
     property var layoutManager: LayoutManager
 
     property Item dragOverlay
-    property Item nowDock
     property Item toolBox
 
+    signal clearZoomSignal();
     signal updateIndexes();
     //END properties
 
@@ -63,6 +63,8 @@ DragDrop.DropArea {
     property int realSize: iconSize + iconMargin
     property int tasksCount: nowDock ? nowDock.tasksCount : 0
     property real zoomFactor: nowDock ? nowDock.zoomFactor : 1.7
+
+    property Item nowDock: null;
 
     ///END properties from nowDock
     /*  Rectangle{
@@ -146,7 +148,7 @@ DragDrop.DropArea {
         //Important, removes the first children of the currentLayout after the first
         //applet has been added
         lastSpacer.parent = root;
-      //  }
+        //  }
 
         updateIndexes();
     }
@@ -175,6 +177,44 @@ DragDrop.DropArea {
         if (!expands) {
             lastSpacer.parent = currentLayout
         }
+    }
+
+    function outsideContainsMouse(){
+        var applets = currentLayout.children;
+
+        for(var i=0; i<applets.length; ++i){
+            var applet = applets[i];
+
+            if(applet && applet.containsMouse){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    function containsMouse(){
+        var result = root.outsideContainsMouse();
+
+        if(result)
+            return true;
+
+        if(!result && nowDock && nowDock.outsideContainsMouse()){
+            return true;
+        }
+
+        if (nowDock){
+            nowDock.clearZoom();
+        }
+
+        return false;
+    }
+
+    function clearZoom(){
+        //console.log("Panel clear....");
+        currentLayout.currentSpot = -1000;
+        currentLayout.hoveredIndex = -1;
+        root.clearZoomSignal();
     }
 
     //END functions
@@ -306,7 +346,7 @@ DragDrop.DropArea {
     //END components
 
     //BEGIN UI elements
-     Item {
+    Item {
         id: lastSpacer
         parent: currentLayout
 
@@ -321,14 +361,14 @@ DragDrop.DropArea {
         }
     }
 
-     Item {
+    Item {
         id: dndSpacer
         Layout.preferredWidth: width
         Layout.preferredHeight: height
         width: (plasmoid.formFactor == PlasmaCore.Types.Vertical) ? currentLayout.width : theme.mSize(theme.defaultFont).width * 10
         height: (plasmoid.formFactor == PlasmaCore.Types.Vertical) ?  theme.mSize(theme.defaultFont).width * 10 : currentLayout.height
 
-       /* Rectangle{
+        /* Rectangle{
             anchors.fill: parent
             color: "transparent"
             border.color: "blue"
@@ -343,35 +383,17 @@ DragDrop.DropArea {
         border.width: 2
     } */
 
-     //Timer to check if the mouse is still inside the ListView
-     Timer{
-         id:checkListHovered
-         repeat:false;
-         interval:60;
+    //Timer to check if the mouse is still inside the ListView
+    Timer{
+        id:checkListHovered
+        repeat:false;
+        interval:120;
 
-         onTriggered: {
-             var applets = currentLayout.children;
-             var lostMouse = true;
-
-             //  console.debug("---------");
-             for(var i=0; i<applets.length-1; ++i){
-                 var applet = applets[i];
-
-             //    console.log(i+", "+applet.containsMouse);
-                 if(applet && applet.containsMouse){
-                         lostMouse = false;
-                         break;
-                 }
-             }
-
-             if(lostMouse){
-                 currentLayout.currentSpot = -1000;
-                 currentLayout.hoveredIndex = -1;
-             }
-
-             interval = 60;
-         }
-     }
+        onTriggered: {
+            if(!root.containsMouse())
+                root.clearZoom();
+        }
+    }
 
 
     GridLayout {
