@@ -87,8 +87,9 @@ DragDrop.DropArea {
         var appletWidth = applet.width;
         var appletHeight = applet.height;
         //applet.parent = container;
-        applet.parent = container.appletWrapper;
+
         container.applet = applet;
+        applet.parent = container.appletWrapper;
         //applet.anchors.fill = container;
         applet.anchors.fill = container.appletWrapper;
 

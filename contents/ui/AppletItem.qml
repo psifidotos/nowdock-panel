@@ -1,7 +1,8 @@
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
-import org.kde.plasma.plasmoid 2.0
+import QtGraphicalEffects 1.0
 
+import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.kquickcontrolsaddons 2.0
@@ -55,8 +56,9 @@ Item {
                                                    wrapper.height
 
     property Item applet
-    property Item nowDock: applet && (applet.pluginName === "org.kdelook.nowdock") ? applet.children[0] : null
-    property Item appletWrapper: wrapper
+    property Item nowDock: applet && (applet.pluginName === "org.kdelook.nowdock") ?
+                               (applet.children[0] ? applet.children[0] : null) : null
+    property Item appletWrapper: applet && (applet.pluginName === "org.kdelook.nowdock") ? wrapper : wrapperContainer
 
     property alias containsMouse: appletMouseArea.containsMouse
 
@@ -219,6 +221,20 @@ Item {
                 height: width
 
                 anchors.centerIn: parent
+            }
+
+            BrightnessContrast{
+                id:hoveredImage
+                anchors.fill: wrapperContainer
+                enabled: opacity != 0 ? true : false
+                opacity: appletMouseArea.containsMouse ? 1 : 0
+
+                brightness: 0.25
+                source: wrapperContainer
+
+                Behavior on opacity {
+                    NumberAnimation { duration: 300 }
+                }
             }
 
             /*   onHeightChanged: {
