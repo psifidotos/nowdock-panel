@@ -101,7 +101,8 @@ Item {
     }
 
     function clearZoom(){
-        wrapper.zoomScale = 1;
+        if(wrapper)
+            wrapper.zoomScale = 1;
     }
 
     ///END functions
@@ -142,6 +143,12 @@ Item {
         root.updateIndexes.connect(checkIndex);
         root.clearZoomSignal.connect(clearZoom);
     }
+
+    Component.onDestruction: {
+        root.updateIndexes.disconnect(checkIndex);
+        root.clearZoomSignal.disconnect(clearZoom);
+    }
+
     ///END connections
 
 
@@ -296,7 +303,7 @@ Item {
 
 
             function signalUpdateScale(nIndex, nScale, step){
-                if(container.index === nIndex){
+                if(container && (container.index === nIndex)){
                     if(!container.nowDock){
                         if(nScale >= 0)
                             zoomScale = nScale + step;
