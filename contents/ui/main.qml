@@ -58,10 +58,16 @@ DragDrop.DropArea {
 
     ///BEGIN properties from nowDock
     property bool showBarLine: nowDock ? nowDock.showBarLine : false
+    property bool transparentPanel: nowDock ? nowDock.transparentPanel : false
+    property bool useThemePanel: nowDock ? nowDock.useThemePanel : true
+
     property int iconSize: nowDock ? nowDock.iconSize : 48
     property int iconMargin: nowDock ? nowDock.iconMargin : 5
+    property int themePanelSize: nowDock ? nowDock.themePanelSize : 16
     property int realSize: iconSize + iconMargin
+    property int statesLineSize: nowDock ? nowDock.statesLineSize : 16
     property int tasksCount: nowDock ? nowDock.tasksCount : 0
+
     property real zoomFactor: nowDock ? nowDock.zoomFactor : 1.7
 
     property Item nowDock: null;
@@ -339,6 +345,11 @@ DragDrop.DropArea {
     //END connections
 
     //BEGIN components
+    Loader{
+        active: root.showBarLine
+        sourceComponent: PanelBox{}
+    }
+
     Component {
         id: appletContainerComponent
         AppletItem{}
@@ -403,6 +414,8 @@ DragDrop.DropArea {
 
         rowSpacing: 0
         columnSpacing: 0
+
+        z:4
 
         property bool isLayoutHorizontal
         property int count: children.length

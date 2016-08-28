@@ -9,8 +9,8 @@ import org.kde.kquickcontrolsaddons 2.0
 Item {
     id: container
     anchors.right: parent.right
+    anchors.rightMargin: nowDock || (showZoomed && !plasmoid.immutable) ? 0 : appletMargin
 
-    anchors.rightMargin: nowDock || (showZoomed && !plasmoid.immutable) ? 0 : 10
     visible: false
 
     //Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
@@ -30,7 +30,7 @@ Item {
     property int animationTime: 70
     property int hoveredIndex: currentLayout.hoveredIndex
     property int index: -1
-
+    property int appletMargin: root.statesLineSize + 2
     property int maxWidth: root.isHorizontal ? root.height : root.width
     property int maxHeight: root.isHorizontal ? root.height : root.width
 
@@ -48,10 +48,10 @@ Item {
 
     property alias containsMouse: appletMouseArea.containsMouse
 
-    onComputeHeightChanged: {
+    /*onComputeHeightChanged: {
         if(index==0)
             console.log(computeHeight);
-    }
+    }*/
 
     /// BEGIN functions
     function checkIndex(){
