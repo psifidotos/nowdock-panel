@@ -10,19 +10,19 @@ import org.kde.kquickcontrolsaddons 2.0
 Item {
     id: container
 
- /*   anchors.bottom: (plasmoid.location === PlasmaCore.Types.BottomEdge) ? parent.bottom : undefined
+    /*   anchors.bottom: (plasmoid.location === PlasmaCore.Types.BottomEdge) ? parent.bottom : undefined
     anchors.top: (plasmoid.location === PlasmaCore.Types.TopEdge) ? parent.top : undefined
     anchors.left: (plasmoid.location === PlasmaCore.Types.LeftEdge) ? parent.left : undefined
     anchors.right: (plasmoid.location === PlasmaCore.Types.RightEdge) ? parent.right : undefined */
 
     anchors.rightMargin: (nowDock || (showZoomed && !plasmoid.immutable)) ||
-                         (plasmoid.location !== PlasmaCore.Types.RightEdge) ? 0 : appletMargin
+                         (plasmoid.location !== PlasmaCore.Types.RightEdge) ? 0 : shownAppletMargin
     anchors.leftMargin: (nowDock || (showZoomed && !plasmoid.immutable)) ||
-                        (plasmoid.location !== PlasmaCore.Types.LeftEdge) ? 0 : appletMargin
+                        (plasmoid.location !== PlasmaCore.Types.LeftEdge) ? 0 : shownAppletMargin
     anchors.topMargin: (nowDock || (showZoomed && !plasmoid.immutable)) ||
-                       (plasmoid.location !== PlasmaCore.Types.TopEdge)? 0 : appletMargin
+                       (plasmoid.location !== PlasmaCore.Types.TopEdge)? 0 : shownAppletMargin
     anchors.bottomMargin: (nowDock || (showZoomed && !plasmoid.immutable)) ||
-                          (plasmoid.location !== PlasmaCore.Types.BottomEdge) ? 0 : appletMargin
+                          (plasmoid.location !== PlasmaCore.Types.BottomEdge) ? 0 : shownAppletMargin
 
     visible: false
 
@@ -46,6 +46,7 @@ Item {
     property int appletMargin: root.statesLineSize + 2
     property int maxWidth: root.isHorizontal ? root.height : root.width
     property int maxHeight: root.isHorizontal ? root.height : root.width
+    property int shownAppletMargin: applet && (applet.pluginName === "org.kde.plasma.systemtray") ? 0 : appletMargin
 
     //property real animationStep: root.iconSize / 8
     property real animationStep: 6
@@ -58,9 +59,12 @@ Item {
     property Item applet
     property Item nowDock: applet && (applet.pluginName === "org.kdelook.nowdock") ?
                                (applet.children[0] ? applet.children[0] : null) : null
-    property Item appletWrapper: applet && (applet.pluginName === "org.kdelook.nowdock") ? wrapper : wrapperContainer
+    property Item appletWrapper: applet &&
+                                 ((applet.pluginName === "org.kdelook.nowdock") ||
+                                  (applet.pluginName === "org.kde.plasma.systemtray")) ? wrapper : wrapperContainer
 
     property alias containsMouse: appletMouseArea.containsMouse
+    property bool canBeHovered: true
 
     /*onComputeHeightChanged: {
         if(index==0)
@@ -107,6 +111,16 @@ Item {
             wrapper.zoomScale = 1;
     }
 
+    function checkCanBeHovered(){
+        if ((applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal) ||
+                (applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical)){
+            canBeHovered = false;
+        }
+        else{
+            canBeHovered = true;
+        }
+    }
+
     ///END functions
 
     //BEGIN connections
@@ -115,6 +129,7 @@ Item {
             destroy();
         }
     }
+
 
     onHoveredIndexChanged:{
         if ( (Math.abs(hoveredIndex-index) > 1)||(hoveredIndex == -1) )
@@ -163,12 +178,12 @@ Item {
         height: width
     }
 
-    /*Rectangle{
+ /*   Rectangle{
         anchors.fill: parent
         color: "transparent"
         border.color: "green"
         border.width: 1
-    }*/
+    } */
 
     Flow{
         width: parent.width
@@ -191,7 +206,7 @@ Item {
                 NumberAnimation { duration: container.animationTime }
             }
 
-           /* Rectangle{
+            /* Rectangle{
                 width: 1
                 height: parent.height
                 x: parent.width/2
@@ -205,20 +220,41 @@ Item {
             id: wrapper
 
             width: nowDock ? ((container.showZoomed && root.isVertical) ? container.maxWidth : nowDock.tasksWidth) : scaledWidth
-            height: nowDock ? ((container.showZoomed && root.isHorizontal) ? container.maxHeight : nowDock.tasksHeight ): scaledWidth
+            height: nowDock ? ((container.showZoomed && root.isHorizontal) ? container.maxHeight : nowDock.tasksHeight ): scaledHeight
 
-            property real scaledWidth: zoomScale * root.realSize
-            property real scaledHeight: zoomScale * root.realSize
+            property real scaledWidth: zoomScale * (layoutWidth + root.iconMargin)
+            property real scaledHeight: zoomScale * (layoutHeight + root.iconMargin)
+
+            property int layoutWidth: applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal && (!canBeHovered) ?
+                                          applet.Layout.minimumWidth : root.iconSize
+            property int layoutHeight: applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical && (!canBeHovered) ?
+                                           applet.Layout.minimumHeight : root.iconSize + moreHeight
+
+            property int moreHeight: applet && (applet.pluginName === "org.kde.plasma.systemtray") ? appletMargin : 0
+            //   property int layoutWidth: root.iconSize
+            //    property int layoutHeight: root.iconSize
 
             property real center: width / 2
             property real zoomScale: 1
 
             property alias index: container.index
+            property int appletMinimumWidth: applet && applet.Layout ?  applet.Layout.minimumWidth : 0
+            property int appletMinimumHeight: applet && applet.Layout ? applet.Layout.minimumHeight : 0
+
+            onAppletMinimumWidthChanged: {
+                if(zoomScale == 1)
+                    checkCanBeHovered();
+            }
+
+            onAppletMinimumHeightChanged: {
+                if(zoomScale == 1)
+                    checkCanBeHovered();
+            }
 
             Item{
                 id:wrapperContainer
-                width: parent.zoomScale * root.iconSize
-                height: width
+                width: parent.zoomScale * wrapper.layoutWidth
+                height: parent.zoomScale * wrapper.layoutHeight
 
                 anchors.centerIn: parent
             }
@@ -319,7 +355,7 @@ Item {
 
 
             function signalUpdateScale(nIndex, nScale, step){
-                if(container && (container.index === nIndex)){
+                if(container && (container.index === nIndex) && canBeHovered){
                     if(!container.nowDock){
                         if(nScale >= 0)
                             zoomScale = nScale + step;
@@ -371,8 +407,8 @@ Item {
     MouseArea{
         id: appletMouseArea
         anchors.fill: parent
-        enabled: (!nowDock)
-        hoverEnabled: plasmoid.immutable && (!container.nowDock) ? true : false
+        enabled: (!nowDock)&&(canBeHovered)
+        hoverEnabled: plasmoid.immutable && (!nowDock) && canBeHovered ? true : false
         propagateComposedEvents: true
 
         onContainsMouseChanged: {
