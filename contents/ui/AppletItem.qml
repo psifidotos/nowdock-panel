@@ -10,32 +10,9 @@ import org.kde.kquickcontrolsaddons 2.0
 Item {
     id: container
 
-    /*   anchors.bottom: (plasmoid.location === PlasmaCore.Types.BottomEdge) ? parent.bottom : undefined
-    anchors.top: (plasmoid.location === PlasmaCore.Types.TopEdge) ? parent.top : undefined
-    anchors.left: (plasmoid.location === PlasmaCore.Types.LeftEdge) ? parent.left : undefined
-    anchors.right: (plasmoid.location === PlasmaCore.Types.RightEdge) ? parent.right : undefined */
-
-    anchors.rightMargin: (nowDock || (showZoomed && !plasmoid.immutable)) ||
-                         (plasmoid.location !== PlasmaCore.Types.RightEdge) ? 0 : shownAppletMargin
-    anchors.leftMargin: (nowDock || (showZoomed && !plasmoid.immutable)) ||
-                        (plasmoid.location !== PlasmaCore.Types.LeftEdge) ? 0 : shownAppletMargin
-    anchors.topMargin: (nowDock || (showZoomed && !plasmoid.immutable)) ||
-                       (plasmoid.location !== PlasmaCore.Types.TopEdge)? 0 : shownAppletMargin
-    anchors.bottomMargin: (nowDock || (showZoomed && !plasmoid.immutable)) ||
-                          (plasmoid.location !== PlasmaCore.Types.BottomEdge) ? 0 : shownAppletMargin
-
     visible: false
-
-    //Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
-
-    Layout.maximumWidth: nowDock && applet ? applet.Layout.maximumWidth : Layout.preferredWidth
-    Layout.maximumHeight: nowDock && applet ? applet.Layout.maximumHeight : Layout.preferredHeight
-    // Layout.preferredWidth: nowDock ? nowDock.tasksWidth : computeWidth
-    // Layout.preferredHeight: nowDock ? nowDock.tasksHeight : computeHeight
-    Layout.preferredWidth: computeWidth
-    Layout.preferredHeight: computeHeight
-    Layout.minimumWidth: nowDock && applet ? applet.Layout.minimumWidth : root.iconSize //Layout.preferredWidth
-    Layout.minimumHeight: nowDock && applet ? applet.Layout.minimumHeight : root.iconSize //Layout.preferredHeight
+    width: root.isHorizontal ? computeWidth : computeWidth + shownAppletMargin
+    height: root.isVertical ?  computeHeight : computeHeight + shownAppletMargin
 
     property bool animationsEnabled: true
     property bool showZoomed: false
@@ -43,7 +20,7 @@ Item {
     property int animationTime: 70
     property int hoveredIndex: currentLayout.hoveredIndex
     property int index: -1
-    property int appletMargin: root.statesLineSize + 2
+    property int appletMargin: applet && (applet.pluginName === "org.kdelook.nowdock") ? 0 : root.statesLineSize + 2
     property int maxWidth: root.isHorizontal ? root.height : root.width
     property int maxHeight: root.isHorizontal ? root.height : root.width
     property int shownAppletMargin: applet && (applet.pluginName === "org.kde.plasma.systemtray") ? appletMargin/2 : appletMargin
@@ -98,10 +75,10 @@ Item {
     //this functions gets the signal from the plasmoid, it can be used for signal items
     //outside the NowDock Plasmoid
     function interceptNowDockUpdateScale(dIndex, newScale, step){
-        if(dIndex == -1){
+        if(dIndex === -1){
             currentLayout.updateScale(index-1,newScale, step);
         }
-        else if(dIndex == root.tasksCount){
+        else if(dIndex === root.tasksCount){
             currentLayout.updateScale(index+1,newScale, step);
         }
     }
@@ -129,7 +106,6 @@ Item {
             destroy();
         }
     }
-
 
     onHoveredIndexChanged:{
         if ( (Math.abs(hoveredIndex-index) > 1)||(hoveredIndex == -1) )
@@ -179,16 +155,27 @@ Item {
         height: width
     }
 
-    /*   Rectangle{
+  /*  Rectangle{
         anchors.fill: parent
         color: "transparent"
         border.color: "green"
         border.width: 1
-    } */
+    }  */
 
     Flow{
-        width: parent.width
-        height: parent.height
+        id: appletFlow
+        width: container.computeWidth
+        height: container.computeHeight
+
+        anchors.rightMargin: (nowDock || (showZoomed && !plasmoid.immutable)) ||
+                             (plasmoid.location !== PlasmaCore.Types.RightEdge) ? 0 : shownAppletMargin
+        anchors.leftMargin: (nowDock || (showZoomed && !plasmoid.immutable)) ||
+                            (plasmoid.location !== PlasmaCore.Types.LeftEdge) ? 0 : shownAppletMargin
+        anchors.topMargin: (nowDock || (showZoomed && !plasmoid.immutable)) ||
+                           (plasmoid.location !== PlasmaCore.Types.TopEdge)? 0 : shownAppletMargin
+        anchors.bottomMargin: (nowDock || (showZoomed && !plasmoid.immutable)) ||
+                              (plasmoid.location !== PlasmaCore.Types.BottomEdge) ? 0 : shownAppletMargin
+
 
         // a hidden spacer for the first element to add stability
         // IMPORTANT: hidden spacers must be tested on vertical !!!
@@ -207,7 +194,7 @@ Item {
                 NumberAnimation { duration: container.animationTime }
             }
 
-            /* Rectangle{
+          /*   Rectangle{
                 width: 1
                 height: parent.height
                 x: parent.width/2
@@ -483,7 +470,7 @@ Item {
             when: plasmoid.location === PlasmaCore.Types.LeftEdge
 
             AnchorChanges {
-                target: container
+                target: appletFlow
                 anchors{ top:undefined; bottom:undefined; left:parent.left; right:undefined;}
             }
         },
@@ -492,7 +479,7 @@ Item {
             when: plasmoid.location === PlasmaCore.Types.RightEdge
 
             AnchorChanges {
-                target: container
+                target: appletFlow
                 anchors{ top:undefined; bottom:undefined; left:undefined; right:parent.right;}
             }
         },
@@ -501,7 +488,7 @@ Item {
             when: plasmoid.location === PlasmaCore.Types.BottomEdge
 
             AnchorChanges {
-                target: container
+                target: appletFlow
                 anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:undefined;}
             }
         },
@@ -510,7 +497,7 @@ Item {
             when: plasmoid.location === PlasmaCore.Types.TopEdge
 
             AnchorChanges {
-                target: container
+                target: appletFlow
                 anchors{ top:parent.top; bottom:undefined; left:undefined; right:undefined;}
             }
         }
@@ -518,3 +505,5 @@ Item {
     //END states
 
 }
+
+

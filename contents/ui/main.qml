@@ -409,8 +409,7 @@ DragDrop.DropArea {
         }
     }
 
-
-    GridLayout {
+    Grid {
         id: currentLayout
 
         rowSpacing: 0
@@ -425,31 +424,10 @@ DragDrop.DropArea {
 
         signal updateScale(int delegateIndex, real newScale, real step)
 
-        Layout.preferredWidth: {
-            var width = 0;
-            for (var i = 0; i < currentLayout.children.length; ++i) {
-                if (currentLayout.children[i].Layout) {
-                    width += Math.max(currentLayout.children[i].Layout.minimumWidth, currentLayout.children[i].Layout.preferredWidth);
-                }
-            }
-            return width;
-        }
-        Layout.preferredHeight: {
-            var height = 0;
-            for (var i = 0; i < currentLayout.children.length; ++i) {
-                if (currentLayout.children[i].Layout) {
-                    height += Math.max(currentLayout.children[i].Layout.minimumHeight, currentLayout.children[i].Layout.preferredHeight);
-                }
-            }
-            return height;
-        }
+        rows: root.isHorizontal ? 1 : 0
+        columns: root.isVertical ? 1 : 0
 
-        //Layout.preferredHeight: 140
-        rows: 1
-        columns: 1
-        //when horizontal layout top-to-bottom, this way it will obey our limit of one row and actually lay out left to right
-        flow: isHorizontal ? GridLayout.TopToBottom : GridLayout.LeftToRight
-        layoutDirection: Qt.application.layoutDirection
+        flow: isHorizontal ? Grid.LeftToRight : Grid.TopToBottom
     }
 
     onWidthChanged: {
@@ -502,6 +480,11 @@ DragDrop.DropArea {
                 target: currentLayout
                 anchors{ top:undefined; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
             }
+            PropertyChanges{
+                target: currentLayout
+                horizontalItemAlignment: Grid.AlignLeft
+                verticalItemAlignment: Grid.AlignVCenter
+            }
         },
         State {
             name: "right"
@@ -510,6 +493,11 @@ DragDrop.DropArea {
             AnchorChanges {
                 target: currentLayout
                 anchors{ top:undefined; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
+            }
+            PropertyChanges{
+                target: currentLayout
+                horizontalItemAlignment: Grid.AlignRight
+                verticalItemAlignment: Grid.AlignVCenter
             }
         },
         State {
@@ -520,6 +508,11 @@ DragDrop.DropArea {
                 target: currentLayout
                 anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
             }
+            PropertyChanges{
+                target: currentLayout
+                horizontalItemAlignment: Grid.AlignHCenter
+                verticalItemAlignment: Grid.AlignBottom
+            }
         },
         State {
             name: "top"
@@ -528,6 +521,11 @@ DragDrop.DropArea {
             AnchorChanges {
                 target: currentLayout
                 anchors{ top:parent.top; bottom:undefined; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: currentLayout
+                horizontalItemAlignment: Grid.AlignHCenter
+                verticalItemAlignment: Grid.AlignTop
             }
         }
     ]
