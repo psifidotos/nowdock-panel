@@ -226,11 +226,12 @@ Item {
             property real scaledHeight: zoomScale * (layoutHeight + root.iconMargin)
 
             property int layoutWidth: applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal && (!canBeHovered) ?
-                                          applet.Layout.minimumWidth : root.iconSize
+                                          applet.Layout.minimumWidth : root.iconSize + moreWidth
             property int layoutHeight: applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical && (!canBeHovered) ?
                                            applet.Layout.minimumHeight : root.iconSize + moreHeight
 
-            property int moreHeight: applet && (applet.pluginName === "org.kde.plasma.systemtray") ? appletMargin : 0
+            property int moreHeight: applet && (applet.pluginName === "org.kde.plasma.systemtray") && root.isHorizontal ? appletMargin : 0
+            property int moreWidth: applet && (applet.pluginName === "org.kde.plasma.systemtray") && root.isVertical ? appletMargin : 0
             //   property int layoutWidth: root.iconSize
             //    property int layoutHeight: root.iconSize
 
