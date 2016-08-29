@@ -90,7 +90,7 @@ Item {
 
     function checkCanBeHovered(){
         if ((applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal) ||
-                (applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical)){
+                (applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical) ){
             canBeHovered = false;
         }
         else{
@@ -155,12 +155,12 @@ Item {
         height: width
     }
 
-  /*  Rectangle{
+    /*  Rectangle{
         anchors.fill: parent
         color: "transparent"
         border.color: "green"
         border.width: 1
-    }  */
+    } */
 
     Flow{
         id: appletFlow
@@ -194,7 +194,7 @@ Item {
                 NumberAnimation { duration: container.animationTime }
             }
 
-          /*   Rectangle{
+            /*   Rectangle{
                 width: 1
                 height: parent.height
                 x: parent.width/2
@@ -210,13 +210,46 @@ Item {
             width: nowDock ? ((container.showZoomed && root.isVertical) ? container.maxWidth : nowDock.tasksWidth) : scaledWidth
             height: nowDock ? ((container.showZoomed && root.isHorizontal) ? container.maxHeight : nowDock.tasksHeight ): scaledHeight
 
-            property real scaledWidth: zoomScale * (layoutWidth + root.iconMargin)
-            property real scaledHeight: zoomScale * (layoutHeight + root.iconMargin)
+            property bool disableScaleWidth: false
+            property bool disableScaleHeight: false
 
-            property int layoutWidth: applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal && (!canBeHovered) ?
+            property real scaledWidth: zoomScaleWidth * (layoutWidth + root.iconMargin)
+            property real scaledHeight: zoomScaleHeight * (layoutHeight + root.iconMargin)
+
+            /*property int layoutWidth: applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal && (!canBeHovered) ?
                                           applet.Layout.minimumWidth : root.iconSize + moreWidth
+
             property int layoutHeight: applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical && (!canBeHovered) ?
-                                           applet.Layout.minimumHeight : root.iconSize + moreHeight
+                                           applet.Layout.minimumHeight : root.iconSize + moreHeight*/
+
+            property real zoomScaleWidth: disableScaleWidth ? 1 : zoomScale
+            property real zoomScaleHeight: disableScaleHeight ? 1 : zoomScale
+
+
+
+            property int layoutWidth: {
+                if(applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal && (!canBeHovered)){
+                    return applet.Layout.minimumWidth;
+                }
+                else if(applet && (!applet.Layout.minimumWidth) && canBeHovered && (applet.Layout.preferredWidth > root.iconSize) && (root.isHorizontal)){
+                    disableScaleWidth = true;
+                    return applet.Layout.preferredWidth;
+                }
+                else{
+                     return root.iconSize + moreWidth;
+                }
+            }
+
+            property int layoutHeight:{
+                if(applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical && (!canBeHovered))
+                    return applet.Layout.minimumHeight;
+                else if(applet && (!applet.Layout.minimumHeight) && canBeHovered && (applet.Layout.preferredHeight > root.iconSize) && (root.isVertical)){
+                    disableScaleHeight = true;
+                    return applet.Layout.preferredHeight;
+                }
+                else
+                    return root.iconSize + moreHeight;
+            }
 
             property int moreHeight: applet && (applet.pluginName === "org.kde.plasma.systemtray") && root.isHorizontal ? appletMargin : 0
             property int moreWidth: applet && (applet.pluginName === "org.kde.plasma.systemtray") && root.isVertical ? appletMargin : 0
@@ -242,8 +275,8 @@ Item {
 
             Item{
                 id:wrapperContainer
-                width: parent.zoomScale * wrapper.layoutWidth
-                height: parent.zoomScale * wrapper.layoutHeight
+                width: parent.zoomScaleWidth * wrapper.layoutWidth
+                height: parent.zoomScaleHeight * wrapper.layoutHeight
 
                 anchors.centerIn: parent
             }
@@ -325,8 +358,8 @@ Item {
                     currentLayout.updateScale(index-1, leftScale, 0);
                     currentLayout.updateScale(index+1, rightScale, 0);
                     //these messages interfere when an applet is hidden, that is why I disabled them
-                  //  currentLayout.updateScale(index-2, 1, 0);
-                 //   currentLayout.updateScale(index+2, 1, 0);
+                    //  currentLayout.updateScale(index-2, 1, 0);
+                    //   currentLayout.updateScale(index+2, 1, 0);
 
                     //Left hiddenSpacer
                     if((index === 0 )&&(currentLayout.count > 1)){
