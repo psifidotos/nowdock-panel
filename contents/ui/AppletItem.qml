@@ -160,7 +160,7 @@ Item {
         color: "transparent"
         border.color: "green"
         border.width: 1
-    } */
+    }*/
 
     Flow{
         id: appletFlow
@@ -216,24 +216,24 @@ Item {
             property real scaledWidth: zoomScaleWidth * (layoutWidth + root.iconMargin)
             property real scaledHeight: zoomScaleHeight * (layoutHeight + root.iconMargin)
 
-            /*property int layoutWidth: applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal && (!canBeHovered) ?
-                                          applet.Layout.minimumWidth : root.iconSize + moreWidth
-
-            property int layoutHeight: applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical && (!canBeHovered) ?
-                                           applet.Layout.minimumHeight : root.iconSize + moreHeight*/
-
             property real zoomScaleWidth: disableScaleWidth ? 1 : zoomScale
             property real zoomScaleHeight: disableScaleHeight ? 1 : zoomScale
-
 
 
             property int layoutWidth: {
                 if(applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal && (!canBeHovered)){
                     return applet.Layout.minimumWidth;
-                }
-                else if(applet && (!applet.Layout.minimumWidth) && canBeHovered && (applet.Layout.preferredWidth > root.iconSize) && (root.isHorizontal)){
+                } //it is used for plasmoids that need to scale only one axis... e.g. the Weather Plasmoid
+                else if(applet && (!applet.Layout.minimumWidth) && canBeHovered
+                        && ( (applet.Layout.maximumWidth < root.iconSize) || (applet.Layout.preferredWidth > root.iconSize) )
+                        && root.isHorizontal
+                        && !disableScaleHeight){
                     disableScaleWidth = true;
-                    return applet.Layout.preferredWidth;
+                    //this way improves performance, probably because during animation the preferred sizes update a lot
+                    if((applet.Layout.maximumWidth < root.iconSize))
+                        return applet.Layout.preferredWidth;
+                    else if ((applet.Layout.preferredWidth > root.iconSize))
+                        return applet.Layout.maximumWidth;
                 }
                 else{
                      return root.iconSize + moreWidth;
@@ -241,11 +241,19 @@ Item {
             }
 
             property int layoutHeight:{
-                if(applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical && (!canBeHovered))
+                if(applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical && (!canBeHovered)){
                     return applet.Layout.minimumHeight;
-                else if(applet && (!applet.Layout.minimumHeight) && canBeHovered && (applet.Layout.preferredHeight > root.iconSize) && (root.isVertical)){
+                } //it is used for plasmoids that need to scale only one axis... e.g. the Weather Plasmoid
+                else if(applet && (!applet.Layout.minimumHeight) && canBeHovered
+                        && ( (applet.Layout.maximumHeight < root.iconSize) || (applet.Layout.preferredHeight > root.iconSize) )
+                        && root.isVertical
+                        && !disableScaleWidth ){
                     disableScaleHeight = true;
-                    return applet.Layout.preferredHeight;
+                    //this way improves performance, probably because during animation the preferred sizes update a lot
+                    if((applet.Layout.maximumHeight < root.iconSize))
+                        return applet.Layout.preferredHeight;
+                    else if ((applet.Layout.preferredHeight > root.iconSize))
+                        return applet.Layout.maximumHeight;
                 }
                 else
                     return root.iconSize + moreHeight;
@@ -306,6 +314,13 @@ Item {
                     console.log(index+" ("+zoomScale+"). "+currentLayout.children[1].height+" - "+currentLayout.children[3].height+" - "+(currentLayout.children[1].height+currentLayout.children[3].height));
                 }
             }*/
+
+          /*  Rectangle{
+              anchors.fill: parent
+              color: "transparent"
+              border.color: "red"
+              border.width: 1
+          } */
 
             Behavior on zoomScale {
                 NumberAnimation { duration: container.animationTime }
