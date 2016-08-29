@@ -70,6 +70,7 @@ DragDrop.DropArea {
 
     property real zoomFactor: nowDock ? nowDock.zoomFactor : 1.7
 
+    property Item nowDockContainer: null;
     property Item nowDock: null;
 
     ///END properties from nowDock
@@ -207,6 +208,7 @@ DragDrop.DropArea {
             return true;
 
         if(!result && nowDock && nowDock.outsideContainsMouse()){
+            currentLayout.hoveredIndex = nowDockContainer.index;
             return true;
         }
 

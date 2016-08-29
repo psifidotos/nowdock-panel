@@ -139,6 +139,7 @@ Item {
     onNowDockChanged: {
         if(container.nowDock){
             root.nowDock = container.nowDock;
+            root.nowDockContainer = container;
             nowDock.nowDockPanel = root;
             nowDock.forceHidePanel = true;
             nowDock.updateScale.connect(interceptNowDockUpdateScale);
@@ -178,7 +179,7 @@ Item {
         height: width
     }
 
- /*   Rectangle{
+    /*   Rectangle{
         anchors.fill: parent
         color: "transparent"
         border.color: "green"
@@ -336,8 +337,9 @@ Item {
                     //activate messages to update the the neighbour scales
                     currentLayout.updateScale(index-1, leftScale, 0);
                     currentLayout.updateScale(index+1, rightScale, 0);
-                    currentLayout.updateScale(index-2, 1, 0);
-                    currentLayout.updateScale(index+2, 1, 0);
+                    //these messages interfere when an applet is hidden, that is why I disabled them
+                  //  currentLayout.updateScale(index-2, 1, 0);
+                 //   currentLayout.updateScale(index+2, 1, 0);
 
                     //Left hiddenSpacer
                     if((index === 0 )&&(currentLayout.count > 1)){
@@ -356,18 +358,27 @@ Item {
 
 
             function signalUpdateScale(nIndex, nScale, step){
-                if(container && (container.index === nIndex) && canBeHovered){
-                    if(!container.nowDock){
-                        if(nScale >= 0)
-                            zoomScale = nScale + step;
-                        else
-                            zoomScale = zoomScale + step;
-                    }
-                    else{
-                        if(currentLayout.hoveredIndex<container.index)
-                            nowDock.updateScale(0, nScale, step);
-                        else if(currentLayout.hoveredIndex>container.index)
-                            nowDock.updateScale(root.tasksCount-1, nScale, step);
+                if(container && (container.index === nIndex)){
+                    if (canBeHovered && (applet.status !== PlasmaCore.Types.HiddenStatus)
+                            && (index != currentLayout.hoveredIndex)){
+                        if(!container.nowDock){
+                            if(nScale >= 0)
+                                zoomScale = nScale + step;
+                            else
+                                zoomScale = zoomScale + step;
+                        }
+                        else{
+                            if(currentLayout.hoveredIndex<container.index)
+                                nowDock.updateScale(0, nScale, step);
+                            else if(currentLayout.hoveredIndex>container.index)
+                                nowDock.updateScale(root.tasksCount-1, nScale, step);
+                        }
+                    }      ///if the applet is hidden must forward its scale events to its neighbours
+                    else if ((applet.status === PlasmaCore.Types.HiddenStatus)){
+                        if(currentLayout.hoveredIndex>index)
+                            currentLayout.updateScale(index-1, nScale, step);
+                        else if((currentLayout.hoveredIndex<index))
+                            currentLayout.updateScale(index+1, nScale, step);
                     }
                 }
             }
