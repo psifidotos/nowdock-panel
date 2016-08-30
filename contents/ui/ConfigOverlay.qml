@@ -80,10 +80,10 @@ MouseArea {
                 if (isResizingLeft) {
                     if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
                         handle.y += (mouse.y - lastY);
-                        handle.height = currentApplet.height + (currentApplet.y - handle.y);
+                  //      handle.height = currentApplet.height + (currentApplet.y - handle.y);
                     } else {
                         handle.x += (mouse.x - lastX);
-                        handle.width = currentApplet.width + (currentApplet.x - handle.x);
+                   //     handle.width = currentApplet.width + (currentApplet.x - handle.x);
                     }
 
                     lastX = mouse.x;
@@ -91,11 +91,11 @@ MouseArea {
                     return;
 
                 } else if (isResizingRight) {
-                    if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
+                  /*  if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
                         handle.height = mouse.y - handle.y;
                     } else {
                         handle.width = mouse.x - handle.x;
-                    }
+                    } */
 
                     lastX = mouse.x;
                     lastY = mouse.y;
@@ -133,8 +133,8 @@ MouseArea {
             var item = currentLayout.childAt(mouse.x-relevantLayout.x, mouse.y-relevantLayout.y);
 
             if (item && item !== placeHolder) {
-                placeHolder.width = item.width;
-                placeHolder.height = item.height;
+          //      placeHolder.width = item.width;
+           //     placeHolder.height = item.height;
                 placeHolder.parent = configurationArea;
                 var posInItem = mapToItem(item, mouse.x, mouse.y);
 
@@ -184,8 +184,8 @@ MouseArea {
 
         handle.x = relevantLayout.x + currentApplet.x;
         handle.y = relevantLayout.y + currentApplet.y;
-        handle.width = currentApplet.width;
-        handle.height = currentApplet.height;
+      //  handle.width = currentApplet.width;
+    //    handle.height = currentApplet.height;
 
         repositionHandler.start();
     }
@@ -231,6 +231,8 @@ MouseArea {
         lastY = mouse.y;
         placeHolder.width = currentApplet.width;
         placeHolder.height = currentApplet.height;
+        handle.width = currentApplet.width;
+        handle.height = currentApplet.height;
         root.layoutManager.insertBefore(currentApplet, placeHolder);
         currentApplet.parent = root;
         currentApplet.x = lastX-appletX;
@@ -262,8 +264,8 @@ MouseArea {
 
         handle.x = relevantLayout.x + currentApplet.x;
         handle.y = relevantLayout.y + currentApplet.y;
-        handle.width = currentApplet.width;
-        handle.height = currentApplet.height;
+   //     handle.width = currentApplet.width;
+    //    handle.height = currentApplet.height;
         root.layoutManager.save();
     }
 
