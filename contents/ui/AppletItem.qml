@@ -34,6 +34,7 @@ Item {
     height: root.isVertical ?  computeHeight : computeHeight + shownAppletMargin
 
     property bool animationsEnabled: true
+    property bool canBeHovered: true
     property bool showZoomed: false
     property bool lockZoom: false
 
@@ -61,7 +62,8 @@ Item {
                                   (applet.pluginName === "org.kde.plasma.systemtray")) ? wrapper : wrapperContainer
 
     property alias containsMouse: appletMouseArea.containsMouse
-    property bool canBeHovered: true
+    property alias pressed: appletMouseArea.pressed
+
 
     /*onComputeHeightChanged: {
         if(index==0)
@@ -257,7 +259,7 @@ Item {
                         return applet.Layout.maximumWidth;
                 }
                 else{
-                     return root.iconSize + moreWidth;
+                    return root.iconSize + moreWidth;
                 }
             }
 
@@ -287,7 +289,7 @@ Item {
             property real zoomScale: 1
 
             property alias index: container.index
-           /* property int pHeight: applet ? applet.Layout.preferredHeight : -10
+            /* property int pHeight: applet ? applet.Layout.preferredHeight : -10
 
             onLayoutWidthChanged: {
                 console.log("----------");
@@ -343,6 +345,12 @@ Item {
                 }
             }
 
+            BrightnessContrast {
+                id: clickedEffect
+                anchors.fill: wrapperContainer
+                source: wrapperContainer
+            }
+
             /*   onHeightChanged: {
                 if ((index == 1)|| (index==3)){
                     console.log("H: "+index+" ("+zoomScale+"). "+currentLayout.children[1].height+" - "+currentLayout.children[3].height+" - "+(currentLayout.children[1].height+currentLayout.children[3].height));
@@ -355,7 +363,7 @@ Item {
                 }
             }*/
 
-          /*  Rectangle{
+            /*  Rectangle{
               anchors.fill: parent
               color: "transparent"
               border.color: "red"
@@ -493,10 +501,18 @@ Item {
 
     MouseArea{
         id: appletMouseArea
+
         anchors.fill: parent
         enabled: (!nowDock)&&(canBeHovered)&&(!lockZoom)
         hoverEnabled: plasmoid.immutable && (!nowDock) && canBeHovered ? true : false
         propagateComposedEvents: true
+
+        property bool pressed: false
+
+        onClicked: {
+            pressed = false;
+            mouse.accepted = false;
+        }
 
         onContainsMouseChanged: {
             if(!containsMouse){
@@ -527,35 +543,38 @@ Item {
         }
 
         onPositionChanged: {
-            if (root.isHorizontal){
-                var step = Math.abs(currentLayout.currentSpot-mouse.x);
-                if (step >= container.animationStep){
-                    currentLayout.hoveredIndex = index;
-                    currentLayout.currentSpot = mouse.x;
+            if(!pressed){
+                if (root.isHorizontal){
+                    var step = Math.abs(currentLayout.currentSpot-mouse.x);
+                    if (step >= container.animationStep){
+                        currentLayout.hoveredIndex = index;
+                        currentLayout.currentSpot = mouse.x;
 
-                    wrapper.calculateScales(mouse.x);
+                        wrapper.calculateScales(mouse.x);
+                    }
                 }
-            }
-            else{
-                var step = Math.abs(currentLayout.currentSpot-mouse.y);
-                if (step >= container.animationStep){
-                    currentLayout.hoveredIndex = index;
-                    currentLayout.currentSpot = mouse.y;
+                else{
+                    var step = Math.abs(currentLayout.currentSpot-mouse.y);
+                    if (step >= container.animationStep){
+                        currentLayout.hoveredIndex = index;
+                        currentLayout.currentSpot = mouse.y;
 
-                    wrapper.calculateScales(mouse.y);
+                        wrapper.calculateScales(mouse.y);
+                    }
                 }
             }
             mouse.accepted = false;
         }
 
-        onClicked: mouse.accepted = false;
+        onPressed: pressed = true;
     }
 
     //BEGIN states
     states: [
         State {
             name: "left"
-            when: plasmoid.location === PlasmaCore.Types.LeftEdge
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)
+
 
             AnchorChanges {
                 target: appletFlow
@@ -564,7 +583,7 @@ Item {
         },
         State {
             name: "right"
-            when: plasmoid.location === PlasmaCore.Types.RightEdge
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)
 
             AnchorChanges {
                 target: appletFlow
@@ -573,7 +592,7 @@ Item {
         },
         State {
             name: "bottom"
-            when: plasmoid.location === PlasmaCore.Types.BottomEdge
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)
 
             AnchorChanges {
                 target: appletFlow
@@ -582,7 +601,7 @@ Item {
         },
         State {
             name: "top"
-            when: plasmoid.location === PlasmaCore.Types.TopEdge
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)
 
             AnchorChanges {
                 target: appletFlow
@@ -592,6 +611,47 @@ Item {
     ]
     //END states
 
+
+    //BEGIN animations
+    SequentialAnimation{
+        id: clickedAnimation
+        alwaysRunToEnd: true
+        running: appletMouseArea.pressed
+
+        ParallelAnimation{
+            PropertyAnimation {
+                target: clickedEffect
+                property: "brightness"
+                to: -0.35
+                duration: units.longDuration
+                easing.type: Easing.OutQuad
+            }
+            PropertyAnimation {
+                target: wrapper
+                property: "zoomScale"
+                to: wrapper.zoomScale - 0.15
+                duration: units.longDuration
+                easing.type: Easing.OutQuad
+            }
+        }
+        ParallelAnimation{
+            PropertyAnimation {
+                target: clickedEffect
+                property: "brightness"
+                to: 0
+                duration: units.longDuration
+                easing.type: Easing.OutQuad
+            }
+            PropertyAnimation {
+                target: wrapper
+                property: "zoomScale"
+                to: root.zoomFactor
+                duration: units.longDuration
+                easing.type: Easing.OutQuad
+            }
+        }
+    }
+    //END animations
 }
 
 
