@@ -16,6 +16,7 @@ Item {
 
     property bool animationsEnabled: true
     property bool showZoomed: false
+    property bool lockZoom: false
 
     property int animationTime: 70
     property int hoveredIndex: currentLayout.hoveredIndex
@@ -414,7 +415,7 @@ Item {
 
             function signalUpdateScale(nIndex, nScale, step){
                 if(container && (container.index === nIndex)){
-                    if (canBeHovered && (applet.status !== PlasmaCore.Types.HiddenStatus)
+                    if (canBeHovered && !lockZoom && (applet.status !== PlasmaCore.Types.HiddenStatus)
                             && (index != currentLayout.hoveredIndex)){
                         if(!container.nowDock){
                             if(nScale >= 0)
@@ -474,7 +475,7 @@ Item {
     MouseArea{
         id: appletMouseArea
         anchors.fill: parent
-        enabled: (!nowDock)&&(canBeHovered)
+        enabled: (!nowDock)&&(canBeHovered)&&(!lockZoom)
         hoverEnabled: plasmoid.immutable && (!nowDock) && canBeHovered ? true : false
         propagateComposedEvents: true
 

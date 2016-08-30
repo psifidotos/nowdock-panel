@@ -187,6 +187,8 @@ MouseArea {
         handle.width = currentApplet.width;
         handle.height = currentApplet.height;
 
+        lockButton.checked = currentApplet.lockZoom;
+
         repositionHandler.restart();
     }
 
@@ -365,6 +367,64 @@ MouseArea {
                 }
             }
         }
+
+        PlasmaComponents.Button{
+            id: lockButton
+            checkable: true
+            iconSource: checked ? "lock" : "unlock"
+            width: units.iconSizes.large
+            visible: currentApplet &&
+                     ((currentApplet.applet.pluginName === "org.kde.plasma.systemtray")
+                      || (currentApplet.applet.pluginName === "org.kdelook.nowdock")) ? false : true
+
+            anchors.margins: 2*units.smallSpacing
+            tooltip: "Lock/Unlock zoom effect"
+
+            onCheckedChanged: {
+                currentApplet.lockZoom = checked;
+                root.layoutManager.saveLocks();
+            }
+
+            states: [
+                State {
+                    name: "left"
+                    when: plasmoid.location === PlasmaCore.Types.LeftEdge
+
+                    AnchorChanges {
+                        target: lockButton
+                        anchors{ top:parent.top; bottom:undefined; left:undefined; right:parent.right; }
+                    }
+                },
+                State {
+                    name: "right"
+                    when: plasmoid.location === PlasmaCore.Types.RightEdge
+
+                    AnchorChanges {
+                        target: lockButton
+                        anchors{ top:parent.top; bottom:undefined; left:parent.left; right:undefined; }
+                    }
+                },
+                State {
+                    name: "bottom"
+                    when: plasmoid.location === PlasmaCore.Types.BottomEdge
+
+                    AnchorChanges {
+                        target: lockButton
+                        anchors{ top:parent.top; bottom:undefined; left:parent.left; right:undefined; }
+                    }
+                },
+                State {
+                    name: "top"
+                    when: plasmoid.location === PlasmaCore.Types.TopEdge
+
+                    AnchorChanges {
+                        target: lockButton
+                        anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:parent.right; }
+                    }
+                }
+            ]
+        }
+
         Behavior on x {
             enabled: !configurationArea.pressed
             NumberAnimation {

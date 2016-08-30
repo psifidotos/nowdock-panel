@@ -55,6 +55,23 @@ function restore() {
     }
     //rewrite, so if in the orders there were now invalid ids or if some were missing creates a correct list instead
     save();
+    restoreLocks();
+}
+
+function restoreLocks() {
+    var configString = String(plasmoid.configuration.LockedZoomApplets)
+    //array, a cell for encoded item order
+    var itemsArray = configString.split(";");
+
+    for (var i = 0; i < itemsArray.length; i++) {
+        for (var j = 0; j < layout.children.length; ++j) {
+            var child = layout.children[j];
+
+            if (child.applet && (child.applet.id == itemsArray[i])) {
+                child.lockZoom = true;
+            }
+        }
+    }
 }
 
 function save() {
@@ -66,8 +83,21 @@ function save() {
             ids.push(child.applet.id);
         }
     }
-    plasmoid.configuration.AppletOrder = ids.join(';');
+    plasmoid.configuration.AppletOrder = ids.join(';');   
 }
+
+function saveLocks() {
+    var ids = new Array();
+    for (var i = 0; i < layout.children.length; ++i) {
+        var child = layout.children[i];
+
+        if (child.applet && child.lockZoom) {
+            ids.push(child.applet.id);
+        }
+    }
+    plasmoid.configuration.LockedZoomApplets = ids.join(';');
+}
+
 
 function removeApplet (applet) {
     for (var i = layout.children.length - 1; i >= 0; --i) {

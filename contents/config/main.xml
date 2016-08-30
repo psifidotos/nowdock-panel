@@ -9,6 +9,9 @@
     <entry name="AppletOrder" type="String">
       <label>encoded order of items</label>
     </entry>
+    <entry name="LockedZoomApplets" type="String">
+      <label>applets that lock the zoom effect</label>
+    </entry>
   </group>
 
 </kcfg>
