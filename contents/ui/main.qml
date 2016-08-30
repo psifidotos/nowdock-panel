@@ -252,24 +252,32 @@ DragDrop.DropArea {
         } else {
             root.fixedHeight = root.height
         }
-        LayoutManager.insertAtCoordinates(dndSpacer, event.x, event.y)
+
+        var relevantLayout = currentLayout.mapFromItem(root, event.x, event.y);
+        LayoutManager.insertAtCoordinates(dndSpacer, relevantLayout.x, relevantLayout.y)
+        dndSpacer.opacity = 1;
     }
 
     onDragMove: {
-        LayoutManager.insertAtCoordinates(dndSpacer, event.x, event.y)
+        var relevantLayout = currentLayout.mapFromItem(root, event.x, event.y);
+        LayoutManager.insertAtCoordinates(dndSpacer, relevantLayout.x, relevantLayout.y)
+        dndSpacer.opacity = 1;
     }
 
     onDragLeave: {
+        dndSpacer.opacity = 0;
         dndSpacer.parent = root;
         root.fixedWidth = 0;
         root.fixedHeight = 0;
     }
 
     onDrop: {
-        plasmoid.processMimeData(event.mimeData, event.x, event.y);
+        var relevantLayout = currentLayout.mapFromItem(root, event.x, event.y);
+        plasmoid.processMimeData(event.mimeData, relevantLayout.x, relevantLayout.y);
         event.accept(event.proposedAction);
         root.fixedWidth = 0;
         root.fixedHeight = 0;
+        dndSpacer.opacity = 0;
         containmentSizeSyncTimer.restart();
     }
 
@@ -377,17 +385,17 @@ DragDrop.DropArea {
 
     Item {
         id: dndSpacer
+
+        property int normalSize: root.iconSize+3*root.iconMargin
+
+        width: normalSize
+        height: normalSize
+
         Layout.preferredWidth: width
         Layout.preferredHeight: height
-        width: (plasmoid.formFactor == PlasmaCore.Types.Vertical) ? currentLayout.width : theme.mSize(theme.defaultFont).width * 10
-        height: (plasmoid.formFactor == PlasmaCore.Types.Vertical) ?  theme.mSize(theme.defaultFont).width * 10 : currentLayout.height
+        opacity: 0
 
-        /* Rectangle{
-            anchors.fill: parent
-            color: "transparent"
-            border.color: "blue"
-            border.width: 1
-        }*/
+        AddWidgetVisual{}
     }
 
     /* Rectangle{
@@ -412,22 +420,20 @@ DragDrop.DropArea {
     Grid {
         id: currentLayout
 
-        rowSpacing: 0
+        columns: root.isVertical ? 1 : 0
         columnSpacing: 0
+        flow: isHorizontal ? Grid.LeftToRight : Grid.TopToBottom
+        rows: root.isHorizontal ? 1 : 0
+        rowSpacing: 0
 
         z:4
 
-        property bool isLayoutHorizontal
         property int count: children.length
         property int currentSpot: -1000
         property int hoveredIndex: -1
+        property bool isLayoutHorizontal
 
         signal updateScale(int delegateIndex, real newScale, real step)
-
-        rows: root.isHorizontal ? 1 : 0
-        columns: root.isVertical ? 1 : 0
-
-        flow: isHorizontal ? Grid.LeftToRight : Grid.TopToBottom
     }
 
     onWidthChanged: {
@@ -448,11 +454,11 @@ DragDrop.DropArea {
         interval: 150
         onTriggered: {
             dndSpacer.parent = root;
-            currentLayout.x = (Qt.application.layoutDirection === Qt.RightToLeft && !plasmoid.immutable) ? toolBox.width : 0;
-            currentLayout.y = 0
+        //    currentLayout.x = (Qt.application.layoutDirection === Qt.RightToLeft && !plasmoid.immutable) ? toolBox.width : 0;
+         //   currentLayout.y = 0
             /*   currentLayout.width = root.width - (isHorizontal && toolBox && !plasmoid.immutable ? toolBox.width : 0)
             currentLayout.height = root.height - (!isHorizontal && toolBox && !plasmoid.immutable ? toolBox.height : 0) */
-            currentLayout.isLayoutHorizontal = isHorizontal
+          //  currentLayout.isLayoutHorizontal = isHorizontal
         }
     }
 
