@@ -254,9 +254,11 @@ Item {
                     disableScaleWidth = true;
                     //this way improves performance, probably because during animation the preferred sizes update a lot
                     if((applet.Layout.maximumWidth < root.iconSize))
-                        return applet.Layout.preferredWidth;
-                    else if ((applet.Layout.preferredWidth > root.iconSize))
                         return applet.Layout.maximumWidth;
+                    else if ((applet.Layout.preferredWidth > root.iconSize))
+                        return applet.Layout.preferredWidth;
+                    else
+                        return root.iconSize + moreWidth;
                 }
                 else{
                     return root.iconSize + moreWidth;
