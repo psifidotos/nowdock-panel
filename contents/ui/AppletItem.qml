@@ -213,18 +213,19 @@ Item {
             property bool disableScaleWidth: false
             property bool disableScaleHeight: false
 
+            property int appletMinimumWidth: applet && applet.Layout ?  applet.Layout.minimumWidth : 0
+            property int appletMinimumHeight: applet && applet.Layout ? applet.Layout.minimumHeight : 0
+
             property real scaledWidth: zoomScaleWidth * (layoutWidth + root.iconMargin)
             property real scaledHeight: zoomScaleHeight * (layoutHeight + root.iconMargin)
-
             property real zoomScaleWidth: disableScaleWidth ? 1 : zoomScale
             property real zoomScaleHeight: disableScaleHeight ? 1 : zoomScale
-
 
             property int layoutWidth: {
                 if(applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal && (!canBeHovered)){
                     return applet.Layout.minimumWidth;
                 } //it is used for plasmoids that need to scale only one axis... e.g. the Weather Plasmoid
-                else if(applet && (!applet.Layout.minimumWidth) && canBeHovered
+                else if(applet
                         && ( (applet.Layout.maximumWidth < root.iconSize) || (applet.Layout.preferredWidth > root.iconSize) )
                         && root.isHorizontal
                         && !disableScaleHeight){
@@ -244,16 +245,16 @@ Item {
                 if(applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical && (!canBeHovered)){
                     return applet.Layout.minimumHeight;
                 } //it is used for plasmoids that need to scale only one axis... e.g. the Weather Plasmoid
-                else if(applet && (!applet.Layout.minimumHeight) && canBeHovered
-                        && ( (applet.Layout.maximumHeight < root.iconSize) || (applet.Layout.preferredHeight > root.iconSize) )
+                else if(applet
+                        && ( (applet.Layout.maximumHeight < root.iconSize) || (applet.Layout.preferredHeight > root.iconSize))
                         && root.isVertical
                         && !disableScaleWidth ){
                     disableScaleHeight = true;
                     //this way improves performance, probably because during animation the preferred sizes update a lot
                     if((applet.Layout.maximumHeight < root.iconSize))
-                        return applet.Layout.preferredHeight;
-                    else if ((applet.Layout.preferredHeight > root.iconSize))
                         return applet.Layout.maximumHeight;
+                    else if ((applet.Layout.preferredHeight > root.iconSize))
+                        return applet.Layout.preferredHeight;
                 }
                 else
                     return root.iconSize + moreHeight;
@@ -261,15 +262,34 @@ Item {
 
             property int moreHeight: applet && (applet.pluginName === "org.kde.plasma.systemtray") && root.isHorizontal ? appletMargin : 0
             property int moreWidth: applet && (applet.pluginName === "org.kde.plasma.systemtray") && root.isVertical ? appletMargin : 0
-            //   property int layoutWidth: root.iconSize
-            //    property int layoutHeight: root.iconSize
 
             property real center: width / 2
             property real zoomScale: 1
 
             property alias index: container.index
-            property int appletMinimumWidth: applet && applet.Layout ?  applet.Layout.minimumWidth : 0
-            property int appletMinimumHeight: applet && applet.Layout ? applet.Layout.minimumHeight : 0
+           /* property int pHeight: applet ? applet.Layout.preferredHeight : -10
+
+            onLayoutWidthChanged: {
+                console.log("----------");
+                console.log("MinW "+applet.Layout.minimumWidth);
+                console.log("PW "+applet.Layout.preferredWidth);
+                console.log("MaxW "+applet.Layout.maximumWidth);
+
+                console.log("MinH "+applet.Layout.minimumHeight);
+                console.log("PH "+applet.Layout.preferredHeight);
+                console.log("MaxH "+applet.Layout.maximumHeight);
+            }
+
+            onPHeightChanged: {
+                console.log("----------");
+                console.log("MinW "+applet.Layout.minimumWidth);
+                console.log("PW "+applet.Layout.preferredWidth);
+                console.log("MaxW "+applet.Layout.maximumWidth);
+
+                console.log("MinH "+applet.Layout.minimumHeight);
+                console.log("PH "+applet.Layout.preferredHeight);
+                console.log("MaxH "+applet.Layout.maximumHeight);
+            } */
 
             onAppletMinimumWidthChanged: {
                 if(zoomScale == 1)
