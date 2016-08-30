@@ -33,6 +33,9 @@ DragDrop.DropArea {
     height: 90
 
     //BEGIN properties
+
+    /*Layout.minimumHeight: isVertical ? currentLayout.height : (zoomFactor+0.1) * (iconSize+iconMargin)
+    Layout.minimumWidth: isHorizontal ? currentLayout.width : (zoomFactor+0.1) * (iconSize+iconMargin)*/
     Layout.minimumWidth: fixedWidth > 0 ? fixedWidth : (currentLayout.Layout.minimumWidth + (isHorizontal && toolBox ? toolBox.width : 0))
     Layout.maximumWidth: fixedWidth > 0 ? fixedWidth : (currentLayout.Layout.maximumWidth + (isHorizontal && toolBox ? toolBox.width : 0))
     Layout.preferredWidth: fixedWidth > 0 ? fixedWidth : (currentLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
@@ -425,8 +428,10 @@ DragDrop.DropArea {
         flow: isHorizontal ? Grid.LeftToRight : Grid.TopToBottom
         rows: root.isHorizontal ? 1 : 0
         rowSpacing: 0
-
         z:4
+
+        Layout.preferredWidth: width
+        Layout.preferredHeight: height
 
         property int count: children.length
         property int currentSpot: -1000
