@@ -80,10 +80,10 @@ MouseArea {
                 if (isResizingLeft) {
                     if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
                         handle.y += (mouse.y - lastY);
-                  //      handle.height = currentApplet.height + (currentApplet.y - handle.y);
+                        //      handle.height = currentApplet.height + (currentApplet.y - handle.y);
                     } else {
                         handle.x += (mouse.x - lastX);
-                   //     handle.width = currentApplet.width + (currentApplet.x - handle.x);
+                        //     handle.width = currentApplet.width + (currentApplet.x - handle.x);
                     }
 
                     lastX = mouse.x;
@@ -91,7 +91,7 @@ MouseArea {
                     return;
 
                 } else if (isResizingRight) {
-                  /*  if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
+                    /*  if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
                         handle.height = mouse.y - handle.y;
                     } else {
                         handle.width = mouse.x - handle.x;
@@ -133,8 +133,8 @@ MouseArea {
             var item = currentLayout.childAt(mouse.x-relevantLayout.x, mouse.y-relevantLayout.y);
 
             if (item && item !== placeHolder) {
-          //      placeHolder.width = item.width;
-           //     placeHolder.height = item.height;
+                //      placeHolder.width = item.width;
+                //     placeHolder.height = item.height;
                 placeHolder.parent = configurationArea;
                 var posInItem = mapToItem(item, mouse.x, mouse.y);
 
@@ -184,10 +184,10 @@ MouseArea {
 
         handle.x = relevantLayout.x + currentApplet.x;
         handle.y = relevantLayout.y + currentApplet.y;
-      //  handle.width = currentApplet.width;
-    //    handle.height = currentApplet.height;
+        handle.width = currentApplet.width;
+        handle.height = currentApplet.height;
 
-        repositionHandler.start();
+        repositionHandler.restart();
     }
 
     onPressed: {
@@ -264,8 +264,8 @@ MouseArea {
 
         handle.x = relevantLayout.x + currentApplet.x;
         handle.y = relevantLayout.y + currentApplet.y;
-   //     handle.width = currentApplet.width;
-    //    handle.height = currentApplet.height;
+        //     handle.width = currentApplet.width;
+        //    handle.height = currentApplet.height;
         root.layoutManager.save();
     }
 
@@ -277,20 +277,12 @@ MouseArea {
     }
 
     //Because of the animations for the applets the handler can not catch up to
-    //reposition itself when the currentApplet changes. This timer fixes that
+    //reposition itself when the currentApplet position or size changes.
+    //This timer fixes that situation
     Timer {
         id: repositionHandler
-        interval: 90
-        onTriggered:{
-            if(currentApplet){
-                var relevantLayout = mapFromItem(currentLayout, 0, 0);
-
-                handle.x = relevantLayout.x + currentApplet.x;
-                handle.y = relevantLayout.y + currentApplet.y;
-                handle.width = currentApplet.width;
-                handle.height = currentApplet.height;
-            }
-        }
+        interval: 100
+        onTriggered: handle.updatePlacement();
     }
 
     Timer {
@@ -301,24 +293,10 @@ MouseArea {
 
     Connections {
         target: currentApplet
-        onXChanged: {
-            var transformChoords = root.mapFromItem(currentApplet, 0, 0)
-            handle.x = transformChoords.x;
-            //handle.x = currentApplet.x
-        }
-        onYChanged: {
-            var transformChoords = root.mapFromItem(currentApplet, 0, 0)
-            handle.y = transformChoords.y;
-            //handle.y = currentApplet.y
-        }
-        onWidthChanged: {
-            if (currentApplet)
-                handle.width = currentApplet.width;
-        }
-        onHeightChanged: {
-            if (currentApplet)
-                handle.height = currentApplet.height;
-        }
+        onXChanged: handle.updatePlacement();
+        onYChanged: handle.updatePlacement();
+        onWidthChanged: handle.updatePlacement();
+        onHeightChanged: handle.updatePlacement()
     }
 
     Rectangle {
@@ -328,6 +306,21 @@ MouseArea {
         radius: 3
         opacity: currentApplet ? 0.5 : 0
 
+        //BEGIN functions
+        function updatePlacement(){
+            if(currentApplet){
+                var transformChoords = root.mapFromItem(currentApplet, 0, 0)
+
+                handle.x = transformChoords.x;
+                handle.y = transformChoords.y;
+                handle.width = currentApplet.width;
+                handle.height = currentApplet.height;
+
+                repositionHandler.restart();
+            }
+        }
+
+        //END functions
         PlasmaCore.IconItem {
             source: "transform-move"
             width: Math.min(parent.width, parent.height)
