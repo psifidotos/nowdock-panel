@@ -24,7 +24,7 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.kquickcontrolsaddons 2.0
 
-Component{
+//Component{
     Item{
         id:barLine
 
@@ -35,11 +35,18 @@ Component{
         width: root.isHorizontal ? currentLayout.width + spacing : smallSize
         height: root.isVertical ? currentLayout.height + spacing : smallSize
 
-        property int spacing: root.iconSize / 2
+        property int spacing: root.panelEdgeSpacing
         property int smallSize: Math.max(3.7*root.statesLineSize, 16)
 
         Behavior on opacity{
             NumberAnimation { duration: 150 }
+        }
+
+        Rectangle{
+            anchors.fill: parent
+            color:"transparent"
+            border.color: "red"
+            border.width: 1
         }
 
         /// plasmoid's default panel
@@ -102,10 +109,13 @@ Component{
         }
 
         //BEGIN states
+        //user set Panel Positions
+        //0-Center, 1-Left, 2-Right, 3-Top, 4-Bottom
         states: [
+            ///Left
             State {
-                name: "left"
-                when: plasmoid.location === PlasmaCore.Types.LeftEdge
+                name: "leftCenter"
+                when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 0)
 
                 AnchorChanges {
                     target: barLine
@@ -120,6 +130,43 @@ Component{
                     anchors{ top:undefined; bottom:undefined; left:belower.left; right:undefined; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
                 }
             },
+            ///Left
+            State {
+                name: "leftTop"
+                when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 3)
+
+                AnchorChanges {
+                    target: barLine
+                    anchors{ top:parent.top; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+                }
+                AnchorChanges {
+                    target: belower
+                    anchors{ top:undefined; bottom:parent,top; left:undefined; right:parent.left}
+                }
+                AnchorChanges {
+                    target: shadowsSvgItem
+                    anchors{ top:belower.top; bottom:undefined; left:belower.left; right:undefined; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
+                }
+            },
+            ///Left
+            State {
+                name: "leftBottom"
+                when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 4)
+
+                AnchorChanges {
+                    target: barLine
+                    anchors{ top:undefined; bottom:parent.bottom; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+                }
+                AnchorChanges {
+                    target: belower
+                    anchors{ top:parent.bottom; bottom:undefined; left:undefined; right:parent.left}
+                }
+                AnchorChanges {
+                    target: shadowsSvgItem
+                    anchors{ top:undefined; bottom:belower.bottom; left:belower.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+                }
+            },
+            ///Right
             State {
                 name: "right"
                 when: plasmoid.location === PlasmaCore.Types.RightEdge
@@ -174,4 +221,4 @@ Component{
         ]
         //END states
     }
-}
+//}

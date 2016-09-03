@@ -66,10 +66,12 @@ DragDrop.DropArea {
 
     property int iconSize: nowDock ? nowDock.iconSize : 48
     property int iconMargin: nowDock ? nowDock.iconMargin : 5
-    property int themePanelSize: nowDock ? nowDock.themePanelSize : 16
+    property int userPanelPosition: nowDock ? nowDock.userPanelPosition : 0
+    property int panelEdgeSpacing: iconSize / 2
     property int realSize: iconSize + iconMargin
     property int statesLineSize: nowDock ? nowDock.statesLineSize : 16
     property int tasksCount: nowDock ? nowDock.tasksCount : 0
+    property int themePanelSize: nowDock ? nowDock.themePanelSize : 16
 
     property real zoomFactor: nowDock ? nowDock.zoomFactor : 1.7
 
@@ -360,6 +362,7 @@ DragDrop.DropArea {
 
     //BEGIN components
     Loader{
+        anchors.fill: parent
         active: root.showBarLine
         sourceComponent: PanelBox{}
     }
@@ -420,7 +423,7 @@ DragDrop.DropArea {
         }
     }
 
-    Grid {
+    Grid{
         id: currentLayout
 
         columns: root.isVertical ? 1 : 0
@@ -441,6 +444,7 @@ DragDrop.DropArea {
         signal updateScale(int delegateIndex, real newScale, real step)
     }
 
+
     onWidthChanged: {
         containmentSizeSyncTimer.restart()
         if (startupTimer.running) {
@@ -459,11 +463,11 @@ DragDrop.DropArea {
         interval: 150
         onTriggered: {
             dndSpacer.parent = root;
-        //    currentLayout.x = (Qt.application.layoutDirection === Qt.RightToLeft && !plasmoid.immutable) ? toolBox.width : 0;
-         //   currentLayout.y = 0
+            //    currentLayout.x = (Qt.application.layoutDirection === Qt.RightToLeft && !plasmoid.immutable) ? toolBox.width : 0;
+            //   currentLayout.y = 0
             /*   currentLayout.width = root.width - (isHorizontal && toolBox && !plasmoid.immutable ? toolBox.width : 0)
             currentLayout.height = root.height - (!isHorizontal && toolBox && !plasmoid.immutable ? toolBox.height : 0) */
-          //  currentLayout.isLayoutHorizontal = isHorizontal
+            //  currentLayout.isLayoutHorizontal = isHorizontal
         }
     }
 
@@ -482,21 +486,47 @@ DragDrop.DropArea {
     //END UI elements
 
     //BEGIN states
+    //user set Panel Positions
+    // 0-Center, 1-Left, 2-Right, 3-Top, 4-Bottom
     states: [
+        ///Left Edge
         State {
-            name: "left"
-            when: plasmoid.location === PlasmaCore.Types.LeftEdge
+            name: "leftCenter"
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 0)
 
             AnchorChanges {
                 target: currentLayout
                 anchors{ top:undefined; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
             }
             PropertyChanges{
-                target: currentLayout
-                horizontalItemAlignment: Grid.AlignLeft
-                verticalItemAlignment: Grid.AlignVCenter
+                target: currentLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
             }
         },
+        State {
+            name: "leftTop"
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 3)
+
+            AnchorChanges {
+                target: currentLayout
+                anchors{ top:parent.top; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: currentLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
+            }
+        },
+        State {
+            name: "leftBottom"
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 4)
+
+            AnchorChanges {
+                target: currentLayout
+                anchors{ top:undefined; bottom:parent.bottom; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: currentLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
+            }
+        },
+        ///Right Edge
         State {
             name: "right"
             when: plasmoid.location === PlasmaCore.Types.RightEdge
@@ -506,9 +536,7 @@ DragDrop.DropArea {
                 anchors{ top:undefined; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
             }
             PropertyChanges{
-                target: currentLayout
-                horizontalItemAlignment: Grid.AlignRight
-                verticalItemAlignment: Grid.AlignVCenter
+                target: currentLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
             }
         },
         State {
@@ -520,9 +548,7 @@ DragDrop.DropArea {
                 anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
             }
             PropertyChanges{
-                target: currentLayout
-                horizontalItemAlignment: Grid.AlignHCenter
-                verticalItemAlignment: Grid.AlignBottom
+                target: currentLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
             }
         },
         State {
@@ -534,9 +560,7 @@ DragDrop.DropArea {
                 anchors{ top:parent.top; bottom:undefined; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
             }
             PropertyChanges{
-                target: currentLayout
-                horizontalItemAlignment: Grid.AlignHCenter
-                verticalItemAlignment: Grid.AlignTop
+                target: currentLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
             }
         }
     ]

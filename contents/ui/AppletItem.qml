@@ -291,10 +291,10 @@ Item {
             property real zoomScale: 1
 
             property alias index: container.index
-            /* property int pHeight: applet ? applet.Layout.preferredHeight : -10
+            // property int pHeight: applet ? applet.Layout.preferredHeight : -10
 
             onLayoutWidthChanged: {
-                console.log("----------");
+                console.log("---------- "+ applet.pluginName +" ----------");
                 console.log("MinW "+applet.Layout.minimumWidth);
                 console.log("PW "+applet.Layout.preferredWidth);
                 console.log("MaxW "+applet.Layout.maximumWidth);
@@ -303,7 +303,7 @@ Item {
                 console.log("PH "+applet.Layout.preferredHeight);
                 console.log("MaxH "+applet.Layout.maximumHeight);
             }
-
+/*
             onPHeightChanged: {
                 console.log("----------");
                 console.log("MinW "+applet.Layout.minimumWidth);
