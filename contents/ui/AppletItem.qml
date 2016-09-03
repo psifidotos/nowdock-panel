@@ -96,11 +96,14 @@ Item {
 
     //this functions gets the signal from the plasmoid, it can be used for signal items
     //outside the NowDock Plasmoid
+  //  property int debCounter: 0;
     function interceptNowDockUpdateScale(dIndex, newScale, step){
         if(dIndex === -1){
             currentLayout.updateScale(index-1,newScale, step);
         }
         else if(dIndex === root.tasksCount){
+         //   debCounter++;
+         //   console.log(debCounter+ " "+dIndex+" "+newScale+" received...");
             currentLayout.updateScale(index+1,newScale, step);
         }
     }
@@ -182,7 +185,7 @@ Item {
         color: "transparent"
         border.color: "green"
         border.width: 1
-    }*/
+    } */
 
     Flow{
         id: appletFlow
@@ -293,7 +296,7 @@ Item {
             property alias index: container.index
             // property int pHeight: applet ? applet.Layout.preferredHeight : -10
 
-            onLayoutWidthChanged: {
+ /*           onLayoutWidthChanged: {
                 console.log("---------- "+ applet.pluginName +" ----------");
                 console.log("MinW "+applet.Layout.minimumWidth);
                 console.log("PW "+applet.Layout.preferredWidth);
@@ -303,7 +306,7 @@ Item {
                 console.log("PH "+applet.Layout.preferredHeight);
                 console.log("MaxH "+applet.Layout.maximumHeight);
             }
-/*
+
             onPHeightChanged: {
                 console.log("----------");
                 console.log("MinW "+applet.Layout.minimumWidth);
@@ -444,8 +447,10 @@ Item {
 
             function signalUpdateScale(nIndex, nScale, step){
                 if(container && (container.index === nIndex)){
-                    if (canBeHovered && !lockZoom && (applet.status !== PlasmaCore.Types.HiddenStatus)
-                            && (index != currentLayout.hoveredIndex)){
+                    if ( ((canBeHovered && !lockZoom ) || container.nowDock)
+                            && (applet.status !== PlasmaCore.Types.HiddenStatus)
+                            //&& (index != currentLayout.hoveredIndex)
+                            ){
                         if(!container.nowDock){
                             if(nScale >= 0)
                                 zoomScale = nScale + step;
@@ -455,10 +460,10 @@ Item {
                         else{
                             if(currentLayout.hoveredIndex<container.index)
                                 nowDock.updateScale(0, nScale, step);
-                            else if(currentLayout.hoveredIndex>container.index)
+                            else if(currentLayout.hoveredIndex>=container.index)
                                 nowDock.updateScale(root.tasksCount-1, nScale, step);
                         }
-                    }      ///if the applet is hidden must forward its scale events to its neighbours
+                    }  ///if the applet is hidden must forward its scale events to its neighbours
                     else if ((applet.status === PlasmaCore.Types.HiddenStatus)){
                         if(currentLayout.hoveredIndex>index)
                             currentLayout.updateScale(index-1, nScale, step);
