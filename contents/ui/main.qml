@@ -528,8 +528,8 @@ DragDrop.DropArea {
         },
         ///Right Edge
         State {
-            name: "right"
-            when: plasmoid.location === PlasmaCore.Types.RightEdge
+            name: "rightCenter"
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 0)
 
             AnchorChanges {
                 target: currentLayout
@@ -540,8 +540,33 @@ DragDrop.DropArea {
             }
         },
         State {
-            name: "bottom"
-            when: plasmoid.location === PlasmaCore.Types.BottomEdge
+            name: "rightTop"
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 3)
+
+            AnchorChanges {
+                target: currentLayout
+                anchors{ top:parent.top; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: currentLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
+            }
+        },
+        State {
+            name: "rightBottom"
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 4)
+
+            AnchorChanges {
+                target: currentLayout
+                anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: currentLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
+            }
+        },
+        ///Bottom Edge
+        State {
+            name: "bottomCenter"
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 0)
 
             AnchorChanges {
                 target: currentLayout
@@ -552,12 +577,61 @@ DragDrop.DropArea {
             }
         },
         State {
-            name: "top"
-            when: plasmoid.location === PlasmaCore.Types.TopEdge
+            name: "bottomLeft"
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 1)
+
+            AnchorChanges {
+                target: currentLayout
+                anchors{ top:undefined; bottom:parent.bottom; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: currentLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
+            }
+        },
+        State {
+            name: "bottomRight"
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 2)
+
+            AnchorChanges {
+                target: currentLayout
+                anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: currentLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
+            }
+        },
+        ///Top Edge
+        State {
+            name: "topCenter"
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 0)
 
             AnchorChanges {
                 target: currentLayout
                 anchors{ top:parent.top; bottom:undefined; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: currentLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
+            }
+        },
+        State {
+            name: "topLeft"
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 1)
+
+            AnchorChanges {
+                target: currentLayout
+                anchors{ top:parent.top; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: currentLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
+            }
+        },
+        State {
+            name: "topRight"
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 2)
+
+            AnchorChanges {
+                target: currentLayout
+                anchors{ top:parent.top; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
             }
             PropertyChanges{
                 target: currentLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop

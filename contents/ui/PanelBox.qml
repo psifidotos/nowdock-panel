@@ -35,18 +35,11 @@ import org.kde.kquickcontrolsaddons 2.0
         width: root.isHorizontal ? currentLayout.width + spacing : smallSize
         height: root.isVertical ? currentLayout.height + spacing : smallSize
 
-        property int spacing: root.panelEdgeSpacing
+        property int spacing: (root.userPanelPosition === 0) ? root.panelEdgeSpacing : root.panelEdgeSpacing/2
         property int smallSize: Math.max(3.7*root.statesLineSize, 16)
 
         Behavior on opacity{
             NumberAnimation { duration: 150 }
-        }
-
-        Rectangle{
-            anchors.fill: parent
-            color:"transparent"
-            border.color: "red"
-            border.width: 1
         }
 
         /// plasmoid's default panel
@@ -123,7 +116,7 @@ import org.kde.kquickcontrolsaddons 2.0
                 }
                 AnchorChanges {
                     target: belower
-                    anchors{ top:undefined; bottom:undefined; left:undefined; right:parent.left}
+                    anchors{ top:undefined; bottom:undefined; left:undefined; right:parent.left; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
                 }
                 AnchorChanges {
                     target: shadowsSvgItem
@@ -141,7 +134,7 @@ import org.kde.kquickcontrolsaddons 2.0
                 }
                 AnchorChanges {
                     target: belower
-                    anchors{ top:undefined; bottom:parent,top; left:undefined; right:parent.left}
+                    anchors{ top:undefined; bottom:parent,top; left:undefined; right:parent.left; horizontalCenter:undefined; verticalCenter:undefined}
                 }
                 AnchorChanges {
                     target: shadowsSvgItem
@@ -159,7 +152,7 @@ import org.kde.kquickcontrolsaddons 2.0
                 }
                 AnchorChanges {
                     target: belower
-                    anchors{ top:parent.bottom; bottom:undefined; left:undefined; right:parent.left}
+                    anchors{ top:parent.bottom; bottom:undefined; left:undefined; right:parent.left; horizontalCenter:undefined; verticalCenter:undefined}
                 }
                 AnchorChanges {
                     target: shadowsSvgItem
@@ -168,8 +161,8 @@ import org.kde.kquickcontrolsaddons 2.0
             },
             ///Right
             State {
-                name: "right"
-                when: plasmoid.location === PlasmaCore.Types.RightEdge
+                name: "rightCenter"
+                when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 0)
 
                 AnchorChanges {
                     target: barLine
@@ -177,7 +170,7 @@ import org.kde.kquickcontrolsaddons 2.0
                 }
                 AnchorChanges {
                     target: belower
-                    anchors{ top:undefined; bottom:undefined; left:parent.right; right:undefined}
+                    anchors{ top:undefined; bottom:undefined; left:parent.right; right:undefined; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
                 }
                 AnchorChanges {
                     target: shadowsSvgItem
@@ -185,8 +178,43 @@ import org.kde.kquickcontrolsaddons 2.0
                 }
             },
             State {
-                name: "bottom"
-                when: plasmoid.location === PlasmaCore.Types.BottomEdge
+                name: "rightTop"
+                when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 3)
+
+                AnchorChanges {
+                    target: barLine
+                    anchors{ top:parent.top; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
+                }
+                AnchorChanges {
+                    target: belower
+                    anchors{ top:undefined; bottom:parent.top; left:parent.right; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+                }
+                AnchorChanges {
+                    target: shadowsSvgItem
+                    anchors{ top:belower.top; bottom:undefined; left:undefined; right:belower.right; horizontalCenter:undefined; verticalCenter:undefined}
+                }
+            },
+            State {
+                name: "rightBottom"
+                when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 4)
+
+                AnchorChanges {
+                    target: barLine
+                    anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined }
+                }
+                AnchorChanges {
+                    target: belower
+                    anchors{ top:parent.bottom; bottom:undefined; left:parent.right; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+                }
+                AnchorChanges {
+                    target: shadowsSvgItem
+                    anchors{ top:undefined; bottom:belower.bottom; left:undefined; right:belower.right; horizontalCenter:undefined; verticalCenter:undefined}
+                }
+            },
+            ///Bottom
+            State {
+                name: "bottomCenter"
+                when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 0)
 
                 AnchorChanges {
                     target: barLine
@@ -194,7 +222,7 @@ import org.kde.kquickcontrolsaddons 2.0
                 }
                 AnchorChanges {
                     target: belower
-                    anchors{ top:parent.bottom; bottom:undefined; left:undefined; right:undefined}
+                    anchors{ top:parent.bottom; bottom:undefined; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
                 }
                 AnchorChanges {
                     target: shadowsSvgItem
@@ -202,8 +230,43 @@ import org.kde.kquickcontrolsaddons 2.0
                 }
             },
             State {
-                name: "top"
-                when: plasmoid.location === PlasmaCore.Types.TopEdge
+                name: "bottomLeft"
+                when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 1)
+
+                AnchorChanges {
+                    target: barLine
+                    anchors{ top:undefined; bottom:parent.bottom; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+                }
+                AnchorChanges {
+                    target: belower
+                    anchors{ top:parent.bottom; bottom:undefined; left:undefined; right:parent.left; horizontalCenter:undefined; verticalCenter:undefined}
+                }
+                AnchorChanges {
+                    target: shadowsSvgItem
+                    anchors{ top:undefined; bottom:belower.bottom; left:belower.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+                }
+            },
+            State {
+                name: "bottomRight"
+                when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 2)
+
+                AnchorChanges {
+                    target: barLine
+                    anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
+                }
+                AnchorChanges {
+                    target: belower
+                    anchors{ top:parent.bottom; bottom:undefined; left:parent.right; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+                }
+                AnchorChanges {
+                    target: shadowsSvgItem
+                    anchors{ top:undefined; bottom:belower.bottom; left:undefined; right:belower.right; horizontalCenter:undefined; verticalCenter:undefined}
+                }
+            },
+            ///Top
+            State {
+                name: "topCenter"
+                when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 0)
 
                 AnchorChanges {
                     target: barLine
@@ -211,11 +274,45 @@ import org.kde.kquickcontrolsaddons 2.0
                 }
                 AnchorChanges {
                     target: belower
-                    anchors{ top:undefined; bottom:parent.top; left:undefined; right:undefined}
+                    anchors{ top:undefined; bottom:parent.top; left:undefined; right:undefined;  horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
                 }
                 AnchorChanges {
                     target: shadowsSvgItem
                     anchors{ top:belower.top; bottom:undefined; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
+                }
+            },
+            State {
+                name: "topLeft"
+                when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 1)
+
+                AnchorChanges {
+                    target: barLine
+                    anchors{ top:parent.top; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+                }
+                AnchorChanges {
+                    target: belower
+                    anchors{ top:undefined; bottom:parent.top; left:undefined; right:parent.left;  horizontalCenter:undefined; verticalCenter:undefined}
+                }
+                AnchorChanges {
+                    target: shadowsSvgItem
+                    anchors{ top:belower.top; bottom:undefined; left:belower.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+                }
+            },
+            State {
+                name: "topRight"
+                when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 2)
+
+                AnchorChanges {
+                    target: barLine
+                    anchors{ top:parent.top; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
+                }
+                AnchorChanges {
+                    target: belower
+                    anchors{ top:undefined; bottom:parent.top; left:parent.right; right:undefined;  horizontalCenter:undefined; verticalCenter:undefined}
+                }
+                AnchorChanges {
+                    target: shadowsSvgItem
+                    anchors{ top:belower.top; bottom:undefined; left:undefined; right:belower.right; horizontalCenter:undefined; verticalCenter:undefined}
                 }
             }
         ]
