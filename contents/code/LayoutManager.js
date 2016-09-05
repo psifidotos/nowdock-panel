@@ -24,7 +24,7 @@ var lastSpacer;
 
 
 function restore() {
-    var configString = String(plasmoid.configuration.AppletOrder)
+    var configString = String(plasmoid.configuration.appletOrder)
 
     //array, a cell for encoded item order
     var itemsArray = configString.split(";");
@@ -59,7 +59,7 @@ function restore() {
 }
 
 function restoreLocks() {
-    var configString = String(plasmoid.configuration.LockedZoomApplets)
+    var configString = String(plasmoid.configuration.lockedZoomApplets)
     //array, a cell for encoded item order
     var itemsArray = configString.split(";");
 
@@ -83,7 +83,7 @@ function save() {
             ids.push(child.applet.id);
         }
     }
-    plasmoid.configuration.AppletOrder = ids.join(';');   
+    plasmoid.configuration.appletOrder = ids.join(';');
 }
 
 function saveLocks() {
@@ -95,7 +95,7 @@ function saveLocks() {
             ids.push(child.applet.id);
         }
     }
-    plasmoid.configuration.LockedZoomApplets = ids.join(';');
+    plasmoid.configuration.lockedZoomApplets = ids.join(';');
 }
 
 

@@ -6,10 +6,10 @@
   <kcfgfile name=""/>
 
   <group name="General">
-    <entry name="AppletOrder" type="String">
+    <entry name="appletOrder" type="String">
       <label>encoded order of items</label>
     </entry>
-    <entry name="LockedZoomApplets" type="String">
+    <entry name="lockedZoomApplets" type="String">
       <label>applets that lock the zoom effect</label>
     </entry>
     <entry name="panelPosition" type="Enum">
