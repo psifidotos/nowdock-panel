@@ -52,33 +52,43 @@ DragDrop.DropArea {
 
     property var layoutManager: LayoutManager
 
-    property Item dragOverlay
-    property Item toolBox
-
     signal clearZoomSignal();
     signal updateIndexes();
     //END properties
 
     ///BEGIN properties from nowDock
-    property bool showBarLine: nowDock ? nowDock.showBarLine : false
-    property bool transparentPanel: nowDock ? nowDock.transparentPanel : false
-    property bool useThemePanel: nowDock ? nowDock.useThemePanel : true
+ //   property bool showBarLine: nowDock ? nowDock.showBarLine : false
+  //  property bool transparentPanel: nowDock ? nowDock.transparentPanel : false
+ //   property bool useThemePanel: nowDock ? nowDock.useThemePanel : true
 
     property int iconSize: nowDock ? nowDock.iconSize : 48
     property int iconMargin: nowDock ? nowDock.iconMargin : 5
-    property int userPanelPosition: nowDock ? nowDock.userPanelPosition : 0
+    //property int userPanelPosition: nowDock ? nowDock.userPanelPosition : 0
     property int panelEdgeSpacing: iconSize / 2
     property int realSize: iconSize + iconMargin
     property int statesLineSize: nowDock ? nowDock.statesLineSize : 16
     property int tasksCount: nowDock ? nowDock.tasksCount : 0
-    property int themePanelSize: nowDock ? nowDock.themePanelSize : 16
+    //property int themePanelSize: nowDock ? nowDock.themePanelSize : 16
 
-    property real zoomFactor: nowDock ? nowDock.zoomFactor : 1.7
-
-    property Item nowDockContainer: null;
-    property Item nowDock: null;
-
+   // property real zoomFactor: nowDock ? nowDock.zoomFactor : 1.7
     ///END properties from nowDock
+    property bool useThemePanel: plasmoid.configuration.useThemePanel
+
+    property int userPanelPosition: plasmoid.configuration.panelPosition
+    property int themePanelSize: plasmoid.configuration.panelSize
+
+    property real zoomFactor: ( 1 + (plasmoid.configuration.zoomLevel / 20) )
+
+
+    property Item dragOverlay
+    property Item toolBox
+    property Item nowDockContainer
+    property Item nowDock
+    property Item nowDockConfiguration
+
+    onUserPanelPositionChanged: console.log("P: "+userPanelPosition);
+
+
     /*  Rectangle{
         anchors.fill: parent
         color: "transparent"
@@ -231,6 +241,29 @@ DragDrop.DropArea {
         root.clearZoomSignal();
     }
 
+    function updateNowDockConfiguration(){
+        ///BEGIN of Now Dock Configuration Panel
+        if (plasmoid.immutable) {
+            if (nowDockConfiguration){
+                nowDockConfiguration.destroy();
+            }
+            return;
+        }
+
+        if (!nowDockConfiguration){
+            var component = Qt.createComponent("NowDockConfiguration.qml");
+            if (component.status == Component.Ready) {
+                nowDockConfiguration = component.createObject(root);
+            } else {
+                console.log("Could not create NowDockConfiguration.qml");
+                console.log(component.errorString());
+            }
+            component.destroy();
+        }
+        nowDockConfiguration.visible = true;
+        ///END of Now Dock Configuration Panel
+    }
+
     //END functions
 
     //BEGIN connections
@@ -244,6 +277,7 @@ DragDrop.DropArea {
         containmentSizeSyncTimer.restart();
         plasmoid.action("configure").visible = !plasmoid.immutable;
         plasmoid.action("configure").enabled = !plasmoid.immutable;
+        updateNowDockConfiguration();
     }
 
     onDragEnter: {
@@ -350,6 +384,8 @@ DragDrop.DropArea {
         if(plasmoid.immutable){
             updateIndexes();
         }
+
+        updateNowDockConfiguration();
     }
 
     onToolBoxChanged: {
@@ -363,7 +399,7 @@ DragDrop.DropArea {
     //BEGIN components
     Loader{
         anchors.fill: parent
-        active: root.showBarLine
+        active: root.useThemePanel
         sourceComponent: PanelBox{}
     }
 
@@ -443,7 +479,6 @@ DragDrop.DropArea {
 
         signal updateScale(int delegateIndex, real newScale, real step)
     }
-
 
     onWidthChanged: {
         containmentSizeSyncTimer.restart()
