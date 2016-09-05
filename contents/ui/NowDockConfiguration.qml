@@ -9,7 +9,7 @@ import org.kde.kquickcontrolsaddons 2.0 as KQuickControlAddons
 
 Item{
     id: settingsButtonContainer
-    height: root.isVertical ? 75 : 55
+    height: root.isVertical ? 75 : 40
     width: root.isVertical ? 40 : 75
 
     anchors.margins: 10
@@ -27,7 +27,7 @@ Item{
         PlasmaCore.IconItem{
             id:settingsIconItem
             //KQuickControlAddons.QIconItem{
-            anchors.margins: 3
+         //   anchors.margins: 3
 
             width: Math.min(0.6*settingsButtonContainer.width,0.6*settingsButtonContainer.height)
             height: width
@@ -113,7 +113,7 @@ Item{
         },
         State {
             name: "top"
-            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)
 
             AnchorChanges {
                 target: settingsButtonContainer
@@ -121,24 +121,23 @@ Item{
             }
             AnchorChanges {
                 target: settingsIconItem
-                anchors{ top:parent.top; bottom:parent.bottom; left:undefined; right:undefined;
+                anchors{ top:parent.top; bottom:undefined; left:undefined; right:undefined;
                     horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
             }
         }
     ]
 
     /////BEGIN Now Dock Configuration Dialog///////
-    PlasmaCore.Dialog {
+    PlasmaCore.Dialog{
         id: nowDockConfigurationDialog
-        visualParent: settingsIconItem
-        visible: false
+        hideOnWindowDeactivate: true
 
-        type: PlasmaCore.Dialog.Dock
-        flags: Qt.WindowStaysOnTopHint|Qt.WindowDoesNotAcceptFocus|Qt.BypassWindowManagerHint
+        type: PlasmaCore.Dialog.Tooltip
+        flags: Qt.WindowStaysOnTopHint
         location: plasmoid.location
 
-        onVisualParentChanged: {
-        }
+        visualParent: settingsIconItem
+        visible: false
 
         mainItem:Item{
             enabled: true
@@ -208,6 +207,7 @@ Item{
                                         plasmoid.configuration.panelPosition = 1
                                 }
                             }
+                            onClicked: checked=true;
                         }
                         PlasmaComponents.Button{
                             id: centerPosition
@@ -220,6 +220,7 @@ Item{
                                     plasmoid.configuration.panelPosition = 0
                                 }
                             }
+                            onClicked: checked=true;
                         }
                         PlasmaComponents.Button{
                             id: lastPosition
@@ -235,7 +236,7 @@ Item{
                                         plasmoid.configuration.panelPosition = 2
                                 }
                             }
-
+                            onClicked: checked=true;
                         }
                     }
                 }
@@ -463,7 +464,7 @@ Item{
                         }
 
                         Component.onCompleted: {
-                        //    console.log("From Store:"+plasmoid.configuration.iconSize);
+                            //    console.log("From Store:"+plasmoid.configuration.iconSize);
                             switch (plasmoid.configuration.iconSize){
                             case 16:
                                 iconsFlow.checkedButton = 0;
