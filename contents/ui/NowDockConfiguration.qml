@@ -256,6 +256,15 @@ Item{
                     RowLayout{
                         width: parent.width
 
+                        PlasmaComponents.Button{
+                            text:"-"
+
+                            Layout.preferredWidth: parent.height
+                            Layout.preferredHeight: parent.height
+
+                            onClicked: zoomSlider.value -= 0.05
+                        }
+
                         PlasmaComponents.Slider{
                             id:zoomSlider
 
@@ -286,9 +295,18 @@ Item{
                             }
                         }
 
+                        PlasmaComponents.Button{
+                            text:"+"
+
+                            Layout.preferredWidth: parent.height
+                            Layout.preferredHeight: parent.height
+
+                            onClicked: zoomSlider.value += 0.05
+                        }
+
                         PlasmaComponents.Label{
                             enabled: showBackground.checked
-                            text: Number(zoomSlider.value).toFixed(2)
+                            text: " "+Number(zoomSlider.value).toFixed(2)
                         }
 
                     }
@@ -322,13 +340,23 @@ Item{
                     RowLayout{
                         width: parent.width
 
+                        PlasmaComponents.Button{
+                            enabled: showBackground.checked
+                            text:"-"
+
+                            Layout.preferredWidth: parent.height
+                            Layout.preferredHeight: parent.height
+
+                            onClicked: panelSizeSlider.value -= 2
+                        }
+
                         PlasmaComponents.Slider{
                             id:panelSizeSlider
                             enabled: showBackground.checked
                             valueIndicatorText: "Size"
                             valueIndicatorVisible: true
 
-                            minimumValue: 6
+                            minimumValue: 0
                             maximumValue: 256
 
                             stepSize: 2
@@ -347,6 +375,17 @@ Item{
                                     plasmoid.configuration.panelSize = value;
                             }
                         }
+
+                        PlasmaComponents.Button{
+                            enabled: showBackground.checked
+                            text:"+"
+
+                            Layout.preferredWidth: parent.height
+                            Layout.preferredHeight: parent.height
+
+                            onClicked: panelSizeSlider.value += 2
+                        }
+
 
                         PlasmaComponents.Label{
                             enabled: showBackground.checked
