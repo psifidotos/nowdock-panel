@@ -12,7 +12,10 @@ Item{
     height: root.isVertical ? 75 : 40
     width: root.isVertical ? 40 : 75
 
-    anchors.margins: 10
+    anchors.margins: 8
+
+    //in  Left Edge the button is appearing bigger with no reason!!!!
+    anchors.horizontalCenterOffset: (plasmoid.location === PlasmaCore.Types.LeftEdge) ? 6 : 0
 
     Rectangle{
         id:settingsButton
@@ -28,6 +31,7 @@ Item{
             id:settingsIconItem
             //KQuickControlAddons.QIconItem{
          //   anchors.margins: 3
+          //  anchors.leftMargin: (plasmoid.location === PlasmaCore.Types.LeftEdge) ? 2 : 0
 
             width: Math.min(0.6*settingsButtonContainer.width,0.6*settingsButtonContainer.height)
             height: width
