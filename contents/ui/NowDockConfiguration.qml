@@ -22,7 +22,7 @@ Item{
         anchors.fill: parent
         radius: 3
         color: activeStatus ? theme.highlightColor : Qt.lighter(theme.backgroundColor, 1.3)
-        border.color: activeStatus ? Qt.lighter(theme.backgroundColor, 1.6) : Qt.darker(theme.textColor, 1.3)
+      //  border.color: activeStatus ? Qt.lighter(theme.backgroundColor, 1.6) : Qt.darker(theme.textColor, 1.6)
         opacity: 0.7
 
         property bool activeStatus: settingsMouseArea.containsMouse || nowDockConfigurationDialog.visible
