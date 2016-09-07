@@ -21,7 +21,9 @@ Item{
         id:settingsButton
         anchors.fill: parent
         radius: 3
-        color: activeStatus ? theme.highlightColor : Qt.lighter(theme.backgroundColor, 1.3)
+        property real backColorLuma: 0.2126*theme.backgroundColor.r + 0.7152*theme.backgroundColor.g + 0.0722*theme.backgroundColor.b
+        property color backColor: backColorLuma > 0.5 ? Qt.darker(theme.backgroundColor, 1.3) : Qt.lighter(theme.backgroundColor, 1.3)
+        color: activeStatus ? theme.highlightColor : backColor
       //  border.color: activeStatus ? Qt.lighter(theme.backgroundColor, 1.6) : Qt.darker(theme.textColor, 1.6)
         opacity: 0.7
 
