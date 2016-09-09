@@ -168,11 +168,10 @@ DragDrop.DropArea {
             else
                 maxZoomSize = root.height;
 
-
             for (var i=iconsArray.length-1; i>=0; --i){
-                var currentZoomSize = (zoomFactor+0.1)*iconsArray[i];
+                var currentZoomSize = zoomFactor*iconsArray[i];
 
-                if(currentZoomSize < maxZoomSize){
+                if(currentZoomSize <= maxZoomSize){
                     return iconsArray[i];
                     break;
                 }
