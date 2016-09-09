@@ -139,7 +139,7 @@ import org.kde.kquickcontrolsaddons 2.0
                 }
                 AnchorChanges {
                     target: shadowsSvgItem
-                    anchors{ top:belower.top; bottom:undefined; left:belower.left; right:undefined; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
+                    anchors{ top:belower.top; bottom:undefined; left:belower.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
                 }
             },
             ///Left
