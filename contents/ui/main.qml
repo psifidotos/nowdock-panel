@@ -62,15 +62,125 @@ DragDrop.DropArea {
     property int tasksCount: nowDock ? nowDock.tasksCount : 0
     ///END properties from nowDock
 
+    property bool automaticSize: plasmoid.configuration.automaticIconSize
     property bool useThemePanel: plasmoid.configuration.useThemePanel
 
+
     property int panelEdgeSpacing: iconSize / 2
-    property int iconSize: plasmoid.configuration.iconSize
+    property int iconSize: automaticSize ? (automaticIconSizeBasedSize>0 ? Math.min(automaticIconSizeBasedSize, automaticIconSizeBasedZoom) : automaticIconSizeBasedZoom ):
+                                           Math.min(automaticIconSizeBasedSize, plasmoid.configuration.iconSize)
+                                           //(automaticIconSizeBasedSize>0 ? Math.max(automaticIconSizeBasedSize) : plasmoid.configuration.iconSize)
     property int realSize: iconSize + iconMargin
     property int themePanelSize: plasmoid.configuration.panelSize
     property int userPanelPosition: plasmoid.configuration.panelPosition
 
     property real zoomFactor: ( 1 + (plasmoid.configuration.zoomLevel / 20) )
+
+    property var iconsArray: [16, 22, 32, 48, 64, 92, 128, 256]
+
+    //automatic icon size which is calculated based on the applets size
+    property int counter:0;
+
+    property int currentIconIndex:{
+        for(var i=iconsArray.length-1; i>=0; --i){
+            if(iconsArray[i] === iconSize){
+                return i;
+            }
+        }
+    }
+
+    property int automaticIconSizeBasedSize: 48
+
+    function updateAutomaticIconSize(){
+        var iconSizeExists = false;
+
+        for(var i=iconsArray.length-1; i>=0; --i){
+            if(iconSize == iconsArray[i]){
+                iconSizeExists = true;
+                break;
+            }
+        }
+
+        var layoutSize;
+        var rootSize;
+
+        if(root.isHorizontal){
+            layoutSize = currentLayout.width;
+            rootSize = root.width;
+        }
+        else{
+            layoutSize = currentLayout.height;
+            rootSize = root.height;
+        }
+
+        var dif1
+        if(currentIconIndex>0)
+            dif1 = iconsArray[currentIconIndex-1] / iconSize;
+        else
+            dif1 = iconsArray[0] / iconSize;
+
+        var futureSizeSmaller = dif1*(layoutSize+zoomFactor*iconSize)
+
+        if(currentLayout.hoveredIndex == -1 && iconSizeExists
+                && layoutSize>rootSize
+                && futureSizeSmaller<rootSize){
+            var result = 0;
+            for(var i=iconsArray.length-1; i>=0; --i){
+                if(iconsArray[i]<iconSize){
+                    automaticIconSizeBasedSize = iconsArray[i];
+                    break;
+                }
+            }
+        }
+        else{
+            var dif2
+            if(currentIconIndex<iconsArray.length-1)
+                dif2 = iconsArray[currentIconIndex+1] / iconSize;
+            else
+                dif2 = iconsArray[iconsArray.length-1] / iconSize;
+
+            var futureSize = dif2*(layoutSize+zoomFactor*iconSize);
+
+            if(currentLayout.hoveredIndex == -1 && iconSizeExists
+                    && layoutSize-iconSize<rootSize
+                    && futureSize<rootSize) {
+
+                for(var i=0; i<iconsArray.length; ++i){
+                    if(iconsArray[i]>iconSize){
+                        var dif=iconsArray[i] / iconSize;
+                        if( (dif*(layoutSize+zoomFactor*iconSize) < rootSize) ){
+                            automaticIconSizeBasedSize = iconsArray[i];
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    //automatic icon size which is calculated based on panels size and zoom factor
+    property int automaticIconSizeBasedZoom: {
+        var maxZoomSize;
+        if(isVertical)
+            maxZoomSize = root.width;
+        else
+            maxZoomSize = root.height;
+
+
+        for (var i=iconsArray.length-1; i>=0; --i){
+            var currentZoomSize = (zoomFactor+0.1)*iconsArray[i];
+
+            if(currentZoomSize < maxZoomSize){
+                return iconsArray[i];
+                break;
+            }
+        }
+
+        return iconsArray[0];
+    }
+
+    // onIconSizeChanged: console.log(iconSize);
 
     property Item dragOverlay
     property Item toolBox
@@ -78,7 +188,9 @@ DragDrop.DropArea {
     property Item nowDock
     property Item nowDockConfiguration
 
-
+    Behavior on iconSize {
+        NumberAnimation { duration: 200 }
+    }
     /*  Rectangle{
         anchors.fill: parent
         color: "transparent"
@@ -459,15 +571,27 @@ DragDrop.DropArea {
         rowSpacing: 0
         z:4
 
+
         Layout.preferredWidth: width
         Layout.preferredHeight: height
 
+        property int allCount: root.nowDock ? count-1+nowDock.tasksCount : count
         property int count: children.length
         property int currentSpot: -1000
         property int hoveredIndex: -1
         property bool isLayoutHorizontal
 
         signal updateScale(int delegateIndex, real newScale, real step)
+
+        onHeightChanged: {
+            if(root.isVertical)
+                updateAutomaticIconSize();
+        }
+        onWidthChanged: {
+            if(root.isHorizontal)
+                updateAutomaticIconSize();
+        }
+
     }
 
     onWidthChanged: {

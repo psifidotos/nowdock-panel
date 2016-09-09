@@ -24,7 +24,7 @@ Item{
         property real backColorLuma: 0.2126*theme.backgroundColor.r + 0.7152*theme.backgroundColor.g + 0.0722*theme.backgroundColor.b
         property color backColor: backColorLuma > 0.5 ? Qt.darker(theme.backgroundColor, 1.3) : Qt.lighter(theme.backgroundColor, 1.3)
         color: activeStatus ? theme.highlightColor : backColor
-      //  border.color: activeStatus ? Qt.lighter(theme.backgroundColor, 1.6) : Qt.darker(theme.textColor, 1.6)
+        //  border.color: activeStatus ? Qt.lighter(theme.backgroundColor, 1.6) : Qt.darker(theme.textColor, 1.6)
         opacity: 0.7
 
         property bool activeStatus: settingsMouseArea.containsMouse || nowDockConfigurationDialog.visible
@@ -32,8 +32,8 @@ Item{
         PlasmaCore.IconItem{
             id:settingsIconItem
             //KQuickControlAddons.QIconItem{
-         //   anchors.margins: 3
-          //  anchors.leftMargin: (plasmoid.location === PlasmaCore.Types.LeftEdge) ? 2 : 0
+            //   anchors.margins: 3
+            //  anchors.leftMargin: (plasmoid.location === PlasmaCore.Types.LeftEdge) ? 2 : 0
 
             width: Math.min(0.6*settingsButtonContainer.width,0.6*settingsButtonContainer.height)
             height: width
@@ -412,8 +412,8 @@ Item{
                         width: parent.width
                         spacing: 2
 
-                        property int buttonSize: (width/4) -2
-                        property int checkedButton
+                        property int buttonSize: (width/3) -2
+                        property int checkedButton: -1
 
                         onCheckedButtonChanged:
                         {
@@ -423,37 +423,42 @@ Item{
                                 else
                                     children[i].checked = true;
 
-                            var realValue = 48;
-                            switch(checkedButton){
-                            case 0:
-                                realValue = 16;
-                                break;
-                            case 1:
-                                realValue = 22;
-                                break;
-                            case 2:
-                                realValue = 32;
-                                break;
-                            case 3:
-                                realValue = 48;
-                                break;
-                            case 4:
-                                realValue = 64;
-                                break;
-                            case 5:
-                                realValue = 92;
-                                break;
-                            case 6:
-                                realValue = 128;
-                                break;
-                            case 7:
-                                realValue = 256;
-                                break;
-                            default:
-                                realValue = 64;
-                                break
+                            if (children[0].checked)
+                                plasmoid.configuration.automaticIconSize = true;
+                            else{
+                                var realValue = 48;
+                                switch(checkedButton){
+                                case 1:
+                                    realValue = 16;
+                                    break;
+                                case 2:
+                                    realValue = 22;
+                                    break;
+                                case 3:
+                                    realValue = 32;
+                                    break;
+                                case 4:
+                                    realValue = 48;
+                                    break;
+                                case 5:
+                                    realValue = 64;
+                                    break;
+                                case 6:
+                                    realValue = 92;
+                                    break;
+                                case 7:
+                                    realValue = 128;
+                                    break;
+                                case 8:
+                                    realValue = 256;
+                                    break;
+                                default:
+                                    realValue = 64;
+                                    break
+                                }
+                                plasmoid.configuration.iconSize = realValue;
+                                plasmoid.configuration.automaticIconSize = false;
                             }
-                            plasmoid.configuration.iconSize = realValue;
                             // console.log("Pressed Stored:"+realValue);
                             // console.log("Pressed:"+checkedButton);
                         }
@@ -461,83 +466,94 @@ Item{
                         PlasmaComponents.Button{
                             width: parent.buttonSize
                             checkable: true
-                            text: "16px."
+                            text: "Automatic"
                             onClicked: parent.checkedButton=0;
                         }
+
                         PlasmaComponents.Button{
                             width: parent.buttonSize
                             checkable: true
-                            text: "22px."
+                            text: "16px."
                             onClicked: parent.checkedButton=1;
                         }
                         PlasmaComponents.Button{
                             width: parent.buttonSize
                             checkable: true
-                            text: "32px."
+                            text: "22px."
                             onClicked: parent.checkedButton=2;
+                        }
+                        PlasmaComponents.Button{
+                            width: parent.buttonSize
+                            checkable: true
+                            text: "32px."
+                            onClicked: parent.checkedButton=3;
                         }
                         PlasmaComponents.Button{
                             width: parent.buttonSize
                             checkable: true
                             checked: true
                             text: "48px."
-                            onClicked: parent.checkedButton=3;
-                        }
-                        PlasmaComponents.Button{
-                            width: parent.buttonSize
-                            checkable: true
-                            text: "64px."
                             onClicked: parent.checkedButton=4;
                         }
                         PlasmaComponents.Button{
                             width: parent.buttonSize
                             checkable: true
-                            text: "92px."
+                            text: "64px."
                             onClicked: parent.checkedButton=5;
                         }
                         PlasmaComponents.Button{
                             width: parent.buttonSize
                             checkable: true
-                            text: "128px."
+                            text: "92px."
                             onClicked: parent.checkedButton=6;
                         }
                         PlasmaComponents.Button{
                             width: parent.buttonSize
                             checkable: true
-                            text: "256px."
+                            text: "128px."
                             onClicked: parent.checkedButton=7;
+                        }
+                        PlasmaComponents.Button{
+                            width: parent.buttonSize
+                            checkable: true
+                            text: "256px."
+                            onClicked: parent.checkedButton=8;
                         }
 
                         Component.onCompleted: {
                             //    console.log("From Store:"+plasmoid.configuration.iconSize);
-                            switch (plasmoid.configuration.iconSize){
-                            case 16:
+                            if(plasmoid.configuration.automaticIconSize)
                                 iconsFlow.checkedButton = 0;
-                                break;
-                            case 22:
-                                iconsFlow.checkedButton = 1;
-                                break;
-                            case 32:
-                                iconsFlow.checkedButton = 2;
-                                break;
-                            case 48:
-                                iconsFlow.checkedButton = 3;
-                                break;
-                            case 64:
-                                iconsFlow.checkedButton = 4;
-                                break;
-                            case 92:
-                                iconsFlow.checkedButton = 5;
-                                break;
-                            case 128:
-                                iconsFlow.checkedButton = 6;
-                                break;
-                            case 256:
-                                iconsFlow.checkedButton = 7;
-                                break;
-                            default:
-                                iconsFlow.checkedButton = 4;
-                                break
+                            else{
+                                switch (plasmoid.configuration.iconSize){
+                                case 16:
+                                    iconsFlow.checkedButton = 1;
+                                    break;
+                                case 22:
+                                    iconsFlow.checkedButton = 2;
+                                    break;
+                                case 32:
+                                    iconsFlow.checkedButton = 3;
+                                    break;
+                                case 48:
+                                    iconsFlow.checkedButton = 4;
+                                    break;
+                                case 64:
+                                    iconsFlow.checkedButton = 5;
+                                    break;
+                                case 92:
+                                    iconsFlow.checkedButton = 6;
+                                    break;
+                                case 128:
+                                    iconsFlow.checkedButton = 7;
+                                    break;
+                                case 256:
+                                    iconsFlow.checkedButton = 8;
+                                    break;
+                                default:
+                                    iconsFlow.checkedButton = 5;
+                                    break
+                                }
                             }
 
                         }

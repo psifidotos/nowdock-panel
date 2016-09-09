@@ -238,54 +238,26 @@ Item {
             property bool disableScaleWidth: false
             property bool disableScaleHeight: false
 
-            property int appletMinimumWidth: applet && applet.Layout ?  applet.Layout.minimumWidth : 0
-            property int appletMinimumHeight: applet && applet.Layout ? applet.Layout.minimumHeight : 0
+            property int appletMinimumWidth: applet && applet.Layout ?  applet.Layout.minimumWidth : -1
+            property int appletMinimumHeight: applet && applet.Layout ? applet.Layout.minimumHeight : -1
+
+            property int appletPreferredWidth: applet && applet.Layout ?  applet.Layout.preferredWidth : -1
+            property int appletPreferredHeight: applet && applet.Layout ?  applet.Layout.preferredHeight : -1
+
+            property int appletMaximumWidth: applet && applet.Layout ?  applet.Layout.maximumWidth : -1
+            property int appletMaximumHeight: applet && applet.Layout ?  applet.Layout.maximumHeight : -1
+
+            property int iconSize: root.iconSize
 
             property real scaledWidth: zoomScaleWidth * (layoutWidth + root.iconMargin)
             property real scaledHeight: zoomScaleHeight * (layoutHeight + root.iconMargin)
             property real zoomScaleWidth: disableScaleWidth ? 1 : zoomScale
             property real zoomScaleHeight: disableScaleHeight ? 1 : zoomScale
 
-            property int layoutWidth: {
-                if(applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal && (!canBeHovered)){
-                    return applet.Layout.minimumWidth;
-                } //it is used for plasmoids that need to scale only one axis... e.g. the Weather Plasmoid
-                else if(applet
-                        && ( (applet.Layout.maximumWidth < root.iconSize) || (applet.Layout.preferredWidth > root.iconSize) )
-                        && root.isHorizontal
-                        && !disableScaleHeight){
-                    disableScaleWidth = true;
-                    //this way improves performance, probably because during animation the preferred sizes update a lot
-                    if((applet.Layout.maximumWidth < root.iconSize))
-                        return applet.Layout.maximumWidth;
-                    else if ((applet.Layout.preferredWidth > root.iconSize))
-                        return applet.Layout.preferredWidth;
-                    else
-                        return root.iconSize + moreWidth;
-                }
-                else{
-                    return root.iconSize + moreWidth;
-                }
-            }
+            property int layoutWidthResult: 0
 
-            property int layoutHeight:{
-                if(applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical && (!canBeHovered)){
-                    return applet.Layout.minimumHeight;
-                } //it is used for plasmoids that need to scale only one axis... e.g. the Weather Plasmoid
-                else if(applet
-                        && ( (applet.Layout.maximumHeight < root.iconSize) || (applet.Layout.preferredHeight > root.iconSize))
-                        && root.isVertical
-                        && !disableScaleWidth ){
-                    disableScaleHeight = true;
-                    //this way improves performance, probably because during animation the preferred sizes update a lot
-                    if((applet.Layout.maximumHeight < root.iconSize))
-                        return applet.Layout.maximumHeight;
-                    else if ((applet.Layout.preferredHeight > root.iconSize))
-                        return applet.Layout.preferredHeight;
-                }
-                else
-                    return root.iconSize + moreHeight;
-            }
+            property int layoutWidth
+            property int layoutHeight
 
             property int moreHeight: applet && (applet.pluginName === "org.kde.plasma.systemtray") && root.isHorizontal ? appletMargin : 0
             property int moreWidth: applet && (applet.pluginName === "org.kde.plasma.systemtray") && root.isVertical ? appletMargin : 0
@@ -321,11 +293,82 @@ Item {
             onAppletMinimumWidthChanged: {
                 if(zoomScale == 1)
                     checkCanBeHovered();
+
+                updateLayoutWidth();
             }
 
             onAppletMinimumHeightChanged: {
                 if(zoomScale == 1)
                     checkCanBeHovered();
+
+                updateLayoutHeight();
+            }
+
+            onAppletPreferredWidthChanged: updateLayoutWidth();
+            onAppletPreferredHeightChanged: updateLayoutHeight();
+
+            onAppletMaximumWidthChanged: updateLayoutWidth();
+            onAppletMaximumHeightChanged: updateLayoutHeight();
+
+            onIconSizeChanged: {
+                updateLayoutWidth();
+                updateLayoutHeight();
+            }
+
+
+
+            function updateLayoutHeight(){
+                if(applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical && (!canBeHovered)){
+                   // return applet.Layout.minimumHeight;
+                     layoutHeight = applet.Layout.minimumHeight;
+                } //it is used for plasmoids that need to scale only one axis... e.g. the Weather Plasmoid
+                else if(applet
+                        && ( (applet.Layout.maximumHeight < root.iconSize) || (applet.Layout.preferredHeight > root.iconSize))
+                        && root.isVertical
+                        && !disableScaleWidth ){
+                    disableScaleHeight = true;
+                    //this way improves performance, probably because during animation the preferred sizes update a lot
+                    if((applet.Layout.maximumHeight < root.iconSize))
+                        //return applet.Layout.maximumHeight;
+                        layoutHeight = applet.Layout.maximumHeight;
+                    else if ((applet.Layout.preferredHeight > root.iconSize))
+                        //return applet.Layout.preferredHeight;
+                        layoutHeight = applet.Layout.preferredHeight;
+                    else
+                        layoutHeight = root.iconSize + moreHeight;
+                }
+                else
+                   layoutHeight = root.iconSize + moreHeight;
+                    //return root.iconSize + moreHeight;
+            }
+
+            function updateLayoutWidth(){
+                if(applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal && (!canBeHovered)){
+                    //return applet.Layout.minimumWidth;
+                    layoutWidth = applet.Layout.minimumWidth;
+                } //it is used for plasmoids that need to scale only one axis... e.g. the Weather Plasmoid
+                else if(applet
+                        && ( (applet.Layout.maximumWidth < root.iconSize) || (applet.Layout.preferredWidth > root.iconSize) )
+                        && root.isHorizontal
+                        && !disableScaleHeight){
+                    disableScaleWidth = true;
+                    //this way improves performance, probably because during animation the preferred sizes update a lot
+                    if((applet.Layout.maximumWidth < root.iconSize)){
+                     //   return applet.Layout.maximumWidth;
+                        layoutWidth = applet.Layout.maximumWidth;
+                    }
+                    else if ((applet.Layout.preferredWidth > root.iconSize)){
+                        layoutWidth = applet.Layout.preferredWidth;
+                    }    //return applet.Layout.preferredWidth;
+                    else{
+//                        return root.iconSize + moreWidth;
+                        layoutWidth = root.iconSize + moreWidth;
+                    }
+                }
+                else{
+                    //return root.iconSize + moreWidth;
+                    layoutWidth = root.iconSize + moreWidth;
+                }
             }
 
             Item{
