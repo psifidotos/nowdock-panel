@@ -69,7 +69,7 @@ DragDrop.DropArea {
     property int panelEdgeSpacing: iconSize / 2
     property int iconSize: automaticSize ? (automaticIconSizeBasedSize>0 ? Math.min(automaticIconSizeBasedSize, automaticIconSizeBasedZoom) : automaticIconSizeBasedZoom ):
                                            Math.min(automaticIconSizeBasedSize, plasmoid.configuration.iconSize)
-                                           //(automaticIconSizeBasedSize>0 ? Math.max(automaticIconSizeBasedSize) : plasmoid.configuration.iconSize)
+    //(automaticIconSizeBasedSize>0 ? Math.max(automaticIconSizeBasedSize) : plasmoid.configuration.iconSize)
     property int realSize: iconSize + iconMargin
     property int themePanelSize: plasmoid.configuration.panelSize
     property int userPanelPosition: plasmoid.configuration.panelPosition
@@ -161,23 +161,27 @@ DragDrop.DropArea {
 
     //automatic icon size which is calculated based on panels size and zoom factor
     property int automaticIconSizeBasedZoom: {
-        var maxZoomSize;
-        if(isVertical)
-            maxZoomSize = root.width;
-        else
-            maxZoomSize = root.height;
+        if(automaticSize){
+            var maxZoomSize;
+            if(isVertical)
+                maxZoomSize = root.width;
+            else
+                maxZoomSize = root.height;
 
 
-        for (var i=iconsArray.length-1; i>=0; --i){
-            var currentZoomSize = (zoomFactor+0.1)*iconsArray[i];
+            for (var i=iconsArray.length-1; i>=0; --i){
+                var currentZoomSize = (zoomFactor+0.1)*iconsArray[i];
 
-            if(currentZoomSize < maxZoomSize){
-                return iconsArray[i];
-                break;
+                if(currentZoomSize < maxZoomSize){
+                    return iconsArray[i];
+                    break;
+                }
             }
-        }
 
-        return iconsArray[0];
+            return iconsArray[0];
+        }
+        else
+            return plasmoid.configuration.iconSize;
     }
 
     // onIconSizeChanged: console.log(iconSize);
