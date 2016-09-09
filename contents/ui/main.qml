@@ -57,6 +57,7 @@ DragDrop.DropArea {
     //END properties
 
     ///BEGIN properties from nowDock
+    property int nowDockHoveredIndex: nowDock ? nowDock.hoveredIndex : -1
     property int iconMargin: nowDock ? nowDock.iconMargin : 5
     property int statesLineSize: nowDock ? nowDock.statesLineSize : 16
     property int tasksCount: nowDock ? nowDock.tasksCount : 0
@@ -91,71 +92,110 @@ DragDrop.DropArea {
 
     property int automaticIconSizeBasedSize: 48
 
-    function updateAutomaticIconSize(){
-        var iconSizeExists = false;
+    //is used to forbit updateAutomaticIconSize when hovering
+    property int previousAllTasks: -1
+    //is used for the initialization phase in startup where there arent removals
+    //this variable provides a way to grow icon size
+    property bool onlyAddingStarup: true
 
-        for(var i=iconsArray.length-1; i>=0; --i){
-            if(iconSize == iconsArray[i]){
-                iconSizeExists = true;
-                break;
-            }
-        }
+    //sizeViolation variable is used when for any reason the currentLayout
+    //exceeds the panel size
+    function updateAutomaticIconSize(sizeViolation){
+        if(((currentLayout.hoveredIndex == -1)
+           && (nowDockHoveredIndex == -1)
+           && previousAllTasks !== currentLayout.allCount)
+                || sizeViolation){
 
-        var layoutSize;
-        var rootSize;
+            var removedItem = previousAllTasks > currentLayout.allCount;
 
-        if(root.isHorizontal){
-            layoutSize = currentLayout.width;
-            rootSize = root.width;
-        }
-        else{
-            layoutSize = currentLayout.height;
-            rootSize = root.height;
-        }
+            if (removedItem)
+                onlyAddingStarup = false;
 
-        var dif1
-        if(currentIconIndex>0)
-            dif1 = iconsArray[currentIconIndex-1] / iconSize;
-        else
-            dif1 = iconsArray[0] / iconSize;
+            previousAllTasks = currentLayout.allCount;
+            var iconSizeExists = false;
 
-        var futureSizeSmaller = dif1*(layoutSize+zoomFactor*iconSize)
 
-        if(currentLayout.hoveredIndex == -1 && iconSizeExists
-                && layoutSize>rootSize
-                && futureSizeSmaller<rootSize){
-            var result = 0;
             for(var i=iconsArray.length-1; i>=0; --i){
-                if(iconsArray[i]<iconSize){
-                    automaticIconSizeBasedSize = iconsArray[i];
+                if(iconSize == iconsArray[i]){
+                    iconSizeExists = true;
                     break;
                 }
             }
-        }
-        else{
-            var dif2
-            if(currentIconIndex<iconsArray.length-1)
-                dif2 = iconsArray[currentIconIndex+1] / iconSize;
-            else
-                dif2 = iconsArray[iconsArray.length-1] / iconSize;
 
-            var futureSize = dif2*(layoutSize+zoomFactor*iconSize);
+            var layoutSize;
+            var rootSize;
 
-            if(currentLayout.hoveredIndex == -1 && iconSizeExists
-                    && layoutSize-iconSize<rootSize
-                    && futureSize<rootSize) {
+            if(root.isHorizontal){
+                layoutSize = currentLayout.width;
+                rootSize = root.width;
+            }
+            else{
+                layoutSize = currentLayout.height;
+                rootSize = root.height;
+            }
 
-                for(var i=0; i<iconsArray.length; ++i){
+            var nextIconSize;
+
+            if(currentIconIndex>0){
+                nextIconSize = iconsArray[currentIconIndex-1];
+            }
+            else{
+                nextIconSize = iconsArray[0];
+            }
+
+            //compute how big is going to be layout with the new icon size
+            //1+zoomFactor is used because when the signal is received
+            //everything is unzoomed
+            var dif1 = nextIconSize / iconSize;
+            var limitToShrink = (1+zoomFactor)*(nextIconSize+2*iconMargin);
+            var futureSizeSmaller = dif1*layoutSize + limitToShrink;
+
+            var result=0;
+
+            if(iconSizeExists && (!removedItem || sizeViolation)
+                    && layoutSize+(1+zoomFactor)*(iconSize+2*iconMargin)>rootSize
+                    && futureSizeSmaller<rootSize){
+                for(var i=iconsArray.length-1; i>=0; --i){
+                    if(iconsArray[i]<iconSize){
+                        result = iconsArray[i];
+                        break;
+                    }
+                }
+            }
+            //   else{
+
+            if(currentIconIndex<iconsArray.length-1){
+                nextIconSize = iconsArray[currentIconIndex+1];
+            }
+            else{
+                nextIconSize = iconsArray[iconsArray.length-1]
+            }
+
+            var dif2 = nextIconSize / iconSize ;
+            var limitToGrow = zoomFactor*(nextIconSize+2*iconMargin);
+            var futureSize = dif2*layoutSize - limitToGrow;
+
+            if(iconSizeExists && (removedItem || onlyAddingStarup || sizeViolation)
+                    && layoutSize<=rootSize
+                   //  && layoutSize<rootSize
+                    && futureSize<=rootSize) {
+
+                for(var i=iconsArray.length-1; i>=0; --i){
                     if(iconsArray[i]>iconSize){
                         var dif=iconsArray[i] / iconSize;
-                        if( (dif*(layoutSize+zoomFactor*iconSize) < rootSize) ){
-                            automaticIconSizeBasedSize = iconsArray[i];
+                        var localLimitToGrow = zoomFactor*(iconsArray[i]+2*iconMargin);
+                        if( (dif*layoutSize - localLimitToGrow < rootSize) ){
+                            result = iconsArray[i];
                             break;
                         }
                     }
                 }
             }
+
+            if(result>0)
+                automaticIconSizeBasedSize = result;
         }
+        //   }
     }
 
 
@@ -587,13 +627,22 @@ DragDrop.DropArea {
         signal updateScale(int delegateIndex, real newScale, real step)
 
         onHeightChanged: {
-            if(root.isVertical)
-                updateAutomaticIconSize();
+            if(root.isVertical){
+                if(currentLayout.height>root.height)
+                    updateAutomaticIconSize(true);
+                else
+                    updateAutomaticIconSize(false);
+            }
         }
         onWidthChanged: {
-            if(root.isHorizontal)
-                updateAutomaticIconSize();
+            if(root.isHorizontal){
+                if(currentLayout.width>root.width)
+                    updateAutomaticIconSize(true);
+                else
+                    updateAutomaticIconSize(false);
+            }
         }
+        //    onAllCountChanged: updateAutomaticIconSize();
 
     }
 
