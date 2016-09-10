@@ -96,15 +96,17 @@ Item {
 
     //this functions gets the signal from the plasmoid, it can be used for signal items
     //outside the NowDock Plasmoid
-  //  property int debCounter: 0;
+    //property int debCounter: 0;
     function interceptNowDockUpdateScale(dIndex, newScale, step){
-        if(dIndex === -1){
-            currentLayout.updateScale(index-1,newScale, step);
-        }
-        else if(dIndex === root.tasksCount){
-         //   debCounter++;
-         //   console.log(debCounter+ " "+dIndex+" "+newScale+" received...");
-            currentLayout.updateScale(index+1,newScale, step);
+        if(plasmoid.immutable){
+            if(dIndex === -1){
+                currentLayout.updateScale(index-1,newScale, step);
+            }
+            else if(dIndex === root.tasksCount){
+                //   debCounter++;
+                //   console.log(debCounter+ " "+dIndex+" "+newScale+" received...");
+                currentLayout.updateScale(index+1,newScale, step);
+            }
         }
     }
 
@@ -180,7 +182,7 @@ Item {
         height: width
     }
 
-   /*  Rectangle{
+    /*  Rectangle{
         anchors.fill: parent
         color: "transparent"
         border.color: "green"
@@ -268,7 +270,7 @@ Item {
             property alias index: container.index
             // property int pHeight: applet ? applet.Layout.preferredHeight : -10
 
- /*           onLayoutWidthChanged: {
+            /*           onLayoutWidthChanged: {
                 console.log("---------- "+ applet.pluginName +" ----------");
                 console.log("MinW "+applet.Layout.minimumWidth);
                 console.log("PW "+applet.Layout.preferredWidth);
@@ -319,8 +321,8 @@ Item {
 
             function updateLayoutHeight(){
                 if(applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical && (!canBeHovered)){
-                   // return applet.Layout.minimumHeight;
-                     layoutHeight = applet.Layout.minimumHeight;
+                    // return applet.Layout.minimumHeight;
+                    layoutHeight = applet.Layout.minimumHeight;
                 } //it is used for plasmoids that need to scale only one axis... e.g. the Weather Plasmoid
                 else if(applet
                         && ( (applet.Layout.maximumHeight < root.iconSize) || (applet.Layout.preferredHeight > root.iconSize))
@@ -338,8 +340,8 @@ Item {
                         layoutHeight = root.iconSize + moreHeight;
                 }
                 else
-                   layoutHeight = root.iconSize + moreHeight;
-                    //return root.iconSize + moreHeight;
+                    layoutHeight = root.iconSize + moreHeight;
+                //return root.iconSize + moreHeight;
             }
 
             function updateLayoutWidth(){
@@ -354,14 +356,14 @@ Item {
                     disableScaleWidth = true;
                     //this way improves performance, probably because during animation the preferred sizes update a lot
                     if((applet.Layout.maximumWidth < root.iconSize)){
-                     //   return applet.Layout.maximumWidth;
+                        //   return applet.Layout.maximumWidth;
                         layoutWidth = applet.Layout.maximumWidth;
                     }
                     else if ((applet.Layout.preferredWidth > root.iconSize)){
                         layoutWidth = applet.Layout.preferredWidth;
                     }    //return applet.Layout.preferredWidth;
                     else{
-//                        return root.iconSize + moreWidth;
+                        //                        return root.iconSize + moreWidth;
                         layoutWidth = root.iconSize + moreWidth;
                     }
                 }
