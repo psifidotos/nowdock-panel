@@ -69,7 +69,7 @@ DragDrop.DropArea {
 
     property int panelEdgeSpacing: iconSize / 2
     property int iconSize: automaticSize ? (automaticIconSizeBasedSize>0 ? Math.min(automaticIconSizeBasedSize, automaticIconSizeBasedZoom) : automaticIconSizeBasedZoom ):
-                                           Math.min(automaticIconSizeBasedSize, plasmoid.configuration.iconSize)
+                                           plasmoid.configuration.iconSize
     //(automaticIconSizeBasedSize>0 ? Math.max(automaticIconSizeBasedSize) : plasmoid.configuration.iconSize)
     property int realSize: iconSize + iconMargin
     property int themePanelSize: plasmoid.configuration.panelSize
@@ -627,7 +627,7 @@ DragDrop.DropArea {
         signal updateScale(int delegateIndex, real newScale, real step)
 
         onHeightChanged: {
-            if(root.isVertical){
+            if(root.isVertical && automaticSize){
                 if(currentLayout.height>root.height)
                     updateAutomaticIconSize(true);
                 else
@@ -635,7 +635,7 @@ DragDrop.DropArea {
             }
         }
         onWidthChanged: {
-            if(root.isHorizontal){
+            if(root.isHorizontal && automaticSize){
                 if(currentLayout.width>root.width)
                     updateAutomaticIconSize(true);
                 else
@@ -643,7 +643,6 @@ DragDrop.DropArea {
             }
         }
         //    onAllCountChanged: updateAutomaticIconSize();
-
     }
 
     onWidthChanged: {
