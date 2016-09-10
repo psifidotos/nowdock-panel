@@ -108,7 +108,7 @@ DragDrop.DropArea {
             && (nowDockHoveredIndex == -1)
             && (iconSize % iconStep == 0)
             && previousAllTasks !== currentLayout.allCount)
-                || sizeViolation){
+                || (sizeViolation && (iconSize % iconStep == 0))){
 
             console.log("In .... :"+previousAllTasks+" - "+currentLayout.allCount);
             console.log("Currect icon size :"+iconSize+"  - "+(iconSize % iconStep));
@@ -140,7 +140,7 @@ DragDrop.DropArea {
 
             var nextIconSize= Math.max(iconSize - iconStep, 16);
             var dif1 = nextIconSize / iconSize;
-            var limitToShrink = (1+zoomFactor)*(nextIconSize+2*iconMargin);
+            var limitToShrink = (1+zoomFactor)*(nextIconSize+2*dif1*iconMargin);
             var futureSizeSmaller = dif1*layoutSize + limitToShrink;
             var currentPredictedSize = layoutSize+(1+zoomFactor)*(iconSize+2*iconMargin)
 
@@ -157,7 +157,7 @@ DragDrop.DropArea {
                 nextIconSize = iconSize + iconStep;
 
                 var dif2 = nextIconSize / iconSize ;
-                var limitToGrow = zoomFactor*(nextIconSize+2*iconMargin);
+                var limitToGrow = zoomFactor*(nextIconSize+2*dif2*iconMargin);
                 var futureSize = dif2*layoutSize - limitToGrow;
 
                 if((removedItem || onlyAddingStarup || !sizeViolation)
