@@ -69,8 +69,10 @@ DragDrop.DropArea {
 
 
     property int panelEdgeSpacing: iconSize / 2
-    property int iconSize: automaticSize ? (automaticIconSizeBasedSize>0 ? Math.min(automaticIconSizeBasedSize, automaticIconSizeBasedZoom) : automaticIconSizeBasedZoom ):
-                                           plasmoid.configuration.iconSize
+    property int iconSize: automaticSize ? ( (automaticIconSizeBasedSize>0 && plasmoid.immutable)  ?
+                                               Math.min(automaticIconSizeBasedSize, automaticIconSizeBasedZoom) : automaticIconSizeBasedZoom ):
+                                            Math.min(automaticIconSizeBasedZoom,plasmoid.configuration.iconSize)
+    property int iconStep: 8
     //(automaticIconSizeBasedSize>0 ? Math.max(automaticIconSizeBasedSize) : plasmoid.configuration.iconSize)
     property int realSize: iconSize + iconMargin
     property int themePanelSize: plasmoid.configuration.panelSize
@@ -83,13 +85,13 @@ DragDrop.DropArea {
     //automatic icon size which is calculated based on the applets size
     property int counter:0;
 
-    property int currentIconIndex:{
+/*    property int currentIconIndex:{
         for(var i=iconsArray.length-1; i>=0; --i){
             if(iconsArray[i] === iconSize){
                 return i;
             }
         }
-    }
+    }*/
 
     property int automaticIconSizeBasedSize: 48
 
@@ -104,11 +106,12 @@ DragDrop.DropArea {
     function updateAutomaticIconSize(sizeViolation){
         if(((currentLayout.hoveredIndex == -1)
             && (nowDockHoveredIndex == -1)
+            && (iconSize % iconStep == 0)
             && previousAllTasks !== currentLayout.allCount)
                 || sizeViolation){
 
             console.log("In .... :"+previousAllTasks+" - "+currentLayout.allCount);
-            console.log("Currect icon size :"+iconSize);
+            console.log("Currect icon size :"+iconSize+"  - "+(iconSize % iconStep));
 
             var removedItem = previousAllTasks > currentLayout.allCount;
 
@@ -132,7 +135,6 @@ DragDrop.DropArea {
             //compute how big is going to be layout with the new icon size
             //1+zoomFactor is used because when the signal is received
             //everything is unzoomed
-            var iconStep = 8;
 
             // console.log(iconSize);
 
@@ -156,7 +158,7 @@ DragDrop.DropArea {
 
                 var dif2 = nextIconSize / iconSize ;
                 var limitToGrow = zoomFactor*(nextIconSize+2*iconMargin);
-                var futureSize = dif2*layoutSize;// - limitToGrow;
+                var futureSize = dif2*layoutSize - limitToGrow;
 
                 if((removedItem || onlyAddingStarup || !sizeViolation)
                         && layoutSize<=rootSize
@@ -178,33 +180,59 @@ DragDrop.DropArea {
 
 
     //automatic icon size which is calculated based on panels size and zoom factor
-    property int automaticIconSizeBasedZoom: {
-        if(automaticSize){
-            var maxZoomSize;
-            if(isVertical)
-                maxZoomSize = root.width;
-            else
-                maxZoomSize = root.height;
-
-            var maxIconSize = 16;
-            var found = false;
-
-            do {
-                var currentZoomedSize = zoomFactor*maxIconSize;
-
-                if(currentZoomedSize <= maxZoomSize)
-                    maxIconSize += 8;
-                else
-                    found = true;
-
-            } while(!found)
-
-            return Math.max (16, maxIconSize-8);
-
-        }
+    property int automaticIconSizeBasedZoom:{
+//    function updateAutomaticIconSizeZoom() {
+        //      if(automaticSize){
+        var maxZoomSize;
+        if(isVertical)
+            maxZoomSize = root.width;
         else
-            return plasmoid.configuration.iconSize;
+            maxZoomSize = root.height;
+
+        if(root.nowDock){
+            maxZoomSize -= root.statesLineSize;
+        }
+
+        var maxIconSize = 16;
+        var found = false;
+
+        do {
+            var currentZoomedSize = zoomFactor*maxIconSize;
+
+            if(currentZoomedSize <= maxZoomSize)
+                maxIconSize += iconStep;
+            else
+                found = true;
+
+        } while(!found)
+
+        return Math.max (16, maxIconSize-iconStep);
+
+        // }
+        //  else
+        //       return plasmoid.configuration.iconSize;
     }
+
+    onWidthChanged: {
+        containmentSizeSyncTimer.restart()
+        if (startupTimer.running) {
+            startupTimer.restart();
+        }
+
+      //  if(isHorizontal)
+         //   updateAutomaticIconSizeZoom();
+    }
+    onHeightChanged: {
+        containmentSizeSyncTimer.restart()
+        if (startupTimer.running) {
+            startupTimer.restart();
+        }
+
+      //  if(isVertical)
+        //    updateAutomaticIconSizeZoom();
+    }
+
+  //  onZoomFactorChanged: updateAutomaticIconSizeZoom();
 
     // onIconSizeChanged: console.log(iconSize);
 
@@ -628,18 +656,7 @@ DragDrop.DropArea {
         //    onAllCountChanged: updateAutomaticIconSize();
     }
 
-    onWidthChanged: {
-        containmentSizeSyncTimer.restart()
-        if (startupTimer.running) {
-            startupTimer.restart();
-        }
-    }
-    onHeightChanged: {
-        containmentSizeSyncTimer.restart()
-        if (startupTimer.running) {
-            startupTimer.restart();
-        }
-    }
+
 
     Timer {
         id: containmentSizeSyncTimer
