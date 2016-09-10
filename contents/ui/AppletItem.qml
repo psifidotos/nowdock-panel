@@ -180,7 +180,7 @@ Item {
         height: width
     }
 
-    /*  Rectangle{
+   /*  Rectangle{
         anchors.fill: parent
         color: "transparent"
         border.color: "green"

@@ -58,7 +58,8 @@ DragDrop.DropArea {
 
     ///BEGIN properties from nowDock
     property int nowDockHoveredIndex: nowDock ? nowDock.hoveredIndex : -1
-    property int iconMargin: nowDock ? nowDock.iconMargin : 5
+    property int iconMargin: nowDock ? nowDock.iconMargin : 0.2 * iconSize
+    // property int iconMargin: 5
     property int statesLineSize: nowDock ? nowDock.statesLineSize : 0
     property int tasksCount: nowDock ? nowDock.tasksCount : 0
     ///END properties from nowDock
@@ -102,9 +103,12 @@ DragDrop.DropArea {
     //exceeds the panel size
     function updateAutomaticIconSize(sizeViolation){
         if(((currentLayout.hoveredIndex == -1)
-           && (nowDockHoveredIndex == -1)
-           && previousAllTasks !== currentLayout.allCount)
+            && (nowDockHoveredIndex == -1)
+            && previousAllTasks !== currentLayout.allCount)
                 || sizeViolation){
+
+            console.log("In .... :"+previousAllTasks+" - "+currentLayout.allCount);
+            console.log("Currect icon size :"+iconSize);
 
             var removedItem = previousAllTasks > currentLayout.allCount;
 
@@ -112,15 +116,6 @@ DragDrop.DropArea {
                 onlyAddingStarup = false;
 
             previousAllTasks = currentLayout.allCount;
-            var iconSizeExists = false;
-
-
-            for(var i=iconsArray.length-1; i>=0; --i){
-                if(iconSize == iconsArray[i]){
-                    iconSizeExists = true;
-                    break;
-                }
-            }
 
             var layoutSize;
             var rootSize;
@@ -134,68 +129,51 @@ DragDrop.DropArea {
                 rootSize = root.height;
             }
 
-            var nextIconSize;
-
-            if(currentIconIndex>0){
-                nextIconSize = iconsArray[currentIconIndex-1];
-            }
-            else{
-                nextIconSize = iconsArray[0];
-            }
-
             //compute how big is going to be layout with the new icon size
             //1+zoomFactor is used because when the signal is received
             //everything is unzoomed
+            var iconStep = 8;
+
+            // console.log(iconSize);
+
+            var nextIconSize= Math.max(iconSize - iconStep, 16);
             var dif1 = nextIconSize / iconSize;
             var limitToShrink = (1+zoomFactor)*(nextIconSize+2*iconMargin);
             var futureSizeSmaller = dif1*layoutSize + limitToShrink;
+            var currentPredictedSize = layoutSize+(1+zoomFactor)*(iconSize+2*iconMargin)
 
             var result=0;
 
-            if(iconSizeExists && (!removedItem || sizeViolation)
-                    && layoutSize+(1+zoomFactor)*(iconSize+2*iconMargin)>rootSize
-                    && futureSizeSmaller<rootSize){
-                for(var i=iconsArray.length-1; i>=0; --i){
-                    if(iconsArray[i]<iconSize){
-                        result = iconsArray[i];
-                        break;
-                    }
+            if( (!removedItem || sizeViolation)
+                    && currentPredictedSize>rootSize
+                    && (futureSizeSmaller<rootSize || sizeViolation)){
+                result = nextIconSize;
+                console.log("Decrease: "+result);
+            }
+
+            if((result===0)||(onlyAddingStarup)){
+                nextIconSize = iconSize + iconStep;
+
+                var dif2 = nextIconSize / iconSize ;
+                var limitToGrow = zoomFactor*(nextIconSize+2*iconMargin);
+                var futureSize = dif2*layoutSize;// - limitToGrow;
+
+                if((removedItem || onlyAddingStarup || !sizeViolation)
+                        && layoutSize<=rootSize
+                        && futureSize<=rootSize) {
+                    if(onlyAddingStarup)
+                        result = automaticIconSizeBasedZoom;
+                    else
+                        result = nextIconSize;
+                    console.log("Increase: "+result);
                 }
             }
-            //   else{
 
-            if(currentIconIndex<iconsArray.length-1){
-                nextIconSize = iconsArray[currentIconIndex+1];
-            }
-            else{
-                nextIconSize = iconsArray[iconsArray.length-1]
-            }
-
-            var dif2 = nextIconSize / iconSize ;
-            var limitToGrow = zoomFactor*(nextIconSize+2*iconMargin);
-            var futureSize = dif2*layoutSize - limitToGrow;
-
-            if(iconSizeExists && (removedItem || onlyAddingStarup || sizeViolation)
-                    && layoutSize<=rootSize
-                   //  && layoutSize<rootSize
-                    && futureSize<=rootSize) {
-
-                for(var i=iconsArray.length-1; i>=0; --i){
-                    if(iconsArray[i]>iconSize){
-                        var dif=iconsArray[i] / iconSize;
-                        var localLimitToGrow = zoomFactor*(iconsArray[i]+2*iconMargin);
-                        if( (dif*layoutSize - localLimitToGrow < rootSize) ){
-                            result = iconsArray[i];
-                            break;
-                        }
-                    }
-                }
-            }
 
             if(result>0)
                 automaticIconSizeBasedSize = result;
         }
-        //   }
+
     }
 
 
@@ -208,16 +186,21 @@ DragDrop.DropArea {
             else
                 maxZoomSize = root.height;
 
-            for (var i=iconsArray.length-1; i>=0; --i){
-                var currentZoomSize = zoomFactor*iconsArray[i];
+            var maxIconSize = 16;
+            var found = false;
 
-                if(currentZoomSize <= maxZoomSize){
-                    return iconsArray[i];
-                    break;
-                }
-            }
+            do {
+                var currentZoomedSize = zoomFactor*maxIconSize;
 
-            return iconsArray[0];
+                if(currentZoomedSize <= maxZoomSize)
+                    maxIconSize += 8;
+                else
+                    found = true;
+
+            } while(!found)
+
+            return Math.max (16, maxIconSize-8);
+
         }
         else
             return plasmoid.configuration.iconSize;
