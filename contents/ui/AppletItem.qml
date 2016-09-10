@@ -234,8 +234,10 @@ Item {
         Item{
             id: wrapper
 
-            width: nowDock ? ((container.showZoomed && root.isVertical) ? container.maxWidth : nowDock.tasksWidth) : scaledWidth
-            height: nowDock ? ((container.showZoomed && root.isHorizontal) ? container.maxHeight : nowDock.tasksHeight ): scaledHeight
+            width: nowDock ? ((container.showZoomed && root.isVertical) ?
+                                  scaledWidth : nowDock.tasksWidth) : scaledWidth
+            height: nowDock ? ((container.showZoomed && root.isHorizontal) ?
+                                   scaledHeight : nowDock.tasksHeight ): scaledHeight
 
             property bool disableScaleWidth: false
             property bool disableScaleHeight: false
