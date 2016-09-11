@@ -37,5 +37,8 @@
     <entry name="automaticIconSize" type="Bool">
       <default>false</default>
     </entry>
+    <entry name="smallAutomaticIconJumps" type="Bool">
+      <default>false</default>
+    </entry>
   </group>
 </kcfg>

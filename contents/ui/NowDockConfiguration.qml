@@ -559,6 +559,23 @@ Item{
                         }
 
 
+                    } //end of Flow
+
+                    PlasmaComponents.CheckBox{
+                        id: smallJumpsChk
+                        text:"Small steps for icon sizes in automatic modes"
+
+                        property bool inStartup: true
+
+                        onCheckedChanged:{
+                            if(!inStartup)
+                                plasmoid.configuration.smallAutomaticIconJumps = checked;
+                        }
+
+                        Component.onCompleted: {
+                            checked = plasmoid.configuration.smallAutomaticIconJumps;
+                            inStartup = false;
+                        }
                     }
                 }
 

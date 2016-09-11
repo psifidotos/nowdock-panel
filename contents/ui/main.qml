@@ -65,13 +65,14 @@ DragDrop.DropArea {
     ///END properties from nowDock
 
     property bool automaticSize: plasmoid.configuration.automaticIconSize
+    property bool smallAutomaticIconJumps: plasmoid.configuration.smallAutomaticIconJumps
     property bool useThemePanel: plasmoid.configuration.useThemePanel
 
 
     property int panelEdgeSpacing: iconSize / 2
     property int iconSize: automaticSize ? ( (automaticIconSizeBasedSize>0 && plasmoid.immutable)  ?
-                                               Math.min(automaticIconSizeBasedSize, automaticIconSizeBasedZoom) : automaticIconSizeBasedZoom ):
-                                            Math.min(automaticIconSizeBasedZoom,plasmoid.configuration.iconSize)
+                                                Math.min(automaticIconSizeBasedSize, automaticIconSizeBasedZoom) : automaticIconSizeBasedZoom ):
+                                           Math.min(automaticIconSizeBasedZoom,plasmoid.configuration.iconSize)
     property int iconStep: 8
     //(automaticIconSizeBasedSize>0 ? Math.max(automaticIconSizeBasedSize) : plasmoid.configuration.iconSize)
     property int realSize: iconSize + iconMargin
@@ -85,13 +86,25 @@ DragDrop.DropArea {
     //automatic icon size which is calculated based on the applets size
     property int counter:0;
 
-/*    property int currentIconIndex:{
+    property int currentIconIndex:{
         for(var i=iconsArray.length-1; i>=0; --i){
             if(iconsArray[i] === iconSize){
                 return i;
             }
         }
-    }*/
+    }
+
+    function sizeIsFromAutomaticMode(size){
+
+        for(var i=iconsArray.length-1; i>=0; --i){
+            if(iconsArray[i] === size){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     property int automaticIconSizeBasedSize: 48
 
@@ -106,7 +119,7 @@ DragDrop.DropArea {
     function updateAutomaticIconSize(sizeViolation){
         if(((currentLayout.hoveredIndex == -1)
             && (nowDockHoveredIndex == -1)
-            && (iconSize % iconStep == 0)
+            && ((smallAutomaticIconJumps && (iconSize % iconStep) == 0 ) || (!smallAutomaticIconJumps && sizeIsFromAutomaticMode(iconSize)) )
             && previousAllTasks !== currentLayout.allCount)
                 || (sizeViolation && (iconSize % iconStep == 0))){
 
@@ -138,7 +151,17 @@ DragDrop.DropArea {
 
             // console.log(iconSize);
 
-            var nextIconSize= Math.max(iconSize - iconStep, 16);
+            var nextIconSize
+
+            if(smallAutomaticIconJumps)
+                nextIconSize = Math.max(iconSize - iconStep, 16);
+            else{
+                if(currentIconIndex == 0)
+                    nextIconSize = iconsArray[0];
+                else
+                    nextIconSize = iconsArray[currentIconIndex-1];
+            }
+
             var dif1 = nextIconSize / iconSize;
             var limitToShrink = (1+zoomFactor)*(nextIconSize+2*dif1*iconMargin);
             var futureSizeSmaller = dif1*layoutSize + limitToShrink;
@@ -150,15 +173,24 @@ DragDrop.DropArea {
                     && currentPredictedSize>rootSize
                     && (futureSizeSmaller<rootSize || sizeViolation)){
                 result = nextIconSize;
-                console.log("Decrease: "+result);
+                console.log("Should Decrease: "+result);
             }
 
             if((result===0)||(onlyAddingStarup)){
-                nextIconSize = iconSize + iconStep;
+
+                if(smallAutomaticIconJumps){
+                    nextIconSize = iconSize + iconStep;
+                } else{
+                    if(currentIconIndex == iconsArray.length -1)
+                        nextIconSize = iconsArray[iconsArray.length -1];
+                    else
+                        nextIconSize = iconsArray[currentIconIndex+1];
+                }
+
 
                 var dif2 = nextIconSize / iconSize ;
                 var limitToGrow = zoomFactor*(nextIconSize+2*dif2*iconMargin);
-                var futureSize = dif2*layoutSize - limitToGrow;
+                var futureSize = dif2*layoutSize //- limitToGrow;
 
                 if((removedItem || onlyAddingStarup || !sizeViolation)
                         && layoutSize<=rootSize
@@ -167,7 +199,7 @@ DragDrop.DropArea {
                         result = automaticIconSizeBasedZoom;
                     else
                         result = nextIconSize;
-                    console.log("Increase: "+result);
+                    console.log("Should Increase: "+result);
                 }
             }
 
@@ -181,8 +213,7 @@ DragDrop.DropArea {
 
     //automatic icon size which is calculated based on panels size and zoom factor
     property int automaticIconSizeBasedZoom:{
-//    function updateAutomaticIconSizeZoom() {
-        //      if(automaticSize){
+        //    function updateAutomaticIconSizeZoom() {
         var maxZoomSize;
         if(isVertical)
             maxZoomSize = root.width;
@@ -193,24 +224,35 @@ DragDrop.DropArea {
             maxZoomSize -= root.statesLineSize;
         }
 
-        var maxIconSize = 16;
-        var found = false;
+        if(smallAutomaticIconJumps){
+            var maxIconSize = 16;
+            var found = false;
 
-        do {
-            var currentZoomedSize = zoomFactor*maxIconSize;
+            do {
+                var currentZoomedSize = zoomFactor*maxIconSize;
 
-            if(currentZoomedSize <= maxZoomSize)
-                maxIconSize += iconStep;
-            else
-                found = true;
+                if(currentZoomedSize <= maxZoomSize)
+                    maxIconSize += iconStep;
+                else
+                    found = true;
 
-        } while(!found)
+            } while(!found)
 
-        return Math.max (16, maxIconSize-iconStep);
+            return Math.max (16, maxIconSize-iconStep);
+        }
+        else{
+            var maxIconSize2 = iconsArray[iconsArray.length - 1];
 
-        // }
-        //  else
-        //       return plasmoid.configuration.iconSize;
+            for(var i=iconsArray.length - 1; i>=0; --i){
+                var currentZoomedSize2 = zoomFactor*iconsArray[i];
+
+                if(currentZoomedSize2 <= maxZoomSize)
+                    return iconsArray[i];
+            }
+
+            return iconsArray[0];
+        }
+
     }
 
     onWidthChanged: {
@@ -219,8 +261,8 @@ DragDrop.DropArea {
             startupTimer.restart();
         }
 
-      //  if(isHorizontal)
-         //   updateAutomaticIconSizeZoom();
+        //  if(isHorizontal)
+        //   updateAutomaticIconSizeZoom();
     }
     onHeightChanged: {
         containmentSizeSyncTimer.restart()
@@ -228,13 +270,13 @@ DragDrop.DropArea {
             startupTimer.restart();
         }
 
-      //  if(isVertical)
+        //  if(isVertical)
         //    updateAutomaticIconSizeZoom();
     }
 
-  //  onZoomFactorChanged: updateAutomaticIconSizeZoom();
+    //  onZoomFactorChanged: updateAutomaticIconSizeZoom();
 
-    // onIconSizeChanged: console.log(iconSize);
+    onIconSizeChanged: console.log("Icon Size Changed:"+iconSize);
 
     property Item dragOverlay
     property Item toolBox
