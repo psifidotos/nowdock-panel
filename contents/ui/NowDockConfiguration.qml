@@ -444,7 +444,7 @@ Item{
                                     realValue = 64;
                                     break;
                                 case 6:
-                                    realValue = 92;
+                                    realValue = 96;
                                     break;
                                 case 7:
                                     realValue = 128;
@@ -504,7 +504,7 @@ Item{
                         PlasmaComponents.Button{
                             width: parent.buttonSize
                             checkable: true
-                            text: "92px."
+                            text: "96px."
                             onClicked: parent.checkedButton=6;
                         }
                         PlasmaComponents.Button{
@@ -541,7 +541,7 @@ Item{
                                 case 64:
                                     iconsFlow.checkedButton = 5;
                                     break;
-                                case 92:
+                                case 96:
                                     iconsFlow.checkedButton = 6;
                                     break;
                                 case 128:

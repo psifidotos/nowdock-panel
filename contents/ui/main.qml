@@ -81,7 +81,7 @@ DragDrop.DropArea {
 
     property real zoomFactor: ( 1 + (plasmoid.configuration.zoomLevel / 20) )
 
-    property var iconsArray: [16, 22, 32, 48, 64, 92, 128, 256]
+    property var iconsArray: [16, 22, 32, 48, 64, 96, 128, 256]
 
     //automatic icon size which is calculated based on the applets size
     property int counter:0;
