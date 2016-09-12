@@ -58,7 +58,7 @@ DragDrop.DropArea {
 
     ///BEGIN properties from nowDock
     property int nowDockHoveredIndex: nowDock ? nowDock.hoveredIndex : -1
-    property int iconMargin: nowDock ? nowDock.iconMargin : 0.2 * iconSize
+    property int iconMargin: nowDock ? nowDock.iconMargin : 0.12 * iconSize
     // property int iconMargin: 5
     property int statesLineSize: nowDock ? nowDock.statesLineSize : 0
     property int tasksCount: nowDock ? nowDock.tasksCount : 0
