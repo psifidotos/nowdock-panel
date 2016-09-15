@@ -124,8 +124,8 @@ DragDrop.DropArea {
             && previousAllTasks !== currentLayout.allCount)
                 || (sizeViolation && (iconSize % iconStep == 0))){
 
-            console.log("In .... :"+previousAllTasks+" - "+currentLayout.allCount);
-            console.log("Currect icon size :"+iconSize+"  - "+(iconSize % iconStep));
+          //  console.log("In .... :"+previousAllTasks+" - "+currentLayout.allCount);
+          //  console.log("Currect icon size :"+iconSize+"  - "+(iconSize % iconStep));
 
             var removedItem = previousAllTasks > currentLayout.allCount;
 
@@ -174,7 +174,7 @@ DragDrop.DropArea {
                     && currentPredictedSize>rootSize
                     && (futureSizeSmaller<rootSize || sizeViolation)){
                 result = nextIconSize;
-                console.log("Should Decrease: "+result);
+            //   console.log("Should Decrease: "+result);
             }
 
             if((result===0)||(onlyAddingStarup)){
@@ -200,7 +200,7 @@ DragDrop.DropArea {
                         result = automaticIconSizeBasedZoom;
                     else
                         result = nextIconSize;
-                    console.log("Should Increase: "+result);
+                //    console.log("Should Increase: "+result);
                 }
             }
 
@@ -277,7 +277,7 @@ DragDrop.DropArea {
 
     //  onZoomFactorChanged: updateAutomaticIconSizeZoom();
 
-    onIconSizeChanged: console.log("Icon Size Changed:"+iconSize);
+  //  onIconSizeChanged: console.log("Icon Size Changed:"+iconSize);
 
     property Item dragOverlay
     property Item toolBox
