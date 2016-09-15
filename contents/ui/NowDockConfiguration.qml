@@ -9,13 +9,14 @@ import org.kde.kquickcontrolsaddons 2.0 as KQuickControlAddons
 
 Item{
     id: settingsButtonContainer
+    anchors.margins: 8
+    //in  Left Edge the button is appearing bigger with no reason!!!!
+    anchors.horizontalCenterOffset: (plasmoid.location === PlasmaCore.Types.LeftEdge) ? 6 : 0
+
     height: root.isVertical ? 75 : 40
     width: root.isVertical ? 40 : 75
 
-    anchors.margins: 8
-
-    //in  Left Edge the button is appearing bigger with no reason!!!!
-    anchors.horizontalCenterOffset: (plasmoid.location === PlasmaCore.Types.LeftEdge) ? 6 : 0
+    z:1000
 
     Rectangle{
         id:settingsButton
