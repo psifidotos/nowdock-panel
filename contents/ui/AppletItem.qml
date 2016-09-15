@@ -41,7 +41,7 @@ Item {
     property int animationTime: root.durationTime* (0.7*units.shortDuration) // 70
     property int hoveredIndex: currentLayout.hoveredIndex
     property int index: -1
-    property int appletMargin: applet && (applet.pluginName === "org.kdelook.nowdock") ? 0 : root.statesLineSize + 2
+    property int appletMargin: applet && (applet.pluginName === "org.kde.store.nowdock.plasmoid") ? 0 : root.statesLineSize + 2
     property int maxWidth: root.isHorizontal ? root.height : root.width
     property int maxHeight: root.isHorizontal ? root.height : root.width
     property int shownAppletMargin: applet && (applet.pluginName === "org.kde.plasma.systemtray") ? appletMargin/2 : appletMargin
@@ -55,10 +55,10 @@ Item {
                                                    wrapper.height
 
     property Item applet
-    property Item nowDock: applet && (applet.pluginName === "org.kdelook.nowdock") ?
+    property Item nowDock: applet && (applet.pluginName === "org.kde.store.nowdock.plasmoid") ?
                                (applet.children[0] ? applet.children[0] : null) : null
     property Item appletWrapper: applet &&
-                                 ((applet.pluginName === "org.kdelook.nowdock") ||
+                                 ((applet.pluginName === "org.kde.store.nowdock.plasmoid") ||
                                   (applet.pluginName === "org.kde.plasma.systemtray")) ? wrapper : wrapperContainer
 
     property alias containsMouse: appletMouseArea.containsMouse
