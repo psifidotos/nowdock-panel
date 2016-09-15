@@ -38,7 +38,7 @@ Item {
     property bool showZoomed: false
     property bool lockZoom: false
 
-    property int animationTime: 70
+    property int animationTime: root.durationTime* (0.7*units.shortDuration) // 70
     property int hoveredIndex: currentLayout.hoveredIndex
     property int index: -1
     property int appletMargin: applet && (applet.pluginName === "org.kdelook.nowdock") ? 0 : root.statesLineSize + 2
