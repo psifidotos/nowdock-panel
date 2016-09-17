@@ -93,6 +93,7 @@ DragDrop.DropArea {
                 return i;
             }
         }
+        return 3;
     }
 
     function sizeIsFromAutomaticMode(size){
