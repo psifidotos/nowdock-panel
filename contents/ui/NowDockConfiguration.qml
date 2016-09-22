@@ -180,16 +180,30 @@ Item{
                                 firstPosition.checked = true;
                                 centerPosition.checked = false;
                                 lastPosition.checked = false;
+                                splitTwoPosition.checked = false;
+                                root.removeInternalViewSplitter();
                             }
                             else if(panelPosition == 0){
                                 firstPosition.checked = false;
                                 centerPosition.checked = true;
                                 lastPosition.checked = false;
+                                splitTwoPosition.checked = false;
+                                root.removeInternalViewSplitter();
                             }
                             else if((panelPosition == 2)||(panelPosition == 4)){
                                 firstPosition.checked = false;
                                 centerPosition.checked = false;
                                 lastPosition.checked = true;
+                                splitTwoPosition.checked = false;
+                                root.removeInternalViewSplitter();
+                            }
+                            else if (panelPosition == 10){
+                                firstPosition.checked = false;
+                                centerPosition.checked = false;
+                                lastPosition.checked = false;
+                                splitTwoPosition.checked = true;
+                                //add the splitter visual
+                                root.addInternalViewSplitter();
                             }
                         }
 
@@ -241,6 +255,23 @@ Item{
                                         plasmoid.configuration.panelPosition = 4
                                     else
                                         plasmoid.configuration.panelPosition = 2
+                                }
+                            }
+                            onClicked: checked=true;
+                        }
+
+                        PlasmaComponents.Button{
+                            id: splitTwoPosition
+                            checkable: true
+                            text: root.isVertical ? "Top | Bottom" : "Left | Right"
+                            width: parent.width
+
+                            onCheckedChanged: {
+                                if(checked && !parent.inStartup){
+                                  //  if(root.isVertical)
+                                        plasmoid.configuration.panelPosition = 10
+                                //    else
+                                   //     plasmoid.configuration.panelPosition = 2
                                 }
                             }
                             onClicked: checked=true;

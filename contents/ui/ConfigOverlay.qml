@@ -74,7 +74,7 @@ MouseArea {
         }*/
 
         if (pressed) {
-           /* if (currentApplet && currentApplet.applet &&
+            /* if (currentApplet && currentApplet.applet &&
                     currentApplet.applet.pluginName == "org.kde.plasma.panelspacer") {
 
                 if (isResizingLeft) {
@@ -97,7 +97,7 @@ MouseArea {
                         handle.width = mouse.x - handle.x;
                     } */
 
-              /*      lastX = mouse.x;
+            /*      lastX = mouse.x;
                     lastY = mouse.y;
                     return;
                 }
@@ -329,7 +329,7 @@ MouseArea {
             height: width
             anchors.centerIn: parent
         }
-      /*  Rectangle {
+        /*  Rectangle {
             anchors {
                 left: parent.left
                 top: parent.top
@@ -374,8 +374,10 @@ MouseArea {
             iconSource: checked ? "lock" : "unlock"
             width: units.iconSizes.large
             visible: currentApplet &&
-                     ((currentApplet.applet.pluginName === "org.kde.plasma.systemtray")
-                      || (currentApplet.applet.pluginName === "org.kdelook.nowdock")) ? false : true
+                     ((currentApplet.applet &&
+                       ((currentApplet.applet.pluginName === "org.kde.plasma.systemtray")
+                        || (currentApplet.applet.pluginName === "org.kde.store.nowdock.plasmoid")) )
+                      || currentApplet.internalSplitterView) ? false : true
 
             anchors.margins: 2*units.smallSpacing
             tooltip: "Lock/Unlock zoom effect"

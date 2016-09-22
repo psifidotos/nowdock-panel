@@ -37,6 +37,7 @@ Item {
     property bool canBeHovered: true
     property bool showZoomed: false
     property bool lockZoom: false
+    property bool isInternalViewSplitter: false
 
     property int animationTime: root.durationTime* (0.7*units.shortDuration) // 70
     property int hoveredIndex: layoutsContainer.hoveredIndex
@@ -53,6 +54,8 @@ Item {
 
     property real computeHeight: root.isVertical ? hiddenSpacerLeft.height + wrapper.height + hiddenSpacerRight.height :
                                                    wrapper.height
+
+    property string title: isInternalViewSplitter ? "Now Dock Splitter" : ""
 
     property Item applet
     property Item nowDock: applet && (applet.pluginName === "org.kde.store.nowdock.plasmoid") ?
@@ -321,7 +324,13 @@ Item {
 
 
             function updateLayoutHeight(){
-                if(applet && applet.pluginName === "org.kde.plasma.panelspacer"){
+                if(container.isInternalViewSplitter){
+                    if(plasmoid.immutable)
+                        layoutHeight = 0;
+                    else
+                        layoutHeight = root.iconSize + moreWidth;
+                }
+                else if(applet && applet.pluginName === "org.kde.plasma.panelspacer"){
                     layoutHeight = root.iconSize + moreHeight;
                 }
                 else{
@@ -352,7 +361,13 @@ Item {
             }
 
             function updateLayoutWidth(){
-                if(applet && applet.pluginName === "org.kde.plasma.panelspacer"){
+                if(container.isInternalViewSplitter){
+                    if(plasmoid.immutable)
+                        layoutWidth = 0;
+                    else
+                        layoutWidth = root.iconSize + moreWidth;
+                }
+                else if(applet && applet.pluginName === "org.kde.plasma.panelspacer"){
                     layoutWidth = root.iconSize + moreWidth;
                 }
                 else{
@@ -398,16 +413,18 @@ Item {
             Rectangle{
                 anchors.fill: wrapperContainer
                 border.width: 1
-                border.color: theme.textColor
+                border.color: container.isInternalViewSplitter ? theme.highlightColor : theme.textColor
                 color: "transparent"
                 opacity: 0.7
 
                 radius: root.iconMargin
-                visible: applet && applet.pluginName === "org.kde.plasma.panelspacer" && !plasmoid.immutable
+                visible: ((applet && (applet.pluginName === "org.kde.plasma.panelspacer"))
+                          || container.isInternalViewSplitter)
+                         && !plasmoid.immutable
 
                 Rectangle{
                     anchors.centerIn: parent
-                    color: theme.textColor
+                    color: parent.border.color
 
                     width:parent.width - 1
                     height: parent.height - 1
@@ -528,7 +545,7 @@ Item {
             function signalUpdateScale(nIndex, nScale, step){
                 if(container && (container.index === nIndex)){
                     if ( ((canBeHovered && !lockZoom ) || container.nowDock)
-                            && (applet.status !== PlasmaCore.Types.HiddenStatus)
+                            && (applet && applet.status !== PlasmaCore.Types.HiddenStatus)
                             //&& (index != currentLayout.hoveredIndex)
                             ){
                         if(!container.nowDock){
@@ -544,7 +561,7 @@ Item {
                                 nowDock.updateScale(root.tasksCount-1, nScale, step);
                         }
                     }  ///if the applet is hidden must forward its scale events to its neighbours
-                    else if ((applet.status === PlasmaCore.Types.HiddenStatus)){
+                    else if ((applet && (applet.status === PlasmaCore.Types.HiddenStatus))){
                         if(layoutsContainer.hoveredIndex>index)
                             layoutsContainer.updateScale(index-1, nScale, step);
                         else if((layoutsContainer.hoveredIndex<index))

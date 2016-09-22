@@ -78,7 +78,7 @@ DragDrop.DropArea {
     //(automaticIconSizeBasedSize>0 ? Math.max(automaticIconSizeBasedSize) : plasmoid.configuration.iconSize)
     property int realSize: iconSize + iconMargin
     property int themePanelSize: plasmoid.configuration.panelSize
-    property int userPanelPosition: plasmoid.configuration.panelPosition
+    property int userPanelPosition: plasmoid.configuration.panelPosition !== 10 ? plasmoid.configuration.panelPosition : 0
 
     property real zoomFactor: ( 1 + (plasmoid.configuration.zoomLevel / 20) )
 
@@ -297,26 +297,7 @@ DragDrop.DropArea {
     } */
 
     //BEGIN functions
-    function addApplet(applet, x, y) {
-        var container = appletContainerComponent.createObject(root)
-
-        var appletWidth = applet.width;
-        var appletHeight = applet.height;
-        //applet.parent = container;
-
-        container.applet = applet;
-        applet.parent = container.appletWrapper;
-        //applet.anchors.fill = container;
-        applet.anchors.fill = container.appletWrapper;
-
-        applet.visible = true;
-
-        // don't show applet if it choses to be hidden but still make it
-        // accessible in the panelcontroller
-        container.visible = Qt.binding(function() {
-            return applet.status !== PlasmaCore.Types.HiddenStatus || (!plasmoid.immutable && plasmoid.userConfiguring)
-        })
-
+    function addContainerInLayout(container, applet, x, y){
         // Is there a DND placeholder? Replace it!
         if (dndSpacer.parent === mainLayout) {
             LayoutManager.insertBefore(dndSpacer, container);
@@ -377,6 +358,27 @@ DragDrop.DropArea {
     }
 
 
+    function addApplet(applet, x, y) {
+        var container = appletContainerComponent.createObject(root)
+
+        container.applet = applet;
+        applet.parent = container.appletWrapper;
+
+        applet.anchors.fill = container.appletWrapper;
+
+        applet.visible = true;
+
+
+        // don't show applet if it choses to be hidden but still make it
+        // accessible in the panelcontroller
+        container.visible = Qt.binding(function() {
+            return applet.status !== PlasmaCore.Types.HiddenStatus || (!plasmoid.immutable && plasmoid.userConfiguring)
+        })
+
+        addContainerInLayout(container, applet, x, y);
+    }
+
+
     function checkLastSpacer() {
         lastSpacer.parent = root
 
@@ -399,6 +401,36 @@ DragDrop.DropArea {
         }
         if (!expands) {
             lastSpacer.parent = mainLayout
+        }
+    }
+
+    function internalViewSplitterExists(){
+        for (var container in mainLayout.children) {
+            var item = mainLayout.children[container];
+            if(item && item.isInternalViewSplitter)
+                return true;
+        }
+        return false;
+    }
+
+    function removeInternalViewSplitter(){
+        for (var container in mainLayout.children) {
+            var item = mainLayout.children[container];
+            if(item && item.isInternalViewSplitter)
+                item.destroy();
+        }
+    }
+
+    function addInternalViewSplitter(){
+        if(!internalViewSplitterExists()){
+            var container = appletContainerComponent.createObject(root);
+
+            container.isInternalViewSplitter = true;
+            x= mainLayout.width/2;
+            y= mainLayout.height/2;
+            container.visible = true;
+
+            addContainerInLayout(container, x, y);
         }
     }
 
@@ -468,7 +500,7 @@ DragDrop.DropArea {
 
     //BEGIN connections
     Component.onCompleted: {
-      //  currentLayout.isLayoutHorizontal = isHorizontal
+        //  currentLayout.isLayoutHorizontal = isHorizontal
         LayoutManager.plasmoid = plasmoid;
         LayoutManager.root = root;
         LayoutManager.layout = mainLayout;
@@ -666,7 +698,7 @@ DragDrop.DropArea {
 
         property int allCount: root.nowDock ? mainLayout.count-1+nowDock.tasksCount : mainLayout.count
 
-      //  property int count: children.length
+        //  property int count: children.length
         property int currentSpot: -1000
         property int hoveredIndex: -1
 
@@ -675,7 +707,7 @@ DragDrop.DropArea {
 
         // This is the main Layout, in contrary with the others
         Grid{
-        //    id: currentLayout
+            //    id: currentLayout
             id: mainLayout
 
             columns: root.isVertical ? 1 : 0
