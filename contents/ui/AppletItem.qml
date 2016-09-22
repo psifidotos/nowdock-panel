@@ -319,66 +319,70 @@ Item {
                 updateLayoutHeight();
             }
 
-            onZoomScaleChanged: {
-                if(zoomScale == 1 && !plasmoid.immutable){
-                    updateLayoutWidth();
-                    updateLayoutHeight();
-                }
-            }
 
             function updateLayoutHeight(){
-                if(applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical && (!canBeHovered)){
-                    // return applet.Layout.minimumHeight;
-                    layoutHeight = applet.Layout.minimumHeight;
-                } //it is used for plasmoids that need to scale only one axis... e.g. the Weather Plasmoid
-                else if(applet
-                        && ( (applet.Layout.maximumHeight < root.iconSize) || (applet.Layout.preferredHeight > root.iconSize))
-                        && root.isVertical
-                        && !disableScaleWidth
-                        && plasmoid.immutable ){
-                    disableScaleHeight = true;
-                    //this way improves performance, probably because during animation the preferred sizes update a lot
-                    if((applet.Layout.maximumHeight < root.iconSize))
-                        //return applet.Layout.maximumHeight;
-                        layoutHeight = applet.Layout.maximumHeight;
-                    else if ((applet.Layout.preferredHeight > root.iconSize))
-                        //return applet.Layout.preferredHeight;
-                        layoutHeight = applet.Layout.preferredHeight;
+                if(applet && applet.pluginName === "org.kde.plasma.panelspacer"){
+                    layoutHeight = root.iconSize + moreHeight;
+                }
+                else{
+                    if(applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical && (!canBeHovered)){
+                        // return applet.Layout.minimumHeight;
+                        layoutHeight = applet.Layout.minimumHeight;
+                    } //it is used for plasmoids that need to scale only one axis... e.g. the Weather Plasmoid
+                    else if(applet
+                            && ( (applet.Layout.maximumHeight < root.iconSize) || (applet.Layout.preferredHeight > root.iconSize))
+                            && root.isVertical
+                            && !disableScaleWidth
+                            && plasmoid.immutable ){
+                        disableScaleHeight = true;
+                        //this way improves performance, probably because during animation the preferred sizes update a lot
+                        if((applet.Layout.maximumHeight < root.iconSize))
+                            //return applet.Layout.maximumHeight;
+                            layoutHeight = applet.Layout.maximumHeight;
+                        else if ((applet.Layout.preferredHeight > root.iconSize))
+                            //return applet.Layout.preferredHeight;
+                            layoutHeight = applet.Layout.preferredHeight;
+                        else
+                            layoutHeight = root.iconSize + moreHeight;
+                    }
                     else
                         layoutHeight = root.iconSize + moreHeight;
                 }
-                else
-                    layoutHeight = root.iconSize + moreHeight;
                 //return root.iconSize + moreHeight;
             }
 
             function updateLayoutWidth(){
-                if(applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal && (!canBeHovered)){
-                    //return applet.Layout.minimumWidth;
-                    layoutWidth = applet.Layout.minimumWidth;
-                } //it is used for plasmoids that need to scale only one axis... e.g. the Weather Plasmoid
-                else if(applet
-                        && ( (applet.Layout.maximumWidth < root.iconSize) || (applet.Layout.preferredWidth > root.iconSize) )
-                        && root.isHorizontal
-                        && !disableScaleHeight
-                        && plasmoid.immutable){
-                    disableScaleWidth = true;
-                    //this way improves performance, probably because during animation the preferred sizes update a lot
-                    if((applet.Layout.maximumWidth < root.iconSize)){
-                        //   return applet.Layout.maximumWidth;
-                        layoutWidth = applet.Layout.maximumWidth;
-                    }
-                    else if ((applet.Layout.preferredWidth > root.iconSize)){
-                        layoutWidth = applet.Layout.preferredWidth;
-                    }    //return applet.Layout.preferredWidth;
-                    else{
-                        //                        return root.iconSize + moreWidth;
-                        layoutWidth = root.iconSize + moreWidth;
-                    }
+                if(applet && applet.pluginName === "org.kde.plasma.panelspacer"){
+                    layoutWidth = root.iconSize + moreWidth;
                 }
                 else{
-                    //return root.iconSize + moreWidth;
-                    layoutWidth = root.iconSize + moreWidth;
+                    if(applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal && (!canBeHovered)){
+                        //return applet.Layout.minimumWidth;
+                        layoutWidth = applet.Layout.minimumWidth;
+                    } //it is used for plasmoids that need to scale only one axis... e.g. the Weather Plasmoid
+                    else if(applet
+                            && ( (applet.Layout.maximumWidth < root.iconSize) || (applet.Layout.preferredWidth > root.iconSize) )
+                            && root.isHorizontal
+                            && !disableScaleHeight
+                            && plasmoid.immutable){
+                        disableScaleWidth = true;
+                        //this way improves performance, probably because during animation the preferred sizes update a lot
+                        if((applet.Layout.maximumWidth < root.iconSize)){
+                            //   return applet.Layout.maximumWidth;
+                            layoutWidth = applet.Layout.maximumWidth;
+                        }
+                        else if ((applet.Layout.preferredWidth > root.iconSize)){
+                            layoutWidth = applet.Layout.preferredWidth;
+                        }    //return applet.Layout.preferredWidth;
+                        else{
+                            //                        return root.iconSize + moreWidth;
+                            layoutWidth = root.iconSize + moreWidth;
+                        }
+                    }
+                    else{
+                        //return root.iconSize + moreWidth;
+                        layoutWidth = root.iconSize + moreWidth;
+                    }
                 }
             }
 
@@ -388,6 +392,28 @@ Item {
                 height: parent.zoomScaleHeight * wrapper.layoutHeight
 
                 anchors.centerIn: parent
+            }
+
+            //spacer background
+            Rectangle{
+                anchors.fill: wrapperContainer
+                border.width: 1
+                border.color: theme.textColor
+                color: "transparent"
+                opacity: 0.7
+
+                radius: root.iconMargin
+                visible: applet && applet.pluginName === "org.kde.plasma.panelspacer" && !plasmoid.immutable
+
+                Rectangle{
+                    anchors.centerIn: parent
+                    color: theme.textColor
+
+                    width:parent.width - 1
+                    height: parent.height - 1
+
+                    opacity: 0.2
+                }
             }
 
             BrightnessContrast{
