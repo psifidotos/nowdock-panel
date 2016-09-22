@@ -68,6 +68,7 @@ DragDrop.DropArea {
     property bool automaticSize: plasmoid.configuration.automaticIconSize
     property bool smallAutomaticIconJumps: plasmoid.configuration.smallAutomaticIconJumps
     property bool useThemePanel: plasmoid.configuration.useThemePanel
+    property bool immutable: plasmoid.immutable
 
 
     property int panelEdgeSpacing: iconSize / 2
@@ -78,7 +79,8 @@ DragDrop.DropArea {
     //(automaticIconSizeBasedSize>0 ? Math.max(automaticIconSizeBasedSize) : plasmoid.configuration.iconSize)
     property int realSize: iconSize + iconMargin
     property int themePanelSize: plasmoid.configuration.panelSize
-    property int userPanelPosition: plasmoid.configuration.panelPosition !== 10 ? plasmoid.configuration.panelPosition : 0
+    property int mainLayoutPosition: !plasmoid.immutable ? 0 : (root.isVertical ? 3 : 1)
+    property int userPanelPosition: plasmoid.configuration.panelPosition !== 10 ? plasmoid.configuration.panelPosition : mainLayoutPosition
 
     property real zoomFactor: ( 1 + (plasmoid.configuration.zoomLevel / 20) )
 
@@ -445,6 +447,18 @@ DragDrop.DropArea {
             }
         }
 
+
+        ///check second layout also
+        var applets = secondLayout.children;
+
+        for(var i=0; i<applets.length; ++i){
+            var applet = applets[i];
+
+            if(applet && applet.containsMouse){
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -552,6 +566,35 @@ DragDrop.DropArea {
         containmentSizeSyncTimer.restart();
     }
 
+    onImmutableChanged: {
+        if(immutable){
+            var splitter = -1;
+
+            var totalChildren = mainLayout.children.length;
+            for (var i=0; i<totalChildren; ++i) {
+                var item;
+                if(splitter === -1)
+                    item = mainLayout.children[i];
+                else{
+                    item = mainLayout.children[splitter+1];
+                    item.parent = secondLayout;
+                }
+
+                if(item.isInternalViewSplitter)
+                    splitter = i;
+            }
+
+            updateIndexes();
+        }
+        else{
+            var totalChildren2 = secondLayout.children.length;
+           // for (var container in secondLayout.children) {
+            for (var i=0; i<totalChildren2; ++i) {
+                var item2 = secondLayout.children[0];
+                item2.parent = mainLayout;
+            }
+        }
+    }
 
     Containment.onAppletAdded: {
         addApplet(applet, x, y);
@@ -720,7 +763,6 @@ DragDrop.DropArea {
             Layout.preferredWidth: width
             Layout.preferredHeight: height
 
-            //property bool isLayoutHorizontal
 
             property int count: children.length
 
@@ -740,7 +782,78 @@ DragDrop.DropArea {
                         updateAutomaticIconSize(false);
                 }
             }
-            //    onAllCountChanged: updateAutomaticIconSize();
+
+        }
+
+        Grid{
+            id:secondLayout
+
+            columns: root.isVertical ? 1 : 0
+            columnSpacing: 0
+            flow: isHorizontal ? Grid.LeftToRight : Grid.TopToBottom
+            rows: root.isHorizontal ? 1 : 0
+            rowSpacing: 0
+
+
+            Layout.preferredWidth: width
+            Layout.preferredHeight: height
+
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+
+            property int beginIndex: 100
+            property int count: children.length
+
+            states:[
+                State {
+                    name: "bottom"
+                    when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(plasmoid.configuration.panelPosition === 10)
+
+                    AnchorChanges {
+                        target: secondLayout
+                        anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
+                    }
+                    PropertyChanges{
+                        target: secondLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
+                    }
+                },
+                State {
+                    name: "left"
+                    when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(plasmoid.configuration.panelPosition === 10)
+
+                    AnchorChanges {
+                        target: secondLayout
+                        anchors{ top:undefined; bottom:parent.bottom; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+                    }
+                    PropertyChanges{
+                        target: secondLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
+                    }
+                },
+                State {
+                    name: "right"
+                    when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(plasmoid.configuration.panelPosition === 10)
+
+                    AnchorChanges {
+                        target: secondLayout
+                        anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
+                    }
+                    PropertyChanges{
+                        target: secondLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
+                    }
+                },
+                State {
+                    name: "top"
+                    when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 2)
+
+                    AnchorChanges {
+                        target: secondLayout
+                        anchors{ top:parent.top; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
+                    }
+                    PropertyChanges{
+                        target: secondLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
+                    }
+                }
+            ]
         }
     }
 

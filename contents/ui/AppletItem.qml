@@ -84,6 +84,16 @@ Item {
             }
         }
 
+        for(var i=0; i<secondLayout.count; ++i){
+            if(secondLayout.children[i] == container){
+                //create a very high index in order to not need to exchange hovering messages
+                //between mainLayout and secondLayout
+                index = secondLayout.beginIndex + i;
+                break;
+            }
+        }
+
+
         if(container.nowDock){
             if(index>0)
                 nowDock.disableLeftSpacer = true;
@@ -215,7 +225,8 @@ Item {
             width: root.isHorizontal ? nHiddenSize : wrapper.width
             height: root.isHorizontal ? wrapper.height : nHiddenSize
 
-            visible: (container.index === 0)
+            ///check also if this is the first plasmoid in secondLayout
+            visible: (container.index === 0) || (container.index === secondLayout.beginIndex)
 
             property real nHiddenSize: (nScale > 0) ? (root.realSize * nScale) : 0
             property real nScale: 0
@@ -589,7 +600,7 @@ Item {
             width: root.isHorizontal ? nHiddenSize : wrapper.width
             height: root.isHorizontal ? wrapper.height : nHiddenSize
 
-            visible: (container.index === mainLayout.count - 1)
+            visible: (container.index === mainLayout.count - 1) || (container.index === secondLayout.beginIndex+secondLayout.count-1)
 
             property real nHiddenSize: (nScale > 0) ? (root.realSize * nScale) : 0
             property real nScale: 0
