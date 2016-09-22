@@ -36,13 +36,13 @@ DragDrop.DropArea {
 
     /*Layout.minimumHeight: isVertical ? currentLayout.height : (zoomFactor+0.1) * (iconSize+iconMargin)
     Layout.minimumWidth: isHorizontal ? currentLayout.width : (zoomFactor+0.1) * (iconSize+iconMargin)*/
-    Layout.minimumWidth: fixedWidth > 0 ? fixedWidth : (currentLayout.Layout.minimumWidth + (isHorizontal && toolBox ? toolBox.width : 0))
-    Layout.maximumWidth: fixedWidth > 0 ? fixedWidth : (currentLayout.Layout.maximumWidth + (isHorizontal && toolBox ? toolBox.width : 0))
-    Layout.preferredWidth: fixedWidth > 0 ? fixedWidth : (currentLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
+    Layout.minimumWidth: fixedWidth > 0 ? fixedWidth : (mainLayout.Layout.minimumWidth + (isHorizontal && toolBox ? toolBox.width : 0))
+    Layout.maximumWidth: fixedWidth > 0 ? fixedWidth : (mainLayout.Layout.maximumWidth + (isHorizontal && toolBox ? toolBox.width : 0))
+    Layout.preferredWidth: fixedWidth > 0 ? fixedWidth : (mainLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
 
-    Layout.minimumHeight: fixedHeight > 0 ? fixedHeight : (currentLayout.Layout.minimumHeight + (!isHorizontal && toolBox ? toolBox.height : 0))
-    Layout.maximumHeight: fixedHeight > 0 ? fixedHeight : (currentLayout.Layout.maximumHeight + (!isHorizontal && toolBox ? toolBox.height : 0))
-    Layout.preferredHeight: fixedHeight > 0 ? fixedHeight : (currentLayout.Layout.preferredHeight + (!isHorizontal && toolBox? toolBox.height : 0))
+    Layout.minimumHeight: fixedHeight > 0 ? fixedHeight : (mainLayout.Layout.minimumHeight + (!isHorizontal && toolBox ? toolBox.height : 0))
+    Layout.maximumHeight: fixedHeight > 0 ? fixedHeight : (mainLayout.Layout.maximumHeight + (!isHorizontal && toolBox ? toolBox.height : 0))
+    Layout.preferredHeight: fixedHeight > 0 ? fixedHeight : (mainLayout.Layout.preferredHeight + (!isHorizontal && toolBox? toolBox.height : 0))
 
     property bool isHorizontal: plasmoid.formFactor == PlasmaCore.Types.Horizontal
     property bool isVertical: !isHorizontal
@@ -116,34 +116,34 @@ DragDrop.DropArea {
     //this variable provides a way to grow icon size
     property bool onlyAddingStarup: true
 
-    //sizeViolation variable is used when for any reason the currentLayout
+    //sizeViolation variable is used when for any reason the mainLayout
     //exceeds the panel size
     function updateAutomaticIconSize(sizeViolation){
-        if(((currentLayout.hoveredIndex == -1)
+        if(((layoutsContainer.hoveredIndex == -1)
             && (nowDockHoveredIndex == -1)
             && ((smallAutomaticIconJumps && (iconSize % iconStep) == 0 ) || (!smallAutomaticIconJumps && sizeIsFromAutomaticMode(iconSize)) )
-            && previousAllTasks !== currentLayout.allCount)
+            && previousAllTasks !== layoutsContainer.allCount)
                 || (sizeViolation && (iconSize % iconStep == 0))){
 
-          //  console.log("In .... :"+previousAllTasks+" - "+currentLayout.allCount);
-          //  console.log("Currect icon size :"+iconSize+"  - "+(iconSize % iconStep));
+            //  console.log("In .... :"+previousAllTasks+" - "+currentLayout.allCount);
+            //  console.log("Currect icon size :"+iconSize+"  - "+(iconSize % iconStep));
 
-            var removedItem = previousAllTasks > currentLayout.allCount;
+            var removedItem = previousAllTasks > layoutsContainer.allCount;
 
             if (removedItem)
                 onlyAddingStarup = false;
 
-            previousAllTasks = currentLayout.allCount;
+            previousAllTasks = layoutsContainer.allCount;
 
             var layoutSize;
             var rootSize;
 
             if(root.isHorizontal){
-                layoutSize = currentLayout.width;
+                layoutSize = mainLayout.width;
                 rootSize = root.width;
             }
             else{
-                layoutSize = currentLayout.height;
+                layoutSize = mainLayout.height;
                 rootSize = root.height;
             }
 
@@ -175,7 +175,7 @@ DragDrop.DropArea {
                     && currentPredictedSize>rootSize
                     && (futureSizeSmaller<rootSize || sizeViolation)){
                 result = nextIconSize;
-            //   console.log("Should Decrease: "+result);
+                //   console.log("Should Decrease: "+result);
             }
 
             if((result===0)||(onlyAddingStarup)){
@@ -201,7 +201,7 @@ DragDrop.DropArea {
                         result = automaticIconSizeBasedZoom;
                     else
                         result = nextIconSize;
-                //    console.log("Should Increase: "+result);
+                    //    console.log("Should Increase: "+result);
                 }
             }
 
@@ -278,7 +278,7 @@ DragDrop.DropArea {
 
     //  onZoomFactorChanged: updateAutomaticIconSizeZoom();
 
-  //  onIconSizeChanged: console.log("Icon Size Changed:"+iconSize);
+    //  onIconSizeChanged: console.log("Icon Size Changed:"+iconSize);
 
     property Item dragOverlay
     property Item toolBox
@@ -318,7 +318,7 @@ DragDrop.DropArea {
         })
 
         // Is there a DND placeholder? Replace it!
-        if (dndSpacer.parent === currentLayout) {
+        if (dndSpacer.parent === mainLayout) {
             LayoutManager.insertBefore(dndSpacer, container);
             dndSpacer.parent = root;
             return;
@@ -331,7 +331,7 @@ DragDrop.DropArea {
             var before = null;
             container.animationsEnabled = false;
 
-            if (lastSpacer.parent === currentLayout) {
+            if (lastSpacer.parent === mainLayout) {
                 before = lastSpacer;
             }
 
@@ -346,7 +346,7 @@ DragDrop.DropArea {
             // system the containment would be informed of requested launchers, and determine by
             // itself what it wants to do with that information.
             if (!startupTimer.running && applet.pluginName == "org.kde.plasma.icon") {
-                var middle = currentLayout.childAt(root.width / 2, root.height / 2);
+                var middle = mainLayout.childAt(root.width / 2, root.height / 2);
 
                 if (middle) {
                     before = middle;
@@ -360,7 +360,7 @@ DragDrop.DropArea {
 
                 // Fall through to adding at the end.
             } else {
-                container.parent = currentLayout;
+                container.parent = mainLayout;
             }
 
             //event compress the enable of animations
@@ -368,7 +368,7 @@ DragDrop.DropArea {
         }
 
         //if (applet.Layout.fillWidth) {
-        //Important, removes the first children of the currentLayout after the first
+        //Important, removes the first children of the mainLayout after the first
         //applet has been added
         lastSpacer.parent = root;
         //  }
@@ -383,27 +383,27 @@ DragDrop.DropArea {
         var expands = false;
 
         if (isHorizontal) {
-            for (var container in currentLayout.children) {
-                var item = currentLayout.children[container];
+            for (var container in mainLayout.children) {
+                var item = mainLayout.children[container];
                 if (item.Layout && item.Layout.fillWidth) {
                     expands = true;
                 }
             }
         } else {
-            for (var container in currentLayout.children) {
-                var item = currentLayout.children[container];
+            for (var container in mainLayout.children) {
+                var item = mainLayout.children[container];
                 if (item.Layout && item.Layout.fillHeight) {
                     expands = true;
                 }
             }
         }
         if (!expands) {
-            lastSpacer.parent = currentLayout
+            lastSpacer.parent = mainLayout
         }
     }
 
     function outsideContainsMouse(){
-        var applets = currentLayout.children;
+        var applets = mainLayout.children;
 
         for(var i=0; i<applets.length; ++i){
             var applet = applets[i];
@@ -423,7 +423,7 @@ DragDrop.DropArea {
             return true;
 
         if(!result && nowDock && nowDock.outsideContainsMouse()){
-            currentLayout.hoveredIndex = nowDockContainer.index;
+            layoutsContainer.hoveredIndex = nowDockContainer.index;
             return true;
         }
 
@@ -436,8 +436,8 @@ DragDrop.DropArea {
 
     function clearZoom(){
         //console.log("Panel clear....");
-        currentLayout.currentSpot = -1000;
-        currentLayout.hoveredIndex = -1;
+        layoutsContainer.currentSpot = -1000;
+        layoutsContainer.hoveredIndex = -1;
         root.clearZoomSignal();
     }
 
@@ -468,10 +468,10 @@ DragDrop.DropArea {
 
     //BEGIN connections
     Component.onCompleted: {
-        currentLayout.isLayoutHorizontal = isHorizontal
+      //  currentLayout.isLayoutHorizontal = isHorizontal
         LayoutManager.plasmoid = plasmoid;
         LayoutManager.root = root;
-        LayoutManager.layout = currentLayout;
+        LayoutManager.layout = mainLayout;
         LayoutManager.lastSpacer = lastSpacer;
         LayoutManager.restore();
         containmentSizeSyncTimer.restart();
@@ -492,13 +492,13 @@ DragDrop.DropArea {
             root.fixedHeight = root.height
         }
 
-        var relevantLayout = currentLayout.mapFromItem(root, event.x, event.y);
+        var relevantLayout = mainLayout.mapFromItem(root, event.x, event.y);
         LayoutManager.insertAtCoordinates(dndSpacer, relevantLayout.x, relevantLayout.y)
         dndSpacer.opacity = 1;
     }
 
     onDragMove: {
-        var relevantLayout = currentLayout.mapFromItem(root, event.x, event.y);
+        var relevantLayout = mainLayout.mapFromItem(root, event.x, event.y);
         LayoutManager.insertAtCoordinates(dndSpacer, relevantLayout.x, relevantLayout.y)
         dndSpacer.opacity = 1;
     }
@@ -511,7 +511,7 @@ DragDrop.DropArea {
     }
 
     onDrop: {
-        var relevantLayout = currentLayout.mapFromItem(root, event.x, event.y);
+        var relevantLayout = mainLayout.mapFromItem(root, event.x, event.y);
         plasmoid.processMimeData(event.mimeData, relevantLayout.x, relevantLayout.y);
         event.accept(event.proposedAction);
         root.fixedWidth = 0;
@@ -529,8 +529,8 @@ DragDrop.DropArea {
     Containment.onAppletRemoved: {
         LayoutManager.removeApplet(applet);
         var flexibleFound = false;
-        for (var i = 0; i < currentLayout.children.length; ++i) {
-            var applet = currentLayout.children[i].applet;
+        for (var i = 0; i < mainLayout.children.length; ++i) {
+            var applet = mainLayout.children[i].applet;
             if (applet && ((root.isHorizontal && applet.Layout.fillWidth) ||
                            (!root.isHorizontal && applet.Layout.fillHeight)) &&
                     applet.visible) {
@@ -539,7 +539,7 @@ DragDrop.DropArea {
             }
         }
         if (!flexibleFound) {
-            lastSpacer.parent = currentLayout;
+            lastSpacer.parent = mainLayout;
         }
 
         LayoutManager.save();
@@ -612,7 +612,7 @@ DragDrop.DropArea {
     //BEGIN UI elements
     Item {
         id: lastSpacer
-        parent: currentLayout
+        parent: mainLayout
 
         Layout.fillWidth: true
         Layout.fillHeight: true
@@ -641,7 +641,7 @@ DragDrop.DropArea {
     }
 
     /* Rectangle{
-        anchors.fill: currentLayout
+        anchors.fill: mainLayout
         color: "transparent"
         border.color: "yellow"
         border.width: 2
@@ -659,48 +659,58 @@ DragDrop.DropArea {
         }
     }
 
-    Grid{
-        id: currentLayout
-
-        columns: root.isVertical ? 1 : 0
-        columnSpacing: 0
-        flow: isHorizontal ? Grid.LeftToRight : Grid.TopToBottom
-        rows: root.isHorizontal ? 1 : 0
-        rowSpacing: 0
+    Item{
+        id: layoutsContainer
+        anchors.fill: parent
         z:4
 
+        property int allCount: root.nowDock ? mainLayout.count-1+nowDock.tasksCount : mainLayout.count
 
-        Layout.preferredWidth: width
-        Layout.preferredHeight: height
-
-        property int allCount: root.nowDock ? count-1+nowDock.tasksCount : count
-        property int count: children.length
+      //  property int count: children.length
         property int currentSpot: -1000
         property int hoveredIndex: -1
-        property bool isLayoutHorizontal
 
         signal updateScale(int delegateIndex, real newScale, real step)
 
-        onHeightChanged: {
-            if(root.isVertical && automaticSize){
-                if(currentLayout.height>root.height)
-                    updateAutomaticIconSize(true);
-                else
-                    updateAutomaticIconSize(false);
+
+        // This is the main Layout, in contrary with the others
+        Grid{
+        //    id: currentLayout
+            id: mainLayout
+
+            columns: root.isVertical ? 1 : 0
+            columnSpacing: 0
+            flow: isHorizontal ? Grid.LeftToRight : Grid.TopToBottom
+            rows: root.isHorizontal ? 1 : 0
+            rowSpacing: 0
+
+
+            Layout.preferredWidth: width
+            Layout.preferredHeight: height
+
+            //property bool isLayoutHorizontal
+
+            property int count: children.length
+
+            onHeightChanged: {
+                if(root.isVertical && automaticSize){
+                    if(mainLayout.height>root.height)
+                        updateAutomaticIconSize(true);
+                    else
+                        updateAutomaticIconSize(false);
+                }
             }
-        }
-        onWidthChanged: {
-            if(root.isHorizontal && automaticSize){
-                if(currentLayout.width>root.width)
-                    updateAutomaticIconSize(true);
-                else
-                    updateAutomaticIconSize(false);
+            onWidthChanged: {
+                if(root.isHorizontal && automaticSize){
+                    if(mainLayout.width>root.width)
+                        updateAutomaticIconSize(true);
+                    else
+                        updateAutomaticIconSize(false);
+                }
             }
+            //    onAllCountChanged: updateAutomaticIconSize();
         }
-        //    onAllCountChanged: updateAutomaticIconSize();
     }
-
-
 
     Timer {
         id: containmentSizeSyncTimer
@@ -720,9 +730,9 @@ DragDrop.DropArea {
         id: startupTimer
         interval: 4000
         onTriggered: {
-            for (var i = 0; i < currentLayout.children.length; ++i) {
-                if ( currentLayout.children[i].hasOwnProperty('animationsEnabled') ) {
-                    currentLayout.children[i].animationsEnabled = true;
+            for (var i = 0; i < mainLayout.children.length; ++i) {
+                if ( mainLayout.children[i].hasOwnProperty('animationsEnabled') ) {
+                    mainLayout.children[i].animationsEnabled = true;
                 }
             }
         }
@@ -739,11 +749,11 @@ DragDrop.DropArea {
             when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 0)
 
             AnchorChanges {
-                target: currentLayout
+                target: mainLayout
                 anchors{ top:undefined; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
             }
             PropertyChanges{
-                target: currentLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
+                target: mainLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
             }
         },
         State {
@@ -751,11 +761,11 @@ DragDrop.DropArea {
             when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 3)
 
             AnchorChanges {
-                target: currentLayout
+                target: mainLayout
                 anchors{ top:parent.top; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
             }
             PropertyChanges{
-                target: currentLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
+                target: mainLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
             }
         },
         State {
@@ -763,11 +773,11 @@ DragDrop.DropArea {
             when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 4)
 
             AnchorChanges {
-                target: currentLayout
+                target: mainLayout
                 anchors{ top:undefined; bottom:parent.bottom; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
             }
             PropertyChanges{
-                target: currentLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
+                target: mainLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
             }
         },
         ///Right Edge
@@ -776,11 +786,11 @@ DragDrop.DropArea {
             when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 0)
 
             AnchorChanges {
-                target: currentLayout
+                target: mainLayout
                 anchors{ top:undefined; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
             }
             PropertyChanges{
-                target: currentLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
+                target: mainLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
             }
         },
         State {
@@ -788,11 +798,11 @@ DragDrop.DropArea {
             when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 3)
 
             AnchorChanges {
-                target: currentLayout
+                target: mainLayout
                 anchors{ top:parent.top; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
             }
             PropertyChanges{
-                target: currentLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
+                target: mainLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
             }
         },
         State {
@@ -800,11 +810,11 @@ DragDrop.DropArea {
             when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 4)
 
             AnchorChanges {
-                target: currentLayout
+                target: mainLayout
                 anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
             }
             PropertyChanges{
-                target: currentLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
+                target: mainLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
             }
         },
         ///Bottom Edge
@@ -813,11 +823,11 @@ DragDrop.DropArea {
             when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 0)
 
             AnchorChanges {
-                target: currentLayout
+                target: mainLayout
                 anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
             }
             PropertyChanges{
-                target: currentLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
+                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
             }
         },
         State {
@@ -825,11 +835,11 @@ DragDrop.DropArea {
             when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 1)
 
             AnchorChanges {
-                target: currentLayout
+                target: mainLayout
                 anchors{ top:undefined; bottom:parent.bottom; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
             }
             PropertyChanges{
-                target: currentLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
+                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
             }
         },
         State {
@@ -837,11 +847,11 @@ DragDrop.DropArea {
             when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 2)
 
             AnchorChanges {
-                target: currentLayout
+                target: mainLayout
                 anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
             }
             PropertyChanges{
-                target: currentLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
+                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
             }
         },
         ///Top Edge
@@ -850,11 +860,11 @@ DragDrop.DropArea {
             when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 0)
 
             AnchorChanges {
-                target: currentLayout
+                target: mainLayout
                 anchors{ top:parent.top; bottom:undefined; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
             }
             PropertyChanges{
-                target: currentLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
+                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
             }
         },
         State {
@@ -862,11 +872,11 @@ DragDrop.DropArea {
             when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 1)
 
             AnchorChanges {
-                target: currentLayout
+                target: mainLayout
                 anchors{ top:parent.top; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
             }
             PropertyChanges{
-                target: currentLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
+                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
             }
         },
         State {
@@ -874,11 +884,11 @@ DragDrop.DropArea {
             when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 2)
 
             AnchorChanges {
-                target: currentLayout
+                target: mainLayout
                 anchors{ top:parent.top; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
             }
             PropertyChanges{
-                target: currentLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
+                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
             }
         }
     ]

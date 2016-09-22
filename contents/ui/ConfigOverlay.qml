@@ -52,7 +52,7 @@ MouseArea {
     onWidthChanged: tooltip.visible = false;
 
     onPositionChanged: {
-        if (currentApplet && currentApplet.applet &&
+        /*if (currentApplet && currentApplet.applet &&
                 currentApplet.applet.pluginName == "org.kde.plasma.panelspacer") {
             if (plasmoid.formFactor === PlasmaCore.Types.Vertical) {
                 if ((mouse.y - handle.y) < spacerHandleSize ||
@@ -71,10 +71,10 @@ MouseArea {
             }
         } else {
             configurationArea.cursorShape = Qt.ArrowCursor;
-        }
+        }*/
 
         if (pressed) {
-            if (currentApplet && currentApplet.applet &&
+           /* if (currentApplet && currentApplet.applet &&
                     currentApplet.applet.pluginName == "org.kde.plasma.panelspacer") {
 
                 if (isResizingLeft) {
@@ -97,11 +97,11 @@ MouseArea {
                         handle.width = mouse.x - handle.x;
                     } */
 
-                    lastX = mouse.x;
+              /*      lastX = mouse.x;
                     lastY = mouse.y;
                     return;
                 }
-            }
+            }*/
 
             var padding = units.gridUnit * 3;
             if (currentApplet && (mouse.x < -padding || mouse.y < -padding ||
@@ -129,8 +129,8 @@ MouseArea {
             lastX = mouse.x;
             lastY = mouse.y;
 
-            var relevantLayout = mapFromItem(currentLayout, 0, 0);
-            var item = currentLayout.childAt(mouse.x-relevantLayout.x, mouse.y-relevantLayout.y);
+            var relevantLayout = mapFromItem(mainLayout, 0, 0);
+            var item = mainLayout.childAt(mouse.x-relevantLayout.x, mouse.y-relevantLayout.y);
 
             if (item && item !== placeHolder) {
                 //      placeHolder.width = item.width;
@@ -147,9 +147,9 @@ MouseArea {
             }
 
         } else {
-            var relevantLayout = mapFromItem(currentLayout,0,0);
+            var relevantLayout = mapFromItem(mainLayout,0,0);
 
-            var item = currentLayout.childAt(mouse.x-relevantLayout.x, mouse.y-relevantLayout.y);
+            var item = mainLayout.childAt(mouse.x-relevantLayout.x, mouse.y-relevantLayout.y);
             if (root.dragOverlay && item && item !== lastSpacer) {
                 root.dragOverlay.currentApplet = item;
             } else {
@@ -180,7 +180,7 @@ MouseArea {
         if(currentApplet.showZoomed !== undefined)
             currentApplet.showZoomed = true;
 
-        var relevantLayout = mapFromItem(currentLayout, 0, 0);
+        var relevantLayout = mapFromItem(mainLayout, 0, 0);
 
         handle.x = relevantLayout.x + currentApplet.x;
         handle.y = relevantLayout.y + currentApplet.y;
@@ -262,7 +262,7 @@ MouseArea {
         placeHolder.parent = configurationArea;
         currentApplet.z = 1;
 
-        var relevantLayout = mapFromItem(currentLayout, 0, 0);
+        var relevantLayout = mapFromItem(mainLayout, 0, 0);
 
         handle.x = relevantLayout.x + currentApplet.x;
         handle.y = relevantLayout.y + currentApplet.y;
@@ -329,7 +329,7 @@ MouseArea {
             height: width
             anchors.centerIn: parent
         }
-        Rectangle {
+      /*  Rectangle {
             anchors {
                 left: parent.left
                 top: parent.top
@@ -366,7 +366,7 @@ MouseArea {
                     easing.type: Easing.InOutQuad
                 }
             }
-        }
+        }*/
 
         PlasmaComponents.Button{
             id: lockButton

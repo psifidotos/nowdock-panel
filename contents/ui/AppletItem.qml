@@ -39,7 +39,7 @@ Item {
     property bool lockZoom: false
 
     property int animationTime: root.durationTime* (0.7*units.shortDuration) // 70
-    property int hoveredIndex: currentLayout.hoveredIndex
+    property int hoveredIndex: layoutsContainer.hoveredIndex
     property int index: -1
     property int appletMargin: applet && (applet.pluginName === "org.kde.store.nowdock.plasmoid") ? 0 : root.statesLineSize + 2
     property int maxWidth: root.isHorizontal ? root.height : root.width
@@ -74,8 +74,8 @@ Item {
     function checkIndex(){
         index = -1;
 
-        for(var i=0; i<currentLayout.count; ++i){
-            if(currentLayout.children[i] == container){
+        for(var i=0; i<mainLayout.count; ++i){
+            if(mainLayout.children[i] == container){
                 index = i;
                 break;
             }
@@ -87,7 +87,7 @@ Item {
             else
                 nowDock.disableLeftSpacer = false;
 
-            if(index<currentLayout.count-1)
+            if(index<mainLayout.count-1)
                 nowDock.disableRightSpacer = true;
             else
                 nowDock.disableRightSpacer = false;
@@ -100,12 +100,12 @@ Item {
     function interceptNowDockUpdateScale(dIndex, newScale, step){
         if(plasmoid.immutable){
             if(dIndex === -1){
-                currentLayout.updateScale(index-1,newScale, step);
+                layoutsContainer.updateScale(index-1,newScale, step);
             }
             else if(dIndex === root.tasksCount){
                 //   debCounter++;
                 //   console.log(debCounter+ " "+dIndex+" "+newScale+" received...");
-                currentLayout.updateScale(index+1,newScale, step);
+                layoutsContainer.updateScale(index+1,newScale, step);
             }
         }
     }
@@ -117,7 +117,7 @@ Item {
 
     function checkCanBeHovered(){
         if ((applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal) ||
-                (applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical) ){
+                (applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical)){
             canBeHovered = false;
         }
         else{
@@ -319,7 +319,12 @@ Item {
                 updateLayoutHeight();
             }
 
-
+            onZoomScaleChanged: {
+                if(zoomScale == 1 && !plasmoid.immutable){
+                    updateLayoutWidth();
+                    updateLayoutHeight();
+                }
+            }
 
             function updateLayoutHeight(){
                 if(applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical && (!canBeHovered)){
@@ -329,7 +334,8 @@ Item {
                 else if(applet
                         && ( (applet.Layout.maximumHeight < root.iconSize) || (applet.Layout.preferredHeight > root.iconSize))
                         && root.isVertical
-                        && !disableScaleWidth ){
+                        && !disableScaleWidth
+                        && plasmoid.immutable ){
                     disableScaleHeight = true;
                     //this way improves performance, probably because during animation the preferred sizes update a lot
                     if((applet.Layout.maximumHeight < root.iconSize))
@@ -354,7 +360,8 @@ Item {
                 else if(applet
                         && ( (applet.Layout.maximumWidth < root.iconSize) || (applet.Layout.preferredWidth > root.iconSize) )
                         && root.isHorizontal
-                        && !disableScaleHeight){
+                        && !disableScaleHeight
+                        && plasmoid.immutable){
                     disableScaleWidth = true;
                     //this way improves performance, probably because during animation the preferred sizes update a lot
                     if((applet.Layout.maximumWidth < root.iconSize)){
@@ -427,7 +434,7 @@ Item {
             }
 
             function calculateScales( currentMousePosition ){
-                var distanceFromHovered = Math.abs(index - currentLayout.hoveredIndex);
+                var distanceFromHovered = Math.abs(index - layoutsContainer.hoveredIndex);
 
                 // A new algorithm tryig to make the zoom calculation only once
                 // and at the same time fixing glitches
@@ -470,19 +477,19 @@ Item {
                     //   console.log("--------------")
                     //  console.debug(leftScale + "  " + rightScale + " " + index);
                     //activate messages to update the the neighbour scales
-                    currentLayout.updateScale(index-1, leftScale, 0);
-                    currentLayout.updateScale(index+1, rightScale, 0);
+                    layoutsContainer.updateScale(index-1, leftScale, 0);
+                    layoutsContainer.updateScale(index+1, rightScale, 0);
                     //these messages interfere when an applet is hidden, that is why I disabled them
                     //  currentLayout.updateScale(index-2, 1, 0);
                     //   currentLayout.updateScale(index+2, 1, 0);
 
                     //Left hiddenSpacer
-                    if((index === 0 )&&(currentLayout.count > 1)){
+                    if((index === 0 )&&(layoutsContainer.count > 1)){
                         hiddenSpacerLeft.nScale = leftScale - 1;
                     }
 
                     //Right hiddenSpacer  ///there is one more item in the currentLayout ????
-                    if((index === currentLayout.count - 1 )&&(currentLayout.count>1)){
+                    if((index === layoutsContainer.count - 1 )&&(layoutsContainer.count>1)){
                         hiddenSpacerRight.nScale =  rightScale - 1;
                     }
 
@@ -505,23 +512,23 @@ Item {
                                 zoomScale = zoomScale + step;
                         }
                         else{
-                            if(currentLayout.hoveredIndex<container.index)
+                            if(layoutsContainer.hoveredIndex<container.index)
                                 nowDock.updateScale(0, nScale, step);
-                            else if(currentLayout.hoveredIndex>=container.index)
+                            else if(layoutsContainer.hoveredIndex>=container.index)
                                 nowDock.updateScale(root.tasksCount-1, nScale, step);
                         }
                     }  ///if the applet is hidden must forward its scale events to its neighbours
                     else if ((applet.status === PlasmaCore.Types.HiddenStatus)){
-                        if(currentLayout.hoveredIndex>index)
-                            currentLayout.updateScale(index-1, nScale, step);
-                        else if((currentLayout.hoveredIndex<index))
-                            currentLayout.updateScale(index+1, nScale, step);
+                        if(layoutsContainer.hoveredIndex>index)
+                            layoutsContainer.updateScale(index-1, nScale, step);
+                        else if((layoutsContainer.hoveredIndex<index))
+                            layoutsContainer.updateScale(index+1, nScale, step);
                     }
                 }
             }
 
             Component.onCompleted: {
-                currentLayout.updateScale.connect(signalUpdateScale);
+                layoutsContainer.updateScale.connect(signalUpdateScale);
             }
         }// Main task area // id:wrapper
 
@@ -532,7 +539,7 @@ Item {
             width: root.isHorizontal ? nHiddenSize : wrapper.width
             height: root.isHorizontal ? wrapper.height : nHiddenSize
 
-            visible: (container.index === currentLayout.count - 1)
+            visible: (container.index === mainLayout.count - 1)
 
             property real nHiddenSize: (nScale > 0) ? (root.realSize * nScale) : 0
             property real nScale: 0
@@ -576,18 +583,18 @@ Item {
         }
 
         onEntered: {
-            currentLayout.hoveredIndex = index;
+            layoutsContainer.hoveredIndex = index;
             //            mouseEntered = true;
             /*       icList.mouseWasEntered(index-2, false);
                 icList.mouseWasEntered(index+2, false);
                 icList.mouseWasEntered(index-1, true);
                 icList.mouseWasEntered(index+1, true); */
             if (root.isHorizontal){
-                currentLayout.currentSpot = mouseX;
+                layoutsContainer.currentSpot = mouseX;
                 wrapper.calculateScales(mouseX);
             }
             else{
-                currentLayout.currentSpot = mouseY;
+                layoutsContainer.currentSpot = mouseY;
                 wrapper.calculateScales(mouseY);
             }
         }
@@ -599,19 +606,19 @@ Item {
         onPositionChanged: {
             if(!pressed){
                 if (root.isHorizontal){
-                    var step = Math.abs(currentLayout.currentSpot-mouse.x);
+                    var step = Math.abs(layoutsContainer.currentSpot-mouse.x);
                     if (step >= container.animationStep){
-                        currentLayout.hoveredIndex = index;
-                        currentLayout.currentSpot = mouse.x;
+                        layoutsContainer.hoveredIndex = index;
+                        layoutsContainer.currentSpot = mouse.x;
 
                         wrapper.calculateScales(mouse.x);
                     }
                 }
                 else{
-                    var step = Math.abs(currentLayout.currentSpot-mouse.y);
+                    var step = Math.abs(layoutsContainer.currentSpot-mouse.y);
                     if (step >= container.animationStep){
-                        currentLayout.hoveredIndex = index;
-                        currentLayout.currentSpot = mouse.y;
+                        layoutsContainer.hoveredIndex = index;
+                        layoutsContainer.currentSpot = mouse.y;
 
                         wrapper.calculateScales(mouse.y);
                     }
