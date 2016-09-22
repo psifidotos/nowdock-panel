@@ -244,6 +244,7 @@ Item {
 
             property bool disableScaleWidth: false
             property bool disableScaleHeight: false
+            property bool immutable: plasmoid.immutable
 
             property int appletMinimumWidth: applet && applet.Layout ?  applet.Layout.minimumWidth : -1
             property int appletMinimumHeight: applet && applet.Layout ? applet.Layout.minimumHeight : -1
@@ -318,6 +319,11 @@ Item {
             onAppletMaximumHeightChanged: updateLayoutHeight();
 
             onIconSizeChanged: {
+                updateLayoutWidth();
+                updateLayoutHeight();
+            }
+
+            onImmutableChanged: {
                 updateLayoutWidth();
                 updateLayoutHeight();
             }
@@ -426,7 +432,7 @@ Item {
                     anchors.centerIn: parent
                     color: parent.border.color
 
-                    width:parent.width - 1
+                    width: parent.width - 1
                     height: parent.height - 1
 
                     opacity: 0.2
@@ -561,7 +567,8 @@ Item {
                                 nowDock.updateScale(root.tasksCount-1, nScale, step);
                         }
                     }  ///if the applet is hidden must forward its scale events to its neighbours
-                    else if ((applet && (applet.status === PlasmaCore.Types.HiddenStatus))){
+                    else if ((applet && (applet.status === PlasmaCore.Types.HiddenStatus))
+                             || container.isInternalViewSplitter){
                         if(layoutsContainer.hoveredIndex>index)
                             layoutsContainer.updateScale(index-1, nScale, step);
                         else if((layoutsContainer.hoveredIndex<index))
