@@ -437,7 +437,6 @@ Item {
                     opacity: 0.7
 
                     radius: root.iconMargin
-
                     Rectangle{
                         anchors.centerIn: parent
                         color: parent.border.color
@@ -455,12 +454,13 @@ Item {
                 active: container.isInternalViewSplitter
                         && !plasmoid.immutable
 
+                rotation: root.isVertical ? 90 : 0
+
                 sourceComponent: Image{
                     id:splitterImage
                     anchors.fill: parent
-                    source:"../icons/splitter.png"
 
-                    Component.onCompleted: wrapper.zoomScale = 1+ 0.85*(root.zoomFactor - 1)
+                    source:"../icons/splitter.png"
 
                     layer.enabled: true
                     layer.effect: DropShadow {
@@ -472,6 +472,8 @@ Item {
 
                         property int shadowSize : Math.ceil(root.iconSize / 20)
                     }
+
+                    Component.onCompleted: wrapper.zoomScale = 1+ 0.85*(root.zoomFactor - 1)
                 }
             }
 
