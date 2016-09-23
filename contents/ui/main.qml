@@ -141,11 +141,11 @@ DragDrop.DropArea {
             var rootSize;
 
             if(root.isHorizontal){
-                layoutSize = mainLayout.width;
+                layoutSize = mainLayout.width + secondLayout.width;
                 rootSize = root.width;
             }
             else{
-                layoutSize = mainLayout.height;
+                layoutSize = mainLayout.height + secondLayout.height;
                 rootSize = root.height;
             }
 
