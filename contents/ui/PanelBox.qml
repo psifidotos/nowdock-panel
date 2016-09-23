@@ -31,8 +31,11 @@ Item{
     parent: root
     z:0
 
-    width: root.isHorizontal ? mainLayout.width + spacing : smallSize
-    height: root.isVertical ? mainLayout.height + spacing : smallSize
+    property int panelWidth: secondLayout.count > 0 && root.isHorizontal && plasmoid.immutable ? root.width+spacing : mainLayout.width + spacing
+    property int panelHeight: secondLayout.count > 0 && root.isVertical && plasmoid.immutable ? root.height+spacing : mainLayout.height + spacing
+
+    width: root.isHorizontal ? panelWidth : smallSize
+    height: root.isVertical ? panelHeight : smallSize
 
     property int spacing: (root.userPanelPosition === 0) ? root.panelEdgeSpacing : root.panelEdgeSpacing/2
     property int smallSize: Math.max(3.7*root.statesLineSize, 16)
