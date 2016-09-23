@@ -379,11 +379,9 @@ DragDrop.DropArea {
             startupTimer.restart();
         }
 
-        //if (applet.Layout.fillWidth) {
         //Important, removes the first children of the mainLayout after the first
         //applet has been added
         lastSpacer.parent = root;
-        //  }
 
         updateIndexes();
     }
@@ -450,6 +448,8 @@ DragDrop.DropArea {
             if(item && item.isInternalViewSplitter)
                 item.destroy();
         }
+
+        layoutManager.save();
     }
 
     function addInternalViewSplitter(pos){
@@ -463,6 +463,8 @@ DragDrop.DropArea {
                 layoutManager.insertAtIndex(container, pos);
             else
                 layoutManager.insertAtIndex(container, Math.floor(mainLayout.count / 2));
+
+            layoutManager.save();
            // addContainerInLayout(container, x, y);
         }
     }

@@ -43,18 +43,22 @@ function restore() {
     for (var i = 0; i < plasmoid.applets.length; ++i) {
         if (idsOrder[plasmoid.applets[i].id] !== undefined) {
             appletsOrder[idsOrder[plasmoid.applets[i].id]] = plasmoid.applets[i];
-        //ones that weren't saved in AppletOrder go to the end
+            //ones that weren't saved in AppletOrder go to the end
         } else {
             appletsOrder["unordered"+i] = plasmoid.applets[i];
         }
     }
 
     //finally, restore the applets in the correct order
+    console.log("Restore...");
     for (var i in appletsOrder) {
+      //  console.log(appletsOrder[i].pluginName);
         root.addApplet(appletsOrder[i], -1, -1)
     }
 
+    //add the splitter in the correct position if it exists
     if(plasmoid.configuration.splitterPosition !== -1){
+      //  console.log("Splitter: "+plasmoid.configuration.splitterPosition);
         root.addInternalViewSplitter(plasmoid.configuration.splitterPosition);
     }
 
@@ -62,6 +66,7 @@ function restore() {
     save();
     restoreLocks();
 
+    //update layouts in case there is a splitter in them
     root.updateLayouts();
 }
 
@@ -89,8 +94,10 @@ function save() {
 
         if (child.applet) {
             ids.push(child.applet.id);
+            console.log(child.applet.pluginName);
         }
-        else if(child.isInternalViewSplitter){
+        else if(child.isInternalViewSplitter && plasmoid.configuration.panelPosition === 10){
+        //    console.log("Splitter: "+i);
             splitterExists = true;
             plasmoid.configuration.splitterPosition = i;
         }
@@ -190,18 +197,29 @@ function insertAfter(item1, item2) {
 }
 
 function insertAtIndex(item, position) {
-    if (position < 0 || position >= layout.children.length) {
+    if (position < 0 || (position >= layout.children.length && position !== 0)) {
         return;
     }
 
     //never ever insert after lastSpacer
-    if (layout.children[position] === lastSpacer) {
-        --position;
+    var firstItem = (layout.children.length === 1) && (layout.children[0] === lastSpacer);
+
+    //Important !!! , this is used to add the first item
+    if(firstItem){
+        lastSpacer.parent = root;
+        position = 0;
+    }
+
+    if(layout.children.length > 0){
+        if (layout.children[position] === lastSpacer) {
+            --position;
+        }
     }
 
     var removedItems = new Array();
 
-    for (var i = position; i < layout.children.length; ++i) {
+    var totalChildren = layout.children.length;
+    for (var i = position; i < totalChildren; ++i) {
         var child = layout.children[position];
         child.parent = root;
         removedItems.push(child);
@@ -252,7 +270,7 @@ function insertAtCoordinates(item, x, y) {
 
     //PlasmaCore.Types.Vertical = 3
     if ((plasmoid.formFactor === 3 && y < child.y + child.height/2) ||
-        (plasmoid.formFactor !== 3 && x < child.x + child.width/2)) {
+            (plasmoid.formFactor !== 3 && x < child.x + child.width/2)) {
         return insertBefore(child, item);
     } else {
         return insertAfter(child, item);
