@@ -428,11 +428,10 @@ DragDrop.DropArea {
             var container = appletContainerComponent.createObject(root);
 
             container.isInternalViewSplitter = true;
-            x= mainLayout.width/2;
-            y= mainLayout.height/2;
             container.visible = true;
 
-            addContainerInLayout(container, x, y);
+            layoutManager.insertAtIndex(container, Math.floor(mainLayout.count / 2));
+           // addContainerInLayout(container, x, y);
         }
     }
 

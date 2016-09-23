@@ -287,7 +287,7 @@ Item {
             // property int pHeight: applet ? applet.Layout.preferredHeight : -10
 
 
-            function debugLayouts(){
+            /*function debugLayouts(){
                 if(applet){
                     console.log("---------- "+ applet.pluginName +" ----------");
                     console.log("MinW "+applet.Layout.minimumWidth);
@@ -311,7 +311,7 @@ Item {
 
             onLayoutHeightChanged: {
                 debugLayouts();
-            }
+            }*/
 
             onAppletMinimumWidthChanged: {
                 if(zoomScale == 1)
