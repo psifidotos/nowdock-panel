@@ -285,27 +285,30 @@ Item {
             property alias index: container.index
             // property int pHeight: applet ? applet.Layout.preferredHeight : -10
 
-            /*           onLayoutWidthChanged: {
+
+            /*function debugLayouts(){
                 console.log("---------- "+ applet.pluginName +" ----------");
                 console.log("MinW "+applet.Layout.minimumWidth);
                 console.log("PW "+applet.Layout.preferredWidth);
                 console.log("MaxW "+applet.Layout.maximumWidth);
-
+                console.log("FillW "+applet.Layout.fillWidth);
+                console.log("-----");
                 console.log("MinH "+applet.Layout.minimumHeight);
                 console.log("PH "+applet.Layout.preferredHeight);
                 console.log("MaxH "+applet.Layout.maximumHeight);
+                console.log("FillH "+applet.Layout.fillHeight);
+                console.log("-----");
+                console.log("LayoutW: " + layoutWidth);
+                console.log("LayoutH: " + layoutHeight);
             }
 
-            onPHeightChanged: {
-                console.log("----------");
-                console.log("MinW "+applet.Layout.minimumWidth);
-                console.log("PW "+applet.Layout.preferredWidth);
-                console.log("MaxW "+applet.Layout.maximumWidth);
+            onLayoutWidthChanged: {
+                debugLayouts();
+            }
 
-                console.log("MinH "+applet.Layout.minimumHeight);
-                console.log("PH "+applet.Layout.preferredHeight);
-                console.log("MaxH "+applet.Layout.maximumHeight);
-            } */
+            onLayoutHeightChanged: {
+                debugLayouts();
+            }*/
 
             onAppletMinimumWidthChanged: {
                 if(zoomScale == 1)
@@ -348,6 +351,9 @@ Item {
                 else if(applet && applet.pluginName === "org.kde.plasma.panelspacer"){
                     layoutHeight = root.iconSize + moreHeight;
                 }
+                else if(applet && applet.pluginName === "org.kde.plasma.systemtray" && root.isHorizontal){
+                    layoutHeight = root.iconSize+root.iconMargin+root.statesLineSize;
+                }
                 else{
                     if(applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical && (!canBeHovered)){
                         // return applet.Layout.minimumHeight;
@@ -384,6 +390,9 @@ Item {
                 }
                 else if(applet && applet.pluginName === "org.kde.plasma.panelspacer"){
                     layoutWidth = root.iconSize + moreWidth;
+                }
+                else if(applet && applet.pluginName === "org.kde.plasma.systemtray" && root.isVertical){
+                    layoutWidth = root.iconSize+root.iconMargin+root.statesLineSize;
                 }
                 else{
                     if(applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal && (!canBeHovered)){
