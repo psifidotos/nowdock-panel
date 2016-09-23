@@ -53,9 +53,16 @@ function restore() {
     for (var i in appletsOrder) {
         root.addApplet(appletsOrder[i], -1, -1)
     }
+
+    if(plasmoid.configuration.splitterPosition !== -1){
+        root.addInternalViewSplitter(plasmoid.configuration.splitterPosition);
+    }
+
     //rewrite, so if in the orders there were now invalid ids or if some were missing creates a correct list instead
     save();
     restoreLocks();
+
+    root.updateLayouts();
 }
 
 function restoreLocks() {
@@ -76,13 +83,22 @@ function restoreLocks() {
 
 function save() {
     var ids = new Array();
+    var splitterExists = false;
     for (var i = 0; i < layout.children.length; ++i) {
         var child = layout.children[i];
 
         if (child.applet) {
             ids.push(child.applet.id);
         }
+        else if(child.isInternalViewSplitter){
+            splitterExists = true;
+            plasmoid.configuration.splitterPosition = i;
+        }
     }
+
+    if(!splitterExists)
+        plasmoid.configuration.splitterPosition = -1;
+
     plasmoid.configuration.appletOrder = ids.join(';');
 }
 

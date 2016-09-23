@@ -259,6 +259,35 @@ DragDrop.DropArea {
 
     }
 
+    function updateLayouts(){
+        if(immutable){
+            var splitter = -1;
+
+            var totalChildren = mainLayout.children.length;
+            for (var i=0; i<totalChildren; ++i) {
+                var item;
+                if(splitter === -1)
+                    item = mainLayout.children[i];
+                else{
+                    item = mainLayout.children[splitter+1];
+                    item.parent = secondLayout;
+                }
+
+                if(item.isInternalViewSplitter)
+                    splitter = i;
+            }
+
+            updateIndexes();
+        }
+        else{
+            var totalChildren2 = secondLayout.children.length;
+            for (var i=0; i<totalChildren2; ++i) {
+                var item2 = secondLayout.children[0];
+                item2.parent = mainLayout;
+            }
+        }
+    }
+
     onWidthChanged: {
         containmentSizeSyncTimer.restart()
         if (startupTimer.running) {
@@ -423,14 +452,17 @@ DragDrop.DropArea {
         }
     }
 
-    function addInternalViewSplitter(){
+    function addInternalViewSplitter(pos){
         if(!internalViewSplitterExists()){
             var container = appletContainerComponent.createObject(root);
 
             container.isInternalViewSplitter = true;
             container.visible = true;
 
-            layoutManager.insertAtIndex(container, Math.floor(mainLayout.count / 2));
+            if(pos >=0 )
+                layoutManager.insertAtIndex(container, pos);
+            else
+                layoutManager.insertAtIndex(container, Math.floor(mainLayout.count / 2));
            // addContainerInLayout(container, x, y);
         }
     }
@@ -566,33 +598,7 @@ DragDrop.DropArea {
     }
 
     onImmutableChanged: {
-        if(immutable){
-            var splitter = -1;
-
-            var totalChildren = mainLayout.children.length;
-            for (var i=0; i<totalChildren; ++i) {
-                var item;
-                if(splitter === -1)
-                    item = mainLayout.children[i];
-                else{
-                    item = mainLayout.children[splitter+1];
-                    item.parent = secondLayout;
-                }
-
-                if(item.isInternalViewSplitter)
-                    splitter = i;
-            }
-
-            updateIndexes();
-        }
-        else{
-            var totalChildren2 = secondLayout.children.length;
-           // for (var container in secondLayout.children) {
-            for (var i=0; i<totalChildren2; ++i) {
-                var item2 = secondLayout.children[0];
-                item2.parent = mainLayout;
-            }
-        }
+        updateLayouts();
     }
 
     Containment.onAppletAdded: {

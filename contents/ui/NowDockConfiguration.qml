@@ -203,7 +203,7 @@ Item{
                                 lastPosition.checked = false;
                                 splitTwoPosition.checked = true;
                                 //add the splitter visual
-                                root.addInternalViewSplitter();
+                                root.addInternalViewSplitter(-1);
                             }
                         }
 

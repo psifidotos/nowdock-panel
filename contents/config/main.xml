@@ -40,5 +40,8 @@
     <entry name="smallAutomaticIconJumps" type="Bool">
       <default>false</default>
     </entry>
+    <entry name="splitterPosition" type="Int">
+      <default>-1</default>
+    </entry>
   </group>
 </kcfg>
