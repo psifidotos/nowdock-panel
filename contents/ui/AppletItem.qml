@@ -127,8 +127,9 @@ Item {
     }
 
     function checkCanBeHovered(){
-        if ((applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal) ||
-                (applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical)){
+        if ( ((applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal) ||
+                (applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical))
+            && (applet && applet.pluginName !== "org.kde.plasma.panelspacer") ){
             canBeHovered = false;
         }
         else{
