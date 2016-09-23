@@ -50,15 +50,12 @@ function restore() {
     }
 
     //finally, restore the applets in the correct order
-    console.log("Restore...");
     for (var i in appletsOrder) {
-      //  console.log(appletsOrder[i].pluginName);
         root.addApplet(appletsOrder[i], -1, -1)
     }
 
     //add the splitter in the correct position if it exists
     if(plasmoid.configuration.splitterPosition !== -1){
-      //  console.log("Splitter: "+plasmoid.configuration.splitterPosition);
         root.addInternalViewSplitter(plasmoid.configuration.splitterPosition);
     }
 
@@ -94,10 +91,8 @@ function save() {
 
         if (child.applet) {
             ids.push(child.applet.id);
-            console.log(child.applet.pluginName);
         }
         else if(child.isInternalViewSplitter && plasmoid.configuration.panelPosition === 10){
-        //    console.log("Splitter: "+i);
             splitterExists = true;
             plasmoid.configuration.splitterPosition = i;
         }
