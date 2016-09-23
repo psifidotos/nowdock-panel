@@ -157,8 +157,9 @@ MouseArea {
             }
         }
 
-        if (root.dragOverlay.currentApplet) {
+        if (root.dragOverlay.currentApplet && !currentApplet.isInternalViewSplitter) {
             hideTimer.stop();
+
             tooltip.visible = true;
             tooltip.raise();
         }
@@ -172,8 +173,11 @@ MouseArea {
 
         previousCurrentApplet = currentApplet;
 
-        if (!currentApplet || !root.dragOverlay.currentApplet) {
-            hideTimer.start();
+
+        if (!currentApplet
+                || !root.dragOverlay.currentApplet
+                || (currentApplet &&currentApplet.isInternalViewSplitter)) {
+            hideTimer.restart();
             return;
         }
 
@@ -289,7 +293,7 @@ MouseArea {
 
     Timer {
         id: hideTimer
-        interval: units.longDuration * 4
+        interval: units.longDuration * 2
         onTriggered: tooltip.visible = false;
     }
 
@@ -377,7 +381,8 @@ MouseArea {
                      ((currentApplet.applet &&
                        ((currentApplet.applet.pluginName === "org.kde.plasma.systemtray")
                         || (currentApplet.applet.pluginName === "org.kde.store.nowdock.plasmoid")) )
-                      || currentApplet.internalSplitterView) ? false : true
+                      || (currentApplet.isInternalViewSplitter))
+                     ? false : true
 
             anchors.margins: 2*units.smallSpacing
             tooltip: "Lock/Unlock zoom effect"

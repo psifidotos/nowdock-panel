@@ -15,8 +15,6 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  2.010-1301, USA.
  */
-
-
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
 import QtGraphicalEffects 1.0
@@ -42,7 +40,7 @@ Item {
     property int animationTime: root.durationTime* (0.7*units.shortDuration) // 70
     property int hoveredIndex: layoutsContainer.hoveredIndex
     property int index: -1
-    property int appletMargin: applet && (applet.pluginName === "org.kde.store.nowdock.plasmoid") ? 0 : root.statesLineSize + 2
+    property int appletMargin: (applet && (applet.pluginName === "org.kde.store.nowdock.plasmoid")) || isInternalViewSplitter ? 0 : root.statesLineSize + 2
     property int maxWidth: root.isHorizontal ? root.height : root.width
     property int maxHeight: root.isHorizontal ? root.height : root.width
     property int shownAppletMargin: applet && (applet.pluginName === "org.kde.plasma.systemtray") ? appletMargin/2 : appletMargin
@@ -95,15 +93,15 @@ Item {
 
 
         if(container.nowDock){
-            if(index>0)
-                nowDock.disableLeftSpacer = true;
-            else
+            if(index===0 || index===secondLayout.beginIndex)
                 nowDock.disableLeftSpacer = false;
-
-            if(index<mainLayout.count-1)
-                nowDock.disableRightSpacer = true;
             else
+                nowDock.disableLeftSpacer = true;
+
+            if(index===mainLayout.count-1 || index === secondLayout.beginIndex + secondLayout.count - 1)
                 nowDock.disableRightSpacer = false;
+            else
+                nowDock.disableRightSpacer = true;
         }
     }
 
@@ -345,7 +343,7 @@ Item {
                     if(plasmoid.immutable)
                         layoutHeight = 0;
                     else
-                        layoutHeight = root.iconSize + moreWidth;
+                        layoutHeight = root.iconSize + moreHeight + root.statesLineSize;
                 }
                 else if(applet && applet.pluginName === "org.kde.plasma.panelspacer"){
                     layoutHeight = root.iconSize + moreHeight;
@@ -382,7 +380,7 @@ Item {
                     if(plasmoid.immutable)
                         layoutWidth = 0;
                     else
-                        layoutWidth = root.iconSize + moreWidth;
+                        layoutWidth = root.iconSize + moreWidth+ root.statesLineSize;
                 }
                 else if(applet && applet.pluginName === "org.kde.plasma.panelspacer"){
                     layoutWidth = root.iconSize + moreWidth;
@@ -427,26 +425,53 @@ Item {
             }
 
             //spacer background
-            Rectangle{
+            Loader{
                 anchors.fill: wrapperContainer
-                border.width: 1
-                border.color: container.isInternalViewSplitter ? theme.highlightColor : theme.textColor
-                color: "transparent"
-                opacity: 0.7
+                active: applet && (applet.pluginName === "org.kde.plasma.panelspacer") && !plasmoid.immutable
 
-                radius: root.iconMargin
-                visible: ((applet && (applet.pluginName === "org.kde.plasma.panelspacer"))
-                          || container.isInternalViewSplitter)
-                         && !plasmoid.immutable
+                sourceComponent: Rectangle{
+                    anchors.fill: parent
+                    border.width: 1
+                    border.color: theme.textColor
+                    color: "transparent"
+                    opacity: 0.7
 
-                Rectangle{
-                    anchors.centerIn: parent
-                    color: parent.border.color
+                    radius: root.iconMargin
 
-                    width: parent.width - 1
-                    height: parent.height - 1
+                    Rectangle{
+                        anchors.centerIn: parent
+                        color: parent.border.color
 
-                    opacity: 0.2
+                        width: parent.width - 1
+                        height: parent.height - 1
+
+                        opacity: 0.2
+                    }
+                }
+            }
+
+            Loader{
+                anchors.fill: wrapperContainer
+                active: container.isInternalViewSplitter
+                        && !plasmoid.immutable
+
+                sourceComponent: Image{
+                    id:splitterImage
+                    anchors.fill: parent
+                    source:"../icons/splitter.png"
+
+                    Component.onCompleted: wrapper.zoomScale = 1+ 0.85*(root.zoomFactor - 1)
+
+                    layer.enabled: true
+                    layer.effect: DropShadow {
+                        radius: shadowSize
+                        samples: 2 * radius
+                        color: "#cc080808"
+
+                        verticalOffset: 2
+
+                        property int shadowSize : Math.ceil(root.iconSize / 20)
+                    }
                 }
             }
 
