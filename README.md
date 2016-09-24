@@ -10,19 +10,11 @@ Installation
 ============
 
 ###(no translations)###
-- cd nowdockpanel
-- plasmapkg -i .
-
-####or to update####
-- plasmapkg -u .
+- $ sh install-local.sh
 
 
 ###(with translations)###
-- $ mkdir build
-- $ cd build
-- $ cmake -DCMAKE_INSTALL_PREFIX=/usr .. 
-- $ make
-- $ sudo make install
+- $ sh install-global.sh
 
 Now Dock Panel is now ready to be used from right-click menu in the Desktop
 
