@@ -283,7 +283,7 @@ Item{
                     width: parent.width
                     spacing: 0.8*theme.defaultFont.pointSize
                     PlasmaComponents.Label{
-                        text:"Zoom On Hover"
+                        text: i18n("Zoom On Hover")
                         font.pointSize: 1.5 * theme.defaultFont.pointSize
                     }
 

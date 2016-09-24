@@ -1,6 +1,10 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Now Dock Panel
+Name[el]=Now Dock Πίνακας
+Comment=A plasma panel that tries to animate its plasmoid on hovering
+Comment[el]=Ένας πίνακας του Plasma που χρησιμοποιεί ποικίλα εφέ για τις εφαρμογές του
+
 Type=Service
 Keywords=
 NoDisplay=true

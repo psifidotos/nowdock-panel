@@ -1,0 +1,6 @@
+*~
+.*
+!.gitignore
+build
+*.kdev4
+
