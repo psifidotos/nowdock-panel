@@ -22,8 +22,18 @@ Installation
 
 Now Dock Panel is now ready to be used from right-click menu in the Desktop
 
+Translators
+============
+For translations you can use the **transifex.com** webpage using the link:
+
+https://www.transifex.com/psifidotos/now-dock-panel/
+
 
 Requirements  
 ------------
 * Plasma >= 5.7.0
 * Now Dock Plasmoid >= 0.3.0
+
+
+
+
