@@ -10,11 +10,10 @@ Installation
 ============
 
 ###(no translations)###
-- $ sh install-local.sh
-
+- _sh install-local.sh_
 
 ###(with translations)###
-- $ sh install-global.sh
+- _sh install-global.sh_
 
 Now Dock Panel is now ready to be used from right-click menu in the Desktop
 
