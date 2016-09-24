@@ -9,11 +9,15 @@ windows are going to create a nice zoom effect on hovering.
 Installation
 ============
 
-**(no translations)**
+###(no translations)###
 - cd nowdockpanel
 - plasmapkg -i .
 
-**(with translations)**
+####or to update####
+- plasmapkg -u .
+
+
+###(with translations)###
 - $ mkdir build
 - $ cd build
 - $ cmake -DCMAKE_INSTALL_PREFIX=/usr .. 
@@ -30,7 +34,7 @@ https://www.transifex.com/psifidotos/now-dock-panel/
 
 
 Requirements  
-------------
+==========
 * Plasma >= 5.7.0
 * Now Dock Plasmoid >= 0.3.0
 
