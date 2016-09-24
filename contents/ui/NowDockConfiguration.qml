@@ -161,7 +161,7 @@ Item{
                     width:parent.width
                     spacing: 0.8*theme.defaultFont.pointSize
                     PlasmaComponents.Label{
-                        text:"Applets Alignment"
+                        text: i18n("Applets Alignment")
                         font.pointSize: 1.5 * theme.defaultFont.pointSize
                     }
 
@@ -217,7 +217,7 @@ Item{
                         PlasmaComponents.Button{
                             id: firstPosition
                             checkable: true
-                            text: root.isVertical ? "Top" : "Left"
+                            text: root.isVertical ? i18n("Top") : i18n("Left")
                             width: parent.width
 
                             onCheckedChanged: {
@@ -233,7 +233,7 @@ Item{
                         PlasmaComponents.Button{
                             id: centerPosition
                             checkable: true
-                            text: "Center"
+                            text: i18n("Center")
                             width: parent.width
 
                             onCheckedChanged: {
@@ -246,7 +246,7 @@ Item{
                         PlasmaComponents.Button{
                             id: lastPosition
                             checkable: true
-                            text: root.isVertical ? "Bottom" : "Right"
+                            text: root.isVertical ? i18n("Bottom") : i18n("Right")
                             width: parent.width
 
                             onCheckedChanged: {
@@ -263,7 +263,7 @@ Item{
                         PlasmaComponents.Button{
                             id: splitTwoPosition
                             checkable: true
-                            text: root.isVertical ? "Top | Bottom" : "Left | Right"
+                            text: root.isVertical ? i18n("Top")+ " | "+ i18n("Bottom") : i18n("Left") +" | "+ i18n("Right")
                             width: parent.width
 
                             onCheckedChanged: {
@@ -302,7 +302,7 @@ Item{
                         PlasmaComponents.Slider{
                             id:zoomSlider
 
-                            valueIndicatorText: "Zoom Factor"
+                            valueIndicatorText: i18n("Zoom Factor")
                             valueIndicatorVisible: true
 
                             minimumValue: 1
@@ -351,13 +351,13 @@ Item{
                     width: parent.width
                     spacing: 0.8*theme.defaultFont.pointSize
                     PlasmaComponents.Label{
-                        text:"Background"
+                        text: i18n("Background")
                         font.pointSize: 1.5 * theme.defaultFont.pointSize
                     }
 
                     PlasmaComponents.CheckBox{
                         id: showBackground
-                        text:"Show Panel Background"
+                        text: i18n("Show Panel Background")
 
                         property bool inStartup: true
                         onCheckedChanged:{
@@ -387,7 +387,7 @@ Item{
                         PlasmaComponents.Slider{
                             id:panelSizeSlider
                             enabled: showBackground.checked
-                            valueIndicatorText: "Size"
+                            valueIndicatorText: i18n("Size")
                             valueIndicatorVisible: true
 
                             minimumValue: 0
@@ -434,7 +434,7 @@ Item{
                     spacing: 0.8*theme.defaultFont.pointSize
 
                     PlasmaComponents.Label{
-                        text:"Applets Size"
+                        text: i18n("Applets Size")
                         font.pointSize: 1.5 * theme.defaultFont.pointSize
                     }
 
@@ -498,7 +498,7 @@ Item{
                         PlasmaComponents.Button{
                             width: parent.buttonSize
                             checkable: true
-                            text: "Automatic"
+                            text: i18n("Automatic")
                             onClicked: parent.checkedButton=0;
                         }
 
@@ -595,7 +595,7 @@ Item{
 
                     PlasmaComponents.CheckBox{
                         id: smallJumpsChk
-                        text:"Small steps for icon sizes in automatic modes"
+                        text: i18n("Small steps for icon sizes in automatic modes")
 
                         property bool inStartup: true
 
