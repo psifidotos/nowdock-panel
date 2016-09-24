@@ -4,4 +4,5 @@
 #This script was written and tested on openSuSe Leap 42.1
 
 cd nowdockpanel
+plasmapkg2 -r .
 plasmapkg2 -i .
