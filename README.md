@@ -8,7 +8,19 @@ windows are going to create a nice zoom effect on hovering.
 
 Installation
 ============
--- not yet available --
+
+**(no translations)**
+- cd nowdockpanel
+- plasmapkg -i .
+
+**(with translations)**
+- $ mkdir build
+- $ cd build
+- $ cmake -DCMAKE_INSTALL_PREFIX=/usr .. 
+- $ make
+- $ sudo make install
+
+Now Dock Panel is now ready to be used from right-click menu in the Desktop
 
 
 Requirements  
