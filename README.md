@@ -19,9 +19,7 @@ Now Dock Panel is now ready to be used from right-click menu in the Desktop
 
 Translators
 ============
-For translations you can use the **transifex.com** webpage using the link:
-
-https://www.transifex.com/psifidotos/now-dock-panel/
+For translations you can use the **po/plasma_applet_org.kde.store.nowdock.panel.pot** file and either make a **Pull Request** for your language or upload the your language file at https://github.com/psifidotos/nowdock-panel/issues/17
 
 
 Requirements  
