@@ -8,11 +8,21 @@ windows are going to create a nice zoom effect on hovering.
 
 Installation
 ============
+####(no translations)####
 
-###(no translations)###
+1. Right click on Plasma Desktop -> Unlock Widgets
+2. Right click on Plasma Desktop -> Add Widgets
+3. Download New Widgets
+4. Search for "Now Dock Panel"
+5. Install
+
+Manual Installation
+============
+
+####(no translations)####
 - _sh install-local.sh_
 
-###(with translations)###
+####(with translations)####
 - _sh install-global.sh_
 
 Now Dock Panel is now ready to be used from right-click menu in the Desktop
