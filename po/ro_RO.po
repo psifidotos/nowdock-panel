@@ -1,0 +1,86 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Viorel-Cătălin Răpițeanu <rapiteanu.catalin@gmail.com>, 2016.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
+"POT-Creation-Date: 2016-09-25 03:29+0300\n"
+"PO-Revision-Date: 2016-09-25 04:15+0300\n"
+"Language-Team: Romanian <kde-i18n-doc@kde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
+"X-Generator: Poedit 1.8.9\n"
+"Last-Translator: Viorel-Cătălin Răpițeanu <rapiteanu DOT catalin AT gmail DOT com>\n"
+"Language: ro_RO\n"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:164
+msgid "Applets Alignment"
+msgstr "Alinierea miniaplicațiilor"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:220
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+msgid "Top"
+msgstr "Sus"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:220
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+msgid "Left"
+msgstr "Stânga"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:236
+msgid "Center"
+msgstr "Centru"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:249
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+msgid "Bottom"
+msgstr "Jos"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:249
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+msgid "Right"
+msgstr "Dreapta"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:286
+msgid "Zoom On Hover"
+msgstr "Panoramează la trecerea peste"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:305
+msgid "Zoom Factor"
+msgstr "Factor de panoramare"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:354
+msgid "Background"
+msgstr "Fundal"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:360
+msgid "Show Panel Background"
+msgstr "Arată fundalul panoului"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:390
+msgid "Size"
+msgstr "Dimensiune"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:437
+msgid "Applets Size"
+msgstr "Dimensiunea miniaplicațiilor"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:501
+msgid "Automatic"
+msgstr "Automat"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:598
+msgid "Small steps for icon sizes in automatic modes"
+msgstr "Pași mici pentru dimensiunea pictogramelor în modurile automate"
+
+#: ../po/rc.cpp:1 rc.cpp:1
+msgid "Now Dock Panel"
+msgstr "Panou Now Dock"
+
+#: ../po/rc.cpp:2 rc.cpp:2
+msgid "A plasma panel that tries to animate its plasmoid on hovering"
+msgstr "Un panou plasma care încearcă să animeze miniaplicațiile la trecerea peste"
