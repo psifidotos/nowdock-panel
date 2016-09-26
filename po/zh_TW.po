@@ -1,0 +1,87 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Jeff Huang <s8321414@gmail.com>, 2016.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
+"POT-Creation-Date: 2016-09-24 21:09+0300\n"
+"PO-Revision-Date: 2016-09-26 15:47+0800\n"
+"Last-Translator: Jeff Huang <s8321414@gmail.com>\n"
+"Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 2.0\n"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:164
+msgid "Applets Alignment"
+msgstr "小程式對齊"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:220
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+msgid "Top"
+msgstr "頂部"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:220
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+msgid "Left"
+msgstr "左邊"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:236
+msgid "Center"
+msgstr "置中"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:249
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+msgid "Bottom"
+msgstr "底部"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:249
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+msgid "Right"
+msgstr "右邊"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:286
+msgid "Zoom On Hover"
+msgstr "滑鼠游標置於其上時縮放"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:305
+msgid "Zoom Factor"
+msgstr "縮放係數"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:354
+msgid "Background"
+msgstr "背景"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:360
+msgid "Show Panel Background"
+msgstr "顯示面板背景"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:390
+msgid "Size"
+msgstr "大小"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:437
+msgid "Applets Size"
+msgstr "小程式大小"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:501
+msgid "Automatic"
+msgstr "自動"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:598
+msgid "Small steps for icon sizes in automatic modes"
+msgstr "自動模式中，圖示大小少量步進"
+
+#: ../po/rc.cpp:1 rc.cpp:1
+msgid "Now Dock Panel"
+msgstr "Now Dock 面板"
+
+#: ../po/rc.cpp:2 rc.cpp:2
+msgid "A plasma panel that tries to animate its plasmoid on hovering"
+msgstr "一個嘗試讓滑鼠游標停在上面時會讓它的 plasmoid 產生動畫的 plasma 面板"
+
