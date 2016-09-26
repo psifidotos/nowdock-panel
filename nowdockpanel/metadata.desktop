@@ -2,8 +2,12 @@
 Encoding=UTF-8
 Name=Now Dock Panel
 Name[el]=Now Dock Πίνακας
+Name[ro_RO]=Panou Now Dock
+Name[zh_TW]=Now Dock 面板
 Comment=A plasma panel that tries to animate its plasmoid on hovering
 Comment[el]=Ένας πίνακας του Plasma που χρησιμοποιεί ποικίλα εφέ για τις εφαρμογές του
+Comment[ro_RO]=Un panou plasma care încearcă să animeze miniaplicațiile la trecerea peste
+Comment[zh_TW]=一個嘗試讓滑鼠游標停在上面時會讓它的 plasmoid 產生動畫的 plasma 面板
 
 Type=Service
 Keywords=
