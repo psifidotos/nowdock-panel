@@ -7,6 +7,8 @@ set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
 find_package(KF5Plasma)
 
 plasma_install_package(nowdockpanel org.kde.store.nowdock.panel)
+plasma_install_package(layout-templates/org.kde.store.nowdock.defaultPanel org.kde.store.nowdock.defaultPanel layout-templates layout-template)
+
 
 FIND_PROGRAM(GETTEXT_MSGFMT_EXECUTABLE msgfmt)
 

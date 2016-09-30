@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
-"POT-Creation-Date: 2016-09-28 00:38+0300\n"
+"POT-Creation-Date: 2016-09-30 18:37+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -83,4 +83,8 @@ msgstr ""
 
 #: ../po/rc.cpp:2 rc.cpp:2
 msgid "A plasma panel that tries to animate its plasmoid on hovering"
+msgstr ""
+
+#: ../po/rc.cpp:3 rc.cpp:3
+msgid "Now Dock Default Panel"
 msgstr ""

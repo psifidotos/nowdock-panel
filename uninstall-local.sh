@@ -5,3 +5,5 @@
 
 cd nowdockpanel
 plasmapkg2 -r .
+cd ../layout-templates/org.kde.store.nowdock.defaultPanel
+plasmapkg2 -t layout-template -r . 
