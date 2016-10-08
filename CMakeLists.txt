@@ -8,6 +8,7 @@ find_package(KF5Plasma)
 
 plasma_install_package(nowdockpanel org.kde.store.nowdock.panel)
 plasma_install_package(layout-templates/org.kde.store.nowdock.defaultPanel org.kde.store.nowdock.defaultPanel layout-templates layout-template)
+plasma_install_package(layout-templates/org.kde.store.nowdock.emptyPanel org.kde.store.nowdock.emptyPanel layout-templates layout-template)
 
 
 FIND_PROGRAM(GETTEXT_MSGFMT_EXECUTABLE msgfmt)

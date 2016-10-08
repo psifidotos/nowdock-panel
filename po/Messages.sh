@@ -5,6 +5,7 @@ PROJECT="plasma_applet_org.kde.store.nowdock.panel" # project name
 PROJECTPATH="../nowdockpanel" # project path
 BUGADDR="https://github.com/psifidotos/nowdock-panel/" # MSGID-Bugs
 DEFAULTLAYOUT="../layout-templates/org.kde.store.nowdock.defaultPanel"
+EMPTYLAYOUT="../layout-templates/org.kde.store.nowdock.emptyPanel"
 WDIR="`pwd`" # working dir
 
 echo "Preparing rc files"
@@ -19,12 +20,15 @@ xargs --arg-file="${WDIR}/rcfiles.list" extractrc > "${WDIR}/rc.cpp"
 
 intltool-extract --quiet --type=gettext/ini ../metadata.desktop.template
 intltool-extract --quiet --type=gettext/ini ../defaultLayout.metadata.desktop.template
+intltool-extract --quiet --type=gettext/ini ../emptyLayout.metadata.desktop.template
 
 cat ../metadata.desktop.template.h >> ${WDIR}/rc.cpp
 cat ../defaultLayout.metadata.desktop.template.h >> ${WDIR}/rc.cpp
+cat ../emptyLayout.metadata.desktop.template.h >> ${WDIR}/rc.cpp
 
 rm ../metadata.desktop.template.h
 rm ../defaultLayout.metadata.desktop.template.h
+rm ../emptyLayout.metadata.desktop.template.h
 
 
 # echo "Done preparing rc files"
@@ -53,6 +57,7 @@ done
 intltool-merge --quiet --desktop-style . ../metadata.desktop.template "${PROJECTPATH}"/metadata.desktop
 
 intltool-merge --quiet --desktop-style . ../defaultLayout.metadata.desktop.template "${DEFAULTLAYOUT}"/metadata.desktop
+intltool-merge --quiet --desktop-style . ../emptyLayout.metadata.desktop.template "${EMPTYLAYOUT}"/metadata.desktop
 
 
 echo "Done merging translations"

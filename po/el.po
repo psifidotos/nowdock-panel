@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
-"POT-Creation-Date: 2016-09-30 18:37+0300\n"
-"PO-Revision-Date: 2016-09-30 18:39+0200\n"
+"POT-Creation-Date: 2016-10-09 00:19+0300\n"
+"PO-Revision-Date: 2016-10-09 00:20+0200\n"
 "Last-Translator: Michail Vοurlakos <mvourlakos@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-doc@kde.org>\n"
 "Language: el_GR\n"
@@ -89,4 +89,8 @@ msgstr ""
 #: ../po/rc.cpp:3 rc.cpp:3
 msgid "Now Dock Default Panel"
 msgstr "Προκαθορισμένος Now Dock"
+
+#: ../po/rc.cpp:4 rc.cpp:4
+msgid "Empty Now Dock Panel"
+msgstr "Άδειος Now Dock"
 

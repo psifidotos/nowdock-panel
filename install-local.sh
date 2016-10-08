@@ -9,3 +9,6 @@ plasmapkg2 -i .
 cd ../layout-templates/org.kde.store.nowdock.defaultPanel
 plasmapkg2 -t layout-template -r . 
 plasmapkg2 -t layout-template -i .
+cd ../../layout-templates/org.kde.store.nowdock.emptyPanel
+plasmapkg2 -t layout-template -r . 
+plasmapkg2 -t layout-template -i .

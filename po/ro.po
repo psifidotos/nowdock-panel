@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
-"POT-Creation-Date: 2016-09-30 18:37+0300\n"
+"POT-Creation-Date: 2016-10-09 00:19+0300\n"
 "PO-Revision-Date: 2016-09-25 04:15+0300\n"
 "Last-Translator: Viorel-Cătălin Răpițeanu <rapiteanu DOT catalin AT gmail "
 "DOT com>\n"
@@ -91,4 +91,9 @@ msgstr ""
 #: ../po/rc.cpp:3 rc.cpp:3
 #, fuzzy
 msgid "Now Dock Default Panel"
+msgstr "Panou Now Dock"
+
+#: ../po/rc.cpp:4 rc.cpp:4
+#, fuzzy
+msgid "Empty Now Dock Panel"
 msgstr "Panou Now Dock"

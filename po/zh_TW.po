@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
-"POT-Creation-Date: 2016-09-30 18:37+0300\n"
+"POT-Creation-Date: 2016-10-09 00:19+0300\n"
 "PO-Revision-Date: 2016-10-01 09:44+0800\n"
 "Last-Translator: Jeff Huang <s8321414@gmail.com>\n"
 "Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
@@ -89,3 +89,7 @@ msgstr "一個嘗試讓滑鼠游標停在上面時會讓它的 plasmoid 產生�
 msgid "Now Dock Default Panel"
 msgstr "Now Dock 預設面板"
 
+#: ../po/rc.cpp:4 rc.cpp:4
+#, fuzzy
+msgid "Empty Now Dock Panel"
+msgstr "Now Dock 面板"

@@ -1,8 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=Now Dock Default Panel
-Name[el]=Προκαθορισμένος Now Dock
-Name[zh_TW]=Now Dock 預設面板
+_Name=Empty Now Dock Panel
 
 Type=Service
 ServiceTypes=Plasma/LayoutTemplate
@@ -10,7 +8,7 @@ X-Plasma-Shell=plasmashell
 X-Plasma-ContainmentCategories=panel
 X-KDE-PluginInfo-Author=Michail Vourlakos
 X-KDE-PluginInfo-Email=mvourlakos@gmail.com
-X-KDE-PluginInfo-Name=org.kde.store.nowdock.defaultPanel
+X-KDE-PluginInfo-Name=org.kde.store.nowdock.emptyPanel
 X-KDE-PluginInfo-Version=0.1
 X-KDE-PluginInfo-Website=https://store.kde.org/p/1154578/
 X-KDE-PluginInfo-Category=
