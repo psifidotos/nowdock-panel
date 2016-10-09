@@ -822,7 +822,7 @@ Item {
             PropertyAnimation {
                 target: wrapper
                 property: "zoomScale"
-                to: wrapper.zoomScale - 0.15
+                to: wrapper.zoomScale - (root.zoomFactor - 1) / 2
                 duration: units.longDuration
                 easing.type: Easing.OutQuad
             }
