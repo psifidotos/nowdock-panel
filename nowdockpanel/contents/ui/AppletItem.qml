@@ -244,6 +244,7 @@ Item {
             } */
         }
 
+
         Item{
             id: wrapper
 
@@ -491,6 +492,24 @@ Item {
                     }
 
                     Component.onCompleted: wrapper.zoomScale = 1+ 0.85*(root.zoomFactor - 1)
+                }
+            }
+
+            ///Shadow in applets that can not be hovered or they are locked
+            Loader{
+                anchors.fill: container.appletWrapper
+                active: container.applet
+                        && (!container.canBeHovered || (container.lockZoom && (applet.pluginName !== "org.kde.store.nowdock.plasmoid")))
+
+                sourceComponent: DropShadow{
+                    anchors.fill: parent
+                    color: "#cc080808"
+                    samples: 2 * radius
+                    source: container.applet
+                    radius: shadowSize
+                    verticalOffset: 2
+
+                    property int shadowSize : Math.ceil(root.iconSize / 30)
                 }
             }
 
