@@ -2,6 +2,7 @@
 Encoding=UTF-8
 Name=Empty Now Dock Panel
 Name[el]=Κενός Now Dock
+Name[zh_TW]=空的 Now Dock 面板
 
 Type=Service
 ServiceTypes=Plasma/LayoutTemplate
