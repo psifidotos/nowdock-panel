@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Empty Now Dock Panel
-Name[el]=Άδειος Now Dock
+Name[el]=Κενός Now Dock
 
 Type=Service
 ServiceTypes=Plasma/LayoutTemplate
