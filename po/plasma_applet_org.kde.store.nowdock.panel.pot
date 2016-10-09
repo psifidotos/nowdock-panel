@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
-"POT-Creation-Date: 2016-10-09 00:19+0300\n"
+"POT-Creation-Date: 2016-10-09 11:55+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -65,15 +65,19 @@ msgstr ""
 msgid "Size"
 msgstr ""
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:437
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:433
+msgid "Shadows for locked applets"
+msgstr ""
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:453
 msgid "Applets Size"
 msgstr ""
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:501
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:517
 msgid "Automatic"
 msgstr ""
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:598
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:614
 msgid "Small steps for icon sizes in automatic modes"
 msgstr ""
 

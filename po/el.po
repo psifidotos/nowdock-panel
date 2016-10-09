@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
-"POT-Creation-Date: 2016-10-09 00:19+0300\n"
-"PO-Revision-Date: 2016-10-09 03:44+0200\n"
+"POT-Creation-Date: 2016-10-09 11:55+0300\n"
+"PO-Revision-Date: 2016-10-09 11:56+0200\n"
 "Last-Translator: Michail Vοurlakos <mvourlakos@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-doc@kde.org>\n"
 "Language: el_GR\n"
@@ -65,15 +65,19 @@ msgstr "Εμφάνιση Παρασκηνίου"
 msgid "Size"
 msgstr "Μέγεθος"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:437
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:433
+msgid "Shadows for locked applets"
+msgstr "Σκιές στα κλειδωμένα γραφικά συστατικά"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:453
 msgid "Applets Size"
 msgstr "Μέγεθος Εφαρμογών"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:501
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:517
 msgid "Automatic"
 msgstr "Αυτόματα"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:598
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:614
 msgid "Small steps for icon sizes in automatic modes"
 msgstr "Μικρά βήματα στην αυτόματη εναλλαγή μεγέθους"
 
@@ -93,5 +97,4 @@ msgstr "Προκαθορισμένος Now Dock"
 #: ../po/rc.cpp:4 rc.cpp:4
 msgid "Empty Now Dock Panel"
 msgstr "Κενός Now Dock"
-
 
