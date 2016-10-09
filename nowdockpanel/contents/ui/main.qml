@@ -57,6 +57,8 @@ DragDrop.DropArea {
     //END properties
 
     ///BEGIN properties from nowDock
+    property bool reverseLinesPosition: nowDock ? nowDock.reverseLinesPosition : false
+
     property int durationTime: nowDock ? nowDock.durationTime : 2
     property int nowDockHoveredIndex: nowDock ? nowDock.hoveredIndex : -1
     property int iconMargin: nowDock ? nowDock.iconMargin : 0.12 * iconSize

@@ -40,7 +40,9 @@ Item {
     property int animationTime: root.durationTime* (0.7*units.shortDuration) // 70
     property int hoveredIndex: layoutsContainer.hoveredIndex
     property int index: -1
-    property int appletMargin: (applet && (applet.pluginName === "org.kde.store.nowdock.plasmoid")) || isInternalViewSplitter ? 0 : root.statesLineSize + 2
+    property int appletMargin: (applet && (applet.pluginName === "org.kde.store.nowdock.plasmoid"))
+                               || isInternalViewSplitter
+                               || root.reverseLinesPosition ? 0 : root.statesLineSize
     property int maxWidth: root.isHorizontal ? root.height : root.width
     property int maxHeight: root.isHorizontal ? root.height : root.width
     property int shownAppletMargin: applet && (applet.pluginName === "org.kde.plasma.systemtray") ? appletMargin/2 : appletMargin
@@ -278,8 +280,13 @@ Item {
             property int layoutWidth
             property int layoutHeight
 
-            property int moreHeight: applet && (applet.pluginName === "org.kde.plasma.systemtray") && root.isHorizontal ? appletMargin : 0
-            property int moreWidth: applet && (applet.pluginName === "org.kde.plasma.systemtray") && root.isVertical ? appletMargin : 0
+           // property int localMoreSpace: root.reverseLinesPosition ? root.statesLineSize + 2 : appletMargin
+             property int localMoreSpace: appletMargin
+
+            property int moreHeight: ((applet && (applet.pluginName === "org.kde.plasma.systemtray")) || root.reverseLinesPosition)
+                                     && root.isHorizontal ? localMoreSpace : 0
+            property int moreWidth: ((applet && (applet.pluginName === "org.kde.plasma.systemtray")) || root.reverseLinesPosition)
+                                    && root.isVertical ? localMoreSpace : 0
 
             property real center: width / 2
             property real zoomScale: 1
