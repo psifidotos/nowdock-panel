@@ -499,6 +499,7 @@ Item {
             Loader{
                 anchors.fill: container.appletWrapper
                 active: container.applet
+                        && plasmoid.configuration.shadows
                         && (!container.canBeHovered || (container.lockZoom && (applet.pluginName !== "org.kde.store.nowdock.plasmoid")))
 
                 sourceComponent: DropShadow{

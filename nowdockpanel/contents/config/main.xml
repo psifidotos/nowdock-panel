@@ -43,5 +43,8 @@
     <entry name="splitterPosition" type="Int">
       <default>-1</default>
     </entry>
+    <entry name="shadows" type="Bool">
+      <default>true</default>
+    </entry>
   </group>
 </kcfg>

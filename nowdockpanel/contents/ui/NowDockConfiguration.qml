@@ -154,7 +154,7 @@ Item{
             Column{
                 id:mainColumn
                 anchors.horizontalCenter: parent.horizontalCenter
-                spacing: 1.3*theme.defaultFont.pointSize
+                spacing: 1.4*theme.defaultFont.pointSize
                 width: parent.width - 10
 
                 Column{
@@ -426,6 +426,22 @@ Item{
                             text: panelSizeSlider.value + " px."
                         }
 
+                    }
+
+                    PlasmaComponents.CheckBox{
+                        id: showShadows
+                        text: i18n("Shadows for locked applets")
+
+                        property bool inStartup: true
+                        onCheckedChanged:{
+                            if(!inStartup)
+                                plasmoid.configuration.shadows = checked;
+                        }
+
+                        Component.onCompleted: {
+                            checked = plasmoid.configuration.shadows;
+                            inStartup = false;
+                        }
                     }
                 }
 
