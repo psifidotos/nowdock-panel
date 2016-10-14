@@ -1,0 +1,99 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Damian Kopeć <damikope@gmail.com>, 2016.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
+"POT-Creation-Date: 2016-10-09 11:55+0300\n"
+"PO-Revision-Date: 2016-10-14 14:20+0100\n"
+"Last-Translator: Damian Kopeć <damikope@gmail.com>\n"
+"Language-Team: Polish <kde-i18n-doc@kde.org>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 2.0\n"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:164
+msgid "Applets Alignment"
+msgstr "Wyrównanie Apletów "
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:220
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+msgid "Top"
+msgstr "Góra"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:220
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+msgid "Left"
+msgstr "Lewa"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:236
+msgid "Center"
+msgstr "Środek"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:249
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+msgid "Bottom"
+msgstr "Dół"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:249
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+msgid "Right"
+msgstr "Prawa"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:286
+msgid "Zoom On Hover"
+msgstr "Zbliżenie Przy Najechaniu"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:305
+msgid "Zoom Factor"
+msgstr "Stopień Zbliżenia"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:354
+msgid "Background"
+msgstr "Tło"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:360
+msgid "Show Panel Background"
+msgstr "Pokaż Tło Panelu"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:390
+msgid "Size"
+msgstr "Rozmiar"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:433
+msgid "Shadows for locked applets"
+msgstr "Cień dla zablokowanych apletów"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:453
+msgid "Applets Size"
+msgstr "Wielkość Apletów"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:517
+msgid "Automatic"
+msgstr "Automatyczna"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:614
+msgid "Small steps for icon sizes in automatic modes"
+msgstr "Mały skok wielkości ikon w tryb automatycznym"
+
+#: ../po/rc.cpp:1 rc.cpp:1
+msgid "Now Dock Panel"
+msgstr "Panel Now Dock"
+
+#: ../po/rc.cpp:2 rc.cpp:2
+msgid "A plasma panel that tries to animate its plasmoid on hovering"
+msgstr "Panel plazmy próbujący animowac plazmoidy podczas najechania na nie"
+
+#: ../po/rc.cpp:3 rc.cpp:3
+msgid "Now Dock Default Panel"
+msgstr "Domyślny Panel Now Dock"
+
+#: ../po/rc.cpp:4 rc.cpp:4
+msgid "Empty Now Dock Panel"
+msgstr "Pusty Panel Now Dock"
+
