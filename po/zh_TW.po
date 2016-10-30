@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
 "POT-Creation-Date: 2016-10-30 09:52+0200\n"
-"PO-Revision-Date: 2016-10-09 17:12+0800\n"
+"PO-Revision-Date: 2016-10-30 22:28+0800\n"
 "Last-Translator: Jeff Huang <s8321414@gmail.com>\n"
 "Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
 "Language: zh_TW\n"
@@ -67,21 +67,19 @@ msgstr "大小"
 
 #: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:437
 msgid "Shadows"
-msgstr ""
+msgstr "陰影"
 
 #: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:473
 msgid "None"
-msgstr ""
+msgstr "無"
 
 #: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:478
-#, fuzzy
 msgid "Only for locked applets"
-msgstr "已鎖定小程式的陰影"
+msgstr "僅鎖定小程式"
 
 #: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:483
-#, fuzzy
 msgid "All applets"
-msgstr "小程式大小"
+msgstr "所有小程式"
 
 #: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:511
 msgid "Applets Size"
@@ -110,3 +108,4 @@ msgstr "Now Dock 預設面板"
 #: ../po/rc.cpp:4 rc.cpp:4
 msgid "Empty Now Dock Panel"
 msgstr "空的 Now Dock 面板"
+
