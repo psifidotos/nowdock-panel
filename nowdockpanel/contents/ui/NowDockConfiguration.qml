@@ -1,4 +1,5 @@
 import QtQuick 2.0
+import QtQuick.Controls 1.4
 import QtQuick.Layouts 1.3
 import QtGraphicalEffects 1.0
 
@@ -154,7 +155,7 @@ Item{
             Column{
                 id:mainColumn
                 anchors.horizontalCenter: parent.horizontalCenter
-                spacing: 1.4*theme.defaultFont.pointSize
+                spacing: 1.5*theme.defaultFont.pointSize
                 width: parent.width - 10
 
                 Column{
@@ -268,10 +269,10 @@ Item{
 
                             onCheckedChanged: {
                                 if(checked && !parent.inStartup){
-                                  //  if(root.isVertical)
-                                        plasmoid.configuration.panelPosition = 10
-                                //    else
-                                   //     plasmoid.configuration.panelPosition = 2
+                                    //  if(root.isVertical)
+                                    plasmoid.configuration.panelPosition = 10
+                                    //    else
+                                    //     plasmoid.configuration.panelPosition = 2
                                 }
                             }
                             onClicked: checked=true;
@@ -427,8 +428,65 @@ Item{
                         }
 
                     }
+                }
 
-                    PlasmaComponents.CheckBox{
+                Column{
+                    width: parent.width
+                    spacing: 0.8*theme.defaultFont.pointSize
+                    PlasmaComponents.Label{
+                        text: i18n("Shadows")
+                        font.pointSize: 1.5 * theme.defaultFont.pointSize
+                    }
+
+                    RowLayout {
+                        ExclusiveGroup {
+                            id: shadowsGroup
+                            property bool inStartup: true
+
+                            onCurrentChanged: {
+                                if (!inStartup) {
+                                    if (current === noneShadow){
+                                        plasmoid.configuration.shadows = 0; /*No Shadows*/
+                                    } else if (current === lockedAppletsShadow){
+                                        plasmoid.configuration.shadows = 1; /*Locked Applets Shadows*/
+                                    } else if (current === allAppletsShadow){
+                                        plasmoid.configuration.shadows = 2; /*All Applets Shadows*/
+                                    }
+                                }
+                            }
+
+                            Component.onCompleted: {
+                                if (plasmoid.configuration.shadows === 0 /*No Shadows*/){
+                                    noneShadow.checked = true;
+                                } else if (plasmoid.configuration.shadows === 1 /*Locked Applets*/) {
+                                    lockedAppletsShadow.checked = true;
+                                } else if (plasmoid.configuration.shadows === 2 /*All Applets*/) {
+                                    allAppletsShadow.checked = true;
+                                }
+
+                                inStartup = false;
+                            }
+                        }
+
+                        PlasmaComponents.RadioButton {
+                            id: noneShadow
+                            text: i18n("None")
+                            exclusiveGroup: shadowsGroup
+                        }
+                        PlasmaComponents.RadioButton {
+                            id: lockedAppletsShadow
+                            text: i18n("Only for locked applets")
+                            exclusiveGroup: shadowsGroup
+                        }
+                        PlasmaComponents.RadioButton {
+                            id: allAppletsShadow
+                            text: "All applets"
+                            exclusiveGroup: shadowsGroup
+                        }
+
+                    }
+
+                    /*   PlasmaComponents.CheckBox{
                         id: showShadows
                         text: i18n("Shadows for locked applets")
 
@@ -442,7 +500,7 @@ Item{
                             checked = plasmoid.configuration.shadows;
                             inStartup = false;
                         }
-                    }
+                    }*/
                 }
 
                 Column{

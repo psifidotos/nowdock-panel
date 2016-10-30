@@ -43,8 +43,14 @@
     <entry name="splitterPosition" type="Int">
       <default>-1</default>
     </entry>
-    <entry name="shadows" type="Bool">
-      <default>true</default>
+    <entry name="shadows" type="Enum">
+      <label>Shadows for the applets</label>
+        <choices>
+          <choice name="None"/>
+          <choice name="Locked"/>
+          <choice name="All"/>
+        </choices>
+      <default>1</default>
     </entry>
   </group>
 </kcfg>

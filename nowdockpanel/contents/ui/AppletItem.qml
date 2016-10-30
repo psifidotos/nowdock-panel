@@ -280,8 +280,8 @@ Item {
             property int layoutWidth
             property int layoutHeight
 
-           // property int localMoreSpace: root.reverseLinesPosition ? root.statesLineSize + 2 : appletMargin
-             property int localMoreSpace: appletMargin
+            // property int localMoreSpace: root.reverseLinesPosition ? root.statesLineSize + 2 : appletMargin
+            property int localMoreSpace: appletMargin
 
             property int moreHeight: ((applet && (applet.pluginName === "org.kde.plasma.systemtray")) || root.reverseLinesPosition)
                                      && root.isHorizontal ? localMoreSpace : 0
@@ -502,12 +502,14 @@ Item {
                 }
             }
 
-            ///Shadow in applets that can not be hovered or they are locked
+            ///Shadow in applets
             Loader{
                 anchors.fill: container.appletWrapper
                 active: container.applet
-                        && plasmoid.configuration.shadows
-                        && (!container.canBeHovered || (container.lockZoom && (applet.pluginName !== "org.kde.store.nowdock.plasmoid")))
+                        &&((plasmoid.configuration.shadows === 1 /*Locked Applets*/
+                            && (!container.canBeHovered || (container.lockZoom && (applet.pluginName !== "org.kde.store.nowdock.plasmoid"))) )
+                           || (plasmoid.configuration.shadows === 2 /*All Applets*/
+                               && (applet.pluginName !== "org.kde.store.nowdock.plasmoid")))
 
                 sourceComponent: DropShadow{
                     anchors.fill: parent
