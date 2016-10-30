@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
-"POT-Creation-Date: 2016-10-09 11:55+0300\n"
+"POT-Creation-Date: 2016-10-30 09:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,67 +17,79 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:164
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:165
 msgid "Applets Alignment"
 msgstr ""
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:220
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:221
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:267
 msgid "Top"
 msgstr ""
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:220
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:221
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:267
 msgid "Left"
 msgstr ""
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:236
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:237
 msgid "Center"
 msgstr ""
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:249
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:250
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:267
 msgid "Bottom"
 msgstr ""
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:249
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:250
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:267
 msgid "Right"
 msgstr ""
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:286
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:287
 msgid "Zoom On Hover"
 msgstr ""
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:305
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:306
 msgid "Zoom Factor"
 msgstr ""
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:354
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:355
 msgid "Background"
 msgstr ""
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:360
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:361
 msgid "Show Panel Background"
 msgstr ""
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:390
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:391
 msgid "Size"
 msgstr ""
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:433
-msgid "Shadows for locked applets"
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:437
+msgid "Shadows"
 msgstr ""
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:453
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:473
+msgid "None"
+msgstr ""
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:478
+msgid "Only for locked applets"
+msgstr ""
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:483
+msgid "All applets"
+msgstr ""
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:511
 msgid "Applets Size"
 msgstr ""
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:517
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:575
 msgid "Automatic"
 msgstr ""
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:614
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:672
 msgid "Small steps for icon sizes in automatic modes"
 msgstr ""
 

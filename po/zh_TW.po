@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
-"POT-Creation-Date: 2016-10-09 11:55+0300\n"
+"POT-Creation-Date: 2016-10-30 09:52+0200\n"
 "PO-Revision-Date: 2016-10-09 17:12+0800\n"
 "Last-Translator: Jeff Huang <s8321414@gmail.com>\n"
 "Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
@@ -17,67 +17,81 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 2.0\n"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:164
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:165
 msgid "Applets Alignment"
 msgstr "小程式對齊"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:220
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:221
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:267
 msgid "Top"
 msgstr "頂部"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:220
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:221
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:267
 msgid "Left"
 msgstr "左邊"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:236
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:237
 msgid "Center"
 msgstr "置中"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:249
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:250
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:267
 msgid "Bottom"
 msgstr "底部"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:249
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:250
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:267
 msgid "Right"
 msgstr "右邊"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:286
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:287
 msgid "Zoom On Hover"
 msgstr "滑鼠游標置於其上時縮放"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:305
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:306
 msgid "Zoom Factor"
 msgstr "縮放係數"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:354
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:355
 msgid "Background"
 msgstr "背景"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:360
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:361
 msgid "Show Panel Background"
 msgstr "顯示面板背景"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:390
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:391
 msgid "Size"
 msgstr "大小"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:433
-msgid "Shadows for locked applets"
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:437
+msgid "Shadows"
+msgstr ""
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:473
+msgid "None"
+msgstr ""
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:478
+#, fuzzy
+msgid "Only for locked applets"
 msgstr "已鎖定小程式的陰影"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:453
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:483
+#, fuzzy
+msgid "All applets"
+msgstr "小程式大小"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:511
 msgid "Applets Size"
 msgstr "小程式大小"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:517
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:575
 msgid "Automatic"
 msgstr "自動"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:614
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:672
 msgid "Small steps for icon sizes in automatic modes"
 msgstr "自動模式中，圖示大小少量步進"
 
@@ -96,4 +110,3 @@ msgstr "Now Dock 預設面板"
 #: ../po/rc.cpp:4 rc.cpp:4
 msgid "Empty Now Dock Panel"
 msgstr "空的 Now Dock 面板"
-

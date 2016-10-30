@@ -149,7 +149,7 @@ Item{
 
         mainItem:Item{
             enabled: true
-            width: 400
+            width: 420
             height: mainColumn.height+10
 
             Column{
@@ -439,6 +439,8 @@ Item{
                     }
 
                     RowLayout {
+                        width: parent.width
+
                         ExclusiveGroup {
                             id: shadowsGroup
                             property bool inStartup: true
@@ -480,7 +482,7 @@ Item{
                         }
                         PlasmaComponents.RadioButton {
                             id: allAppletsShadow
-                            text: "All applets"
+                            text: i18n("All applets")
                             exclusiveGroup: shadowsGroup
                         }
 

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
-"POT-Creation-Date: 2016-10-09 11:55+0300\n"
+"POT-Creation-Date: 2016-10-30 09:52+0200\n"
 "PO-Revision-Date: 2016-10-14 14:20+0100\n"
 "Last-Translator: Damian Kopeć <damikope@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -17,67 +17,81 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 2.0\n"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:164
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:165
 msgid "Applets Alignment"
 msgstr "Wyrównanie Apletów "
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:220
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:221
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:267
 msgid "Top"
 msgstr "Góra"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:220
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:221
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:267
 msgid "Left"
 msgstr "Lewa"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:236
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:237
 msgid "Center"
 msgstr "Środek"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:249
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:250
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:267
 msgid "Bottom"
 msgstr "Dół"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:249
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:266
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:250
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:267
 msgid "Right"
 msgstr "Prawa"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:286
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:287
 msgid "Zoom On Hover"
 msgstr "Zbliżenie Przy Najechaniu"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:305
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:306
 msgid "Zoom Factor"
 msgstr "Stopień Zbliżenia"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:354
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:355
 msgid "Background"
 msgstr "Tło"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:360
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:361
 msgid "Show Panel Background"
 msgstr "Pokaż Tło Panelu"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:390
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:391
 msgid "Size"
 msgstr "Rozmiar"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:433
-msgid "Shadows for locked applets"
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:437
+msgid "Shadows"
+msgstr ""
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:473
+msgid "None"
+msgstr ""
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:478
+#, fuzzy
+msgid "Only for locked applets"
 msgstr "Cień dla zablokowanych apletów"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:453
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:483
+#, fuzzy
+msgid "All applets"
+msgstr "Wielkość Apletów"
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:511
 msgid "Applets Size"
 msgstr "Wielkość Apletów"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:517
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:575
 msgid "Automatic"
 msgstr "Automatyczna"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:614
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:672
 msgid "Small steps for icon sizes in automatic modes"
 msgstr "Mały skok wielkości ikon w tryb automatycznym"
 
@@ -96,4 +110,3 @@ msgstr "Domyślny Panel Now Dock"
 #: ../po/rc.cpp:4 rc.cpp:4
 msgid "Empty Now Dock Panel"
 msgstr "Pusty Panel Now Dock"
-
