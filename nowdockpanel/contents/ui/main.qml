@@ -33,6 +33,7 @@ DragDrop.DropArea {
     height: 90
 
     //BEGIN properties
+    Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
 
     /*Layout.minimumHeight: isVertical ? currentLayout.height : (zoomFactor+0.1) * (iconSize+iconMargin)
     Layout.minimumWidth: isHorizontal ? currentLayout.width : (zoomFactor+0.1) * (iconSize+iconMargin)*/
@@ -46,6 +47,32 @@ DragDrop.DropArea {
 
     property bool isHorizontal: plasmoid.formFactor == PlasmaCore.Types.Horizontal
     property bool isVertical: !isHorizontal
+
+    property int noApplets: {
+        var count1 = 0;
+        var count2 = 0;
+
+        count1 = mainLayout.children.length;
+        var tempLength = mainLayout.children.length;
+
+        for (var i=tempLength-1; i>=0; --i) {
+            var applet = mainLayout.children[i];
+            if (applet && (applet === dndSpacer || applet === lastSpacer ||  applet.isInternalViewSplitter))
+                count1--;
+        }
+
+        count2 = secondLayout.children.length;
+        tempLength = secondLayout.children.length;
+
+        for (var i=tempLength-1; i>=0; --i) {
+            var applet = secondLayout.children[i];
+            if (applet && (applet === dndSpacer || applet === lastSpacer  || applet.isInternalViewSplitter))
+                count2--;
+        }
+
+        return (count1 + count2);
+    }
+
 
     property int fixedWidth: 0
     property int fixedHeight: 0
@@ -69,7 +96,8 @@ DragDrop.DropArea {
 
     property bool automaticSize: plasmoid.configuration.automaticIconSize
     property bool smallAutomaticIconJumps: plasmoid.configuration.smallAutomaticIconJumps
-    property bool useThemePanel: plasmoid.configuration.useThemePanel
+    //noApplets in startup may not be ready
+    property bool useThemePanel: noApplets === 0 ? true : plasmoid.configuration.useThemePanel
     property bool immutable: plasmoid.immutable
 
 
@@ -467,7 +495,7 @@ DragDrop.DropArea {
                 layoutManager.insertAtIndex(container, Math.floor(mainLayout.count / 2));
 
             layoutManager.save();
-           // addContainerInLayout(container, x, y);
+            // addContainerInLayout(container, x, y);
         }
     }
 
@@ -683,7 +711,12 @@ DragDrop.DropArea {
     //BEGIN components
     Loader{
         anchors.fill: parent
-        active: root.useThemePanel
+
+        // FIX IT && TEST IT: it is crashing Plasma with two Now Docks one of which has only
+        // task manager (small)
+        //active: root.useThemePanel
+        active: true
+
         sourceComponent: PanelBox{}
     }
 
