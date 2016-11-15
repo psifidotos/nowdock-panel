@@ -37,7 +37,7 @@ Item {
     property bool lockZoom: false
     property bool isInternalViewSplitter: false
 
-    property int animationTime: root.durationTime* (0.7*units.shortDuration) // 70
+    property int animationTime: root.durationTime* (1.8*units.shortDuration) // 70
     property int hoveredIndex: layoutsContainer.hoveredIndex
     property int index: -1
     property int appletMargin: (applet && (applet.pluginName === "org.kde.store.nowdock.plasmoid"))
