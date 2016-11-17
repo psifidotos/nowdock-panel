@@ -25,6 +25,8 @@ import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.kquickcontrolsaddons 2.0
 import org.kde.draganddrop 2.0 as DragDrop
 
+import org.kde.nowdock 0.1 as NowDock
+
 import "LayoutManager.js" as LayoutManager
 
 DragDrop.DropArea {
@@ -47,6 +49,8 @@ DragDrop.DropArea {
 
     property bool isHorizontal: plasmoid.formFactor == PlasmaCore.Types.Horizontal
     property bool isVertical: !isHorizontal
+
+    property bool isHovered: nowDock ? (nowDockHoveredIndex !== -1) && (layoutsContainer.hoveredIndex !== -1) : (layoutsContainer.hoveredIndex !== -1)
 
     property int noApplets: {
         var count1 = 0;
@@ -709,17 +713,6 @@ DragDrop.DropArea {
     //END connections
 
     //BEGIN components
-    Loader{
-        anchors.fill: parent
-
-        // FIX IT && TEST IT: it is crashing Plasma with two Now Docks one of which has only
-        // task manager (small)
-        //active: root.useThemePanel
-        active: true
-
-        sourceComponent: PanelBox{}
-    }
-
     Component {
         id: appletContainerComponent
         AppletItem{}
@@ -778,8 +771,10 @@ DragDrop.DropArea {
 
     Item{
         id: layoutsContainer
+        parent: plasmoid.immutable  ? magicWin.contentItem : root
+
         anchors.fill: parent
-        z:4
+       // z:4
 
         property int allCount: root.nowDock ? mainLayout.count-1+nowDock.tasksCount : mainLayout.count
 
@@ -789,6 +784,17 @@ DragDrop.DropArea {
 
         signal updateScale(int delegateIndex, real newScale, real step)
 
+
+        Loader{
+            anchors.fill: parent
+
+            // FIX IT && TEST IT: it is crashing Plasma with two Now Docks one of which has only
+            // task manager (small)
+            //active: root.useThemePanel
+            active: true
+
+            sourceComponent: PanelBox{}
+        }
 
         // This is the main Layout, in contrary with the others
         Grid{
@@ -897,6 +903,12 @@ DragDrop.DropArea {
                 }
             ]
         }
+    }
+
+    MagicWindow{
+        id: magicWin
+
+        visible: false
     }
 
     Timer {

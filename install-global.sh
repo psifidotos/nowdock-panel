@@ -11,6 +11,6 @@ else
     cd build
 fi
 
-cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE ..
 make
 sudo make install

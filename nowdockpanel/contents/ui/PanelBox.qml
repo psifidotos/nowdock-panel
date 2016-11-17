@@ -28,7 +28,7 @@ Item{
     id:barLine
 
     opacity: root.useThemePanel ? 1 : 0
-    parent: root
+  //  parent: root
     z:0
 
     property int panelWidth: secondLayout.count > 0 && root.isHorizontal && plasmoid.immutable ? root.width+spacing : mainLayout.width + spacing
