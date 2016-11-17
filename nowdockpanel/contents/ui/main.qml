@@ -821,6 +821,10 @@ DragDrop.DropArea {
                     else
                         updateAutomaticIconSize(false);
                 }
+
+                if (root.isVertical) {
+                    magicWin.updateMaskArea();
+                }
             }
             onWidthChanged: {
                 if(root.isHorizontal && automaticSize){
@@ -828,6 +832,10 @@ DragDrop.DropArea {
                         updateAutomaticIconSize(true);
                     else
                         updateAutomaticIconSize(false);
+                }
+
+                if (root.isHorizontal) {
+                    magicWin.updateMaskArea();
                 }
             }
 
@@ -907,8 +915,6 @@ DragDrop.DropArea {
 
     MagicWindow{
         id: magicWin
-
-        visible: false
     }
 
     Timer {
