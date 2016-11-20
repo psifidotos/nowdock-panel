@@ -1,11 +1,15 @@
 #include "nowdockplugin.h"
 #include "panelwindow.h"
+//#include "types.h"
 
 #include <qqml.h>
 
 void NowDockPlugin::registerTypes(const char *uri)
 {
     Q_ASSERT(uri == QLatin1String("org.kde.nowdock"));
-    qmlRegisterType<PanelWindow>(uri, 0, 1, "PanelWindow");
+
+  //  qmlRegisterUncreatableType<NowDock::Types>(uri, 0, 1, "Types", "");
+
+    qmlRegisterType<NowDock::PanelWindow>(uri, 0, 1, "PanelWindow");
 }
 

@@ -1,13 +1,14 @@
 import QtQuick 2.1
+import QtQuick.Window 2.2
 
 import org.kde.plasma.core 2.0 as PlasmaCore
-
 import org.kde.nowdock 0.1 as NowDock
 
 NowDock.PanelWindow{
     id: window
 
-    visible: plasmoid.immutable
+   // modality: Qt.NonModal
+    panelVisibility: plasmoid.configuration.panelVisibility
 
     x: {
         if (plasmoid.location === PlasmaCore.Types.RightEdge) {
@@ -31,22 +32,22 @@ NowDock.PanelWindow{
     property int thickness: root.statesLineSize + (root.iconSize * root.zoomFactor) + 5
     property int length: root.isVertical ? screenHeight : screenWidth
 
-    property int screenWidth: 1680
-    property int screenHeight: 1050
+    property int screenWidth: Screen.width
+    property int screenHeight: Screen.height
 
     Rectangle{
         id: windowBackground
         anchors.fill: parent
         color: "transparent"
-     /*   border.color: "red"
-        border.width: 1*/
+        border.color: "red"
+        border.width: 1
     }
 
     function updateMaskArea() {
         var localX = 0;
         var localY = 0;
 
-        var normalState = ((layoutsContainer.hoveredIndex === -1) && (root.nowDockHoveredIndex === -1) );
+        var normalState = (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
 
         var tempLength = root.isHorizontal ? width : height;
         var tempThickness = root.isHorizontal ? height : width;
@@ -62,9 +63,9 @@ NowDock.PanelWindow{
 
             //count the x,y for the mask
             if(root.isVertical && plasmoid.location === PlasmaCore.Types.RightEdge)
-                localX = window.width - (root.statesLineSize + root.iconSize + root.iconMargin);
+                localX = window.width - (root.statesLineSize + root.iconSize + root.iconMargin - 2);
             else if(root.isHorizontal && plasmoid.location === PlasmaCore.Types.BottomEdge)
-                localY = window.height - (root.statesLineSize + root.iconSize + root.iconMargin);
+                localY = window.height - (root.statesLineSize + root.iconSize + root.iconMargin - 2);
 
             var newChoords = mainLayout.mapToItem(windowBackground,localX,localY);
 
@@ -109,6 +110,7 @@ NowDock.PanelWindow{
             }
 
         }
+
     }
 
 

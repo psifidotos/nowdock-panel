@@ -149,7 +149,7 @@ Item{
 
         mainItem:Item{
             enabled: true
-            width: 420
+            width: Math.max(420,noneShadow.width + lockedAppletsShadow.width + allAppletsShadow.width)
             height: mainColumn.height+10
 
             Column{
@@ -219,7 +219,7 @@ Item{
                             id: firstPosition
                             checkable: true
                             text: root.isVertical ? i18n("Top") : i18n("Left")
-                            width: parent.width
+                            width: (parent.width / 3) - 1
 
                             onCheckedChanged: {
                                 if(checked && !parent.inStartup){
@@ -235,7 +235,7 @@ Item{
                             id: centerPosition
                             checkable: true
                             text: i18n("Center")
-                            width: parent.width
+                            width: (parent.width / 3) - 1
 
                             onCheckedChanged: {
                                 if(checked && !parent.inStartup){
@@ -248,7 +248,7 @@ Item{
                             id: lastPosition
                             checkable: true
                             text: root.isVertical ? i18n("Bottom") : i18n("Right")
-                            width: parent.width
+                            width: (parent.width / 3) - 2
 
                             onCheckedChanged: {
                                 if(checked && !parent.inStartup){
@@ -280,6 +280,160 @@ Item{
                     }
                 }
 
+                /*enum PanelVisibility {
+        BelowActive = 0, /** always visible except if ovelaps with the active window, no area reserved */
+    //    LetWindowsCover, /** always visible, windows will go over the panel, no area reserved */
+    //    WindowsGoBelow, /** default, always visible, windows will go under the panel, no area reserved */
+    //    AutoHide, /** the panel will be shownn only if the mouse cursor is on screen edges */
+     //   AlwaysVisible,  /** always visible panel, "Normal" plasma panel, the windowmanager reserves a places for it */
+     //   AlwaysVisibleFree, /** always visible panel but no area reserved */
+//   };*/
+                /**********  Panel Visibility ****************/
+
+                Column{
+                    width:parent.width
+                    spacing: 0.8*theme.defaultFont.pointSize
+                    PlasmaComponents.Label{
+                        text: i18n("Visibility")
+                        font.pointSize: 1.5 * theme.defaultFont.pointSize
+                    }
+
+                    //user set Panel Visibility
+                    // 0-BelowActive, 1-LetWindowsCover, 2-WindowsGoBelow, 3-AutoHide, 4-AlwaysVisible, 5-AlwaysVisibleFree
+                    Flow{
+                        width: parent.width
+                        spacing: 2
+
+                        property bool inStartup: true
+                        property int panelVisibility: plasmoid.configuration.panelVisibility
+
+
+                        function updatePanelVisibilityVisual(){
+                            if (panelVisibility === 0)
+                                firstState.checked = true;
+                            else
+                                firstState.checked = false;
+
+                            if (panelVisibility === 1)
+                                secondState.checked = true;
+                            else
+                                secondState.checked = false;
+
+                            if (panelVisibility === 2)
+                                thirdState.checked = true;
+                            else
+                                thirdState.checked = false;
+
+                            if (panelVisibility === 3)
+                                fourthState.checked = true;
+                            else
+                                fourthState.checked = false;
+
+                            if (panelVisibility === 4)
+                                fifthState.checked = true;
+                            else
+                                fifthState.checked = false;
+
+                            if (panelVisibility === 5)
+                                sixthState.checked = true;
+                            else
+                                sixthState.checked = false;
+                        }
+
+                        onPanelVisibilityChanged: updatePanelVisibilityVisual();
+
+                        Component.onCompleted: {
+                            updatePanelVisibilityVisual();
+                            inStartup = false;
+                        }
+
+                        PlasmaComponents.Button{
+                            id: firstState
+                            checkable: true
+                            text: i18n("Below Active")
+                            width: (parent.width / 2) - 1
+
+                            onCheckedChanged: {
+                                if(checked && !parent.inStartup){
+                                        plasmoid.configuration.panelVisibility = 0
+                                }
+                            }
+                            onClicked: checked=true;
+                        }
+                        PlasmaComponents.Button{
+                            id: secondState
+                            checkable: true
+                            text: i18n("Let Windows Cover")
+                            width: (parent.width / 2) - 1
+
+                            onCheckedChanged: {
+                                if(checked && !parent.inStartup){
+                                    plasmoid.configuration.panelVisibility = 1
+                                }
+                            }
+                            onClicked: checked=true;
+                        }
+                        PlasmaComponents.Button{
+                            id: thirdState
+                            checkable: true
+                            text: i18n("Windows Go Below")
+                            width: (parent.width / 2) - 1
+
+                            onCheckedChanged: {
+                                if(checked && !parent.inStartup){
+                                        plasmoid.configuration.panelVisibility = 2
+                                }
+                            }
+                            onClicked: checked=true;
+                        }
+
+                        PlasmaComponents.Button{
+                            id: fourthState
+                            checkable: true
+                            text: i18n("Auto Hide")
+                            width: (parent.width/2) - 1
+
+                            onCheckedChanged: {
+                                if(checked && !parent.inStartup){
+                                    plasmoid.configuration.panelVisibility = 3
+                                }
+                            }
+                            onClicked: checked=true;
+                        }
+
+                        PlasmaComponents.Button{
+                            id: fifthState
+                            checkable: true
+                            text: i18n("Always Visible")
+                            width: (parent.width/2) - 1
+
+                            onCheckedChanged: {
+                                if(checked && !parent.inStartup){
+                                    plasmoid.configuration.panelVisibility = 4
+                                }
+                            }
+                            onClicked: checked=true;
+                        }
+                        PlasmaComponents.Button{
+                            id: sixthState
+                            checkable: true
+                            text: i18n("Always Visible (Free)")
+                            width: (parent.width/2) - 1
+
+                            onCheckedChanged: {
+                                if(checked && !parent.inStartup){
+                                    plasmoid.configuration.panelVisibility = 5
+                                }
+                            }
+                            onClicked: checked=true;
+                        }
+                    }
+                }
+
+
+
+
+                /**********  Zoom On Hover ****************/
                 Column{
                     width: parent.width
                     spacing: 0.8*theme.defaultFont.pointSize

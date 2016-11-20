@@ -1,2 +1,2 @@
 module org.kde.nowdock
-plugin nowdock
+plugin nowdockplugin

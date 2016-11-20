@@ -36,21 +36,17 @@ DragDrop.DropArea {
 
     //BEGIN properties
     Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
+    Plasmoid.status: PlasmaCore.Types.HiddenStatus
 
-    /*Layout.minimumHeight: isVertical ? currentLayout.height : (zoomFactor+0.1) * (iconSize+iconMargin)
-    Layout.minimumWidth: isHorizontal ? currentLayout.width : (zoomFactor+0.1) * (iconSize+iconMargin)*/
-    Layout.minimumWidth: fixedWidth > 0 ? fixedWidth : (mainLayout.Layout.minimumWidth + (isHorizontal && toolBox ? toolBox.width : 0))
-    Layout.maximumWidth: fixedWidth > 0 ? fixedWidth : (mainLayout.Layout.maximumWidth + (isHorizontal && toolBox ? toolBox.width : 0))
-    Layout.preferredWidth: fixedWidth > 0 ? fixedWidth : (mainLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
-
-    Layout.minimumHeight: fixedHeight > 0 ? fixedHeight : (mainLayout.Layout.minimumHeight + (!isHorizontal && toolBox ? toolBox.height : 0))
-    Layout.maximumHeight: fixedHeight > 0 ? fixedHeight : (mainLayout.Layout.maximumHeight + (!isHorizontal && toolBox ? toolBox.height : 0))
-    Layout.preferredHeight: fixedHeight > 0 ? fixedHeight : (mainLayout.Layout.preferredHeight + (!isHorizontal && toolBox? toolBox.height : 0))
+   // Layout.preferredWidth: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
+    Layout.preferredWidth: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
+    Layout.preferredHeight: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredHeight + (!isHorizontal && toolBox? toolBox.height : 0))
 
     property bool isHorizontal: plasmoid.formFactor == PlasmaCore.Types.Horizontal
     property bool isVertical: !isHorizontal
 
-    property bool isHovered: nowDock ? (nowDockHoveredIndex !== -1) && (layoutsContainer.hoveredIndex !== -1) : (layoutsContainer.hoveredIndex !== -1)
+    property bool isHovered: nowDock ? ((nowDockHoveredIndex !== -1) && (layoutsContainer.hoveredIndex !== -1)) || wholeArea.containsMouse
+                                     : (layoutsContainer.hoveredIndex !== -1) || wholeArea.containsMouse
 
     property int noApplets: {
         var count1 = 0;
@@ -106,9 +102,11 @@ DragDrop.DropArea {
 
 
     property int panelEdgeSpacing: iconSize / 2
-    property int iconSize: automaticSize ? ( (automaticIconSizeBasedSize>0 && plasmoid.immutable)  ?
+   /* property int iconSize: automaticSize ? ( (automaticIconSizeBasedSize>0 && plasmoid.immutable)  ?
                                                 Math.min(automaticIconSizeBasedSize, automaticIconSizeBasedZoom) : automaticIconSizeBasedZoom ):
-                                           Math.min(automaticIconSizeBasedZoom,plasmoid.configuration.iconSize)
+                                           Math.min(automaticIconSizeBasedZoom,plasmoid.configuration.iconSize)*/
+    property int iconSize: plasmoid.configuration.iconSize
+
     property int iconStep: 8
     //(automaticIconSizeBasedSize>0 ? Math.max(automaticIconSizeBasedSize) : plasmoid.configuration.iconSize)
     property int realSize: iconSize + iconMargin
@@ -209,7 +207,7 @@ DragDrop.DropArea {
 
             if( (!removedItem || sizeViolation)
                     && currentPredictedSize>rootSize
-                    && (futureSizeSmaller<rootSize || sizeViolation)){
+                    && (futureSizeSmaller<rootSiz|| sizeViolation)){
                 result = nextIconSize;
                 //   console.log("Should Decrease: "+result);
             }
@@ -267,7 +265,8 @@ DragDrop.DropArea {
             var found = false;
 
             do {
-                var currentZoomedSize = zoomFactor*maxIconSize;
+                //var currentZoomedSize = zoomFactor*maxIconSize;
+                var currentZoomedSize = maxIconSize;
 
                 if(currentZoomedSize <= maxZoomSize)
                     maxIconSize += iconStep;
@@ -282,7 +281,8 @@ DragDrop.DropArea {
             var maxIconSize2 = iconsArray[iconsArray.length - 1];
 
             for(var i=iconsArray.length - 1; i>=0; --i){
-                var currentZoomedSize2 = zoomFactor*iconsArray[i];
+             //   var currentZoomedSize2 = zoomFactor*iconsArray[i];
+                var currentZoomedSize2 = iconsArray[i];
 
                 if(currentZoomedSize2 <= maxZoomSize)
                     return iconsArray[i];
@@ -593,6 +593,11 @@ DragDrop.DropArea {
         updateNowDockConfiguration();
     }
 
+    Component.onDestruction: {
+        console.log("Destroying root...");
+        layoutsContainer.destroy();
+    }
+
     onDragEnter: {
         if (plasmoid.immutable) {
             event.ignore();
@@ -634,7 +639,19 @@ DragDrop.DropArea {
     }
 
     onImmutableChanged: {
+        //set the parent of the magicWindow this way in order to fix a crash in plasma
+        if(immutable)
+            layoutsContainer.parent = magicWin.contentItem;
+        else
+            layoutsContainer.parent = root;
+
         updateLayouts();
+    }
+
+    onIsHoveredChanged: {
+        if (isHovered){
+            magicWin.showOnTop();
+        }
     }
 
     Containment.onAppletAdded: {
@@ -750,12 +767,12 @@ DragDrop.DropArea {
         AddWidgetVisual{}
     }
 
-    /* Rectangle{
-        anchors.fill: mainLayout
-        color: "transparent"
-        border.color: "yellow"
-        border.width: 2
-    } */
+    Rectangle{
+        anchors.fill: parent
+        color: "yellow"
+        opacity: 0.15
+        parent: root
+    }
 
     //Timer to check if the mouse is still inside the ListView
     Timer{
@@ -771,7 +788,8 @@ DragDrop.DropArea {
 
     Item{
         id: layoutsContainer
-        parent: plasmoid.immutable  ? magicWin.contentItem : root
+       // parent: plasmoid.immutable && isHovered ? magicWin.contentItem : root
+       //  parent: plasmoid.immutable ? magicWin.contentItem : root
 
         anchors.fill: parent
        // z:4
@@ -913,9 +931,25 @@ DragDrop.DropArea {
         }
     }
 
+    MouseArea{
+        id: wholeArea
+        anchors.fill: parent
+        hoverEnabled: true
+        onEntered: {
+            magicWin.showOnTop();
+        }
+        onPositionChanged: {
+            magicWin.showOnTop();
+        }
+    }
+
     MagicWindow{
         id: magicWin
+
+        //visible: plasmoid.immutable && root.isHovered
+        visible: plasmoid.immutable
     }
+
 
     Timer {
         id: containmentSizeSyncTimer
