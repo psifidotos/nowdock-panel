@@ -72,6 +72,9 @@ private Q_SLOTS:
     void updateWindowPosition();
 
 private:
+    //second pass of the initialization
+    bool m_secondInitPass;
+
     QRect m_maskArea;
     QTimer m_hideTimer;
     QTimer m_initTimer;

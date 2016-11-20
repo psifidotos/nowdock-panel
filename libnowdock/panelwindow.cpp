@@ -16,7 +16,8 @@ namespace NowDock
 {
 
 PanelWindow::PanelWindow(QQuickWindow *parent) :
-    QQuickWindow(parent)
+    QQuickWindow(parent),
+    m_secondInitPass(false)
 {    
     setClearBeforeRendering(true);
     setColor(QColor(Qt::transparent));
@@ -29,7 +30,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     connect(&m_hideTimer, &QTimer::timeout, this, &PanelWindow::hide);
 
     m_initTimer.setSingleShot(true);
-    m_initTimer.setInterval(1000);
+    m_initTimer.setInterval(500);
     connect(&m_initTimer, &QTimer::timeout, this, &PanelWindow::initWindow);
 
     connect(this, SIGNAL(panelVisibilityChanged()), this, SLOT(updateVisibilityFlags()));
@@ -96,6 +97,7 @@ void PanelWindow::setPanelVisibility(PanelWindow::PanelVisibility state)
 
 void PanelWindow::initialize()
 {
+    m_secondInitPass = true;
     m_initTimer.start();
 }
 
@@ -104,6 +106,14 @@ void PanelWindow::initWindow()
     updateVisibilityFlags();
     shrinkTransient();
     updateWindowPosition();
+
+    // The initialization phase makes two passes because
+    // changing the window style and type wants a small delay
+    // and afterwards the second pass positions them correctly
+    if(m_secondInitPass) {
+        m_initTimer.start();
+        m_secondInitPass = false;
+    }
 }
 
 void PanelWindow::shrinkTransient()
