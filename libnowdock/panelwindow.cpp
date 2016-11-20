@@ -37,10 +37,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     setPanelVisibility(BelowActive);
     updateVisibilityFlags();
 
-    //  setLocation(Plasma::Types::LeftEdge);
     connect(this, SIGNAL(locationChanged()), this, SLOT(updateWindowPosition()));
-
-    initialize();
 }
 
 PanelWindow::~PanelWindow()
