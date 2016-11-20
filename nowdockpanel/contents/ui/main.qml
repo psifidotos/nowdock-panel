@@ -42,6 +42,7 @@ DragDrop.DropArea {
     Layout.preferredWidth: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
     Layout.preferredHeight: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredHeight + (!isHorizontal && toolBox? toolBox.height : 0))
 
+    property bool inStartup: true
     property bool isHorizontal: plasmoid.formFactor == PlasmaCore.Types.Horizontal
     property bool isVertical: !isHorizontal
 
@@ -786,7 +787,7 @@ DragDrop.DropArea {
        // parent: plasmoid.immutable && isHovered ? magicWin.contentItem : root
         //FIXME: Maybe a plasmashell crash ... needs investigation
         //parent: magicWin && magicWin.visible && !startupTimer.running ? magicWin.contentItem : root
-        parent: plasmoid.immutable && magicWin.visible ? magicWin.contentItem : root
+        parent: plasmoid.immutable && magicWin && magicWin.visible ? magicWin.contentItem : root
 
 
         anchors.fill: parent
@@ -951,7 +952,7 @@ DragDrop.DropArea {
     MagicWindow{
         id: magicWin
 
-        visible: plasmoid.immutable && !startupTimer.running
+        visible: plasmoid.immutable && !inStartup
     }
 
 
@@ -978,8 +979,9 @@ DragDrop.DropArea {
                     mainLayout.children[i].animationsEnabled = true;
                 }
             }
-            magicWin.shrinkTransient();
-            magicWin.updateMaskArea();
+            inStartup = false;
+      //      magicWin.shrinkTransient();
+        //    magicWin.updateMaskArea();
         }
     }
     //END UI elements
