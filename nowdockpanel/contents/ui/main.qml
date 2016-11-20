@@ -343,8 +343,8 @@ DragDrop.DropArea {
     }
 
     onNowDockAnimationsChanged: magicWin.updateMaskArea();
-    //  onZoomFactorChanged: updateAutomaticIconSizeZoom();
 
+    //  onZoomFactorChanged: updateAutomaticIconSizeZoom();
     //  onIconSizeChanged: console.log("Icon Size Changed:"+iconSize);
 
     property Item dragOverlay
@@ -597,7 +597,10 @@ DragDrop.DropArea {
 
     Component.onDestruction: {
         console.log("Destroying root...");
-        layoutsContainer.destroy();
+        //layoutsContainer.destroy();
+       // if(nowDock)
+        //    nowDock.destroy();
+       // magicWin.close();
     }
 
     onDragEnter: {
@@ -782,16 +785,33 @@ DragDrop.DropArea {
         }
     }
 
+    MouseArea{
+        id: wholeArea
+        anchors.fill: parent
+        hoverEnabled: true
+        onEntered: {
+            magicWin.showOnTop();
+         //   console.log(magicWin.x+" - "+magicWin.y+" - "+magicWin.width+" - "+magicWin.height);
+         //   console.log(magicWin.maskArea.x+" - "+magicWin.maskArea.y+" - "+magicWin.maskArea.width+" - "+magicWin.maskArea.height);
+        }
+        onPositionChanged: {
+            //magicWin.showOnTop();
+        }
+    }
+
+    MagicWindow{
+        id: magicWin
+
+        visible: plasmoid.immutable && !inStartup
+    }
+
     Item{
         id: layoutsContainer
        // parent: plasmoid.immutable && isHovered ? magicWin.contentItem : root
         //FIXME: Maybe a plasmashell crash ... needs investigation
         //parent: magicWin && magicWin.visible && !startupTimer.running ? magicWin.contentItem : root
-        parent: plasmoid.immutable && magicWin && magicWin.visible ? magicWin.contentItem : root
-
-
+        parent: plasmoid.immutable && magicWin && magicWin.visible && !inStartup ? magicWin.contentItem : root
         anchors.fill: parent
-       // z:4
 
         property int allCount: root.nowDock ? mainLayout.count-1+nowDock.tasksCount : mainLayout.count
 
@@ -934,27 +954,6 @@ DragDrop.DropArea {
             ]
         }
     }
-
-    MouseArea{
-        id: wholeArea
-        anchors.fill: parent
-        hoverEnabled: true
-        onEntered: {
-            magicWin.showOnTop();
-         //   console.log(magicWin.x+" - "+magicWin.y+" - "+magicWin.width+" - "+magicWin.height);
-         //   console.log(magicWin.maskArea.x+" - "+magicWin.maskArea.y+" - "+magicWin.maskArea.width+" - "+magicWin.maskArea.height);
-        }
-        onPositionChanged: {
-            magicWin.showOnTop();
-        }
-    }
-
-    MagicWindow{
-        id: magicWin
-
-        visible: plasmoid.immutable && !inStartup
-    }
-
 
     Timer {
         id: containmentSizeSyncTimer

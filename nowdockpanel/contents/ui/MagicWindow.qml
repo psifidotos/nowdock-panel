@@ -4,10 +4,12 @@ import QtQuick.Window 2.2
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.nowdock 0.1 as NowDock
 
+//import QtQuick.Window 2.2
+
 NowDock.PanelWindow{
+//Window{
     id: window
 
-    // modality: Qt.NonModal
     location: plasmoid.location
     panelVisibility: plasmoid.configuration.panelVisibility
 

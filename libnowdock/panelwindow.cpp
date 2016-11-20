@@ -38,9 +38,11 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     connect(this, SIGNAL(locationChanged()), this, SLOT(updateWindowPosition()));
 }
 
-/*PanelWindow::~PanelWindow()
+PanelWindow::~PanelWindow()
 {
-}*/
+    qDebug() << "Destroying window called";
+   // close();
+}
 
 QRect PanelWindow::maskArea() const
 {
@@ -90,6 +92,10 @@ void PanelWindow::setPanelVisibility(PanelWindow::PanelVisibility state)
 void PanelWindow::shrinkTransient()
 {
     if (transientParent()) {
+       /* if(!parent()){
+            qDebug() << "Parent was set...";
+            setParent(transientParent());
+        }*/
         int newSize = 15;
         int transWidth = transientParent()->width();
         int transHeight = transientParent()->height();

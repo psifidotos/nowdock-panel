@@ -37,7 +37,7 @@ public:
     };
 
     explicit PanelWindow(QQuickWindow *parent = Q_NULLPTR);
-   // ~PanelWindow();
+    ~PanelWindow();
 
     QRect maskArea() const;
     void setMaskArea(QRect area);
