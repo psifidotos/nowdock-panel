@@ -25,7 +25,7 @@ if (freeEdges["bottom"] == true) {
     panel.location = "top";
 }
 
-panel.height = (1.5 * 48) + 12
+panel.height = 48 + 12
 
 //panel.addWidget("org.kde.plasma.showActivityManager")
 panel.addWidget("org.kde.store.nowdock.plasmoid")
