@@ -42,10 +42,11 @@ DragDrop.DropArea {
     Layout.preferredWidth: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
     Layout.preferredHeight: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredHeight + (!isHorizontal && toolBox? toolBox.height : 0))
 
+    property bool debugMode: false
+
     property bool inStartup: true
     property bool isHorizontal: plasmoid.formFactor == PlasmaCore.Types.Horizontal
     property bool isVertical: !isHorizontal
-
     property bool isHovered: nowDock ? ((nowDockHoveredIndex !== -1) && (layoutsContainer.hoveredIndex !== -1)) || wholeArea.containsMouse
                                      : (layoutsContainer.hoveredIndex !== -1) || wholeArea.containsMouse
 
@@ -770,7 +771,7 @@ DragDrop.DropArea {
         anchors.fill: parent
         color: "yellow"
         opacity: 0.15
-        parent: root
+        visible: root.debugMode
     }
 
     //Timer to check if the mouse is still inside the ListView

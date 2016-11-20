@@ -47,9 +47,11 @@ NowDock.PanelWindow{
     Rectangle{
         id: windowBackground
         anchors.fill: parent
-        color: "transparent"
         border.color: "red"
         border.width: 1
+        color: "transparent"
+
+        visible: root.debugMode
     }
     Rectangle{
         x: maskArea.x
@@ -57,9 +59,11 @@ NowDock.PanelWindow{
         height: maskArea.height
         width: maskArea.width
 
-        color: "transparent"
         border.color: "green"
         border.width: 1
+        color: "transparent"
+
+        visible: root.debugMode
     }
 
     function updateMaskArea() {
