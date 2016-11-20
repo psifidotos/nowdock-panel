@@ -87,6 +87,7 @@ DragDrop.DropArea {
     property bool reverseLinesPosition: nowDock ? nowDock.reverseLinesPosition : false
 
     property int durationTime: nowDock ? nowDock.durationTime : 2
+    property int nowDockAnimations: nowDock ? nowDock.animations : 0
     property int nowDockHoveredIndex: nowDock ? nowDock.hoveredIndex : -1
     property int iconMargin: nowDock ? nowDock.iconMargin : 0.12 * iconSize
     // property int iconMargin: 5
@@ -96,11 +97,10 @@ DragDrop.DropArea {
 
     property bool automaticSize: plasmoid.configuration.automaticIconSize
     property bool smallAutomaticIconJumps: plasmoid.configuration.smallAutomaticIconJumps
-    //noApplets in startup may not be ready
     property bool useThemePanel: noApplets === 0 ? true : plasmoid.configuration.useThemePanel
     property bool immutable: plasmoid.immutable
 
-
+    property int animations: 0 //zoomed applets it is used basically on masking for magic window
     property int panelEdgeSpacing: iconSize / 2
    /* property int iconSize: automaticSize ? ( (automaticIconSizeBasedSize>0 && plasmoid.immutable)  ?
                                                 Math.min(automaticIconSizeBasedSize, automaticIconSizeBasedZoom) : automaticIconSizeBasedZoom ):
@@ -341,6 +341,7 @@ DragDrop.DropArea {
         //    updateAutomaticIconSizeZoom();
     }
 
+    onNowDockAnimationsChanged: magicWin.updateMaskArea();
     //  onZoomFactorChanged: updateAutomaticIconSizeZoom();
 
     //  onIconSizeChanged: console.log("Icon Size Changed:"+iconSize);

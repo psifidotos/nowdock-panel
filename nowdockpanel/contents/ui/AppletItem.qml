@@ -36,6 +36,7 @@ Item {
     property bool showZoomed: false
     property bool lockZoom: false
     property bool isInternalViewSplitter: false
+    property bool isZoomed: false
 
     property int animationTime: root.durationTime* (1.8*units.shortDuration) // 70
     property int hoveredIndex: layoutsContainer.hoveredIndex
@@ -349,6 +350,16 @@ Item {
             onImmutableChanged: {
                 updateLayoutWidth();
                 updateLayoutHeight();
+            }
+
+            onZoomScaleChanged: {
+                if ((zoomScale > 1) && !container.isZoomed) {
+                    container.isZoomed = true;
+                    root.animations++;
+                } else if ((zoomScale == 1) && container.isZoomed) {
+                    container.isZoomed = false;
+                    root.animations--;
+                }
             }
 
 
