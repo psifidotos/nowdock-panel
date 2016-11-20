@@ -640,12 +640,6 @@ DragDrop.DropArea {
     }
 
     onImmutableChanged: {
-        //set the parent of the magicWindow this way in order to fix a crash in plasma
-        if(immutable)
-            layoutsContainer.parent = magicWin.contentItem;
-        else
-            layoutsContainer.parent = root;
-
         updateLayouts();
     }
 
@@ -790,7 +784,10 @@ DragDrop.DropArea {
     Item{
         id: layoutsContainer
        // parent: plasmoid.immutable && isHovered ? magicWin.contentItem : root
-       //  parent: plasmoid.immutable ? magicWin.contentItem : root
+        //FIXME: Maybe a plasmashell crash ... needs investigation
+        //parent: magicWin && magicWin.visible && !startupTimer.running ? magicWin.contentItem : root
+        parent: plasmoid.immutable && magicWin.visible ? magicWin.contentItem : root
+
 
         anchors.fill: parent
        // z:4
@@ -803,6 +800,11 @@ DragDrop.DropArea {
 
         signal updateScale(int delegateIndex, real newScale, real step)
 
+        onParentChanged: {
+            if (magicWin && magicWin.contentItem && (parent === magicWin.contentItem)) {
+                magicWin.updateMaskArea();
+            }
+        }
 
         Loader{
             anchors.fill: parent
@@ -938,6 +940,8 @@ DragDrop.DropArea {
         hoverEnabled: true
         onEntered: {
             magicWin.showOnTop();
+         //   console.log(magicWin.x+" - "+magicWin.y+" - "+magicWin.width+" - "+magicWin.height);
+         //   console.log(magicWin.maskArea.x+" - "+magicWin.maskArea.y+" - "+magicWin.maskArea.width+" - "+magicWin.maskArea.height);
         }
         onPositionChanged: {
             magicWin.showOnTop();
@@ -947,8 +951,7 @@ DragDrop.DropArea {
     MagicWindow{
         id: magicWin
 
-        //visible: plasmoid.immutable && root.isHovered
-        visible: plasmoid.immutable
+        visible: plasmoid.immutable && !startupTimer.running
     }
 
 
@@ -975,6 +978,8 @@ DragDrop.DropArea {
                     mainLayout.children[i].animationsEnabled = true;
                 }
             }
+            magicWin.shrinkTransient();
+            magicWin.updateMaskArea();
         }
     }
     //END UI elements

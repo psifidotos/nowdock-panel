@@ -8,6 +8,7 @@ NowDock.PanelWindow{
     id: window
 
     // modality: Qt.NonModal
+    location: plasmoid.location
     panelVisibility: plasmoid.configuration.panelVisibility
 
     x: {
@@ -35,6 +36,12 @@ NowDock.PanelWindow{
     property int screenWidth: Screen.width
     property int screenHeight: Screen.height
 
+    onVisibleChanged:{
+        if (visible) {  //shrink the parent panel window
+           shrinkTransient();
+        }
+    }
+
     Rectangle{
         id: windowBackground
         anchors.fill: parent
@@ -54,7 +61,7 @@ NowDock.PanelWindow{
     }
 
     function updateMaskArea() {
-        var localX = 0;
+       var localX = 0;
         var localY = 0;
 
         var normalState = (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
@@ -75,9 +82,9 @@ NowDock.PanelWindow{
             tempThickness = root.statesLineSize + root.iconSize + root.iconMargin + 5;
 
             //configure the thickness position
-            if(root.isVertical && plasmoid.location === PlasmaCore.Types.RightEdge)
+            if(plasmoid.location === PlasmaCore.Types.RightEdge)
                 localX = window.width - tempThickness;
-            else if(root.isHorizontal && plasmoid.location === PlasmaCore.Types.BottomEdge)
+            else if(plasmoid.location === PlasmaCore.Types.BottomEdge)
                 localY = window.height - tempThickness;
 
             //configure the length Position
@@ -93,11 +100,11 @@ NowDock.PanelWindow{
             //localY = newChoords.y - space/2;
         } else {
             if(root.isHorizontal)
-                tempLength = window.width;
+                tempLength = Screen.width;
             else
-                tempLength = window.height;
+                tempLength = Screen.height;
 
-            tempThickness = height;
+            tempThickness = thickness;
         }
 
         var maskLength = maskArea.width; //in Horizontal
@@ -116,7 +123,7 @@ NowDock.PanelWindow{
 
             // FIXME: For the height(thickness) and hovering we could do better...
             // console.log("Updating mask...");
-            var newMaskArea = Qt.rect(0,0,0,0);
+            var newMaskArea = Qt.rect(-1,-1,0,0);
             newMaskArea.x = localX;
             newMaskArea.y = localY;
 

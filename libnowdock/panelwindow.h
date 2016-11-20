@@ -6,6 +6,8 @@
 #include <QTimer>
 #include <QWindow>
 
+#include <plasma/plasma.h>
+
 namespace NowDock
 {
 
@@ -19,6 +21,8 @@ class PanelWindow : public QQuickWindow {
      * @since 5.8
      */
     Q_PROPERTY(QRect maskArea READ maskArea WRITE setMaskArea NOTIFY maskAreaChanged)
+
+    Q_PROPERTY(Plasma::Types::Location location READ location WRITE setLocation NOTIFY locationChanged)
 
     Q_PROPERTY(PanelVisibility panelVisibility READ panelVisibility WRITE setPanelVisibility NOTIFY panelVisibilityChanged)
 
@@ -38,15 +42,20 @@ public:
     QRect maskArea() const;
     void setMaskArea(QRect area);
 
+    Plasma::Types::Location location() const;
+    void setLocation(Plasma::Types::Location location);
+
     PanelVisibility panelVisibility() const;
     void setPanelVisibility(PanelVisibility state);
 
 Q_SIGNALS:
+    void locationChanged();
     void maskAreaChanged();
     void panelVisibilityChanged();
 
 public slots:
     Q_INVOKABLE void showOnTop();
+    Q_INVOKABLE void shrinkTransient();
 
 protected:
     void showEvent(QShowEvent *event) override;
@@ -57,14 +66,18 @@ private Q_SLOTS:
     void activeWindowChanged(WId win);
     void hide();
     void updateVisibilityFlags();
+    void updateWindowPosition();
 
 private:
     QRect m_maskArea;
     QTimer m_hideTimer;
 
+    Plasma::Types::Location m_location;
+
+
     PanelVisibility m_panelVisibility;
 
-    void shrinkTransient();
+
 };
 
 } //NowDock namespace

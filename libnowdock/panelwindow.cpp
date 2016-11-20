@@ -21,21 +21,21 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
 {    
     setClearBeforeRendering(true);
     setColor(QColor(Qt::transparent));
-
-    // setFlags(Qt::Tool|Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
+    setFlags(Qt::Tool|Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
 
     connect(KWindowSystem::self(), SIGNAL(activeWindowChanged(WId)), this, SLOT(activeWindowChanged(WId)));
-
-    // KWindowSystem::setOnAllDesktops(winId(), true);
 
     m_hideTimer.setSingleShot(true);
     m_hideTimer.setInterval(400);
     connect(&m_hideTimer, &QTimer::timeout, this, &PanelWindow::hide);
 
+
     connect(this, SIGNAL(panelVisibilityChanged()), this, SLOT(updateVisibilityFlags()));
     setPanelVisibility(BelowActive);
+    updateVisibilityFlags();
 
-    //  setFlags(Qt::FramelessWindowHint|Qt::BypassWindowManagerHint); //|Qt::WindowStaysOnTopHint
+    //  setLocation(Plasma::Types::LeftEdge);
+    connect(this, SIGNAL(locationChanged()), this, SLOT(updateWindowPosition()));
 }
 
 /*PanelWindow::~PanelWindow()
@@ -58,6 +58,20 @@ void PanelWindow::setMaskArea(QRect area)
     emit maskAreaChanged();
 }
 
+Plasma::Types::Location PanelWindow::location() const
+{
+    return m_location;
+}
+void PanelWindow::setLocation(Plasma::Types::Location location)
+{
+    if (m_location == location) {
+        return;
+    }
+
+    m_location = location;
+    emit locationChanged();
+}
+
 PanelWindow::PanelVisibility PanelWindow::panelVisibility() const
 {
     return m_panelVisibility;
@@ -76,28 +90,68 @@ void PanelWindow::setPanelVisibility(PanelWindow::PanelVisibility state)
 void PanelWindow::shrinkTransient()
 {
     if (transientParent()) {
-        int newSize = 20;
-        transientParent()->setY(screen()->size().height() - newSize);
-        transientParent()->setMinimumHeight(0);
-        transientParent()->setHeight(newSize);
+        int newSize = 15;
+        int transWidth = transientParent()->width();
+        int transHeight = transientParent()->height();
+        int centerX = x()+width()/2;
+        int centerY = y()+height()/2;
+
+        if (m_location == Plasma::Types::BottomEdge) {
+            transientParent()->setMinimumHeight(0);
+            transientParent()->setHeight(newSize);
+            transientParent()->setY(screen()->size().height() - newSize);
+            transientParent()->setX(centerX - transWidth/2);
+        } else if (m_location == Plasma::Types::TopEdge) {
+            transientParent()->setMinimumHeight(0);
+            transientParent()->setHeight(newSize);
+            transientParent()->setY(0);
+            transientParent()->setX(centerX - transWidth/2);
+        } else if (m_location == Plasma::Types::LeftEdge) {
+            transientParent()->setMinimumWidth(0);
+            transientParent()->setWidth(newSize);
+            transientParent()->setX(0);
+            transientParent()->setY(centerY - transHeight/2);
+        } else if (m_location == Plasma::Types::RightEdge) {
+            transientParent()->setMinimumWidth(0);
+            transientParent()->setWidth(newSize);
+            transientParent()->setX(screen()->size().width() - newSize);
+            transientParent()->setY(centerY - transHeight/2);
+        }
+    }
+}
+
+void PanelWindow::updateWindowPosition()
+{
+    if (m_location == Plasma::Types::BottomEdge) {
+        setX(0);
+        setY(screen()->size().height() - height());
+    } else if (m_location == Plasma::Types::TopEdge) {
+        setX(0);
+        setY(0);
+    } else if (m_location == Plasma::Types::LeftEdge) {
+        setX(0);
+        setY(0);
+    } else if (m_location == Plasma::Types::RightEdge) {
+        setX(screen()->size().width() - width());
+        setY(0);
     }
 }
 
 void PanelWindow::updateVisibilityFlags()
 {
     setFlags(Qt::Tool|Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
-    setY(screen()->size().height() - height());
+    updateWindowPosition();
 
     if (m_panelVisibility == LetWindowsCover) {
-        showOnTop();
-    } else if (m_panelVisibility == WindowsGoBelow) {
         m_hideTimer.start();
+    } else if (m_panelVisibility == WindowsGoBelow) {
+        showOnTop();
     } else if (m_panelVisibility == BelowActive) {
         showOnTop();
         m_hideTimer.start();
     } else if ((m_panelVisibility == AlwaysVisible) || (m_panelVisibility == AlwaysVisibleFree)) {
         KWindowSystem::setType(winId(), NET::Dock);
-        setY(screen()->size().height() - height());
+        updateWindowPosition();
     }
 }
 
@@ -120,7 +174,7 @@ void PanelWindow::hide()
         if (activeInfo.valid() && maskSize.intersects(activeInfo.geometry()) ) {
             KWindowSystem::clearState(winId(), NET::KeepAbove);
         }
-    } else if (m_panelVisibility == WindowsGoBelow){
+    } else if (m_panelVisibility == LetWindowsCover){
         KWindowSystem::clearState(winId(), NET::KeepAbove);
         KWindowSystem::setState(winId(), NET::KeepBelow);
     }
@@ -129,7 +183,6 @@ void PanelWindow::hide()
 
 void PanelWindow::showOnTop()
 {
-
     KWindowSystem::clearState(winId(), NET::KeepBelow);
     KWindowSystem::setState(winId(), NET::KeepAbove);
 }
