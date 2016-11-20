@@ -12,7 +12,6 @@
 
 #include <QDebug>
 
-
 namespace NowDock
 {
 
@@ -69,6 +68,7 @@ Plasma::Types::Location PanelWindow::location() const
 {
     return m_location;
 }
+
 void PanelWindow::setLocation(Plasma::Types::Location location)
 {
     if (m_location == location) {
@@ -192,6 +192,8 @@ void PanelWindow::hide()
 
         if (activeInfo.valid() && maskSize.intersects(activeInfo.geometry()) ) {
             KWindowSystem::clearState(winId(), NET::KeepAbove);
+        } else {
+            KWindowSystem::setState(winId(), NET::KeepAbove);
         }
     } else if (m_panelVisibility == LetWindowsCover){
         KWindowSystem::clearState(winId(), NET::KeepAbove);
