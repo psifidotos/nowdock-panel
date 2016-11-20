@@ -979,8 +979,6 @@ DragDrop.DropArea {
                 }
             }
             inStartup = false;
-      //      magicWin.shrinkTransient();
-        //    magicWin.updateMaskArea();
         }
     }
     //END UI elements

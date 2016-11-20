@@ -54,8 +54,10 @@ Q_SIGNALS:
     void panelVisibilityChanged();
 
 public slots:
+    Q_INVOKABLE void initialize();
     Q_INVOKABLE void showOnTop();
     Q_INVOKABLE void shrinkTransient();
+
 
 protected:
     void showEvent(QShowEvent *event) override;
@@ -65,19 +67,18 @@ protected:
 private Q_SLOTS:
     void activeWindowChanged(WId win);
     void hide();
+    void initWindow();
     void updateVisibilityFlags();
     void updateWindowPosition();
 
 private:
     QRect m_maskArea;
     QTimer m_hideTimer;
+    QTimer m_initTimer;
 
     Plasma::Types::Location m_location;
 
-
     PanelVisibility m_panelVisibility;
-
-
 };
 
 } //NowDock namespace

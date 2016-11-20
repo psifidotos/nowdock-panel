@@ -29,6 +29,9 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     m_hideTimer.setInterval(400);
     connect(&m_hideTimer, &QTimer::timeout, this, &PanelWindow::hide);
 
+    m_initTimer.setSingleShot(true);
+    m_initTimer.setInterval(1000);
+    connect(&m_initTimer, &QTimer::timeout, this, &PanelWindow::initWindow);
 
     connect(this, SIGNAL(panelVisibilityChanged()), this, SLOT(updateVisibilityFlags()));
     setPanelVisibility(BelowActive);
@@ -36,6 +39,8 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
 
     //  setLocation(Plasma::Types::LeftEdge);
     connect(this, SIGNAL(locationChanged()), this, SLOT(updateWindowPosition()));
+
+    initialize();
 }
 
 PanelWindow::~PanelWindow()
@@ -89,13 +94,21 @@ void PanelWindow::setPanelVisibility(PanelWindow::PanelVisibility state)
     emit panelVisibilityChanged();
 }
 
+void PanelWindow::initialize()
+{
+    m_initTimer.start();
+}
+
+void PanelWindow::initWindow()
+{
+    updateVisibilityFlags();
+    shrinkTransient();
+    updateWindowPosition();
+}
+
 void PanelWindow::shrinkTransient()
 {
     if (transientParent()) {
-       /* if(!parent()){
-            qDebug() << "Parent was set...";
-            setParent(transientParent());
-        }*/
         int newSize = 15;
         int transWidth = transientParent()->width();
         int transHeight = transientParent()->height();
