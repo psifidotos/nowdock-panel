@@ -808,11 +808,13 @@ DragDrop.DropArea {
 
     Item{
         id: layoutsContainer
-       // parent: plasmoid.immutable && isHovered ? magicWin.contentItem : root
-        //FIXME: Maybe a plasmashell crash ... needs investigation
-        //parent: magicWin && magicWin.visible && !startupTimer.running ? magicWin.contentItem : root
+
         parent: plasmoid.immutable && magicWin && magicWin.visible && !inStartup ? magicWin.contentItem : root
-        anchors.fill: parent
+        //anchors.fill: parent
+        x: 0
+        y: 0
+        width: parent.width
+        height: parent.height
 
         property int allCount: root.nowDock ? mainLayout.count-1+nowDock.tasksCount : mainLayout.count
 
