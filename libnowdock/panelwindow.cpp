@@ -24,6 +24,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     setFlags(Qt::Tool|Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
 
     connect(KWindowSystem::self(), SIGNAL(activeWindowChanged(WId)), this, SLOT(activeWindowChanged(WId)));
+    m_activeWindow = KWindowSystem::activeWindow();
 
     m_hideTimer.setSingleShot(true);
     m_hideTimer.setInterval(400);
@@ -43,7 +44,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
 PanelWindow::~PanelWindow()
 {
     qDebug() << "Destroying window called";
-   // close();
+    // close();
 }
 
 QRect PanelWindow::maskArea() const
@@ -185,22 +186,33 @@ void PanelWindow::hide()
 {
     //FIXME: check also
     // the screen in which are active and the dock
-    if( m_panelVisibility == BelowActive) {
-        WId activeWId = KWindowSystem::activeWindow();
-        KWindowInfo activeInfo(activeWId, NET::WMGeometry);
+    if (m_panelVisibility == BelowActive) {
+        KWindowInfo activeInfo(m_activeWindow, NET::WMGeometry);
 
-        QRect maskSize;
+        if ( activeInfo.valid() ) {
+            QRect maskSize;
 
-        if ( !m_maskArea.isNull() ) {
-            maskSize = QRect(x()+m_maskArea.x(), y()+m_maskArea.y(), m_maskArea.width(), m_maskArea.height());
-        } else {
-            maskSize = QRect(x(), y(), width(), height());
+            if ( !m_maskArea.isNull() ) {
+                maskSize = QRect(x()+m_maskArea.x(), y()+m_maskArea.y(), m_maskArea.width(), m_maskArea.height());
+            } else {
+                maskSize = QRect(x(), y(), width(), height());
+            }
+
+            if (maskSize.intersects(activeInfo.geometry()) ) {
+                KWindowSystem::clearState(winId(), NET::KeepAbove);
+            } else {
+                KWindowSystem::setState(winId(), NET::KeepAbove);
+            }
         }
+    }else if (m_panelVisibility == BelowMaximized) {
+        KWindowInfo activeInfo(m_activeWindow, NET::WMState);
 
-        if (activeInfo.valid() && maskSize.intersects(activeInfo.geometry()) ) {
-            KWindowSystem::clearState(winId(), NET::KeepAbove);
-        } else {
-            KWindowSystem::setState(winId(), NET::KeepAbove);
+        if ( activeInfo.valid() ) {
+            if (activeInfo.hasState(NET::Max)) {
+                KWindowSystem::clearState(winId(), NET::KeepAbove);
+            } else {
+                KWindowSystem::setState(winId(), NET::KeepAbove);
+            }
         }
     } else if (m_panelVisibility == LetWindowsCover){
         KWindowSystem::clearState(winId(), NET::KeepAbove);
@@ -237,6 +249,7 @@ bool PanelWindow::event(QEvent *e)
 
 void PanelWindow::activeWindowChanged(WId win)
 {
+    m_activeWindow = win;
     m_hideTimer.start();
 }
 

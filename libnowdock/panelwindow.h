@@ -29,7 +29,7 @@ class PanelWindow : public QQuickWindow {
 public:
     enum PanelVisibility {
         BelowActive = 0, /** always visible except if ovelaps with the active window, no area reserved */
-        BelowFullscreen, /** always visible except if ovelaps with a fullscreen window, no area reserved */
+        BelowMaximized, /** always visible except if ovelaps with an active maximize window, no area reserved */
         LetWindowsCover, /** always visible, windows will go over the panel, no area reserved */
         WindowsGoBelow, /** default, always visible, windows will go under the panel, no area reserved */
         AutoHide, /** the panel will be shownn only if the mouse cursor is on screen edges */
@@ -80,6 +80,8 @@ private:
     QTimer m_initTimer;
 
     Plasma::Types::Location m_location;
+
+    WId m_activeWindow;
 
     PanelVisibility m_panelVisibility;
 };

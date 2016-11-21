@@ -25,7 +25,7 @@
     <entry name="panelVisibility" type="Enum">
       <choices>
             <choice name="BelowActive"/>
-            <choice name="BelowFullscreen"/>
+            <choice name="BelowMaximized"/>
             <choice name="LetWindowsCover"/>
             <choice name="WindowsGoBelow"/>
             <choice name="AutoHide"/>

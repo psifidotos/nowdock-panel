@@ -282,7 +282,7 @@ Item{
 
 
                //  BelowActive = 0, /** always visible except if ovelaps with the active window, no area reserved */
-               //  BelowFullscreen, /** always visible except if ovelaps with a fullscreen window, no area reserved */
+               //  BelowMaximized, /** always visible except if ovelaps with an active maximize window, no area reserved */
                //  LetWindowsCover, /** always visible, windows will go over the panel, no area reserved */
                //  WindowsGoBelow, /** default, always visible, windows will go under the panel, no area reserved */
                //  AutoHide, /** the panel will be shownn only if the mouse cursor is on screen edges */
@@ -362,7 +362,7 @@ Item{
                         PlasmaComponents.Button{
                             id: secondState
                             checkable: true
-                            text: i18n("Below Fullscreen")
+                            text: i18n("Below Maximized")
                             width: (parent.width / 2) - 1
 
                             onCheckedChanged: {
