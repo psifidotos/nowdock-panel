@@ -175,7 +175,7 @@ void PanelWindow::updateVisibilityFlags()
     } else if (m_panelVisibility == BelowActive) {
         showOnTop();
         m_hideTimer.start();
-    } else if ((m_panelVisibility == AlwaysVisible) || (m_panelVisibility == AlwaysVisibleFree)) {
+    } else if (m_panelVisibility == AlwaysVisible) {
         KWindowSystem::setType(winId(), NET::Dock);
         updateWindowPosition();
     }

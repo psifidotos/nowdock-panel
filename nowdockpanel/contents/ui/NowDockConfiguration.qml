@@ -280,14 +280,13 @@ Item{
                     }
                 }
 
-                /*enum PanelVisibility {
-        BelowActive = 0, /** always visible except if ovelaps with the active window, no area reserved */
-    //    LetWindowsCover, /** always visible, windows will go over the panel, no area reserved */
-    //    WindowsGoBelow, /** default, always visible, windows will go under the panel, no area reserved */
-    //    AutoHide, /** the panel will be shownn only if the mouse cursor is on screen edges */
-     //   AlwaysVisible,  /** always visible panel, "Normal" plasma panel, the windowmanager reserves a places for it */
-     //   AlwaysVisibleFree, /** always visible panel but no area reserved */
-//   };*/
+
+               //  BelowActive = 0, /** always visible except if ovelaps with the active window, no area reserved */
+               //  BelowFullscreen, /** always visible except if ovelaps with a fullscreen window, no area reserved */
+               //  LetWindowsCover, /** always visible, windows will go over the panel, no area reserved */
+               //  WindowsGoBelow, /** default, always visible, windows will go under the panel, no area reserved */
+               //  AutoHide, /** the panel will be shownn only if the mouse cursor is on screen edges */
+               //  AlwaysVisible,  /** always visible panel, "Normal" plasma panel, accompanies plasma's "Always Visible"  */
                 /**********  Panel Visibility ****************/
 
                 Column{
@@ -363,7 +362,7 @@ Item{
                         PlasmaComponents.Button{
                             id: secondState
                             checkable: true
-                            text: i18n("Let Windows Cover")
+                            text: i18n("Below Fullscreen")
                             width: (parent.width / 2) - 1
 
                             onCheckedChanged: {
@@ -376,7 +375,7 @@ Item{
                         PlasmaComponents.Button{
                             id: thirdState
                             checkable: true
-                            text: i18n("Windows Go Below")
+                            text: i18n("Let Windows Cover")
                             width: (parent.width / 2) - 1
 
                             onCheckedChanged: {
@@ -390,7 +389,7 @@ Item{
                         PlasmaComponents.Button{
                             id: fourthState
                             checkable: true
-                            text: i18n("Auto Hide")
+                            text: i18n("Windows Go Below")
                             width: (parent.width/2) - 1
 
                             onCheckedChanged: {
@@ -404,7 +403,7 @@ Item{
                         PlasmaComponents.Button{
                             id: fifthState
                             checkable: true
-                            text: i18n("Always Visible")
+                            text: i18n("Auto Hide")
                             width: (parent.width/2) - 1
 
                             onCheckedChanged: {
@@ -417,7 +416,7 @@ Item{
                         PlasmaComponents.Button{
                             id: sixthState
                             checkable: true
-                            text: i18n("Always Visible (Free)")
+                            text: i18n("Always Visible")
                             width: (parent.width/2) - 1
 
                             onCheckedChanged: {
