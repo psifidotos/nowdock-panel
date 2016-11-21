@@ -28,7 +28,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     m_activeWindow = KWindowSystem::activeWindow();
 
     m_hideTimer.setSingleShot(true);
-    m_hideTimer.setInterval(1200);
+    m_hideTimer.setInterval(1500);
     connect(&m_hideTimer, &QTimer::timeout, this, &PanelWindow::hide);
 
     m_initTimer.setSingleShot(true);
@@ -187,6 +187,8 @@ void PanelWindow::hide()
 {
     //FIXME: check also
     // the screen in which are active and the dock
+    KWindowInfo dockInfo(winId(), NET::WMState);
+
     if (m_panelVisibility == BelowActive) {
         KWindowInfo activeInfo(m_activeWindow, NET::WMGeometry);
 
@@ -199,33 +201,92 @@ void PanelWindow::hide()
                 maskSize = QRect(x(), y(), width(), height());
             }
 
-            if (maskSize.intersects(activeInfo.geometry()) ) {
-                KWindowSystem::clearState(winId(), NET::KeepAbove);
-            } else {
-                KWindowSystem::setState(winId(), NET::KeepAbove);
+            if ( maskSize.intersects(activeInfo.geometry()) ) {
+                if (isOnTop(&dockInfo)) {
+                    mustBeLowered(); //showNormal();
+                }
+            } else if (isNormal(&dockInfo)){
+                mustBeRaised(); //showOnTop();
             }
         }
     }else if (m_panelVisibility == BelowMaximized) {
         KWindowInfo activeInfo(m_activeWindow, NET::WMState);
-        if ( activeInfo.valid() ) {
-            if (activeInfo.hasState(NET::Max)) {
-                KWindowSystem::clearState(winId(), NET::KeepAbove);
-            } else {
-                KWindowSystem::setState(winId(), NET::KeepAbove);
-            }
-        }
-    } else if (m_panelVisibility == LetWindowsCover){
-        KWindowSystem::clearState(winId(), NET::KeepAbove);
-        KWindowSystem::setState(winId(), NET::KeepBelow);
-    }
 
+        if ( isMaximized(&activeInfo) ) {
+            if (isOnTop(&dockInfo)) {
+                mustBeLowered();   //showNormal();
+            }
+        } else if (isNormal(&dockInfo)){
+            mustBeRaised();   //showOnTop();
+        }
+
+    } else if (m_panelVisibility == LetWindowsCover){
+        if (isOnTop(&dockInfo) || isNormal(&dockInfo)) {
+            mustBeLowered();  //showOnBottom();
+        }
+    }
 }
 
 void PanelWindow::showOnTop()
 {
+    qDebug() << "reached make top...";
     KWindowSystem::clearState(winId(), NET::KeepBelow);
     KWindowSystem::setState(winId(), NET::KeepAbove);
 }
+
+void PanelWindow::showNormal()
+{
+    qDebug() << "reached make normal...";
+    KWindowSystem::clearState(winId(), NET::KeepAbove);
+    KWindowSystem::clearState(winId(), NET::KeepBelow);
+}
+
+void PanelWindow::showOnBottom()
+{
+    qDebug() << "reached make bottom...";
+    KWindowSystem::clearState(winId(), NET::KeepAbove);
+    KWindowSystem::setState(winId(), NET::KeepBelow);
+}
+
+
+bool PanelWindow::isMaximized(KWindowInfo *info)
+{
+    if ( !info || !info->valid() ) {
+        return false;
+    }
+
+    return ( info->hasState(NET::Max) );
+}
+
+bool PanelWindow::isNormal(KWindowInfo *info)
+{
+    if ( !info || !info->valid() ) {
+        return false;
+    }
+
+    return ( !isOnBottom(info) && !isOnTop(info) );
+}
+
+bool PanelWindow::isOnBottom(KWindowInfo *info)
+{
+    if ( !info || !info->valid() ) {
+        return false;
+    }
+
+    return ( info->hasState(NET::KeepBelow) );
+}
+
+bool PanelWindow::isOnTop(KWindowInfo *info)
+{
+    if ( !info || !info->valid() ) {
+        return false;
+    }
+
+    return ( info->hasState(NET::KeepAbove) );
+}
+
+
+/***************/
 
 void PanelWindow::showEvent(QShowEvent *event)
 {

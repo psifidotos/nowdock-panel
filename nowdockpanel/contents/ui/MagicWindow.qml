@@ -2,6 +2,7 @@ import QtQuick 2.1
 import QtQuick.Window 2.2
 
 import org.kde.plasma.core 2.0 as PlasmaCore
+
 import org.kde.nowdock 0.1 as NowDock
 
 //import QtQuick.Window 2.2
@@ -32,8 +33,9 @@ NowDock.PanelWindow{
     width: root.isHorizontal ? length : thickness
     height: root.isHorizontal ? thickness : length
 
-    property int thickness: root.statesLineSize + (root.iconSize * root.zoomFactor) + root.iconMargin + 2
     property int length: root.isVertical ? screenHeight : screenWidth
+    property int normalThickness: root.statesLineSize + root.iconSize + root.iconMargin + 5
+    property int thickness: root.statesLineSize + (root.iconSize * root.zoomFactor) + root.iconMargin + 2
 
     property int screenWidth: Screen.width
     property int screenHeight: Screen.height
@@ -85,7 +87,7 @@ NowDock.PanelWindow{
             else
                 tempLength = mainLayout.height + space;
 
-            tempThickness = root.statesLineSize + root.iconSize + root.iconMargin + 5;
+            tempThickness = normalThickness;
 
             //configure the thickness position
             if(plasmoid.location === PlasmaCore.Types.RightEdge)
@@ -146,5 +148,71 @@ NowDock.PanelWindow{
 
     }
 
+    /***Hiding/Showing Animations*****/
 
+    onMustBeRaised: slidingAnimation.init(true);
+    onMustBeLowered: slidingAnimation.init(false);
+
+    SequentialAnimation{
+        id: slidingAnimation
+
+        property int speed: root.durationTime * 1.4 * units.longDuration
+        property bool inHalf: false
+        property bool raiseFlag: false
+
+        SequentialAnimation{
+                PropertyAnimation {
+                    target: layoutsContainer
+                    property: root.isVertical ? "x" : "y"
+                    to: ((location===PlasmaCore.Types.LeftEdge)||(location===PlasmaCore.Types.TopEdge)) ? -normalThickness : normalThickness
+                    duration: slidingAnimation.speed
+                    easing.type: Easing.OutQuad
+                }
+
+                PropertyAnimation {
+                    target: slidingAnimation
+                    property: "inHalf"
+                    to: true
+                    duration: 200
+                }
+
+                PropertyAnimation {
+                    target: layoutsContainer
+                    property: root.isVertical ? "x" : "y"
+                    to: 0
+                    duration: slidingAnimation.speed
+                    easing.type: Easing.OutQuad
+                }
+        }
+
+        onStopped: {
+            inHalf = false;
+            raiseFlag = false;
+        }
+
+        onInHalfChanged: {
+            if (inHalf) {
+                if (panelVisibility === NowDock.LetWindowsCover) {
+                    if (raiseFlag) {
+                        window.showOnTop();
+                    } else {
+                        window.showOnBottom();
+                    }
+                } else {
+                    if (raiseFlag) {
+                        window.showOnTop();
+                    } else {
+                        window.showNormal();
+                    }
+                }
+            }
+        }
+
+        function init(raise) {
+            if(window.visible) {
+                raiseFlag = raise;
+                start();
+            }
+        }
+    }
 }

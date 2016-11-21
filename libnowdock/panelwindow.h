@@ -54,10 +54,15 @@ Q_SIGNALS:
     void locationChanged();
     void maskAreaChanged();
     void panelVisibilityChanged();
+    //are used to triger the sliding animations from the qml part
+    void mustBeRaised();
+    void mustBeLowered();
 
 public slots:
     Q_INVOKABLE void initialize();
+    Q_INVOKABLE void showNormal();
     Q_INVOKABLE void showOnTop();
+    Q_INVOKABLE void showOnBottom();
     Q_INVOKABLE void shrinkTransient();
 
 
@@ -87,6 +92,11 @@ private:
     WId m_activeWindow;
 
     PanelVisibility m_panelVisibility;
+
+    bool isMaximized(KWindowInfo *info);
+    bool isNormal(KWindowInfo *info);
+    bool isOnBottom(KWindowInfo *info);
+    bool isOnTop(KWindowInfo *info);
 };
 
 } //NowDock namespace
