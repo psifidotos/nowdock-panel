@@ -6,9 +6,9 @@
 #include <QTimer>
 #include <QWindow>
 
-#include <kwindoweffects.h>
-#include <kwindowinfo.h>
-#include <kwindowsystem.h>
+#include <KWindowEffects>
+#include <KWindowInfo>
+#include <KWindowSystem>
 
 #include <QDebug>
 
@@ -24,10 +24,11 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     setFlags(Qt::Tool|Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
 
     connect(KWindowSystem::self(), SIGNAL(activeWindowChanged(WId)), this, SLOT(activeWindowChanged(WId)));
+    connect(KWindowSystem::self(), SIGNAL(windowChanged (WId,NET::Properties,NET::Properties2)), this, SLOT(windowChanged (WId,NET::Properties,NET::Properties2)));
     m_activeWindow = KWindowSystem::activeWindow();
 
     m_hideTimer.setSingleShot(true);
-    m_hideTimer.setInterval(400);
+    m_hideTimer.setInterval(1200);
     connect(&m_hideTimer, &QTimer::timeout, this, &PanelWindow::hide);
 
     m_initTimer.setSingleShot(true);
@@ -206,7 +207,6 @@ void PanelWindow::hide()
         }
     }else if (m_panelVisibility == BelowMaximized) {
         KWindowInfo activeInfo(m_activeWindow, NET::WMState);
-
         if ( activeInfo.valid() ) {
             if (activeInfo.hasState(NET::Max)) {
                 KWindowSystem::clearState(winId(), NET::KeepAbove);
@@ -250,7 +250,20 @@ bool PanelWindow::event(QEvent *e)
 void PanelWindow::activeWindowChanged(WId win)
 {
     m_activeWindow = win;
-    m_hideTimer.start();
+    if (!m_hideTimer.isActive()) {
+        m_hideTimer.start();
+    }
+}
+
+void PanelWindow::windowChanged (WId id, NET::Properties properties, NET::Properties2 properties2)
+{
+    if ((m_panelVisibility!=BelowActive)&&(m_panelVisibility!=BelowMaximized)) {
+        return;
+    }
+
+    if ((id==m_activeWindow) && (!m_hideTimer.isActive())) {
+        m_hideTimer.start();
+    }
 }
 
 } //NowDock namespace

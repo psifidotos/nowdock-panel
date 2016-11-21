@@ -6,6 +6,8 @@
 #include <QTimer>
 #include <QWindow>
 
+#include <KWindowInfo>
+
 #include <plasma/plasma.h>
 
 namespace NowDock
@@ -70,6 +72,7 @@ private Q_SLOTS:
     void initWindow();
     void updateVisibilityFlags();
     void updateWindowPosition();
+    void windowChanged (WId id, NET::Properties properties, NET::Properties2 properties2);
 
 private:
     //second pass of the initialization
