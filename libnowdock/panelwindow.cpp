@@ -28,7 +28,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     m_activeWindow = KWindowSystem::activeWindow();
 
     m_hideTimer.setSingleShot(true);
-    m_hideTimer.setInterval(1500);
+    m_hideTimer.setInterval(2500);
     connect(&m_hideTimer, &QTimer::timeout, this, &PanelWindow::hide);
 
     m_initTimer.setSingleShot(true);
@@ -206,10 +206,14 @@ void PanelWindow::hide()
                     mustBeLowered(); //showNormal();
                 }
             } else if (isNormal(&dockInfo)){
-                mustBeRaised(); //showOnTop();
+                if(dockIsCovered()) {
+                    mustBeRaised();
+                } else {
+                    showOnTop();
+                }
             }
         }
-    }else if (m_panelVisibility == BelowMaximized) {
+    } else if (m_panelVisibility == BelowMaximized) {
         KWindowInfo activeInfo(m_activeWindow, NET::WMState);
 
         if ( isMaximized(&activeInfo) ) {
@@ -229,21 +233,21 @@ void PanelWindow::hide()
 
 void PanelWindow::showOnTop()
 {
-    qDebug() << "reached make top...";
+//    qDebug() << "reached make top...";
     KWindowSystem::clearState(winId(), NET::KeepBelow);
     KWindowSystem::setState(winId(), NET::KeepAbove);
 }
 
 void PanelWindow::showNormal()
 {
-    qDebug() << "reached make normal...";
+//    qDebug() << "reached make normal...";
     KWindowSystem::clearState(winId(), NET::KeepAbove);
     KWindowSystem::clearState(winId(), NET::KeepBelow);
 }
 
 void PanelWindow::showOnBottom()
 {
-    qDebug() << "reached make bottom...";
+//    qDebug() << "reached make bottom...";
     KWindowSystem::clearState(winId(), NET::KeepAbove);
     KWindowSystem::setState(winId(), NET::KeepBelow);
 }
@@ -285,6 +289,46 @@ bool PanelWindow::isOnTop(KWindowInfo *info)
     return ( info->hasState(NET::KeepAbove) );
 }
 
+
+bool PanelWindow::dockIsCovered()
+{
+    int currentDockPos = -1;
+
+    QList<WId> windows = KWindowSystem::stackingOrder();
+    int size = windows.count();
+
+    for(int i=size-1; i>=0; --i) {
+        WId window = windows.at(i);
+        if (window == winId()) {
+            currentDockPos = i;
+            break;
+        }
+    }
+
+    if (currentDockPos >=0) {
+        for(int j=size-1; j>currentDockPos; --j) {
+            WId window = windows.at(j);
+
+            KWindowInfo info(window, NET::WMGeometry);
+
+            if ( info.valid() ) {
+                QRect maskSize;
+
+                if ( !m_maskArea.isNull() ) {
+                    maskSize = QRect(x()+m_maskArea.x(), y()+m_maskArea.y(), m_maskArea.width(), m_maskArea.height());
+                } else {
+                    maskSize = QRect(x(), y(), width(), height());
+                }
+
+                if ( maskSize.intersects(info.geometry()) ) {
+                    return true;
+                }
+            }
+        }
+    }
+
+    return false;
+}
 
 /***************/
 

@@ -97,6 +97,8 @@ private:
     bool isNormal(KWindowInfo *info);
     bool isOnBottom(KWindowInfo *info);
     bool isOnTop(KWindowInfo *info);
+
+    bool dockIsCovered();
 };
 
 } //NowDock namespace
