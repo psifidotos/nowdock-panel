@@ -46,6 +46,8 @@ NowDock.PanelWindow{
         }
     }
 
+    onWindowInAttentionChanged: updateMaskArea();
+
     Rectangle{
         id: windowBackground
         anchors.fill: parent
@@ -88,6 +90,10 @@ NowDock.PanelWindow{
                 tempLength = mainLayout.height + space;
 
             tempThickness = normalThickness;
+
+            if(windowInAttention) {
+                tempThickness = thickness - root.iconSize/2;
+            }
 
             //configure the thickness position
             if(plasmoid.location === PlasmaCore.Types.RightEdge)

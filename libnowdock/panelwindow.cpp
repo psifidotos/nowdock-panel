@@ -17,7 +17,9 @@ namespace NowDock
 
 PanelWindow::PanelWindow(QQuickWindow *parent) :
     QQuickWindow(parent),
-    m_secondInitPass(false)
+    m_secondInitPass(false),
+    m_demandsAttention(-1),
+    m_windowIsInAttention(false)
 {    
     setClearBeforeRendering(true);
     setColor(QColor(Qt::transparent));
@@ -93,6 +95,25 @@ void PanelWindow::setPanelVisibility(PanelWindow::PanelVisibility state)
     m_panelVisibility = state;
     emit panelVisibilityChanged();
 }
+
+
+bool PanelWindow::windowInAttention() const
+{
+    return m_windowIsInAttention;
+}
+
+void PanelWindow::setWindowInAttention(bool state)
+{
+    if (m_windowIsInAttention == state) {
+        return;
+    }
+
+    m_windowIsInAttention = state;
+    emit windowInAttentionChanged();
+}
+
+
+/*******************************/
 
 void PanelWindow::initialize()
 {
@@ -202,7 +223,7 @@ void PanelWindow::hide()
             }
 
             if ( !isDesktop(m_activeWindow) && maskSize.intersects(activeInfo.geometry()) ) {
-                if (isOnTop(&dockInfo)) {
+                if (isOnTop(&dockInfo) && !m_windowIsInAttention) {
                     mustBeLowered(); //showNormal();
                 }
             } else if (isNormal(&dockInfo)){
@@ -403,6 +424,17 @@ void PanelWindow::activeWindowChanged(WId win)
 
 void PanelWindow::windowChanged (WId id, NET::Properties properties, NET::Properties2 properties2)
 {
+    KWindowInfo info(id, NET::WMState);
+    if (info.valid()) {
+        if ((m_demandsAttention == -1) && info.hasState(NET::DemandsAttention)) {
+            m_demandsAttention = id;
+            setWindowInAttention(true);
+        } else if ((m_demandsAttention == id) && !info.hasState(NET::DemandsAttention)) {
+            m_demandsAttention = -1;
+            setWindowInAttention(false);
+        }
+    }
+
     if ((m_panelVisibility!=BelowActive)&&(m_panelVisibility!=BelowMaximized)) {
         return;
     }

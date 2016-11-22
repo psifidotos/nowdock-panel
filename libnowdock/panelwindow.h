@@ -17,6 +17,8 @@ class PanelWindow : public QQuickWindow {
     Q_OBJECT
     Q_ENUMS(PanelVisibility)
 
+    Q_PROPERTY(bool windowInAttention READ windowInAttention WRITE setWindowInAttention NOTIFY windowInAttentionChanged)
+
     /**
      * the window mask, can be used in real transparent panels that set only the visual area
      * of the window
@@ -41,6 +43,9 @@ public:
     explicit PanelWindow(QQuickWindow *parent = Q_NULLPTR);
     ~PanelWindow();
 
+    bool windowInAttention() const;
+    void setWindowInAttention(bool state);
+
     QRect maskArea() const;
     void setMaskArea(QRect area);
 
@@ -57,6 +62,7 @@ Q_SIGNALS:
     //are used to triger the sliding animations from the qml part
     void mustBeRaised();
     void mustBeLowered();
+    void windowInAttentionChanged();
 
 public slots:
     Q_INVOKABLE void initialize();
@@ -82,6 +88,7 @@ private Q_SLOTS:
 private:
     //second pass of the initialization
     bool m_secondInitPass;
+    bool m_windowIsInAttention;
 
     QRect m_maskArea;
     QTimer m_hideTimer;
@@ -90,6 +97,7 @@ private:
     Plasma::Types::Location m_location;
 
     WId m_activeWindow;
+    WId m_demandsAttention;
 
     PanelVisibility m_panelVisibility;
 

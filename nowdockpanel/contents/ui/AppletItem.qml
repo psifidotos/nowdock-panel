@@ -75,9 +75,6 @@ Item {
             console.log(computeHeight);
     }*/
 
-    onStatusChanged: {
-        console.log ("status:" + status);
-    }
     /// BEGIN functions
     function checkIndex(){
         index = -1;
