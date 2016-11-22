@@ -42,7 +42,14 @@ NowDock.PanelWindow{
 
     onIsHoveredChanged: {
         if(isHovered) {
+            if (delayerTimer.running) {
+                delayerTimer.stop();
+            }
+
             updateMaskArea();
+        } else {
+            // initialize the zoom
+            delayerTimer.start();
         }
     }
 
@@ -224,6 +231,20 @@ NowDock.PanelWindow{
             if(window.visible) {
                 raiseFlag = raise;
                 start();
+            }
+        }
+    }
+
+
+    ////////////// Timers //////
+    //Timer to delay onLeave event
+    Timer {
+        id: delayerTimer
+        interval: 400
+        onTriggered: {
+            root.clearZoom();
+            if (root.nowDock) {
+               nowDock.clearZoom();
             }
         }
     }

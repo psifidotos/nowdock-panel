@@ -240,7 +240,7 @@ void PanelWindow::hide()
             }
 
             if ( !isDesktop(m_activeWindow) && maskSize.intersects(activeInfo.geometry()) ) {
-                if (isOnTop(&dockInfo) && !m_windowIsInAttention) {
+                if (!m_isHovered && isOnTop(&dockInfo) && !m_windowIsInAttention) {
                     mustBeLowered();                    //showNormal();
                 } else if ( (!isOnTop(&dockInfo))&& m_windowIsInAttention ) {
                     mustBeRaised();                     //showOnTop();
