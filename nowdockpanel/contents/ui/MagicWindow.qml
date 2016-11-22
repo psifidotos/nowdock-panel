@@ -40,6 +40,12 @@ NowDock.PanelWindow{
     property int screenWidth: Screen.width
     property int screenHeight: Screen.height
 
+    onIsHoveredChanged: {
+        if(isHovered) {
+            updateMaskArea();
+        }
+    }
+
     onVisibleChanged:{
         if (visible) {  //shrink the parent panel window
            initialize();

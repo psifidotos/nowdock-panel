@@ -19,7 +19,8 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     QQuickWindow(parent),
     m_secondInitPass(false),
     m_demandsAttention(-1),
-    m_windowIsInAttention(false)
+    m_windowIsInAttention(false),
+    m_isHovered(false)
 {    
     setClearBeforeRendering(true);
     setColor(QColor(Qt::transparent));
@@ -110,6 +111,21 @@ void PanelWindow::setWindowInAttention(bool state)
 
     m_windowIsInAttention = state;
     emit windowInAttentionChanged();
+}
+
+bool PanelWindow::isHovered() const
+{
+    return m_isHovered;
+}
+
+void PanelWindow::setIsHovered(bool state)
+{
+    if (m_isHovered == state) {
+        return;
+    }
+
+    m_isHovered = state;
+    emit isHoveredChanged();
 }
 
 
@@ -406,10 +422,12 @@ bool PanelWindow::event(QEvent *e)
     QQuickWindow::event(e);
 
     if (e->type() == QEvent::Enter) {
+        setIsHovered(true);
         m_hideTimer.stop();
         shrinkTransient();
         showOnTop();
     } else if ((e->type() == QEvent::Leave) && (!isActive()) ) {
+        setIsHovered(false);
         m_hideTimer.start();
     }
 }

@@ -17,6 +17,8 @@ class PanelWindow : public QQuickWindow {
     Q_OBJECT
     Q_ENUMS(PanelVisibility)
 
+    Q_PROPERTY(bool isHovered READ isHovered NOTIFY isHoveredChanged)
+
     Q_PROPERTY(bool windowInAttention READ windowInAttention WRITE setWindowInAttention NOTIFY windowInAttentionChanged)
 
     /**
@@ -43,6 +45,8 @@ public:
     explicit PanelWindow(QQuickWindow *parent = Q_NULLPTR);
     ~PanelWindow();
 
+    bool isHovered() const;
+
     bool windowInAttention() const;
     void setWindowInAttention(bool state);
 
@@ -56,6 +60,7 @@ public:
     void setPanelVisibility(PanelVisibility state);
 
 Q_SIGNALS:
+    void isHoveredChanged();
     void locationChanged();
     void maskAreaChanged();
     void panelVisibilityChanged();
@@ -81,11 +86,13 @@ private Q_SLOTS:
     void activeWindowChanged(WId win);
     void hide();
     void initWindow();
+    void setIsHovered(bool state);
     void updateVisibilityFlags();
     void updateWindowPosition();
     void windowChanged (WId id, NET::Properties properties, NET::Properties2 properties2);
 
 private:
+    bool m_isHovered;
     //second pass of the initialization
     bool m_secondInitPass;
     bool m_windowIsInAttention;
@@ -109,7 +116,6 @@ private:
     bool isNormal(KWindowInfo *info);
     bool isOnBottom(KWindowInfo *info);
     bool isOnTop(KWindowInfo *info);
-
 };
 
 } //NowDock namespace
