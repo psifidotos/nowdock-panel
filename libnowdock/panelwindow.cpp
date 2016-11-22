@@ -32,7 +32,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     m_activeWindow = KWindowSystem::activeWindow();
 
     m_hideTimer.setSingleShot(true);
-    m_hideTimer.setInterval(2500);
+    m_hideTimer.setInterval(1500);
     connect(&m_hideTimer, &QTimer::timeout, this, &PanelWindow::hide);
 
     m_initTimer.setSingleShot(true);
@@ -240,10 +240,14 @@ void PanelWindow::hide()
             }
 
             if ( !isDesktop(m_activeWindow) && maskSize.intersects(activeInfo.geometry()) ) {
-                if (!m_isHovered && isOnTop(&dockInfo) && !m_windowIsInAttention) {
-                    mustBeLowered();                    //showNormal();
-                } else if ( (!isOnTop(&dockInfo))&& m_windowIsInAttention ) {
-                    mustBeRaised();                     //showOnTop();
+                if ( isOnTop(&dockInfo) ) {
+                    if (!m_isHovered && !m_windowIsInAttention) {
+                        mustBeLowered();                    //showNormal();
+                    }
+                } else {
+                    if ( m_windowIsInAttention ) {
+                        mustBeRaised();                     //showOnTop();
+                    }
                 }
             } else if (isNormal(&dockInfo)){
                 if(!isDesktop(m_activeWindow) && dockIsCovered()) {
