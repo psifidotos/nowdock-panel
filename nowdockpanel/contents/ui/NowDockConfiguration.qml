@@ -727,6 +727,7 @@ Item{
                         PlasmaComponents.Button{
                             width: parent.buttonSize
                             checkable: true
+                            enabled: false
                             text: i18n("Automatic")
                             onClicked: parent.checkedButton=0;
                         }

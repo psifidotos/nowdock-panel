@@ -155,7 +155,7 @@ DragDrop.DropArea {
     //sizeViolation variable is used when for any reason the mainLayout
     //exceeds the panel size
     function updateAutomaticIconSize(sizeViolation){
-        if(((layoutsContainer.hoveredIndex == -1)
+      /*  if(((layoutsContainer.hoveredIndex == -1)
             && (nowDockHoveredIndex == -1)
             && ((smallAutomaticIconJumps && (iconSize % iconStep) == 0 ) || (!smallAutomaticIconJumps && sizeIsFromAutomaticMode(iconSize)) )
             && previousAllTasks !== layoutsContainer.allCount)
@@ -176,11 +176,13 @@ DragDrop.DropArea {
 
             if(root.isHorizontal){
                 layoutSize = mainLayout.width + secondLayout.width;
-                rootSize = root.width;
+                //rootSize = root.width;
+                rootSize = magicWin ? magicWin.width : root.width;
             }
             else{
                 layoutSize = mainLayout.height + secondLayout.height;
-                rootSize = root.height;
+                //rootSize = root.height;
+                rootSize = magicWin ? magicWin.height : root.height;
             }
 
             //compute how big is going to be layout with the new icon size
@@ -233,9 +235,9 @@ DragDrop.DropArea {
                 if((removedItem || onlyAddingStarup || !sizeViolation)
                         && layoutSize<=rootSize
                         && futureSize<=rootSize) {
-                    if(onlyAddingStarup)
-                        result = automaticIconSizeBasedZoom;
-                    else
+                   // if(onlyAddingStarup)
+                       // result = automaticIconSizeBasedZoom;
+                   // else
                         result = nextIconSize;
                     //    console.log("Should Increase: "+result);
                 }
@@ -244,13 +246,12 @@ DragDrop.DropArea {
 
             if(result>0)
                 automaticIconSizeBasedSize = result;
-        }
-
+        }*/
     }
 
 
     //automatic icon size which is calculated based on panels size and zoom factor
-    property int automaticIconSizeBasedZoom:{
+/*    property int automaticIconSizeBasedZoom:{
         //    function updateAutomaticIconSizeZoom() {
         var maxZoomSize;
         if(isVertical)
@@ -293,7 +294,7 @@ DragDrop.DropArea {
             return iconsArray[0];
         }
 
-    }
+    }*/
 
     function updateLayouts(){
         if(immutable){
@@ -598,7 +599,7 @@ DragDrop.DropArea {
     }
 
     Component.onDestruction: {
-        console.log("Destroying root...");
+        console.log("Destroying Now Dock Panel...");
         //layoutsContainer.destroy();
        // if(nowDock)
         //    nowDock.destroy();
@@ -861,24 +862,26 @@ DragDrop.DropArea {
             property int count: children.length
 
             onHeightChanged: {
-                if(root.isVertical && automaticSize){
-                    if(mainLayout.height>root.height)
-                        updateAutomaticIconSize(true);
-                    else
-                        updateAutomaticIconSize(false);
-                }
+               // if(root.isVertical && automaticSize){
+              //   if(root.isVertical){
+               //     if(mainLayout.height>root.height)
+                 //       updateAutomaticIconSize(true);
+                 //  else
+                  //      updateAutomaticIconSize(false);
+              //  }
 
                 if (root.isVertical) {
                     magicWin.updateMaskArea();
                 }
             }
             onWidthChanged: {
-                if(root.isHorizontal && automaticSize){
-                    if(mainLayout.width>root.width)
-                        updateAutomaticIconSize(true);
-                    else
-                        updateAutomaticIconSize(false);
-                }
+                //if(root.isHorizontal && automaticSize){
+               // if(root.isHorizontal){
+                //    if(mainLayout.width>root.width)
+                //        updateAutomaticIconSize(true);
+                 //   else
+                  //      updateAutomaticIconSize(false);
+           //     }
 
                 if (root.isHorizontal) {
                     magicWin.updateMaskArea();

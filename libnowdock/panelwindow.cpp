@@ -48,7 +48,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
 
 PanelWindow::~PanelWindow()
 {
-    qDebug() << "Destroying window called";
+    qDebug() << "Destroying Now Dock - Magic Window called";
     // close();
 }
 

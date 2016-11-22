@@ -55,7 +55,7 @@ NowDock.PanelWindow{
 
     onVisibleChanged:{
         if (visible) {  //shrink the parent panel window
-           initialize();
+           initialize();  
         }
     }
 
