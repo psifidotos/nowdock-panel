@@ -201,14 +201,16 @@ void PanelWindow::hide()
                 maskSize = QRect(x(), y(), width(), height());
             }
 
-            if ( maskSize.intersects(activeInfo.geometry()) ) {
+            if ( !isDesktop(m_activeWindow) && maskSize.intersects(activeInfo.geometry()) ) {
                 if (isOnTop(&dockInfo)) {
                     mustBeLowered(); //showNormal();
                 }
             } else if (isNormal(&dockInfo)){
-                if(dockIsCovered()) {
+                if(!isDesktop(m_activeWindow) && dockIsCovered()) {
+                  //  qDebug() << "Reached is covered...";
                     mustBeRaised();
                 } else {
+                  //  qDebug() << "is not covered...";
                     showOnTop();
                 }
             }
@@ -233,21 +235,21 @@ void PanelWindow::hide()
 
 void PanelWindow::showOnTop()
 {
-//    qDebug() << "reached make top...";
+    //    qDebug() << "reached make top...";
     KWindowSystem::clearState(winId(), NET::KeepBelow);
     KWindowSystem::setState(winId(), NET::KeepAbove);
 }
 
 void PanelWindow::showNormal()
 {
-//    qDebug() << "reached make normal...";
+    //    qDebug() << "reached make normal...";
     KWindowSystem::clearState(winId(), NET::KeepAbove);
     KWindowSystem::clearState(winId(), NET::KeepBelow);
 }
 
 void PanelWindow::showOnBottom()
 {
-//    qDebug() << "reached make bottom...";
+    //    qDebug() << "reached make bottom...";
     KWindowSystem::clearState(winId(), NET::KeepAbove);
     KWindowSystem::setState(winId(), NET::KeepBelow);
 }
@@ -306,29 +308,68 @@ bool PanelWindow::dockIsCovered()
     }
 
     if (currentDockPos >=0) {
+        QRect maskSize;
+
+        if ( !m_maskArea.isNull() ) {
+            maskSize = QRect(x()+m_maskArea.x(), y()+m_maskArea.y(), m_maskArea.width(), m_maskArea.height());
+        } else {
+            maskSize = QRect(x(), y(), width(), height());
+        }
+
         for(int j=size-1; j>currentDockPos; --j) {
             WId window = windows.at(j);
 
             KWindowInfo info(window, NET::WMGeometry);
 
-            if ( info.valid() ) {
-                QRect maskSize;
-
-                if ( !m_maskArea.isNull() ) {
-                    maskSize = QRect(x()+m_maskArea.x(), y()+m_maskArea.y(), m_maskArea.width(), m_maskArea.height());
-                } else {
-                    maskSize = QRect(x(), y(), width(), height());
-                }
-
-                if ( maskSize.intersects(info.geometry()) ) {
-                    return true;
-                }
+            if ( info.valid() && maskSize.intersects(info.geometry()) ) {
+                return true;
             }
         }
     }
 
     return false;
 }
+
+bool PanelWindow::activeWindowAboveDock()
+{
+    int currentDockPos = -1;
+
+    QList<WId> windows = KWindowSystem::stackingOrder();
+    int size = windows.count();
+
+    for(int i=size-1; i>=0; --i) {
+        WId window = windows.at(i);
+        if (window == winId()) {
+            currentDockPos = i;
+            break;
+        }
+    }
+
+    if (currentDockPos >=0) {
+        for(int j=size-1; j>currentDockPos; --j) {
+            WId window = windows.at(j);
+            if (window == m_activeWindow) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+bool PanelWindow::isDesktop(WId id)
+{
+    KWindowInfo info(id, NET::WMWindowType);
+
+    if ( !info.valid() ) {
+        return false;
+    }
+
+    NET::WindowType type = info.windowType(NET::DesktopMask|NET::DockMask|NET::DialogMask);
+
+    return type == NET::Desktop;
+}
+
 
 /***************/
 

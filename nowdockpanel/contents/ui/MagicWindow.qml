@@ -34,8 +34,8 @@ NowDock.PanelWindow{
     height: root.isHorizontal ? thickness : length
 
     property int length: root.isVertical ? screenHeight : screenWidth
-    property int normalThickness: root.statesLineSize + root.iconSize + root.iconMargin + 5
-    property int thickness: root.statesLineSize + (root.iconSize * root.zoomFactor) + root.iconMargin + 2
+    property int normalThickness: root.statesLineSize + root.iconSize + root.iconMargin + 1
+    property int thickness: root.statesLineSize + ((root.iconSize+root.iconMargin) * root.zoomFactor) + 2
 
     property int screenWidth: Screen.width
     property int screenHeight: Screen.height
@@ -78,7 +78,7 @@ NowDock.PanelWindow{
         var tempLength = root.isHorizontal ? width : height;
         var tempThickness = root.isHorizontal ? height : width;
 
-        var space = root.panelEdgeSpacing + root.iconSize/2;
+        var space = root.panelEdgeSpacing + 6;
 
         if (normalState) {
             //count panel length

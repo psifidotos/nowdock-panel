@@ -36,13 +36,12 @@ DragDrop.DropArea {
 
     //BEGIN properties
     Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
-    Plasmoid.status: PlasmaCore.Types.HiddenStatus
 
    // Layout.preferredWidth: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
     Layout.preferredWidth: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
     Layout.preferredHeight: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredHeight + (!isHorizontal && toolBox? toolBox.height : 0))
 
-    property bool debugMode: false
+    property bool debugMode: true
 
     property bool inStartup: true
     property bool isHorizontal: plasmoid.formFactor == PlasmaCore.Types.Horizontal

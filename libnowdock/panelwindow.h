@@ -93,12 +93,15 @@ private:
 
     PanelVisibility m_panelVisibility;
 
+    bool activeWindowAboveDock();
+    bool dockIsCovered();
+
+    bool isDesktop(WId id);
     bool isMaximized(KWindowInfo *info);
     bool isNormal(KWindowInfo *info);
     bool isOnBottom(KWindowInfo *info);
     bool isOnTop(KWindowInfo *info);
 
-    bool dockIsCovered();
 };
 
 } //NowDock namespace

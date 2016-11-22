@@ -47,6 +47,7 @@ Item {
     property int maxWidth: root.isHorizontal ? root.height : root.width
     property int maxHeight: root.isHorizontal ? root.height : root.width
     property int shownAppletMargin: applet && (applet.pluginName === "org.kde.plasma.systemtray") ? appletMargin/2 : appletMargin
+    property int status: applet ? applet.status : -1
 
     //property real animationStep: root.iconSize / 8
     property real animationStep: 6
@@ -74,6 +75,9 @@ Item {
             console.log(computeHeight);
     }*/
 
+    onStatusChanged: {
+        console.log ("status:" + status);
+    }
     /// BEGIN functions
     function checkIndex(){
         index = -1;
