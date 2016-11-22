@@ -28,6 +28,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
 
     connect(KWindowSystem::self(), SIGNAL(activeWindowChanged(WId)), this, SLOT(activeWindowChanged(WId)));
     connect(KWindowSystem::self(), SIGNAL(windowChanged (WId,NET::Properties,NET::Properties2)), this, SLOT(windowChanged (WId,NET::Properties,NET::Properties2)));
+    connect(KWindowSystem::self(), SIGNAL(windowRemoved(WId)), this, SLOT(windowRemoved(WId)));
     m_activeWindow = KWindowSystem::activeWindow();
 
     m_hideTimer.setSingleShot(true);
@@ -240,14 +241,14 @@ void PanelWindow::hide()
 
             if ( !isDesktop(m_activeWindow) && maskSize.intersects(activeInfo.geometry()) ) {
                 if (isOnTop(&dockInfo) && !m_windowIsInAttention) {
-                    mustBeLowered(); //showNormal();
+                    mustBeLowered();                    //showNormal();
+                } else if ( (!isOnTop(&dockInfo))&& m_windowIsInAttention ) {
+                    mustBeRaised();                     //showOnTop();
                 }
             } else if (isNormal(&dockInfo)){
                 if(!isDesktop(m_activeWindow) && dockIsCovered()) {
-                  //  qDebug() << "Reached is covered...";
                     mustBeRaised();
                 } else {
-                  //  qDebug() << "is not covered...";
                     showOnTop();
                 }
             }
@@ -257,10 +258,10 @@ void PanelWindow::hide()
 
         if ( isMaximized(&activeInfo) ) {
             if (isOnTop(&dockInfo)) {
-                mustBeLowered();   //showNormal();
+                mustBeLowered();     //showNormal();
             }
         } else if (isNormal(&dockInfo)){
-            mustBeRaised();   //showOnTop();
+            mustBeRaised();     //showOnTop();
         }
 
     } else if (m_panelVisibility == LetWindowsCover){
@@ -442,7 +443,7 @@ void PanelWindow::activeWindowChanged(WId win)
 
 void PanelWindow::windowChanged (WId id, NET::Properties properties, NET::Properties2 properties2)
 {
-    KWindowInfo info(id, NET::WMState);
+    KWindowInfo info(id, NET::WMState|NET::CloseWindow);
     if (info.valid()) {
         if ((m_demandsAttention == -1) && info.hasState(NET::DemandsAttention)) {
             m_demandsAttention = id;
@@ -459,6 +460,14 @@ void PanelWindow::windowChanged (WId id, NET::Properties properties, NET::Proper
 
     if ((id==m_activeWindow) && (!m_hideTimer.isActive())) {
         m_hideTimer.start();
+    }
+}
+
+void PanelWindow::windowRemoved (WId id)
+{
+    if (id==m_demandsAttention) {
+        m_demandsAttention = -1;
+        setWindowInAttention(false);
     }
 }
 

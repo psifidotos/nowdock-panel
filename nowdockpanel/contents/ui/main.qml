@@ -346,7 +346,6 @@ DragDrop.DropArea {
     onNowDockAnimationsChanged: magicWin.updateMaskArea();
     onAnimationsChanged: magicWin.updateMaskArea();
 
-
     //  onZoomFactorChanged: updateAutomaticIconSizeZoom();
     //  onIconSizeChanged: console.log("Icon Size Changed:"+iconSize);
 

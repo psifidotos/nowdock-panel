@@ -90,6 +90,7 @@ private Q_SLOTS:
     void updateVisibilityFlags();
     void updateWindowPosition();
     void windowChanged (WId id, NET::Properties properties, NET::Properties2 properties2);
+    void windowRemoved (WId id);
 
 private:
     bool m_isHovered;
