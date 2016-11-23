@@ -25,7 +25,7 @@ Item{
     Rectangle{
         anchors.fill: parent
 
-        radius: units.smallSpacing
+        radius: root.iconSize/10
 
         property color tempColor: "#aa222222"
         color: tempColor

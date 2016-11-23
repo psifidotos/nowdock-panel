@@ -862,7 +862,7 @@ DragDrop.DropArea {
     Item {
         id: dndSpacer
 
-        property int normalSize: root.iconSize+3*root.iconMargin
+        property int normalSize: root.statesLineSize + root.iconSize+2*root.iconMargin
 
         width: normalSize
         height: normalSize
