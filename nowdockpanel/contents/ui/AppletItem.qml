@@ -839,13 +839,13 @@ Item {
                 duration: units.longDuration
                 easing.type: Easing.OutQuad
             }
-            PropertyAnimation {
+         /*   PropertyAnimation {
                 target: wrapper
                 property: "zoomScale"
-                to: wrapper.zoomScale - (root.zoomFactor - 1) / 2
+                to: wrapper.zoomScale - (root.zoomFactor - 1) / 10
                 duration: units.longDuration
                 easing.type: Easing.OutQuad
-            }
+            }*/
         }
         ParallelAnimation{
             PropertyAnimation {
@@ -855,13 +855,13 @@ Item {
                 duration: units.longDuration
                 easing.type: Easing.OutQuad
             }
-            PropertyAnimation {
+       /*     PropertyAnimation {
                 target: wrapper
                 property: "zoomScale"
                 to: root.zoomFactor
                 duration: units.longDuration
                 easing.type: Easing.OutQuad
-            }
+            }*/
         }
     }
     //END animations
