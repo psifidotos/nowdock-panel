@@ -18,12 +18,14 @@
 
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
-import org.kde.plasma.plasmoid 2.0
+import QtQuick.Window 2.2
 
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.kquickcontrolsaddons 2.0
 import org.kde.draganddrop 2.0 as DragDrop
+import org.kde.plasma.plasmoid 2.0
+
 
 import org.kde.nowdock 0.1 as NowDock
 
@@ -61,8 +63,6 @@ DragDrop.DropArea {
                                                 Math.min(automaticIconSizeBasedSize, automaticIconSizeBasedZoom) : automaticIconSizeBasedZoom ):
                                            Math.min(automaticIconSizeBasedZoom,plasmoid.configuration.iconSize)*/
 
-    property int fixedWidth: 0   ///fixed's are used to disable automatic resize during dragging an Applet in the panel...
-    property int fixedHeight: 0
     property int iconSize: plasmoid.configuration.iconSize
     property int iconStep: 8
     property int panelEdgeSpacing: iconSize / 2
@@ -99,9 +99,8 @@ DragDrop.DropArea {
     width: 640
     height: 90
 
-    // Layout.preferredWidth: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
-    Layout.preferredWidth: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
-    Layout.preferredHeight: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredHeight + (!isHorizontal && toolBox? toolBox.height : 0))
+    Layout.preferredWidth: plasmoid.immutable ? 0 : Screen.width //on unlocked state use the maximum
+    Layout.preferredHeight: plasmoid.immutable ? 0 : Screen.height
 
     Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
 
@@ -315,12 +314,6 @@ DragDrop.DropArea {
             event.ignore();
             return;
         }
-        //during drag operations we disable panel auto resize
-        if (root.isHorizontal) {
-            root.fixedWidth = root.width
-        } else {
-            root.fixedHeight = root.height
-        }
 
         var relevantLayout = mainLayout.mapFromItem(root, event.x, event.y);
         LayoutManager.insertAtCoordinates(dndSpacer, relevantLayout.x, relevantLayout.y)
@@ -336,16 +329,13 @@ DragDrop.DropArea {
     onDragLeave: {
         dndSpacer.opacity = 0;
         dndSpacer.parent = root;
-        root.fixedWidth = 0;
-        root.fixedHeight = 0;
     }
 
     onDrop: {
         var relevantLayout = mainLayout.mapFromItem(root, event.x, event.y);
         plasmoid.processMimeData(event.mimeData, relevantLayout.x, relevantLayout.y);
         event.accept(event.proposedAction);
-        root.fixedWidth = 0;
-        root.fixedHeight = 0;
+
         dndSpacer.opacity = 0;
         containmentSizeSyncTimer.restart();
     }
@@ -982,16 +972,16 @@ DragDrop.DropArea {
                 if (root.isHorizontal && magicWin) {
                     if (!magicWin.isHovered && (nowDockAnimations === 0) && (root.animations === 0)) {
                         automaticSizeUpdate = true;
-
                     } else {
                         automaticSizeUpdate = false;
+                    }
 
-                        //After the last animations we must check again after a small delay in order
-                        //to disable the automaticSizeUpdate
-                        if (animationEndedTimer.running)
-                            animationEndedTimer.restart();
-                        else
-                            animationEndedTimer.start();
+                    //After the last animations we must check again after a small delay in order
+                    //to disable the automaticSizeUpdate
+                    if (animationEndedTimer.running) {
+                        animationEndedTimer.restart();
+                    } else {
+                        animationEndedTimer.start();
                     }
 
                     magicWin.updateMaskArea();
