@@ -48,8 +48,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
 
 PanelWindow::~PanelWindow()
 {
-    qDebug() << "Destroying Now Dock - Magic Window called";
-    // close();
+    qDebug() << "Destroying Now Dock - Magic Window";
 }
 
 QRect PanelWindow::maskArea() const

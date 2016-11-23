@@ -46,7 +46,7 @@ NowDock.PanelWindow{
                 delayerTimer.stop();
             }
 
-            updateMaskArea();
+            updateMaskArea();            
         } else {
             // initialize the zoom
             delayerTimer.start();
@@ -88,7 +88,7 @@ NowDock.PanelWindow{
         var localY = 0;
 
         var normalState = (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
-                && (nowDockAnimations === 0) && (root.animations === 0)
+                && (nowDockAnimations === 0) && (root.animations === 0) && (!mainLayout.automaticSizeUpdate)
 
         var tempLength = root.isHorizontal ? width : height;
         var tempThickness = root.isHorizontal ? height : width;
@@ -108,13 +108,13 @@ NowDock.PanelWindow{
                 tempThickness = thickness - root.iconSize/2;
             }
 
-            //configure the thickness position
+            //configure the x,y position based on thickness
             if(plasmoid.location === PlasmaCore.Types.RightEdge)
                 localX = window.width - tempThickness;
             else if(plasmoid.location === PlasmaCore.Types.BottomEdge)
                 localY = window.height - tempThickness;
 
-            //configure the length Position
+            //configure the x,y Position based on length
             if (root.isHorizontal) {
                 localX = (window.width/2) - (mainLayout.width/2) - (space/2);
             } else {
@@ -131,7 +131,19 @@ NowDock.PanelWindow{
             else
                 tempLength = Screen.height;
 
-            tempThickness = thickness;
+            //grow only on length and not thickness
+            if(mainLayout.automaticSizeUpdate) {
+                tempThickness = normalThickness;
+
+                //configure the x,y position based on thickness
+                if(plasmoid.location === PlasmaCore.Types.RightEdge)
+                    localX = window.width - tempThickness;
+                else if(plasmoid.location === PlasmaCore.Types.BottomEdge)
+                    localY = window.height - tempThickness;
+            } else{
+                //use all thickness space
+                tempThickness = thickness;
+            }
         }
 
         var maskLength = maskArea.width; //in Horizontal

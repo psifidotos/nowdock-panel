@@ -41,7 +41,7 @@ DragDrop.DropArea {
     Layout.preferredWidth: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
     Layout.preferredHeight: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredHeight + (!isHorizontal && toolBox? toolBox.height : 0))
 
-    property bool debugMode: false
+    property bool debugMode: true
 
     property bool inStartup: true
     property bool isHorizontal: plasmoid.formFactor == PlasmaCore.Types.Horizontal
@@ -858,7 +858,7 @@ DragDrop.DropArea {
             Layout.preferredWidth: width
             Layout.preferredHeight: height
 
-
+            property bool automaticSizeUpdate: false
             property int count: children.length
 
             onHeightChanged: {
@@ -870,7 +870,13 @@ DragDrop.DropArea {
                   //      updateAutomaticIconSize(false);
               //  }
 
-                if (root.isVertical) {
+                if (root.isVertical && magicWin) {
+                    if (!magicWin.isHovered && (nowDockAnimations === 0) && (root.animations === 0)) {
+                        automaticSizeUpdate = true;
+                    } else {
+                        automaticSizeUpdate = false;
+                    }
+
                     magicWin.updateMaskArea();
                 }
             }
@@ -883,7 +889,21 @@ DragDrop.DropArea {
                   //      updateAutomaticIconSize(false);
            //     }
 
-                if (root.isHorizontal) {
+                if (root.isHorizontal && magicWin) {
+                    if (!magicWin.isHovered && (nowDockAnimations === 0) && (root.animations === 0)) {
+                        automaticSizeUpdate = true;
+
+                    } else {
+                        automaticSizeUpdate = false;
+
+                        //After the last animations we must check again after a small delay in order
+                        //to disable the automaticSizeUpdate
+                        if (animationEndedTimer.running)
+                            animationEndedTimer.restart();
+                        else
+                            animationEndedTimer.start();
+                    }
+
                     magicWin.updateMaskArea();
                 }
             }
@@ -972,6 +992,18 @@ DragDrop.DropArea {
             /*   currentLayout.width = root.width - (isHorizontal && toolBox && !plasmoid.immutable ? toolBox.width : 0)
             currentLayout.height = root.height - (!isHorizontal && toolBox && !plasmoid.immutable ? toolBox.height : 0) */
             //  currentLayout.isLayoutHorizontal = isHorizontal
+        }
+    }
+
+
+    Timer {
+        id: animationEndedTimer
+        interval: 200
+        onTriggered: {
+            if (!magicWin.isHovered && (nowDockAnimations === 0) && (root.animations === 0)) {
+                mainLayout.automaticSizeUpdate = false;
+                magicWin.updateMaskArea();
+            }
         }
     }
 
