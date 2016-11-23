@@ -31,24 +31,81 @@ import "LayoutManager.js" as LayoutManager
 
 DragDrop.DropArea {
     id: root
-    width: 640
-    height: 90
 
-    //BEGIN properties
-    Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
+    //// BEGIN SIGNALS
+    signal clearZoomSignal();
+    signal updateIndexes();
+    ////
 
-   // Layout.preferredWidth: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
-    Layout.preferredWidth: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
-    Layout.preferredHeight: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredHeight + (!isHorizontal && toolBox? toolBox.height : 0))
-
+    ////BEGIN properties
     property bool debugMode: true
 
+    property bool automaticSize: plasmoid.configuration.automaticIconSize
+    property bool immutable: plasmoid.immutable
     property bool inStartup: true
     property bool isHorizontal: plasmoid.formFactor == PlasmaCore.Types.Horizontal
     property bool isVertical: !isHorizontal
     property bool isHovered: nowDock ? ((nowDockHoveredIndex !== -1) && (layoutsContainer.hoveredIndex !== -1)) || wholeArea.containsMouse
                                      : (layoutsContainer.hoveredIndex !== -1) || wholeArea.containsMouse
+    property bool onlyAddingStarup: true //is used for the initialization phase in startup where there arent removals, this variable provides a way to grow icon size
+    property bool smallAutomaticIconJumps: plasmoid.configuration.smallAutomaticIconJumps
+    property bool useThemePanel: noApplets === 0 ? true : plasmoid.configuration.useThemePanel
 
+
+
+
+    property int animations: 0 //zoomed applets it is used basically on masking for magic window
+    property int automaticIconSizeBasedSize: 48
+    /// FIXME : The icon size situation
+   /* property int iconSize: automaticSize ? ( (automaticIconSizeBasedSize>0 && plasmoid.immutable)  ?
+                                                Math.min(automaticIconSizeBasedSize, automaticIconSizeBasedZoom) : automaticIconSizeBasedZoom ):
+                                           Math.min(automaticIconSizeBasedZoom,plasmoid.configuration.iconSize)*/
+
+    property int fixedWidth: 0   ///fixed's are used to disable automatic resize during dragging an Applet in the panel...
+    property int fixedHeight: 0
+    property int iconSize: plasmoid.configuration.iconSize
+    property int iconStep: 8
+    property int panelEdgeSpacing: iconSize / 2
+    property int previousAllTasks: -1    //is used to forbit updateAutomaticIconSize when hovering
+    property int realSize: iconSize + iconMargin
+    property int themePanelSize: plasmoid.configuration.panelSize
+    property int mainLayoutPosition: !plasmoid.immutable ? 0 : (root.isVertical ? 3 : 1)
+    property int userPanelPosition: plasmoid.configuration.panelPosition !== 10 ? plasmoid.configuration.panelPosition : mainLayoutPosition
+
+    property real zoomFactor: ( 1 + (plasmoid.configuration.zoomLevel / 20) )
+
+    property var iconsArray: [16, 22, 32, 48, 64, 96, 128, 256]
+    property var layoutManager: LayoutManager
+
+    property Item dragOverlay
+    property Item toolBox
+    property Item nowDockContainer
+    property Item nowDock
+    property Item nowDockConfiguration
+
+    // TO BE DELETED, if not needed: property int counter:0;
+
+    ///BEGIN properties from nowDock
+    property bool reverseLinesPosition: nowDock ? nowDock.reverseLinesPosition : false
+
+    property int durationTime: nowDock ? nowDock.durationTime : 2
+    property int nowDockAnimations: nowDock ? nowDock.animations : 0
+    property int nowDockHoveredIndex: nowDock ? nowDock.hoveredIndex : -1
+    property int iconMargin: nowDock ? nowDock.iconMargin : 0.12 * iconSize
+    property int statesLineSize: nowDock ? nowDock.statesLineSize : 0
+    property int tasksCount: nowDock ? nowDock.tasksCount : 0
+    ///END properties from nowDock
+
+    width: 640
+    height: 90
+
+    // Layout.preferredWidth: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
+    Layout.preferredWidth: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredWidth + (isHorizontal && toolBox ? toolBox.width : 0))
+    Layout.preferredHeight: plasmoid.immutable ? 0 : (mainLayout.Layout.preferredHeight + (!isHorizontal && toolBox? toolBox.height : 0))
+
+    Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
+
+    //// BEGIN properties in functions
     property int noApplets: {
         var count1 = 0;
         var count2 = 0;
@@ -74,55 +131,7 @@ DragDrop.DropArea {
         return (count1 + count2);
     }
 
-
-    property int fixedWidth: 0
-    property int fixedHeight: 0
-
-    property var layoutManager: LayoutManager
-
-
-    signal clearZoomSignal();
-    signal updateIndexes();
-    //END properties
-
-    ///BEGIN properties from nowDock
-    property bool reverseLinesPosition: nowDock ? nowDock.reverseLinesPosition : false
-
-    property int durationTime: nowDock ? nowDock.durationTime : 2
-    property int nowDockAnimations: nowDock ? nowDock.animations : 0
-    property int nowDockHoveredIndex: nowDock ? nowDock.hoveredIndex : -1
-    property int iconMargin: nowDock ? nowDock.iconMargin : 0.12 * iconSize
-    // property int iconMargin: 5
-    property int statesLineSize: nowDock ? nowDock.statesLineSize : 0
-    property int tasksCount: nowDock ? nowDock.tasksCount : 0
-    ///END properties from nowDock
-
-    property bool automaticSize: plasmoid.configuration.automaticIconSize
-    property bool smallAutomaticIconJumps: plasmoid.configuration.smallAutomaticIconJumps
-    property bool useThemePanel: noApplets === 0 ? true : plasmoid.configuration.useThemePanel
-    property bool immutable: plasmoid.immutable
-
-    property int animations: 0 //zoomed applets it is used basically on masking for magic window
-    property int panelEdgeSpacing: iconSize / 2
-   /* property int iconSize: automaticSize ? ( (automaticIconSizeBasedSize>0 && plasmoid.immutable)  ?
-                                                Math.min(automaticIconSizeBasedSize, automaticIconSizeBasedZoom) : automaticIconSizeBasedZoom ):
-                                           Math.min(automaticIconSizeBasedZoom,plasmoid.configuration.iconSize)*/
-    property int iconSize: plasmoid.configuration.iconSize
-
-    property int iconStep: 8
-    //(automaticIconSizeBasedSize>0 ? Math.max(automaticIconSizeBasedSize) : plasmoid.configuration.iconSize)
-    property int realSize: iconSize + iconMargin
-    property int themePanelSize: plasmoid.configuration.panelSize
-    property int mainLayoutPosition: !plasmoid.immutable ? 0 : (root.isVertical ? 3 : 1)
-    property int userPanelPosition: plasmoid.configuration.panelPosition !== 10 ? plasmoid.configuration.panelPosition : mainLayoutPosition
-
-    property real zoomFactor: ( 1 + (plasmoid.configuration.zoomLevel / 20) )
-
-    property var iconsArray: [16, 22, 32, 48, 64, 96, 128, 256]
-
-    //automatic icon size which is calculated based on the applets size
-    property int counter:0;
-
+    ///The index of user's current icon size
     property int currentIconIndex:{
         for(var i=iconsArray.length-1; i>=0; --i){
             if(iconsArray[i] === iconSize){
@@ -130,6 +139,535 @@ DragDrop.DropArea {
             }
         }
         return 3;
+    }
+
+    //// END properties in functions
+
+    ////////////////END properties
+
+    //////////////////////////BEGIN states
+    //user set Panel Positions
+    // 0-Center, 1-Left, 2-Right, 3-Top, 4-Bottom
+    states: [
+        ///Left Edge
+        State {
+            name: "leftCenter"
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 0)
+
+            AnchorChanges {
+                target: mainLayout
+                anchors{ top:undefined; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
+            }
+            PropertyChanges{
+                target: mainLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
+            }
+        },
+        State {
+            name: "leftTop"
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 3)
+
+            AnchorChanges {
+                target: mainLayout
+                anchors{ top:parent.top; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: mainLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
+            }
+        },
+        State {
+            name: "leftBottom"
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 4)
+
+            AnchorChanges {
+                target: mainLayout
+                anchors{ top:undefined; bottom:parent.bottom; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: mainLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
+            }
+        },
+        ///Right Edge
+        State {
+            name: "rightCenter"
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 0)
+
+            AnchorChanges {
+                target: mainLayout
+                anchors{ top:undefined; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
+            }
+            PropertyChanges{
+                target: mainLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
+            }
+        },
+        State {
+            name: "rightTop"
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 3)
+
+            AnchorChanges {
+                target: mainLayout
+                anchors{ top:parent.top; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: mainLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
+            }
+        },
+        State {
+            name: "rightBottom"
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 4)
+
+            AnchorChanges {
+                target: mainLayout
+                anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: mainLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
+            }
+        },
+        ///Bottom Edge
+        State {
+            name: "bottomCenter"
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 0)
+
+            AnchorChanges {
+                target: mainLayout
+                anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
+            }
+        },
+        State {
+            name: "bottomLeft"
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 1)
+
+            AnchorChanges {
+                target: mainLayout
+                anchors{ top:undefined; bottom:parent.bottom; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
+            }
+        },
+        State {
+            name: "bottomRight"
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 2)
+
+            AnchorChanges {
+                target: mainLayout
+                anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
+            }
+        },
+        ///Top Edge
+        State {
+            name: "topCenter"
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 0)
+
+            AnchorChanges {
+                target: mainLayout
+                anchors{ top:parent.top; bottom:undefined; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
+            }
+        },
+        State {
+            name: "topLeft"
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 1)
+
+            AnchorChanges {
+                target: mainLayout
+                anchors{ top:parent.top; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
+            }
+        },
+        State {
+            name: "topRight"
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 2)
+
+            AnchorChanges {
+                target: mainLayout
+                anchors{ top:parent.top; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
+            }
+        }
+    ]
+    ////////////////END states
+
+
+    //// BEGIN OF Behaviors
+    Behavior on iconSize {
+        NumberAnimation { duration: 200 }
+    }
+    //// END OF Behaviors
+
+    //////////////START OF CONNECTIONS
+    onAnimationsChanged: magicWin.updateMaskArea();
+
+    onDragEnter: {
+        if (plasmoid.immutable) {
+            event.ignore();
+            return;
+        }
+        //during drag operations we disable panel auto resize
+        if (root.isHorizontal) {
+            root.fixedWidth = root.width
+        } else {
+            root.fixedHeight = root.height
+        }
+
+        var relevantLayout = mainLayout.mapFromItem(root, event.x, event.y);
+        LayoutManager.insertAtCoordinates(dndSpacer, relevantLayout.x, relevantLayout.y)
+        dndSpacer.opacity = 1;
+    }
+
+    onDragMove: {
+        var relevantLayout = mainLayout.mapFromItem(root, event.x, event.y);
+        LayoutManager.insertAtCoordinates(dndSpacer, relevantLayout.x, relevantLayout.y)
+        dndSpacer.opacity = 1;
+    }
+
+    onDragLeave: {
+        dndSpacer.opacity = 0;
+        dndSpacer.parent = root;
+        root.fixedWidth = 0;
+        root.fixedHeight = 0;
+    }
+
+    onDrop: {
+        var relevantLayout = mainLayout.mapFromItem(root, event.x, event.y);
+        plasmoid.processMimeData(event.mimeData, relevantLayout.x, relevantLayout.y);
+        event.accept(event.proposedAction);
+        root.fixedWidth = 0;
+        root.fixedHeight = 0;
+        dndSpacer.opacity = 0;
+        containmentSizeSyncTimer.restart();
+    }
+
+    onImmutableChanged: {
+        updateLayouts();
+    }
+
+    onIsHoveredChanged: {
+        if (isHovered){
+            magicWin.showOnTop();
+        }
+    }
+
+    onHeightChanged: {
+        containmentSizeSyncTimer.restart()
+        if (startupTimer.running) {
+            startupTimer.restart();
+        }
+
+        //  if(isVertical)
+        //    updateAutomaticIconSizeZoom();
+    }
+
+
+
+    onNowDockAnimationsChanged: magicWin.updateMaskArea();
+
+    onToolBoxChanged: {
+        containmentSizeSyncTimer.restart();
+        if (startupTimer.running) {
+            startupTimer.restart();
+        }
+    }
+
+    onWidthChanged: {
+        containmentSizeSyncTimer.restart()
+        if (startupTimer.running) {
+            startupTimer.restart();
+        }
+
+        //  if(isHorizontal)
+        //   updateAutomaticIconSizeZoom();
+    }
+
+    //  onZoomFactorChanged: updateAutomaticIconSizeZoom();
+    //  onIconSizeChanged: console.log("Icon Size Changed:"+iconSize);
+
+    Component.onCompleted: {
+        //  currentLayout.isLayoutHorizontal = isHorizontal
+        LayoutManager.plasmoid = plasmoid;
+        LayoutManager.root = root;
+        LayoutManager.layout = mainLayout;
+        LayoutManager.lastSpacer = lastSpacer;
+        LayoutManager.restore();
+        containmentSizeSyncTimer.restart();
+        plasmoid.action("configure").visible = !plasmoid.immutable;
+        plasmoid.action("configure").enabled = !plasmoid.immutable;
+        updateNowDockConfiguration();
+    }
+
+    Component.onDestruction: {
+        console.log("Destroying Now Dock Panel...");
+    }
+
+    Containment.onAppletAdded: {
+        addApplet(applet, x, y);
+        LayoutManager.save();
+    }
+
+    Containment.onAppletRemoved: {
+        LayoutManager.removeApplet(applet);
+        var flexibleFound = false;
+        for (var i = 0; i < mainLayout.children.length; ++i) {
+            var applet = mainLayout.children[i].applet;
+            if (applet && ((root.isHorizontal && applet.Layout.fillWidth) ||
+                           (!root.isHorizontal && applet.Layout.fillHeight)) &&
+                    applet.visible) {
+                flexibleFound = true;
+                break
+            }
+        }
+        if (!flexibleFound) {
+            lastSpacer.parent = mainLayout;
+        }
+
+        LayoutManager.save();
+    }
+
+    Plasmoid.onUserConfiguringChanged: {
+        if (plasmoid.immutable) {
+            if (dragOverlay) {
+                dragOverlay.destroy();
+            }
+            return;
+        }
+
+        if (plasmoid.userConfiguring) {
+            for (var i = 0; i < plasmoid.applets.length; ++i) {
+                plasmoid.applets[i].expanded = false;
+            }
+            if (!dragOverlay) {
+                var component = Qt.createComponent("ConfigOverlay.qml");
+                if (component.status == Component.Ready) {
+                    dragOverlay = component.createObject(root);
+                } else {
+                    console.log("Could not create ConfigOverlay");
+                    console.log(component.errorString());
+                }
+                component.destroy();
+            } else {
+                dragOverlay.visible = true;
+            }
+        } else {
+            dragOverlay.visible = false;
+            dragOverlay.destroy();
+        }
+    }
+
+    Plasmoid.onFormFactorChanged: containmentSizeSyncTimer.restart();
+    Plasmoid.onImmutableChanged: {
+        containmentSizeSyncTimer.restart();
+        plasmoid.action("configure").visible = !plasmoid.immutable;
+        plasmoid.action("configure").enabled = !plasmoid.immutable;
+
+        if(plasmoid.immutable){
+            updateIndexes();
+        }
+
+        updateNowDockConfiguration();
+    }
+    //////////////END OF CONNECTIONS
+
+    //////////////START OF FUNCTIONS
+
+    function addApplet(applet, x, y) {
+        var container = appletContainerComponent.createObject(root)
+
+        container.applet = applet;
+        applet.parent = container.appletWrapper;
+
+        applet.anchors.fill = container.appletWrapper;
+
+        applet.visible = true;
+
+
+        // don't show applet if it choses to be hidden but still make it
+        // accessible in the panelcontroller
+        container.visible = Qt.binding(function() {
+            return applet.status !== PlasmaCore.Types.HiddenStatus || (!plasmoid.immutable && plasmoid.userConfiguring)
+        })
+
+        addContainerInLayout(container, applet, x, y);
+    }
+
+    function addContainerInLayout(container, applet, x, y){
+        // Is there a DND placeholder? Replace it!
+        if (dndSpacer.parent === mainLayout) {
+            LayoutManager.insertBefore(dndSpacer, container);
+            dndSpacer.parent = root;
+            return;
+            // If the provided position is valid, use it.
+        } else if (x >= 0 && y >= 0) {
+            var index = LayoutManager.insertAtCoordinates(container, x , y);
+
+            // Fall through to determining an appropriate insert position.
+        } else {
+            var before = null;
+            container.animationsEnabled = false;
+
+            if (lastSpacer.parent === mainLayout) {
+                before = lastSpacer;
+            }
+
+            // Insert icons to the left of whatever is at the center (usually a Task Manager),
+            // if it exists.
+            // FIXME TODO: This is a real-world fix to produce a sensible initial position for
+            // launcher icons added by launcher menu applets. The basic approach has been used
+            // since Plasma 1. However, "add launcher to X" is a generic-enough concept and
+            // frequent-enough occurence that we'd like to abstract it further in the future
+            // and get rid of the uglyness of parties external to the containment adding applets
+            // of a specific type, and the containment caring about the applet type. In a better
+            // system the containment would be informed of requested launchers, and determine by
+            // itself what it wants to do with that information.
+            if (!startupTimer.running && applet.pluginName == "org.kde.plasma.icon") {
+                var middle = mainLayout.childAt(root.width / 2, root.height / 2);
+
+                if (middle) {
+                    before = middle;
+                }
+
+                // Otherwise if lastSpacer is here, enqueue before it.
+            }
+
+            if (before) {
+                LayoutManager.insertBefore(before, container);
+
+                // Fall through to adding at the end.
+            } else {
+                container.parent = mainLayout;
+            }
+
+            //event compress the enable of animations
+            startupTimer.restart();
+        }
+
+        //Important, removes the first children of the mainLayout after the first
+        //applet has been added
+        lastSpacer.parent = root;
+
+        updateIndexes();
+    }
+
+    function addInternalViewSplitter(pos){
+        if(!internalViewSplitterExists()){
+            var container = appletContainerComponent.createObject(root);
+
+            container.isInternalViewSplitter = true;
+            container.visible = true;
+
+            if(pos >=0 )
+                layoutManager.insertAtIndex(container, pos);
+            else
+                layoutManager.insertAtIndex(container, Math.floor(mainLayout.count / 2));
+
+            layoutManager.save();
+            // addContainerInLayout(container, x, y);
+        }
+    }
+
+    function checkLastSpacer() {
+        lastSpacer.parent = root
+
+        var expands = false;
+
+        if (isHorizontal) {
+            for (var container in mainLayout.children) {
+                var item = mainLayout.children[container];
+                if (item.Layout && item.Layout.fillWidth) {
+                    expands = true;
+                }
+            }
+        } else {
+            for (var container in mainLayout.children) {
+                var item = mainLayout.children[container];
+                if (item.Layout && item.Layout.fillHeight) {
+                    expands = true;
+                }
+            }
+        }
+        if (!expands) {
+            lastSpacer.parent = mainLayout
+        }
+    }
+
+    function clearZoom(){
+        //console.log("Panel clear....");
+        layoutsContainer.currentSpot = -1000;
+        layoutsContainer.hoveredIndex = -1;
+        root.clearZoomSignal();
+    }
+
+    function containsMouse(){
+        var result = root.outsideContainsMouse();
+
+        if(result)
+            return true;
+
+        if(!result && nowDock && nowDock.outsideContainsMouse()){
+            layoutsContainer.hoveredIndex = nowDockContainer.index;
+            return true;
+        }
+
+        if (nowDock){
+            nowDock.clearZoom();
+        }
+
+        return false;
+    }
+
+    function internalViewSplitterExists(){
+        for (var container in mainLayout.children) {
+            var item = mainLayout.children[container];
+            if(item && item.isInternalViewSplitter)
+                return true;
+        }
+        return false;
+    }
+
+    function outsideContainsMouse(){
+        var applets = mainLayout.children;
+
+        for(var i=0; i<applets.length; ++i){
+            var applet = applets[i];
+
+            if(applet && applet.containsMouse){
+                return true;
+            }
+        }
+
+        ///check second layout also
+        var applets = secondLayout.children;
+
+        for(var i=0; i<applets.length; ++i){
+            var applet = applets[i];
+
+            if(applet && applet.containsMouse){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    function removeInternalViewSplitter(){
+        for (var container in mainLayout.children) {
+            var item = mainLayout.children[container];
+            if(item && item.isInternalViewSplitter)
+                item.destroy();
+        }
+
+        layoutManager.save();
     }
 
     function sizeIsFromAutomaticMode(size){
@@ -142,15 +680,6 @@ DragDrop.DropArea {
 
         return false;
     }
-
-
-    property int automaticIconSizeBasedSize: 48
-
-    //is used to forbit updateAutomaticIconSize when hovering
-    property int previousAllTasks: -1
-    //is used for the initialization phase in startup where there arent removals
-    //this variable provides a way to grow icon size
-    property bool onlyAddingStarup: true
 
     //sizeViolation variable is used when for any reason the mainLayout
     //exceeds the panel size
@@ -249,53 +778,6 @@ DragDrop.DropArea {
         }*/
     }
 
-
-    //automatic icon size which is calculated based on panels size and zoom factor
-/*    property int automaticIconSizeBasedZoom:{
-        //    function updateAutomaticIconSizeZoom() {
-        var maxZoomSize;
-        if(isVertical)
-            maxZoomSize = root.width;
-        else
-            maxZoomSize = root.height;
-
-        if(root.nowDock){
-            maxZoomSize -= root.statesLineSize;
-        }
-
-        if(smallAutomaticIconJumps){
-            var maxIconSize = 16;
-            var found = false;
-
-            do {
-                //var currentZoomedSize = zoomFactor*maxIconSize;
-                var currentZoomedSize = maxIconSize;
-
-                if(currentZoomedSize <= maxZoomSize)
-                    maxIconSize += iconStep;
-                else
-                    found = true;
-
-            } while(!found)
-
-            return Math.max (16, maxIconSize-iconStep);
-        }
-        else{
-            var maxIconSize2 = iconsArray[iconsArray.length - 1];
-
-            for(var i=iconsArray.length - 1; i>=0; --i){
-             //   var currentZoomedSize2 = zoomFactor*iconsArray[i];
-                var currentZoomedSize2 = iconsArray[i];
-
-                if(currentZoomedSize2 <= maxZoomSize)
-                    return iconsArray[i];
-            }
-
-            return iconsArray[0];
-        }
-
-    }*/
-
     function updateLayouts(){
         if(immutable){
             var splitter = -1;
@@ -325,240 +807,6 @@ DragDrop.DropArea {
         }
     }
 
-    onWidthChanged: {
-        containmentSizeSyncTimer.restart()
-        if (startupTimer.running) {
-            startupTimer.restart();
-        }
-
-        //  if(isHorizontal)
-        //   updateAutomaticIconSizeZoom();
-    }
-    onHeightChanged: {
-        containmentSizeSyncTimer.restart()
-        if (startupTimer.running) {
-            startupTimer.restart();
-        }
-
-        //  if(isVertical)
-        //    updateAutomaticIconSizeZoom();
-    }
-
-    onNowDockAnimationsChanged: magicWin.updateMaskArea();
-    onAnimationsChanged: magicWin.updateMaskArea();
-
-    //  onZoomFactorChanged: updateAutomaticIconSizeZoom();
-    //  onIconSizeChanged: console.log("Icon Size Changed:"+iconSize);
-
-    property Item dragOverlay
-    property Item toolBox
-    property Item nowDockContainer
-    property Item nowDock
-    property Item nowDockConfiguration
-
-    Behavior on iconSize {
-        NumberAnimation { duration: 200 }
-    }
-    /*  Rectangle{
-        anchors.fill: parent
-        color: "transparent"
-        border.color: "red"
-        border.width: 1
-    } */
-
-    //BEGIN functions
-    function addContainerInLayout(container, applet, x, y){
-        // Is there a DND placeholder? Replace it!
-        if (dndSpacer.parent === mainLayout) {
-            LayoutManager.insertBefore(dndSpacer, container);
-            dndSpacer.parent = root;
-            return;
-            // If the provided position is valid, use it.
-        } else if (x >= 0 && y >= 0) {
-            var index = LayoutManager.insertAtCoordinates(container, x , y);
-
-            // Fall through to determining an appropriate insert position.
-        } else {
-            var before = null;
-            container.animationsEnabled = false;
-
-            if (lastSpacer.parent === mainLayout) {
-                before = lastSpacer;
-            }
-
-            // Insert icons to the left of whatever is at the center (usually a Task Manager),
-            // if it exists.
-            // FIXME TODO: This is a real-world fix to produce a sensible initial position for
-            // launcher icons added by launcher menu applets. The basic approach has been used
-            // since Plasma 1. However, "add launcher to X" is a generic-enough concept and
-            // frequent-enough occurence that we'd like to abstract it further in the future
-            // and get rid of the uglyness of parties external to the containment adding applets
-            // of a specific type, and the containment caring about the applet type. In a better
-            // system the containment would be informed of requested launchers, and determine by
-            // itself what it wants to do with that information.
-            if (!startupTimer.running && applet.pluginName == "org.kde.plasma.icon") {
-                var middle = mainLayout.childAt(root.width / 2, root.height / 2);
-
-                if (middle) {
-                    before = middle;
-                }
-
-                // Otherwise if lastSpacer is here, enqueue before it.
-            }
-
-            if (before) {
-                LayoutManager.insertBefore(before, container);
-
-                // Fall through to adding at the end.
-            } else {
-                container.parent = mainLayout;
-            }
-
-            //event compress the enable of animations
-            startupTimer.restart();
-        }
-
-        //Important, removes the first children of the mainLayout after the first
-        //applet has been added
-        lastSpacer.parent = root;
-
-        updateIndexes();
-    }
-
-
-    function addApplet(applet, x, y) {
-        var container = appletContainerComponent.createObject(root)
-
-        container.applet = applet;
-        applet.parent = container.appletWrapper;
-
-        applet.anchors.fill = container.appletWrapper;
-
-        applet.visible = true;
-
-
-        // don't show applet if it choses to be hidden but still make it
-        // accessible in the panelcontroller
-        container.visible = Qt.binding(function() {
-            return applet.status !== PlasmaCore.Types.HiddenStatus || (!plasmoid.immutable && plasmoid.userConfiguring)
-        })
-
-        addContainerInLayout(container, applet, x, y);
-    }
-
-
-    function checkLastSpacer() {
-        lastSpacer.parent = root
-
-        var expands = false;
-
-        if (isHorizontal) {
-            for (var container in mainLayout.children) {
-                var item = mainLayout.children[container];
-                if (item.Layout && item.Layout.fillWidth) {
-                    expands = true;
-                }
-            }
-        } else {
-            for (var container in mainLayout.children) {
-                var item = mainLayout.children[container];
-                if (item.Layout && item.Layout.fillHeight) {
-                    expands = true;
-                }
-            }
-        }
-        if (!expands) {
-            lastSpacer.parent = mainLayout
-        }
-    }
-
-    function internalViewSplitterExists(){
-        for (var container in mainLayout.children) {
-            var item = mainLayout.children[container];
-            if(item && item.isInternalViewSplitter)
-                return true;
-        }
-        return false;
-    }
-
-    function removeInternalViewSplitter(){
-        for (var container in mainLayout.children) {
-            var item = mainLayout.children[container];
-            if(item && item.isInternalViewSplitter)
-                item.destroy();
-        }
-
-        layoutManager.save();
-    }
-
-    function addInternalViewSplitter(pos){
-        if(!internalViewSplitterExists()){
-            var container = appletContainerComponent.createObject(root);
-
-            container.isInternalViewSplitter = true;
-            container.visible = true;
-
-            if(pos >=0 )
-                layoutManager.insertAtIndex(container, pos);
-            else
-                layoutManager.insertAtIndex(container, Math.floor(mainLayout.count / 2));
-
-            layoutManager.save();
-            // addContainerInLayout(container, x, y);
-        }
-    }
-
-    function outsideContainsMouse(){
-        var applets = mainLayout.children;
-
-        for(var i=0; i<applets.length; ++i){
-            var applet = applets[i];
-
-            if(applet && applet.containsMouse){
-                return true;
-            }
-        }
-
-
-        ///check second layout also
-        var applets = secondLayout.children;
-
-        for(var i=0; i<applets.length; ++i){
-            var applet = applets[i];
-
-            if(applet && applet.containsMouse){
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    function containsMouse(){
-        var result = root.outsideContainsMouse();
-
-        if(result)
-            return true;
-
-        if(!result && nowDock && nowDock.outsideContainsMouse()){
-            layoutsContainer.hoveredIndex = nowDockContainer.index;
-            return true;
-        }
-
-        if (nowDock){
-            nowDock.clearZoom();
-        }
-
-        return false;
-    }
-
-    function clearZoom(){
-        //console.log("Panel clear....");
-        layoutsContainer.currentSpot = -1000;
-        layoutsContainer.hoveredIndex = -1;
-        root.clearZoomSignal();
-    }
-
     function updateNowDockConfiguration(){
         ///BEGIN of Now Dock Configuration Panel
         if (plasmoid.immutable) {
@@ -584,161 +832,15 @@ DragDrop.DropArea {
 
     //END functions
 
-    //BEGIN connections
-    Component.onCompleted: {
-        //  currentLayout.isLayoutHorizontal = isHorizontal
-        LayoutManager.plasmoid = plasmoid;
-        LayoutManager.root = root;
-        LayoutManager.layout = mainLayout;
-        LayoutManager.lastSpacer = lastSpacer;
-        LayoutManager.restore();
-        containmentSizeSyncTimer.restart();
-        plasmoid.action("configure").visible = !plasmoid.immutable;
-        plasmoid.action("configure").enabled = !plasmoid.immutable;
-        updateNowDockConfiguration();
-    }
 
-    Component.onDestruction: {
-        console.log("Destroying Now Dock Panel...");
-        //layoutsContainer.destroy();
-       // if(nowDock)
-        //    nowDock.destroy();
-       // magicWin.close();
-    }
-
-    onDragEnter: {
-        if (plasmoid.immutable) {
-            event.ignore();
-            return;
-        }
-        //during drag operations we disable panel auto resize
-        if (root.isHorizontal) {
-            root.fixedWidth = root.width
-        } else {
-            root.fixedHeight = root.height
-        }
-
-        var relevantLayout = mainLayout.mapFromItem(root, event.x, event.y);
-        LayoutManager.insertAtCoordinates(dndSpacer, relevantLayout.x, relevantLayout.y)
-        dndSpacer.opacity = 1;
-    }
-
-    onDragMove: {
-        var relevantLayout = mainLayout.mapFromItem(root, event.x, event.y);
-        LayoutManager.insertAtCoordinates(dndSpacer, relevantLayout.x, relevantLayout.y)
-        dndSpacer.opacity = 1;
-    }
-
-    onDragLeave: {
-        dndSpacer.opacity = 0;
-        dndSpacer.parent = root;
-        root.fixedWidth = 0;
-        root.fixedHeight = 0;
-    }
-
-    onDrop: {
-        var relevantLayout = mainLayout.mapFromItem(root, event.x, event.y);
-        plasmoid.processMimeData(event.mimeData, relevantLayout.x, relevantLayout.y);
-        event.accept(event.proposedAction);
-        root.fixedWidth = 0;
-        root.fixedHeight = 0;
-        dndSpacer.opacity = 0;
-        containmentSizeSyncTimer.restart();
-    }
-
-    onImmutableChanged: {
-        updateLayouts();
-    }
-
-    onIsHoveredChanged: {
-        if (isHovered){
-            magicWin.showOnTop();
-        }
-    }
-
-    Containment.onAppletAdded: {
-        addApplet(applet, x, y);
-        LayoutManager.save();
-    }
-
-    Containment.onAppletRemoved: {
-        LayoutManager.removeApplet(applet);
-        var flexibleFound = false;
-        for (var i = 0; i < mainLayout.children.length; ++i) {
-            var applet = mainLayout.children[i].applet;
-            if (applet && ((root.isHorizontal && applet.Layout.fillWidth) ||
-                           (!root.isHorizontal && applet.Layout.fillHeight)) &&
-                    applet.visible) {
-                flexibleFound = true;
-                break
-            }
-        }
-        if (!flexibleFound) {
-            lastSpacer.parent = mainLayout;
-        }
-
-        LayoutManager.save();
-    }
-
-    Plasmoid.onUserConfiguringChanged: {
-        if (plasmoid.immutable) {
-            if (dragOverlay) {
-                dragOverlay.destroy();
-            }
-            return;
-        }
-
-        if (plasmoid.userConfiguring) {
-            for (var i = 0; i < plasmoid.applets.length; ++i) {
-                plasmoid.applets[i].expanded = false;
-            }
-            if (!dragOverlay) {
-                var component = Qt.createComponent("ConfigOverlay.qml");
-                if (component.status == Component.Ready) {
-                    dragOverlay = component.createObject(root);
-                } else {
-                    console.log("Could not create ConfigOverlay");
-                    console.log(component.errorString());
-                }
-                component.destroy();
-            } else {
-                dragOverlay.visible = true;
-            }
-        } else {
-            dragOverlay.visible = false;
-            dragOverlay.destroy();
-        }
-    }
-
-    Plasmoid.onFormFactorChanged: containmentSizeSyncTimer.restart();
-    Plasmoid.onImmutableChanged: {
-        containmentSizeSyncTimer.restart();
-        plasmoid.action("configure").visible = !plasmoid.immutable;
-        plasmoid.action("configure").enabled = !plasmoid.immutable;
-
-        if(plasmoid.immutable){
-            updateIndexes();
-        }
-
-        updateNowDockConfiguration();
-    }
-
-    onToolBoxChanged: {
-        containmentSizeSyncTimer.restart();
-        if (startupTimer.running) {
-            startupTimer.restart();
-        }
-    }
-    //END connections
-
-    //BEGIN components
+    ///////////////BEGIN components
     Component {
         id: appletContainerComponent
         AppletItem{}
     }
-    //END components
+    ///////////////END components
 
-    //BEGIN UI elements
+    ///////////////BEGIN UI elements
     Item {
         id: lastSpacer
         parent: mainLayout
@@ -774,18 +876,6 @@ DragDrop.DropArea {
         color: "yellow"
         opacity: 0.15
         visible: root.debugMode
-    }
-
-    //Timer to check if the mouse is still inside the ListView
-    Timer{
-        id:checkListHovered
-        repeat:false;
-        interval:120;
-
-        onTriggered: {
-            if(!root.containsMouse())
-                root.clearZoom();
-        }
     }
 
     MouseArea{
@@ -982,6 +1072,32 @@ DragDrop.DropArea {
         }
     }
 
+    ///////////////END UI elements
+
+    ///////////////BEGIN TIMER elements
+    Timer {
+        id: animationEndedTimer
+        interval: 200
+        onTriggered: {
+            if (!magicWin.isHovered && (nowDockAnimations === 0) && (root.animations === 0)) {
+                mainLayout.automaticSizeUpdate = false;
+                magicWin.updateMaskArea();
+            }
+        }
+    }
+
+    //Timer to check if the mouse is still inside the ListView
+    Timer{
+        id:checkListHovered
+        repeat:false;
+        interval:120;
+
+        onTriggered: {
+            if(!root.containsMouse())
+                root.clearZoom();
+        }
+    }
+
     Timer {
         id: containmentSizeSyncTimer
         interval: 150
@@ -992,18 +1108,6 @@ DragDrop.DropArea {
             /*   currentLayout.width = root.width - (isHorizontal && toolBox && !plasmoid.immutable ? toolBox.width : 0)
             currentLayout.height = root.height - (!isHorizontal && toolBox && !plasmoid.immutable ? toolBox.height : 0) */
             //  currentLayout.isLayoutHorizontal = isHorizontal
-        }
-    }
-
-
-    Timer {
-        id: animationEndedTimer
-        interval: 200
-        onTriggered: {
-            if (!magicWin.isHovered && (nowDockAnimations === 0) && (root.animations === 0)) {
-                mainLayout.automaticSizeUpdate = false;
-                magicWin.updateMaskArea();
-            }
         }
     }
 
@@ -1020,160 +1124,7 @@ DragDrop.DropArea {
             inStartup = false;
         }
     }
-    //END UI elements
 
-    //BEGIN states
-    //user set Panel Positions
-    // 0-Center, 1-Left, 2-Right, 3-Top, 4-Bottom
-    states: [
-        ///Left Edge
-        State {
-            name: "leftCenter"
-            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 0)
+    ///////////////END TIMER elements
 
-            AnchorChanges {
-                target: mainLayout
-                anchors{ top:undefined; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
-            }
-            PropertyChanges{
-                target: mainLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
-            }
-        },
-        State {
-            name: "leftTop"
-            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 3)
-
-            AnchorChanges {
-                target: mainLayout
-                anchors{ top:parent.top; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
-            }
-            PropertyChanges{
-                target: mainLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
-            }
-        },
-        State {
-            name: "leftBottom"
-            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 4)
-
-            AnchorChanges {
-                target: mainLayout
-                anchors{ top:undefined; bottom:parent.bottom; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
-            }
-            PropertyChanges{
-                target: mainLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
-            }
-        },
-        ///Right Edge
-        State {
-            name: "rightCenter"
-            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 0)
-
-            AnchorChanges {
-                target: mainLayout
-                anchors{ top:undefined; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
-            }
-            PropertyChanges{
-                target: mainLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
-            }
-        },
-        State {
-            name: "rightTop"
-            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 3)
-
-            AnchorChanges {
-                target: mainLayout
-                anchors{ top:parent.top; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
-            }
-            PropertyChanges{
-                target: mainLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
-            }
-        },
-        State {
-            name: "rightBottom"
-            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 4)
-
-            AnchorChanges {
-                target: mainLayout
-                anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
-            }
-            PropertyChanges{
-                target: mainLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
-            }
-        },
-        ///Bottom Edge
-        State {
-            name: "bottomCenter"
-            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 0)
-
-            AnchorChanges {
-                target: mainLayout
-                anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
-            }
-            PropertyChanges{
-                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
-            }
-        },
-        State {
-            name: "bottomLeft"
-            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 1)
-
-            AnchorChanges {
-                target: mainLayout
-                anchors{ top:undefined; bottom:parent.bottom; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
-            }
-            PropertyChanges{
-                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
-            }
-        },
-        State {
-            name: "bottomRight"
-            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 2)
-
-            AnchorChanges {
-                target: mainLayout
-                anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
-            }
-            PropertyChanges{
-                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
-            }
-        },
-        ///Top Edge
-        State {
-            name: "topCenter"
-            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 0)
-
-            AnchorChanges {
-                target: mainLayout
-                anchors{ top:parent.top; bottom:undefined; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
-            }
-            PropertyChanges{
-                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
-            }
-        },
-        State {
-            name: "topLeft"
-            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 1)
-
-            AnchorChanges {
-                target: mainLayout
-                anchors{ top:parent.top; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
-            }
-            PropertyChanges{
-                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
-            }
-        },
-        State {
-            name: "topRight"
-            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 2)
-
-            AnchorChanges {
-                target: mainLayout
-                anchors{ top:parent.top; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
-            }
-            PropertyChanges{
-                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
-            }
-        }
-    ]
-    //END states
 }
