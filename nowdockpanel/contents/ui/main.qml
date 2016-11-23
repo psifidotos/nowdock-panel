@@ -586,6 +586,24 @@ DragDrop.DropArea {
         }
     }
 
+    function checkLayoutsAnimatedLength() {
+        if (!magicWin.isHovered && (root.nowDockAnimations === 0) && (root.animations === 0)) {
+            mainLayout.animatedLength = true;
+        } else {
+            mainLayout.animatedLength = false;
+        }
+
+        //After the last animations we must check again after a small delay in order
+        //to disable the automaticSizeUpdate
+        if (animatedLengthTimer.running) {
+            animatedLengthTimer.restart();
+        } else {
+            animatedLengthTimer.start();
+        }
+
+        magicWin.updateMaskArea();
+    }
+
     function clearZoom(){
         //console.log("Panel clear....");
         layoutsContainer.currentSpot = -1000;
@@ -933,7 +951,7 @@ DragDrop.DropArea {
             Layout.preferredWidth: width
             Layout.preferredHeight: height
 
-            property bool automaticSizeUpdate: false
+            property bool animatedLength: false
             property int count: children.length
 
             onHeightChanged: {
@@ -945,16 +963,12 @@ DragDrop.DropArea {
                   //      updateAutomaticIconSize(false);
               //  }
 
-                if (root.isVertical && magicWin) {
-                    if (!magicWin.isHovered && (nowDockAnimations === 0) && (root.animations === 0)) {
-                        automaticSizeUpdate = true;
-                    } else {
-                        automaticSizeUpdate = false;
-                    }
-
-                    magicWin.updateMaskArea();
+                if (root.isVertical && magicWin && plasmoid.immutable) {
+                    checkLayoutsAnimatedLength();
                 }
+
             }
+
             onWidthChanged: {
                 //if(root.isHorizontal && automaticSize){
                // if(root.isHorizontal){
@@ -965,21 +979,7 @@ DragDrop.DropArea {
            //     }
 
                 if (root.isHorizontal && magicWin && plasmoid.immutable) {
-                    if (!magicWin.isHovered && (nowDockAnimations === 0) && (root.animations === 0)) {
-                        automaticSizeUpdate = true;
-                    } else {
-                        automaticSizeUpdate = false;
-                    }
-
-                    //After the last animations we must check again after a small delay in order
-                    //to disable the automaticSizeUpdate
-                    if (animationEndedTimer.running) {
-                        animationEndedTimer.restart();
-                    } else {
-                        animationEndedTimer.start();
-                    }
-
-                    magicWin.updateMaskArea();
+                    checkLayoutsAnimatedLength();
                 }
             }
 
@@ -1061,11 +1061,11 @@ DragDrop.DropArea {
 
     ///////////////BEGIN TIMER elements
     Timer {
-        id: animationEndedTimer
+        id: animatedLengthTimer
         interval: 200
         onTriggered: {
             if (!magicWin.isHovered && (nowDockAnimations === 0) && (root.animations === 0)) {
-                mainLayout.automaticSizeUpdate = false;
+                mainLayout.animatedLength = false;
                 magicWin.updateMaskArea();
             }
         }

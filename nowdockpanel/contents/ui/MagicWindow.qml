@@ -86,7 +86,7 @@ NowDock.PanelWindow{
         var localY = 0;
 
         var normalState = (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
-                && (root.nowDockAnimations === 0) && (root.animations === 0) && (!mainLayout.automaticSizeUpdate)
+                && (root.nowDockAnimations === 0) && (root.animations === 0) && (!mainLayout.animatedLength)
 
         var tempLength = root.isHorizontal ? width : height;
         var tempThickness = root.isHorizontal ? height : width;
@@ -119,8 +119,8 @@ NowDock.PanelWindow{
                 localY = (window.height/2) - (mainLayout.height/2) - (space/2);
             }
         } else {
-            console.log(root.nowDockHoveredIndex + " - " + layoutsContainer.hoveredIndex + " - "
-                        + root.nowDockAnimations+ " - " + root.animations + " - " + mainLayout.automaticSizeUpdate);
+          //  console.log(root.nowDockHoveredIndex + " - " + layoutsContainer.hoveredIndex + " - "
+                  //      + root.nowDockAnimations+ " - " + root.animations + " - " + mainLayout.animatedLength);
 
             if(root.isHorizontal)
                 tempLength = Screen.width;
@@ -128,7 +128,7 @@ NowDock.PanelWindow{
                 tempLength = Screen.height;
 
             //grow only on length and not thickness
-            if(mainLayout.automaticSizeUpdate) {
+            if(mainLayout.animatedLength) {
                 tempThickness = normalThickness;
 
                 //configure the x,y position based on thickness
