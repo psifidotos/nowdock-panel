@@ -57,6 +57,7 @@ DragDrop.DropArea {
 
 
     property int animations: 0 //zoomed applets it is used basically on masking for magic window
+    property int animationsNeedOnlyThickness: 0 //animations that need only thickness
     property int automaticIconSizeBasedSize: 48
     /// FIXME : The icon size situation
    /* property int iconSize: automaticSize ? ( (automaticIconSizeBasedSize>0 && plasmoid.immutable)  ?
@@ -356,6 +357,12 @@ DragDrop.DropArea {
         //    updateAutomaticIconSizeZoom();
     }
 
+    onNowDockChanged: {
+        if (nowDock) {
+            nowDock.signalForAnimationsNeedThickness.connect(slotAnimationsNeedThickness);
+        }
+    }
+
     onNowDockAnimationsChanged: magicWin.updateMaskArea();
 
     onToolBoxChanged: {
@@ -465,7 +472,6 @@ DragDrop.DropArea {
     //////////////END OF CONNECTIONS
 
     //////////////START OF FUNCTIONS
-
     function addApplet(applet, x, y) {
         var container = appletContainerComponent.createObject(root)
 
@@ -682,6 +688,11 @@ DragDrop.DropArea {
         }
 
         return false;
+    }
+
+    function slotAnimationsNeedThickness(value) {
+        animationsNeedOnlyThickness = value;
+        magicWin.updateMaskArea();
     }
 
     //sizeViolation variable is used when for any reason the mainLayout

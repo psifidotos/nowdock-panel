@@ -57,7 +57,7 @@ NowDock.PanelWindow{
         }
     }
 
-    onWindowInAttentionChanged: updateMaskArea();
+   // onWindowInAttentionChanged: updateMaskArea();
 
     Rectangle{
         id: windowBackground
@@ -102,7 +102,8 @@ NowDock.PanelWindow{
 
             tempThickness = normalThickness;
 
-            if(windowInAttention) {
+            //if(windowInAttention) {
+            if (root.animationsNeedOnlyThickness > 0) {
                 tempThickness = thickness - root.iconSize/2;
             }
 
@@ -119,8 +120,8 @@ NowDock.PanelWindow{
                 localY = (window.height/2) - (mainLayout.height/2) - (space/2);
             }
         } else {
-          //  console.log(root.nowDockHoveredIndex + " - " + layoutsContainer.hoveredIndex + " - "
-                  //      + root.nowDockAnimations+ " - " + root.animations + " - " + mainLayout.animatedLength);
+            console.log(root.nowDockHoveredIndex + " - " + layoutsContainer.hoveredIndex + " - "
+                        + root.nowDockAnimations+ " - " + root.animations + " - " + mainLayout.animatedLength);
 
             if(root.isHorizontal)
                 tempLength = Screen.width;
