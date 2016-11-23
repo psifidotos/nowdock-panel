@@ -86,7 +86,7 @@ NowDock.PanelWindow{
         var localY = 0;
 
         var normalState = (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
-                && (nowDockAnimations === 0) && (root.animations === 0) && (!mainLayout.automaticSizeUpdate)
+                && (root.nowDockAnimations === 0) && (root.animations === 0) && (!mainLayout.automaticSizeUpdate)
 
         var tempLength = root.isHorizontal ? width : height;
         var tempThickness = root.isHorizontal ? height : width;
@@ -118,12 +118,10 @@ NowDock.PanelWindow{
             } else {
                 localY = (window.height/2) - (mainLayout.height/2) - (space/2);
             }
-
-          //  var newChoords = mainLayout.mapToItem(windowBackground,localX,localY);
-
-            //localX = newChoords.x - space/2;
-            //localY = newChoords.y - space/2;
         } else {
+            console.log(root.nowDockHoveredIndex + " - " + layoutsContainer.hoveredIndex + " - "
+                        + root.nowDockAnimations+ " - " + root.animations + " - " + mainLayout.automaticSizeUpdate);
+
             if(root.isHorizontal)
                 tempLength = Screen.width;
             else

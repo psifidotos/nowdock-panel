@@ -340,10 +340,6 @@ DragDrop.DropArea {
         containmentSizeSyncTimer.restart();
     }
 
-    onImmutableChanged: {
-        updateLayouts();
-    }
-
     onIsHoveredChanged: {
         if (isHovered){
             magicWin.showOnTop();
@@ -359,8 +355,6 @@ DragDrop.DropArea {
         //  if(isVertical)
         //    updateAutomaticIconSizeZoom();
     }
-
-
 
     onNowDockAnimationsChanged: magicWin.updateMaskArea();
 
@@ -465,6 +459,7 @@ DragDrop.DropArea {
             updateIndexes();
         }
 
+        updateLayouts();
         updateNowDockConfiguration();
     }
     //////////////END OF CONNECTIONS
@@ -969,7 +964,7 @@ DragDrop.DropArea {
                   //      updateAutomaticIconSize(false);
            //     }
 
-                if (root.isHorizontal && magicWin) {
+                if (root.isHorizontal && magicWin && plasmoid.immutable) {
                     if (!magicWin.isHovered && (nowDockAnimations === 0) && (root.animations === 0)) {
                         automaticSizeUpdate = true;
                     } else {

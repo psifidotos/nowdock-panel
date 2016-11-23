@@ -32,6 +32,7 @@ Item {
     height: root.isVertical ?  computeHeight : computeHeight + shownAppletMargin
 
     property bool animationsEnabled: true
+    property bool animationWasSent: false  //protection flag for animation broadcasting
     property bool canBeHovered: true
     property bool showZoomed: false
     property bool lockZoom: false
@@ -356,13 +357,18 @@ Item {
             onZoomScaleChanged: {
                 if ((zoomScale > 1) && !container.isZoomed) {
                     container.isZoomed = true;
-                    root.animations++;
+                    if (plasmoid.immutable && !animationWasSent) {
+                        root.animations++;
+                        animationWasSent = true;
+                    }
                 } else if ((zoomScale == 1) && container.isZoomed) {
                     container.isZoomed = false;
-                    root.animations--;
+                    if (plasmoid.immutable && animationWasSent) {
+                        root.animations--;
+                        animationWasSent = false;
+                    }
                 }
             }
-
 
             function updateLayoutHeight(){
                 if(container.isInternalViewSplitter){
