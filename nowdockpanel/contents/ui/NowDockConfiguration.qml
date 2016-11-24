@@ -281,12 +281,12 @@ Item{
                 }
 
 
-               //  BelowActive = 0, /** always visible except if ovelaps with the active window, no area reserved */
-               //  BelowMaximized, /** always visible except if ovelaps with an active maximize window, no area reserved */
-               //  LetWindowsCover, /** always visible, windows will go over the panel, no area reserved */
-               //  WindowsGoBelow, /** default, always visible, windows will go under the panel, no area reserved */
-               //  AutoHide, /** the panel will be shownn only if the mouse cursor is on screen edges */
-               //  AlwaysVisible,  /** always visible panel, "Normal" plasma panel, accompanies plasma's "Always Visible"  */
+                //  BelowActive = 0, /** always visible except if ovelaps with the active window, no area reserved */
+                //  BelowMaximized, /** always visible except if ovelaps with an active maximize window, no area reserved */
+                //  LetWindowsCover, /** always visible, windows will go over the panel, no area reserved */
+                //  WindowsGoBelow, /** default, always visible, windows will go under the panel, no area reserved */
+                //  AutoHide, /** the panel will be shownn only if the mouse cursor is on screen edges */
+                //  AlwaysVisible,  /** always visible panel, "Normal" plasma panel, accompanies plasma's "Always Visible"  */
                 /**********  Panel Visibility ****************/
 
                 Column{
@@ -354,7 +354,7 @@ Item{
 
                             onCheckedChanged: {
                                 if(checked && !parent.inStartup){
-                                        plasmoid.configuration.panelVisibility = 0
+                                    plasmoid.configuration.panelVisibility = 0
                                 }
                             }
                             onClicked: checked=true;
@@ -380,7 +380,7 @@ Item{
 
                             onCheckedChanged: {
                                 if(checked && !parent.inStartup){
-                                        plasmoid.configuration.panelVisibility = 2
+                                    plasmoid.configuration.panelVisibility = 2
                                 }
                             }
                             onClicked: checked=true;
@@ -678,58 +678,55 @@ Item{
 
                         onCheckedButtonChanged:
                         {
-                            for(var i=0; i<children.length; ++i)
-                                if(i != checkedButton )
+                            for(var i=0; i<children.length; ++i) {
+                                if(i != checkedButton-1 )
                                     children[i].checked = false;
                                 else
                                     children[i].checked = true;
-
-                            if (children[0].checked)
-                                plasmoid.configuration.automaticIconSize = true;
-                            else{
-                                var realValue = 48;
-                                switch(checkedButton){
-                                case 1:
-                                    realValue = 16;
-                                    break;
-                                case 2:
-                                    realValue = 22;
-                                    break;
-                                case 3:
-                                    realValue = 32;
-                                    break;
-                                case 4:
-                                    realValue = 48;
-                                    break;
-                                case 5:
-                                    realValue = 64;
-                                    break;
-                                case 6:
-                                    realValue = 96;
-                                    break;
-                                case 7:
-                                    realValue = 128;
-                                    break;
-                                case 8:
-                                    realValue = 256;
-                                    break;
-                                default:
-                                    realValue = 64;
-                                    break
-                                }
-                                plasmoid.configuration.iconSize = realValue;
-                                plasmoid.configuration.automaticIconSize = false;
                             }
+
+                            //  if (children[0].checked)
+                            // plasmoid.configuration.automaticIconSize = true;
+                            //    else{
+                            var realValue = 64;
+                            switch(checkedButton){
+                            case 1:
+                                realValue = 16;
+                                break;
+                            case 2:
+                                realValue = 22;
+                                break;
+                            case 3:
+                                realValue = 32;
+                                break;
+                            case 4:
+                                realValue = 48;
+                                break;
+                            case 5:
+                                realValue = 64;
+                                break;
+                            case 6:
+                                realValue = 96;
+                                break;
+                            case 7:
+                                realValue = 128;
+                                break;
+                            case 8:
+                                realValue = 192;
+                                break;
+                            case 9:
+                                realValue = 256;
+                                break;
+                            default:
+                                realValue = 64;
+                                break
+                            }
+
+                            plasmoid.configuration.iconSize = realValue;
+                            plasmoid.configuration.automaticIconSize = false;
+
                             // console.log("Pressed Stored:"+realValue);
                             // console.log("Pressed:"+checkedButton);
-                        }
-
-                        PlasmaComponents.Button{
-                            width: parent.buttonSize
-                            checkable: true
-                            enabled: false
-                            text: i18n("Automatic")
-                            onClicked: parent.checkedButton=0;
                         }
 
                         PlasmaComponents.Button{
@@ -778,8 +775,14 @@ Item{
                         PlasmaComponents.Button{
                             width: parent.buttonSize
                             checkable: true
-                            text: "256px."
+                            text: "192px."
                             onClicked: parent.checkedButton=8;
+                        }
+                        PlasmaComponents.Button{
+                            width: parent.buttonSize
+                            checkable: true
+                            text: "256px."
+                            onClicked: parent.checkedButton=9;
                         }
 
                         Component.onCompleted: {
@@ -809,8 +812,11 @@ Item{
                                 case 128:
                                     iconsFlow.checkedButton = 7;
                                     break;
-                                case 256:
+                                case 192:
                                     iconsFlow.checkedButton = 8;
+                                    break;
+                                case 256:
+                                    iconsFlow.checkedButton = 9;
                                     break;
                                 default:
                                     iconsFlow.checkedButton = 5;
@@ -823,6 +829,7 @@ Item{
 
                     } //end of Flow
 
+                    /*
                     PlasmaComponents.CheckBox{
                         id: smallJumpsChk
                         text: i18n("Small steps for icon sizes in automatic modes")
@@ -838,7 +845,7 @@ Item{
                             checked = plasmoid.configuration.smallAutomaticIconJumps;
                             inStartup = false;
                         }
-                    }
+                    } */
                 }
 
             }

@@ -37,7 +37,7 @@
       <default>10</default>
     </entry>
     <entry name="iconSize" type="Int">
-      <default>48</default>
+      <default>64</default>
     </entry>
     <entry name="useThemePanel" type="Bool">
       <default>false</default>
@@ -49,7 +49,7 @@
       <default>false</default>
     </entry>
     <entry name="smallAutomaticIconJumps" type="Bool">
-      <default>false</default>
+      <default>true</default>
     </entry>
     <entry name="splitterPosition" type="Int">
       <default>-1</default>
