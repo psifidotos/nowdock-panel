@@ -84,7 +84,7 @@ protected:
 
 private Q_SLOTS:
     void activeWindowChanged(WId win);
-    void hide();
+    void updateState();
     void initWindow();
     void setIsHovered(bool state);
     void updateVisibilityFlags();
@@ -99,8 +99,8 @@ private:
     bool m_windowIsInAttention;
 
     QRect m_maskArea;
-    QTimer m_hideTimer;
     QTimer m_initTimer;
+    QTimer m_updateStateTimer;
 
     Plasma::Types::Location m_location;
 

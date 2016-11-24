@@ -31,9 +31,9 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     connect(KWindowSystem::self(), SIGNAL(windowRemoved(WId)), this, SLOT(windowRemoved(WId)));
     m_activeWindow = KWindowSystem::activeWindow();
 
-    m_hideTimer.setSingleShot(true);
-    m_hideTimer.setInterval(1500);
-    connect(&m_hideTimer, &QTimer::timeout, this, &PanelWindow::hide);
+    m_updateStateTimer.setSingleShot(true);
+    m_updateStateTimer.setInterval(1500);
+    connect(&m_updateStateTimer, &QTimer::timeout, this, &PanelWindow::updateState);
 
     m_initTimer.setSingleShot(true);
     m_initTimer.setInterval(500);
@@ -208,19 +208,24 @@ void PanelWindow::updateVisibilityFlags()
     updateWindowPosition();
 
     if (m_panelVisibility == LetWindowsCover) {
-        m_hideTimer.start();
+        m_updateStateTimer.start();
     } else if (m_panelVisibility == WindowsGoBelow) {
         showOnTop();
     } else if (m_panelVisibility == BelowActive) {
         showOnTop();
-        m_hideTimer.start();
+        m_updateStateTimer.start();
     } else if (m_panelVisibility == AlwaysVisible) {
         KWindowSystem::setType(winId(), NET::Dock);
         updateWindowPosition();
     }
 }
 
-void PanelWindow::hide()
+/*
+ * It is used from the m_updateStateTimer in order to check the dock's
+ * visibility and trigger events and actions which are needed to
+ * respond accordingly
+ */
+void PanelWindow::updateState()
 {
     //FIXME: check also
     // the screen in which are active and the dock
@@ -427,20 +432,20 @@ bool PanelWindow::event(QEvent *e)
 
     if (e->type() == QEvent::Enter) {
         setIsHovered(true);
-        m_hideTimer.stop();
+        m_updateStateTimer.stop();
         shrinkTransient();
         showOnTop();
     } else if ((e->type() == QEvent::Leave) && (!isActive()) ) {
         setIsHovered(false);
-        m_hideTimer.start();
+        m_updateStateTimer.start();
     }
 }
 
 void PanelWindow::activeWindowChanged(WId win)
 {
     m_activeWindow = win;
-    if (!m_hideTimer.isActive()) {
-        m_hideTimer.start();
+    if (!m_updateStateTimer.isActive()) {
+        m_updateStateTimer.start();
     }
 }
 
@@ -461,8 +466,8 @@ void PanelWindow::windowChanged (WId id, NET::Properties properties, NET::Proper
         return;
     }
 
-    if ((id==m_activeWindow) && (!m_hideTimer.isActive())) {
-        m_hideTimer.start();
+    if ((id==m_activeWindow) && (!m_updateStateTimer.isActive())) {
+        m_updateStateTimer.start();
     }
 }
 
