@@ -161,9 +161,27 @@ Item{
                 Column{
                     width:parent.width
                     spacing: 0.8*theme.defaultFont.pointSize
-                    PlasmaComponents.Label{
-                        text: i18n("Applets Alignment")
-                        font.pointSize: 1.5 * theme.defaultFont.pointSize
+
+                    RowLayout{
+                        width: parent.width
+                        PlasmaComponents.Label{
+                            text: i18n("Applets Alignment")
+                            font.pointSize: 1.5 * theme.defaultFont.pointSize
+                            Layout.alignment: Qt.AlignLeft
+                        }
+
+                        PlasmaComponents.Label{
+                            font.pointSize: theme.defaultFont.pointSize
+                            font.italic: true
+                            opacity: 0.6
+
+                            Layout.alignment: Qt.AlignRight
+                            horizontalAlignment: Text.AlignRight
+                           // width: parent.width
+
+                            text: i18n("ver: ") +"0.4.90"
+
+                        }
                     }
 
                     //user set Panel Positions
@@ -828,6 +846,7 @@ Item{
 
 
                     } //end of Flow
+
 
                     /*
                     PlasmaComponents.CheckBox{
