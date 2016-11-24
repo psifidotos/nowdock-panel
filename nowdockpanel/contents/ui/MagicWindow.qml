@@ -31,6 +31,8 @@ NowDock.PanelWindow{
 
     property int length: root.isVertical ? screenGeometry.height : screenGeometry.width
     property int normalThickness: root.statesLineSize + root.iconSize + root.iconMargin + 1
+    //needed in some animations
+    property int midThickness: root.statesLineSize + (1 + (0.65 * (root.zoomFactor-1)))*(root.iconSize+root.iconMargin)
     property int thickness: root.statesLineSize + ((root.iconSize+root.iconMargin) * root.zoomFactor) + 2
 
     onIsHoveredChanged: {
@@ -101,9 +103,8 @@ NowDock.PanelWindow{
 
             tempThickness = normalThickness;
 
-            //if(windowInAttention) {
             if (root.animationsNeedOnlyThickness > 0) {
-                tempThickness = thickness - root.iconSize/2;
+                tempThickness = midThickness;
             }
 
             //configure the x,y position based on thickness
@@ -127,6 +128,10 @@ NowDock.PanelWindow{
             //grow only on length and not thickness
             if(mainLayout.animatedLength) {
                 tempThickness = normalThickness;
+
+                if (root.animationsNeedOnlyThickness > 0) {
+                    tempThickness = midThickness;
+                }
 
                 //configure the x,y position based on thickness
                 if(plasmoid.location === PlasmaCore.Types.RightEdge)
