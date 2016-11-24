@@ -64,7 +64,8 @@ DragDrop.DropArea {
                                                 Math.min(automaticIconSizeBasedSize, automaticIconSizeBasedZoom) : automaticIconSizeBasedZoom ):
                                            Math.min(automaticIconSizeBasedZoom,plasmoid.configuration.iconSize)*/
 
-    property int iconSize: plasmoid.configuration.iconSize
+    property int iconSize: (automaticIconSizeBasedSize>0 && plasmoid.immutable) ? Math.min(automaticIconSizeBasedSize, plasmoid.configuration.iconSize) :
+                                                                                  plasmoid.configuration.iconSize
     property int iconStep: 8
     property int panelEdgeSpacing: iconSize / 2
     property int previousAllTasks: -1    //is used to forbit updateAutomaticIconSize when hovering
@@ -698,7 +699,7 @@ DragDrop.DropArea {
     //sizeViolation variable is used when for any reason the mainLayout
     //exceeds the panel size
     function updateAutomaticIconSize(sizeViolation){
-      /*  if(((layoutsContainer.hoveredIndex == -1)
+        if(((layoutsContainer.hoveredIndex == -1)
             && (nowDockHoveredIndex == -1)
             && ((smallAutomaticIconJumps && (iconSize % iconStep) == 0 ) || (!smallAutomaticIconJumps && sizeIsFromAutomaticMode(iconSize)) )
             && previousAllTasks !== layoutsContainer.allCount)
@@ -720,12 +721,12 @@ DragDrop.DropArea {
             if(root.isHorizontal){
                 layoutSize = mainLayout.width + secondLayout.width;
                 //rootSize = root.width;
-                rootSize = magicWin ? magicWin.width : root.width;
+                rootSize = magicWin && magicWin.visible ? magicWin.width : root.width;
             }
             else{
                 layoutSize = mainLayout.height + secondLayout.height;
                 //rootSize = root.height;
-                rootSize = magicWin ? magicWin.height : root.height;
+                rootSize = magicWin && magicWin.visible ? magicWin.height : root.height;
             }
 
             //compute how big is going to be layout with the new icon size
@@ -754,7 +755,7 @@ DragDrop.DropArea {
 
             if( (!removedItem || sizeViolation)
                     && currentPredictedSize>rootSize
-                    && (futureSizeSmaller<rootSiz|| sizeViolation)){
+                    && (futureSizeSmaller<rootSize|| sizeViolation)){
                 result = nextIconSize;
                 //   console.log("Should Decrease: "+result);
             }
@@ -770,7 +771,6 @@ DragDrop.DropArea {
                         nextIconSize = iconsArray[currentIconIndex+1];
                 }
 
-
                 var dif2 = nextIconSize / iconSize ;
                 var limitToGrow = zoomFactor*(nextIconSize+2*dif2*iconMargin);
                 var futureSize = dif2*layoutSize //- limitToGrow;
@@ -778,18 +778,19 @@ DragDrop.DropArea {
                 if((removedItem || onlyAddingStarup || !sizeViolation)
                         && layoutSize<=rootSize
                         && futureSize<=rootSize) {
-                   // if(onlyAddingStarup)
-                       // result = automaticIconSizeBasedZoom;
-                   // else
+                    if(onlyAddingStarup) {
+                        //result = automaticIconSizeBasedZoom;
+                        result = plasmoid.configuration.iconSize;
+                    } else {
                         result = nextIconSize;
+                    }
                     //    console.log("Should Increase: "+result);
                 }
             }
 
-
             if(result>0)
                 automaticIconSizeBasedSize = result;
-        }*/
+        }
     }
 
     function updateLayouts(){
@@ -949,7 +950,6 @@ DragDrop.DropArea {
 
         // This is the main Layout, in contrary with the others
         Grid{
-            //    id: currentLayout
             id: mainLayout
 
             columns: root.isVertical ? 1 : 0
@@ -966,31 +966,28 @@ DragDrop.DropArea {
             property int count: children.length
 
             onHeightChanged: {
-               // if(root.isVertical && automaticSize){
-              //   if(root.isVertical){
-               //     if(mainLayout.height>root.height)
-                 //       updateAutomaticIconSize(true);
-                 //  else
-                  //      updateAutomaticIconSize(false);
-              //  }
-
                 if (root.isVertical && magicWin && plasmoid.immutable) {
                     checkLayoutsAnimatedLength();
                 }
 
+                if(root.isVertical && plasmoid.immutable && magicWin && magicWin.visible) {
+                    if (mainLayout.height > magicWin.height)
+                        updateAutomaticIconSize(true);
+                    else
+                        updateAutomaticIconSize(false);
+                }
             }
 
             onWidthChanged: {
-                //if(root.isHorizontal && automaticSize){
-               // if(root.isHorizontal){
-                //    if(mainLayout.width>root.width)
-                //        updateAutomaticIconSize(true);
-                 //   else
-                  //      updateAutomaticIconSize(false);
-           //     }
-
                 if (root.isHorizontal && magicWin && plasmoid.immutable) {
                     checkLayoutsAnimatedLength();
+                }
+
+                if(root.isHorizontal && plasmoid.immutable && magicWin && magicWin.visible) {
+                    if (mainLayout.width > magicWin.width)
+                        updateAutomaticIconSize(true);
+                    else
+                        updateAutomaticIconSize(false);
                 }
             }
 
