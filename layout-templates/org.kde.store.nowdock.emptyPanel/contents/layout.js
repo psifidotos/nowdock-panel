@@ -26,6 +26,7 @@ if (freeEdges["bottom"] == true) {
 }
 
 panel.height = 48 + 12
+panel.hiding = "windowscover"
 
 //panel.addWidget("org.kde.plasma.showActivityManager")
 //panel.addWidget("org.kde.store.nowdock.plasmoid")
