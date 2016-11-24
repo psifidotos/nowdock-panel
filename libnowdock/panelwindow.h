@@ -28,6 +28,11 @@ class PanelWindow : public QQuickWindow {
      */
     Q_PROPERTY(QRect maskArea READ maskArea WRITE setMaskArea NOTIFY maskAreaChanged)
 
+    /**
+     * the dock's screen geometry, e.g. it is used to set correctly x, y values
+     */
+    Q_PROPERTY(QRect screenGeometry READ screenGeometry NOTIFY screenGeometryChanged)
+
     Q_PROPERTY(Plasma::Types::Location location READ location WRITE setLocation NOTIFY locationChanged)
 
     Q_PROPERTY(PanelVisibility panelVisibility READ panelVisibility WRITE setPanelVisibility NOTIFY panelVisibilityChanged)
@@ -53,6 +58,8 @@ public:
     QRect maskArea() const;
     void setMaskArea(QRect area);
 
+    QRect screenGeometry() const;
+
     Plasma::Types::Location location() const;
     void setLocation(Plasma::Types::Location location);
 
@@ -63,10 +70,10 @@ Q_SIGNALS:
     void isHoveredChanged();
     void locationChanged();
     void maskAreaChanged();
-    void panelVisibilityChanged();
-    //are used to triger the sliding animations from the qml part
-    void mustBeRaised();
+    void mustBeRaised(); //are used to triger the sliding animations from the qml part
     void mustBeLowered();
+    void panelVisibilityChanged();
+    void screenGeometryChanged();
     void windowInAttentionChanged();
 
 public slots:
@@ -87,6 +94,7 @@ private Q_SLOTS:
     void updateState();
     void initWindow();
     void setIsHovered(bool state);
+    void screenChanged(QScreen *screen);
     void updateVisibilityFlags();
     void updateWindowPosition();
     void windowChanged (WId id, NET::Properties properties, NET::Properties2 properties2);
@@ -99,6 +107,7 @@ private:
     bool m_windowIsInAttention;
 
     QRect m_maskArea;
+    QScreen *m_screen;
     QTimer m_initTimer;
     QTimer m_updateStateTimer;
 

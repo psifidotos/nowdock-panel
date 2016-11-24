@@ -31,6 +31,12 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     connect(KWindowSystem::self(), SIGNAL(windowRemoved(WId)), this, SLOT(windowRemoved(WId)));
     m_activeWindow = KWindowSystem::activeWindow();
 
+    m_screen = screen();
+    connect(this, SIGNAL(screenChanged(QScreen *)), this, SLOT(screenChanged(QScreen *)));
+    if (m_screen) {
+        connect(m_screen, SIGNAL(geometryChanged(const QRect &)), this, SIGNAL(screenGeometryChanged()));
+    }
+
     m_updateStateTimer.setSingleShot(true);
     m_updateStateTimer.setInterval(1500);
     connect(&m_updateStateTimer, &QTimer::timeout, this, &PanelWindow::updateState);
@@ -95,6 +101,11 @@ void PanelWindow::setPanelVisibility(PanelWindow::PanelVisibility state)
 
     m_panelVisibility = state;
     emit panelVisibilityChanged();
+}
+
+QRect PanelWindow::screenGeometry() const
+{
+    return (m_screen ? m_screen->geometry() : QRect());
 }
 
 
@@ -188,17 +199,17 @@ void PanelWindow::shrinkTransient()
 void PanelWindow::updateWindowPosition()
 {
     if (m_location == Plasma::Types::BottomEdge) {
-        setX(0);
-        setY(screen()->size().height() - height());
+        setX(m_screen->geometry().x());
+        setY(m_screen->geometry().height() - height());
     } else if (m_location == Plasma::Types::TopEdge) {
-        setX(0);
-        setY(0);
+        setX(m_screen->geometry().x());
+        setY(m_screen->geometry().y());
     } else if (m_location == Plasma::Types::LeftEdge) {
-        setX(0);
-        setY(0);
+        setX(m_screen->geometry().x());
+        setY(m_screen->geometry().y());
     } else if (m_location == Plasma::Types::RightEdge) {
-        setX(screen()->size().width() - width());
-        setY(0);
+        setX(m_screen->geometry().width() - width());
+        setY(m_screen->geometry().y());
     }
 }
 
@@ -227,8 +238,6 @@ void PanelWindow::updateVisibilityFlags()
  */
 void PanelWindow::updateState()
 {
-    //FIXME: check also
-    // the screen in which are active and the dock
     KWindowInfo dockInfo(winId(), NET::WMState);
 
     if (m_panelVisibility == BelowActive) {
@@ -419,10 +428,11 @@ bool PanelWindow::isDesktop(WId id)
 
 /***************/
 
-void PanelWindow::showEvent(QShowEvent *event)
+void PanelWindow::activeWindowChanged(WId win)
 {
-    if ( !m_maskArea.isNull() ) {
-        setMask(m_maskArea);
+    m_activeWindow = win;
+    if (!m_updateStateTimer.isActive()) {
+        m_updateStateTimer.start();
     }
 }
 
@@ -441,13 +451,27 @@ bool PanelWindow::event(QEvent *e)
     }
 }
 
-void PanelWindow::activeWindowChanged(WId win)
+void PanelWindow::screenChanged(QScreen *screen)
 {
-    m_activeWindow = win;
-    if (!m_updateStateTimer.isActive()) {
-        m_updateStateTimer.start();
+    if (screen) {
+        if (m_screen) {
+            disconnect(m_screen, SIGNAL(geometryChanged(const QRect &)), this, SIGNAL(screenGeometryChanged()));
+        }
+
+        m_screen = screen;
+        connect(m_screen, SIGNAL(geometryChanged(const QRect &)), this, SIGNAL(screenGeometryChanged()));
+
+        emit screenGeometryChanged();
     }
 }
+
+void PanelWindow::showEvent(QShowEvent *event)
+{
+    if ( !m_maskArea.isNull() ) {
+        setMask(m_maskArea);
+    }
+}
+
 
 void PanelWindow::windowChanged (WId id, NET::Properties properties, NET::Properties2 properties2)
 {

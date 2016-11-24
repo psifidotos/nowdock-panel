@@ -1,12 +1,10 @@
 import QtQuick 2.1
-import QtQuick.Window 2.2
 
 import org.kde.plasma.core 2.0 as PlasmaCore
 
 import org.kde.nowdock 0.1 as NowDock
 
 NowDock.PanelWindow{
-//Window{
     id: window
 
     location: plasmoid.location
@@ -14,29 +12,26 @@ NowDock.PanelWindow{
 
     x: {
         if (plasmoid.location === PlasmaCore.Types.RightEdge) {
-            return screenWidth - thickness;
+            return screenGeometry.x + (screenGeometry.width - thickness);
         } else {
-            return 0;
+            return screenGeometry.x;
         }
     }
 
     y: {
         if (plasmoid.location === PlasmaCore.Types.BottomEdge) {
-            return screenHeight - thickness;
+            return screenGeometry.y + (screenGeometry.height - thickness);
         } else {
-            return 0;
+            return screenGeometry.y;
         }
     }
 
     width: root.isHorizontal ? length : thickness
     height: root.isHorizontal ? thickness : length
 
-    property int length: root.isVertical ? screenHeight : screenWidth
+    property int length: root.isVertical ? screenGeometry.height : screenGeometry.width
     property int normalThickness: root.statesLineSize + root.iconSize + root.iconMargin + 1
     property int thickness: root.statesLineSize + ((root.iconSize+root.iconMargin) * root.zoomFactor) + 2
-
-    property int screenWidth: Screen.width
-    property int screenHeight: Screen.height
 
     onIsHoveredChanged: {
         if(isHovered) {
@@ -125,9 +120,9 @@ NowDock.PanelWindow{
             }
         } else {
             if(root.isHorizontal)
-                tempLength = Screen.width;
+                tempLength = screenGeometry.width;
             else
-                tempLength = Screen.height;
+                tempLength = screenGeometry.height;
 
             //grow only on length and not thickness
             if(mainLayout.animatedLength) {
