@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
-"POT-Creation-Date: 2016-10-30 09:52+0200\n"
+"POT-Creation-Date: 2016-11-24 18:04+0200\n"
 "PO-Revision-Date: 2016-10-30 09:53+0200\n"
 "Last-Translator: Michail Vοurlakos <mvourlakos@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-doc@kde.org>\n"
@@ -45,51 +45,79 @@ msgstr "Κάτω"
 msgid "Right"
 msgstr "Δεξιά"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:287
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:296
+msgid "Visibility"
+msgstr ""
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:352
+msgid "Below Active"
+msgstr ""
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:365
+msgid "Below Maximized"
+msgstr ""
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:378
+msgid "Let Windows Cover"
+msgstr ""
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:392
+msgid "Windows Go Below"
+msgstr ""
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:406
+msgid "Auto Hide"
+msgstr ""
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:419
+msgid "Always Visible"
+msgstr ""
+
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:440
 msgid "Zoom On Hover"
 msgstr "Εστίαση"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:306
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:459
 msgid "Zoom Factor"
 msgstr "Συντελεστής Εστίασης"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:355
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:508
 msgid "Background"
 msgstr "Παρασκήνιο"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:361
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:514
 msgid "Show Panel Background"
 msgstr "Εμφάνιση Παρασκηνίου"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:391
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:544
 msgid "Size"
 msgstr "Μέγεθος"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:437
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:590
 msgid "Shadows"
 msgstr "Σκιές"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:473
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:628
 msgid "None"
 msgstr "Καμία"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:478
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:633
 msgid "Only for locked applets"
 msgstr "Μόνο κλειδωμένες εφαρμογές"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:483
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:638
 msgid "All applets"
 msgstr "Παντού"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:511
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:666
 msgid "Applets Size"
 msgstr "Μέγεθος Εφαρμογών"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:575
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:731
 msgid "Automatic"
 msgstr "Αυτόματα"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:672
+#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:828
 msgid "Small steps for icon sizes in automatic modes"
 msgstr "Μικρά βήματα στην αυτόματη εναλλαγή μεγέθους"
 
@@ -109,4 +137,3 @@ msgstr "Προκαθορισμένος Now Dock"
 #: ../po/rc.cpp:4 rc.cpp:4
 msgid "Empty Now Dock Panel"
 msgstr "Κενός Now Dock"
-
