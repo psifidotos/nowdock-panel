@@ -271,20 +271,52 @@ void PanelWindow::updateState()
             }
         }
     } else if (m_panelVisibility == BelowMaximized) {
-        KWindowInfo activeInfo(m_activeWindow, NET::WMState);
+        KWindowInfo activeInfo(m_activeWindow, NET::WMGeometry | NET::WMState);
 
-        if ( isMaximized(&activeInfo) ) {
-            if (isOnTop(&dockInfo)) {
-                mustBeLowered();     //showNormal();
+        if ( activeInfo.valid() ) {
+            QRect maskSize;
+
+            if ( !m_maskArea.isNull() ) {
+                maskSize = QRect(x()+m_maskArea.x(), y()+m_maskArea.y(), m_maskArea.width(), m_maskArea.height());
+            } else {
+                maskSize = QRect(x(), y(), width(), height());
             }
-        } else if (isNormal(&dockInfo)){
-            mustBeRaised();     //showOnTop();
-        }
 
-    } else if (m_panelVisibility == LetWindowsCover){
-        if (isOnTop(&dockInfo) || isNormal(&dockInfo)) {
-            mustBeLowered();  //showOnBottom();
+            if ( !isDesktop(m_activeWindow) && isMaximized(&activeInfo) && maskSize.intersects(activeInfo.geometry()) ) {
+                if ( isOnTop(&dockInfo) ) {
+                    if (!m_isHovered && !m_windowIsInAttention) {
+                        mustBeLowered();                    //showNormal();
+                    }
+                } else {
+                    if ( m_windowIsInAttention ) {
+                        mustBeRaised();                     //showOnTop();
+                    }
+                }
+            } else if (isNormal(&dockInfo)){
+                if(!isDesktop(m_activeWindow) && dockIsCovered()) {
+                    mustBeRaised();
+                } else {
+                    showOnTop();
+                }
+            }
         }
+    } else if (m_panelVisibility == LetWindowsCover) {
+        //FIXME::: This must be updated....
+        /*if (!m_isHovered && isOnTop(&dockInfo)) {
+            if( !dockIsCovered() ) {
+                mustBeLowered();
+            } else {
+                showOnBottom();
+            }
+        } else if ( m_windowIsInAttention ) {
+            if( !isOnTop(&dockInfo) ) {
+                if (dockIsCovered()) {
+                    mustBeRaised();
+                } else {
+                    showOnTop();
+                }
+            }
+        }*/
     }
 }
 
