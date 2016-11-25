@@ -10,7 +10,7 @@ NowDock.PanelWindow{
     location: plasmoid.location
     panelVisibility: plasmoid.configuration.panelVisibility
 
-    x: {
+   /* x: {
         if (plasmoid.location === PlasmaCore.Types.RightEdge) {
             return screenGeometry.x + (screenGeometry.width - thickness);
         } else {
@@ -24,16 +24,24 @@ NowDock.PanelWindow{
         } else {
             return screenGeometry.y;
         }
-    }
+    }*/
 
     width: root.isHorizontal ? length : thickness
     height: root.isHorizontal ? thickness : length
+
+    property bool inStartup: root.inStartup
 
     property int length: root.isVertical ? screenGeometry.height : screenGeometry.width
     property int normalThickness: root.statesLineSize + root.iconSize + root.iconMargin + 1
     //needed in some animations
     property int midThickness: root.statesLineSize + (1 + (0.65 * (root.zoomFactor-1)))*(root.iconSize+root.iconMargin)
     property int thickness: root.statesLineSize + ((root.iconSize+root.iconMargin) * root.zoomFactor) + 2
+
+    onInStartupChanged: {
+        if (!inStartup) {
+            delayAnimationTimer.start();
+        }
+    }
 
     onIsHoveredChanged: {
         if(isHovered) {
@@ -48,34 +56,38 @@ NowDock.PanelWindow{
         }
     }
 
+    onMustBeRaised: slidingAnimation.init(true);
+    onMustBeLowered: slidingAnimation.init(false);
+
     onVisibleChanged:{
         if (visible) {  //shrink the parent panel window
-           initialize();  
+           initialize();
         }
     }
 
-   // onWindowInAttentionChanged: updateMaskArea();
+    function initializeSlidingInAnimation() {
+        // Hide in Startup in order to show the contents with beautiful sliding animation
+        var hiddenSpace;
 
-    Rectangle{
-        id: windowBackground
-        anchors.fill: parent
-        border.color: "red"
-        border.width: 1
-        color: "transparent"
+        if ((location===PlasmaCore.Types.LeftEdge)||(location===PlasmaCore.Types.TopEdge)) {
+            hiddenSpace = -normalThickness;
+        } else {
+            hiddenSpace = normalThickness;
+        }
 
-        visible: root.debugMode
-    }
-    Rectangle{
-        x: maskArea.x
-        y: maskArea.y
-        height: maskArea.height
-        width: maskArea.width
+        if (root.isVertical) {
+            layoutsContainer.x = hiddenSpace;
+        } else {
+            layoutsContainer.y = hiddenSpace;
+        }
 
-        border.color: "green"
-        border.width: 1
-        color: "transparent"
+        layoutsContainer.opacity = 1;
 
-        visible: root.debugMode
+        if (!inStartup) {
+            //console.log("I am in startup case...");
+            slidingAnimation.init(true);
+            //delayAnimationTimer.start();
+        }
     }
 
     function updateMaskArea() {
@@ -177,10 +189,29 @@ NowDock.PanelWindow{
 
     }
 
-    /***Hiding/Showing Animations*****/
+    Rectangle{
+        id: windowBackground
+        anchors.fill: parent
+        border.color: "red"
+        border.width: 1
+        color: "transparent"
 
-    onMustBeRaised: slidingAnimation.init(true);
-    onMustBeLowered: slidingAnimation.init(false);
+        visible: root.debugMode
+    }
+    Rectangle{
+        x: maskArea.x
+        y: maskArea.y
+        height: maskArea.height
+        width: maskArea.width
+
+        border.color: "green"
+        border.width: 1
+        color: "transparent"
+
+        visible: root.debugMode
+    }
+
+    /***Hiding/Showing Animations*****/
 
     SequentialAnimation{
         id: slidingAnimation
@@ -243,7 +274,7 @@ NowDock.PanelWindow{
                 start();
             }
         }
-    }
+    }   
 
 
     ////////////// Timers //////
@@ -256,6 +287,16 @@ NowDock.PanelWindow{
             if (root.nowDock) {
                nowDock.clearZoom();
             }
+        }
+    }
+
+    //Timer to delay onLeave event
+    Timer {
+        id: delayAnimationTimer
+        interval: 1000
+        onTriggered: {
+            layoutsContainer.opacity = 1;
+            slidingAnimation.init(true);
         }
     }
 }

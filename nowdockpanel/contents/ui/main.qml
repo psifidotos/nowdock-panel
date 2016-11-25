@@ -40,7 +40,7 @@ DragDrop.DropArea {
     ////
 
     ////BEGIN properties
-    property bool debugMode: true
+    property bool debugMode: false
 
     property bool automaticSize: plasmoid.configuration.automaticIconSize
     property bool immutable: plasmoid.immutable
@@ -58,7 +58,7 @@ DragDrop.DropArea {
 
     property int animations: 0 //zoomed applets it is used basically on masking for magic window
     property int animationsNeedOnlyThickness: 0 //animations that need only thickness
-    property int automaticIconSizeBasedSize: 48
+    property int automaticIconSizeBasedSize: 0
     /// FIXME : The icon size situation
    /* property int iconSize: automaticSize ? ( (automaticIconSizeBasedSize>0 && plasmoid.immutable)  ?
                                                 Math.min(automaticIconSizeBasedSize, automaticIconSizeBasedZoom) : automaticIconSizeBasedZoom ):
@@ -910,30 +910,42 @@ DragDrop.DropArea {
     MagicWindow{
         id: magicWin
 
-        visible: plasmoid.immutable && !inStartup
+        visible: false
     }
 
     Item{
         id: layoutsContainer
 
-        parent: plasmoid.immutable && magicWin && magicWin.visible && !inStartup ? magicWin.contentItem : root
-        //anchors.fill: parent
+        signal updateScale(int delegateIndex, real newScale, real step)
+
+        property bool parentMagicWinFlag: plasmoid.immutable && magicWin && !inStartup
+
+        property int allCount: root.nowDock ? mainLayout.count-1+nowDock.tasksCount : mainLayout.count
+        property int currentSpot: -1000
+        property int hoveredIndex: -1
+
         x: 0
         y: 0
         width: parent.width
         height: parent.height
 
-        property int allCount: root.nowDock ? mainLayout.count-1+nowDock.tasksCount : mainLayout.count
-
-        //  property int count: children.length
-        property int currentSpot: -1000
-        property int hoveredIndex: -1
-
-        signal updateScale(int delegateIndex, real newScale, real step)
+        opacity: 0
 
         onParentChanged: {
             if (magicWin && magicWin.contentItem && (parent === magicWin.contentItem)) {
                 magicWin.updateMaskArea();
+            }
+        }
+
+        onParentMagicWinFlagChanged: {
+            if (parentMagicWinFlag) {
+                opacity = 0;
+                parent = magicWin.contentItem;
+                magicWin.visible = true;
+                magicWin.initializeSlidingInAnimation();
+            } else {
+                parent = root;
+                magicWin.visible = false;
             }
         }
 
@@ -970,7 +982,7 @@ DragDrop.DropArea {
                     checkLayoutsAnimatedLength();
                 }
 
-                if(root.isVertical && plasmoid.immutable && magicWin && magicWin.visible) {
+                if(root.isVertical && plasmoid.immutable && magicWin && magicWin.visible && !root.inStartup) {
                     if (mainLayout.height > magicWin.height)
                         updateAutomaticIconSize(true);
                     else
@@ -983,7 +995,7 @@ DragDrop.DropArea {
                     checkLayoutsAnimatedLength();
                 }
 
-                if(root.isHorizontal && plasmoid.immutable && magicWin && magicWin.visible) {
+                if(root.isHorizontal && plasmoid.immutable && magicWin && magicWin.visible && !root.inStartup) {
                     if (mainLayout.width > magicWin.width)
                         updateAutomaticIconSize(true);
                     else
