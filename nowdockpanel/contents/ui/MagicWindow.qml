@@ -83,10 +83,8 @@ NowDock.PanelWindow{
 
         layoutsContainer.opacity = 1;
 
-        if (!inStartup) {
-            //console.log("I am in startup case...");
-            slidingAnimation.init(true);
-            //delayAnimationTimer.start();
+        if (!inStartup) {      
+            delayAnimationTimer.start();
         }
     }
 
@@ -293,7 +291,7 @@ NowDock.PanelWindow{
     //Timer to delay onLeave event
     Timer {
         id: delayAnimationTimer
-        interval: 1000
+        interval: window.inStartup ? 1000 : 500
         onTriggered: {
             layoutsContainer.opacity = 1;
             slidingAnimation.init(true);

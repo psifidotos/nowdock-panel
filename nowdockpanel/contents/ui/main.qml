@@ -397,6 +397,10 @@ DragDrop.DropArea {
         plasmoid.action("configure").visible = !plasmoid.immutable;
         plasmoid.action("configure").enabled = !plasmoid.immutable;
         updateNowDockConfiguration();
+
+        if (!plasmoid.immutable) {
+            inStartup = false;
+        }
     }
 
     Component.onDestruction: {
@@ -918,7 +922,7 @@ DragDrop.DropArea {
 
         signal updateScale(int delegateIndex, real newScale, real step)
 
-        property bool parentMagicWinFlag: plasmoid.immutable && magicWin && !inStartup
+        property bool parentMagicWinFlag: plasmoid.immutable && magicWin && !root.inStartup
 
         property int allCount: root.nowDock ? mainLayout.count-1+nowDock.tasksCount : mainLayout.count
         property int currentSpot: -1000
@@ -929,7 +933,13 @@ DragDrop.DropArea {
         width: parent.width
         height: parent.height
 
-        opacity: 0
+        Component.onCompleted: {
+            if(plasmoid.immutable) {
+                opacity = 0;
+            } else {
+                opacity = 1;
+            }
+        }
 
         onParentChanged: {
             if (magicWin && magicWin.contentItem && (parent === magicWin.contentItem)) {
