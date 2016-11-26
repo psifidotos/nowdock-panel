@@ -926,12 +926,18 @@ DragDrop.DropArea {
         anchors.fill: parent
         hoverEnabled: true
         onEntered: {
-            magicWin.showOnTop();
-         //   console.log(magicWin.x+" - "+magicWin.y+" - "+magicWin.width+" - "+magicWin.height);
-         //   console.log(magicWin.maskArea.x+" - "+magicWin.maskArea.y+" - "+magicWin.maskArea.width+" - "+magicWin.maskArea.height);
+            if (plasmoid.immutable && magicWin && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) {
+                magicWin.updateMaskArea();
+                magicWin.mustBeRaised();
+            } else {
+                magicWin.showOnTop();
+            }
         }
-        onPositionChanged: {
-            //magicWin.showOnTop();
+
+        onExited: {
+            if (plasmoid.immutable && magicWin && !magicWin.isHovered && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) {
+                hideMagicWindowInAutoHide.start();
+            }
         }
     }
 
@@ -1114,6 +1120,19 @@ DragDrop.DropArea {
     ///////////////END UI elements
 
     ///////////////BEGIN TIMER elements
+    Timer {
+        id:hideMagicWindowInAutoHide
+        interval:1500
+        onTriggered: {
+            if (plasmoid.immutable && magicWin && !magicWin.isHovered && !wholeArea.containsMouse
+                    && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) {
+                magicWin.mustBeLowered();
+            }
+
+        }
+    }
+
+
     Timer {
         id: animatedLengthTimer
         interval: 150

@@ -19,6 +19,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     QQuickWindow(parent),
     m_secondInitPass(false),
     m_isAutoHidden(false),
+    m_childrenLength(-1),
     m_demandsAttention(-1),
     m_windowIsInAttention(false),
     m_isHovered(false)
@@ -72,6 +73,9 @@ void PanelWindow::setMaskArea(QRect area)
 
     m_maskArea = area;
     setMask(m_maskArea);
+
+    shrinkTransient();
+
     emit maskAreaChanged();
 }
 
@@ -146,6 +150,21 @@ bool PanelWindow::isHovered() const
     return m_isHovered;
 }
 
+int PanelWindow::childrenLength() const
+{
+    return m_childrenLength;
+}
+
+void PanelWindow::setChildrenLength(int value)
+{
+    if (m_childrenLength == value) {
+        return;
+    }
+
+    m_childrenLength = value;
+    emit childrenLengthChanged();
+}
+
 void PanelWindow::setIsHovered(bool state)
 {
     if (m_isHovered == state) {
@@ -189,26 +208,46 @@ void PanelWindow::shrinkTransient()
         int centerX = x()+width()/2;
         int centerY = y()+height()/2;
 
-        if (m_location == Plasma::Types::BottomEdge) {
-            transientParent()->setMinimumHeight(0);
-            transientParent()->setHeight(newSize);
-            transientParent()->setY(screen()->size().height() - newSize);
-            transientParent()->setX(centerX - transWidth/2);
-        } else if (m_location == Plasma::Types::TopEdge) {
-            transientParent()->setMinimumHeight(0);
-            transientParent()->setHeight(newSize);
-            transientParent()->setY(0);
-            transientParent()->setX(centerX - transWidth/2);
-        } else if (m_location == Plasma::Types::LeftEdge) {
-            transientParent()->setMinimumWidth(0);
-            transientParent()->setWidth(newSize);
-            transientParent()->setX(0);
-            transientParent()->setY(centerY - transHeight/2);
-        } else if (m_location == Plasma::Types::RightEdge) {
-            transientParent()->setMinimumWidth(0);
-            transientParent()->setWidth(newSize);
-            transientParent()->setX(screen()->size().width() - newSize);
-            transientParent()->setY(centerY - transHeight/2);
+        QWindow *transient = transientParent();
+        int screenLength = ((m_location == Plasma::Types::BottomEdge) || (m_location == Plasma::Types::TopEdge)) ?
+                    m_screen->geometry().width() : m_screen->geometry().height();
+
+        int tempLength = qMax(screenLength/2, m_childrenLength);
+
+        if (transient) {
+            if (m_location == Plasma::Types::BottomEdge) {
+                transient->setMinimumHeight(0);
+                transient->setHeight(newSize);
+                transient->setMinimumWidth(tempLength);
+                transient->setWidth(tempLength);
+
+                transient->setY(screen()->size().height() - newSize);
+                transient->setX(centerX - transWidth/2);
+            } else if (m_location == Plasma::Types::TopEdge) {
+                transient->setMinimumHeight(0);
+                transient->setHeight(newSize);
+                transient->setMinimumWidth(tempLength);
+                transient->setWidth(tempLength);
+
+                transient->setY(0);
+                transient->setX(centerX - transWidth/2);
+            } else if (m_location == Plasma::Types::LeftEdge) {
+                transient->setMinimumWidth(0);
+                transient->setWidth(newSize);
+                transient->setMinimumHeight(tempLength);
+                transient->setHeight(tempLength);
+
+                transient->setX(0);
+                transient->setY(centerY - transHeight/2);
+            } else if (m_location == Plasma::Types::RightEdge) {
+                transient->setMinimumWidth(0);
+                transient->setWidth(newSize);
+                transient->setMinimumHeight(tempLength);
+                transient->setHeight(tempLength);
+
+                transient->setX(screen()->size().width() - newSize);
+                transient->setY(centerY - transHeight/2);
+            }
         }
     }
 }

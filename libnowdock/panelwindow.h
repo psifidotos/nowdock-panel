@@ -23,6 +23,8 @@ class PanelWindow : public QQuickWindow {
 
     Q_PROPERTY(bool windowInAttention READ windowInAttention WRITE setWindowInAttention NOTIFY windowInAttentionChanged)
 
+    Q_PROPERTY(int childrenLength READ childrenLength WRITE setChildrenLength NOTIFY childrenLengthChanged)
+
     /**
      * the window mask, can be used in real transparent panels that set only the visual area
      * of the window
@@ -60,6 +62,9 @@ public:
     bool windowInAttention() const;
     void setWindowInAttention(bool state);
 
+    int childrenLength() const;
+    void setChildrenLength(int value);
+
     QRect maskArea() const;
     void setMaskArea(QRect area);
 
@@ -72,6 +77,7 @@ public:
     void setPanelVisibility(PanelVisibility state);
 
 Q_SIGNALS:
+    void childrenLengthChanged();
     void isAutoHiddenChanged();
     void isHoveredChanged();
     void locationChanged();
@@ -112,6 +118,8 @@ private:
     //second pass of the initialization
     bool m_secondInitPass;
     bool m_windowIsInAttention;
+
+    int m_childrenLength;
 
     QRect m_maskArea;
     QScreen *m_screen;

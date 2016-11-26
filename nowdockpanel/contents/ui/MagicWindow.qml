@@ -17,6 +17,7 @@ NowDock.PanelWindow{
     property int thicknessNormal: root.statesLineSize + root.iconSize + root.iconMargin + 1
     property int thicknessZoom: root.statesLineSize + ((root.iconSize+root.iconMargin) * root.zoomFactor) + 2
 
+    childrenLength: root.isHorizontal ? mainLayout.width : mainLayout.height
     location: plasmoid.location
     panelVisibility: plasmoid.configuration.panelVisibility
 
