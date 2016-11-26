@@ -8,6 +8,11 @@ NowDock.PanelWindow{
     id: window
 
     property bool inStartup: root.inStartup
+    property bool  normalState : (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
+                                 && (root.appletsAnimations === 0)
+                                 && (root.animationsNeedBothAxis === 0) && (root.animationsNeedLength === 0)
+                                 && (!mainLayout.animatedLength)
+
 
     property int animationSpeed: root.durationTime * 1.2 * units.longDuration
     property int length: root.isVertical ? screenGeometry.height : screenGeometry.width
@@ -76,6 +81,12 @@ NowDock.PanelWindow{
         }
     }
 
+    onNormalStateChanged: {
+        if(normalState && nowDock) {
+            nowDock.publishTasksGeometries();
+        }
+    }
+
     onVisibleChanged:{
         if (visible) {  //shrink the parent panel window
             initialize();
@@ -109,10 +120,10 @@ NowDock.PanelWindow{
         var localX = 0;
         var localY = 0;
 
-        var normalState = (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
+       /* var normalState = (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
                 && (root.appletsAnimations === 0)
                 && (root.animationsNeedBothAxis === 0) && (root.animationsNeedLength === 0)
-                && (!mainLayout.animatedLength)
+                && (!mainLayout.animatedLength)*/
 
         // debug maskArea criteria
         //console.log(root.nowDockHoveredIndex + ", " + layoutsContainer.hoveredIndex + ", "
