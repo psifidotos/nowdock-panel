@@ -362,6 +362,7 @@ DragDrop.DropArea {
             nowDock.signalAnimationsNeedBothAxis.connect(slotAnimationsNeedBothAxis);
             nowDock.signalAnimationsNeedLength.connect(slotAnimationsNeedLength);
             nowDock.signalAnimationsNeedThickness.connect(slotAnimationsNeedThickness);
+            nowDock.signalDraggingState.connect(slotDisableHiding);
         }
     }
 
@@ -721,6 +722,10 @@ DragDrop.DropArea {
 
         animationsNeedThickness = value;
         magicWin.updateMaskArea();
+    }
+
+    function slotDisableHiding(value) {
+        magicWin.disableHiding = value;
     }
 
     //sizeViolation variable is used when for any reason the mainLayout

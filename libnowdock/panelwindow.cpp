@@ -22,6 +22,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     m_childrenLength(-1),
     m_demandsAttention(-1),
     m_windowIsInAttention(false),
+    m_disableHiding(false),
     m_isHovered(false)
 {    
     setClearBeforeRendering(true);
@@ -143,11 +144,6 @@ void PanelWindow::setWindowInAttention(bool state)
     emit windowInAttentionChanged();
 }
 
-bool PanelWindow::isHovered() const
-{
-    return m_isHovered;
-}
-
 int PanelWindow::childrenLength() const
 {
     return m_childrenLength;
@@ -161,6 +157,31 @@ void PanelWindow::setChildrenLength(int value)
 
     m_childrenLength = value;
     emit childrenLengthChanged();
+}
+
+bool PanelWindow::disableHiding() const
+{
+    return m_disableHiding;
+}
+
+void PanelWindow::setDisableHiding(bool value)
+{
+    if (m_disableHiding == value) {
+        return;
+    }
+
+    m_disableHiding = value;
+
+    emit disableHidingChanged();
+
+    if (!m_disableHiding) {
+        m_updateStateTimer.start();
+    }
+}
+
+bool PanelWindow::isHovered() const
+{
+    return m_isHovered;
 }
 
 void PanelWindow::setIsHovered(bool state)
@@ -297,6 +318,8 @@ void PanelWindow::updateState()
     KWindowInfo dockInfo(winId(), NET::WMState);
     KWindowInfo activeInfo(m_activeWindow, NET::WMGeometry | NET::WMState);
 
+    //qDebug() << "in update state disableHiding:" <<m_disableHiding;
+
     switch (m_panelVisibility) {
     case BelowActive:
         if ( activeInfo.valid() ) {
@@ -310,7 +333,7 @@ void PanelWindow::updateState()
 
             if ( !isDesktop(m_activeWindow) && maskSize.intersects(activeInfo.geometry()) ) {
                 if ( isOnTop(&dockInfo) ) {
-                    if (!m_isHovered && !m_windowIsInAttention) {
+                    if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
                         mustBeLowered();                    //showNormal();
                     }
                 } else {
@@ -339,7 +362,7 @@ void PanelWindow::updateState()
 
             if ( !isDesktop(m_activeWindow) && isMaximized(&activeInfo) && maskSize.intersects(activeInfo.geometry()) ) {
                 if ( isOnTop(&dockInfo) ) {
-                    if (!m_isHovered && !m_windowIsInAttention) {
+                    if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
                         mustBeLowered();                    //showNormal();
                     }
                 } else {
@@ -358,8 +381,10 @@ void PanelWindow::updateState()
         break;
     case LetWindowsCover:
         if (!m_isHovered && isOnTop(&dockInfo)) {
-            if( dockIsCovering() ) {
-                mustBeLowered();
+            if( dockIsCovering()  ) {
+                if (!m_disableHiding) {
+                    mustBeLowered();
+                }
             } else {
                 showOnBottom();
             }
@@ -379,7 +404,7 @@ void PanelWindow::updateState()
     case AutoHide:
         if (m_windowIsInAttention && m_isAutoHidden) {
             emit mustBeRaised();
-        } else if (!m_isHovered) {
+        } else if (!m_isHovered && !m_disableHiding) {
             emit mustBeLowered();
         }
         break;

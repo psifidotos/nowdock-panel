@@ -22,6 +22,8 @@ class PanelWindow : public QQuickWindow {
 
     Q_PROPERTY(bool isHovered READ isHovered NOTIFY isHoveredChanged)
 
+    Q_PROPERTY(bool disableHiding READ disableHiding WRITE setDisableHiding NOTIFY disableHidingChanged)
+
     Q_PROPERTY(bool windowInAttention READ windowInAttention WRITE setWindowInAttention NOTIFY windowInAttentionChanged)
 
     Q_PROPERTY(int childrenLength READ childrenLength WRITE setChildrenLength NOTIFY childrenLengthChanged)
@@ -64,6 +66,9 @@ public:
     explicit PanelWindow(QQuickWindow *parent = Q_NULLPTR);
     ~PanelWindow();
 
+    bool disableHiding() const;
+    void setDisableHiding(bool state);
+
     bool isAutoHidden() const;
     void setIsAutoHidden(bool state);
 
@@ -88,6 +93,7 @@ public:
 
 Q_SIGNALS:
     void childrenLengthChanged();
+    void disableHidingChanged();
     void isAutoHiddenChanged();
     void isHoveredChanged();
     void locationChanged();
@@ -123,6 +129,7 @@ private Q_SLOTS:
     void windowRemoved (WId id);
 
 private:
+    bool m_disableHiding;
     bool m_isAutoHidden;
     bool m_isHovered;
     //second pass of the initialization
