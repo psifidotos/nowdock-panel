@@ -17,6 +17,8 @@ class PanelWindow : public QQuickWindow {
     Q_OBJECT
     Q_ENUMS(PanelVisibility)
 
+    Q_PROPERTY(bool isAutoHidden READ isAutoHidden WRITE setIsAutoHidden NOTIFY isAutoHiddenChanged)
+
     Q_PROPERTY(bool isHovered READ isHovered NOTIFY isHoveredChanged)
 
     Q_PROPERTY(bool windowInAttention READ windowInAttention WRITE setWindowInAttention NOTIFY windowInAttentionChanged)
@@ -50,6 +52,9 @@ public:
     explicit PanelWindow(QQuickWindow *parent = Q_NULLPTR);
     ~PanelWindow();
 
+    bool isAutoHidden() const;
+    void setIsAutoHidden(bool state);
+
     bool isHovered() const;
 
     bool windowInAttention() const;
@@ -67,6 +72,7 @@ public:
     void setPanelVisibility(PanelVisibility state);
 
 Q_SIGNALS:
+    void isAutoHiddenChanged();
     void isHoveredChanged();
     void locationChanged();
     void maskAreaChanged();
@@ -101,6 +107,7 @@ private Q_SLOTS:
     void windowRemoved (WId id);
 
 private:
+    bool m_isAutoHidden;
     bool m_isHovered;
     //second pass of the initialization
     bool m_secondInitPass;

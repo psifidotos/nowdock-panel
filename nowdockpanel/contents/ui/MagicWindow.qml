@@ -7,10 +7,20 @@ import org.kde.nowdock 0.1 as NowDock
 NowDock.PanelWindow{
     id: window
 
+    property bool inStartup: root.inStartup
+
+    property int animationSpeed: root.durationTime * 1.2 * units.longDuration
+    property int length: root.isVertical ? screenGeometry.height : screenGeometry.width
+
+    property int thicknessAutoHidden: 8
+    property int thicknessMid: root.statesLineSize + (1 + (0.65 * (root.zoomFactor-1)))*(root.iconSize+root.iconMargin) //needed in some animations
+    property int thicknessNormal: root.statesLineSize + root.iconSize + root.iconMargin + 1
+    property int thicknessZoom: root.statesLineSize + ((root.iconSize+root.iconMargin) * root.zoomFactor) + 2
+
     location: plasmoid.location
     panelVisibility: plasmoid.configuration.panelVisibility
 
-   /* x: {
+    /* x: {
         if (plasmoid.location === PlasmaCore.Types.RightEdge) {
             return screenGeometry.x + (screenGeometry.width - thickness);
         } else {
@@ -26,16 +36,9 @@ NowDock.PanelWindow{
         }
     }*/
 
-    width: root.isHorizontal ? length : thickness
-    height: root.isHorizontal ? thickness : length
+    width: root.isHorizontal ? length : thicknessZoom
+    height: root.isHorizontal ? thicknessZoom : length
 
-    property bool inStartup: root.inStartup
-
-    property int length: root.isVertical ? screenGeometry.height : screenGeometry.width
-    property int normalThickness: root.statesLineSize + root.iconSize + root.iconMargin + 1
-    //needed in some animations
-    property int midThickness: root.statesLineSize + (1 + (0.65 * (root.zoomFactor-1)))*(root.iconSize+root.iconMargin)
-    property int thickness: root.statesLineSize + ((root.iconSize+root.iconMargin) * root.zoomFactor) + 2
 
     onInStartupChanged: {
         if (!inStartup) {
@@ -49,19 +52,32 @@ NowDock.PanelWindow{
                 delayerTimer.stop();
             }
 
-            updateMaskArea();            
+            updateMaskArea();
         } else {
             // initialize the zoom
             delayerTimer.start();
         }
     }
 
-    onMustBeRaised: slidingAnimation.init(true);
-    onMustBeLowered: slidingAnimation.init(false);
+    onMustBeRaised: {
+        if (panelVisibility === NowDock.PanelWindow.AutoHide) {
+            slidingAnimationAutoHiddenIn.init();
+        } else {
+            slidingAnimation.init(true);
+        }
+    }
+
+    onMustBeLowered: {
+        if (panelVisibility === NowDock.PanelWindow.AutoHide) {
+            slidingAnimationAutoHiddenOut.init();
+        } else {
+            slidingAnimation.init(false);
+        }
+    }
 
     onVisibleChanged:{
         if (visible) {  //shrink the parent panel window
-           initialize();
+            initialize();
         }
     }
 
@@ -70,9 +86,9 @@ NowDock.PanelWindow{
         var hiddenSpace;
 
         if ((location===PlasmaCore.Types.LeftEdge)||(location===PlasmaCore.Types.TopEdge)) {
-            hiddenSpace = -normalThickness;
+            hiddenSpace = -thicknessNormal;
         } else {
-            hiddenSpace = normalThickness;
+            hiddenSpace = thicknessNormal;
         }
 
         if (root.isVertical) {
@@ -83,13 +99,13 @@ NowDock.PanelWindow{
 
         layoutsContainer.opacity = 1;
 
-        if (!inStartup) {      
+        if (!inStartup) {
             delayAnimationTimer.start();
         }
     }
 
     function updateMaskArea() {
-       var localX = 0;
+        var localX = 0;
         var localY = 0;
 
         var normalState = (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
@@ -99,9 +115,9 @@ NowDock.PanelWindow{
 
         // debug maskArea criteria
         //console.log(root.nowDockHoveredIndex + ", " + layoutsContainer.hoveredIndex + ", "
-          //         + root.appletsAnimations+ ", "
-          //         + root.animationsNeedBothAxis + ", " + root.animationsNeedLength + ", " + root.animationsNeedThickness +", "
-          //         + mainLayout.animatedLength);
+        //         + root.appletsAnimations+ ", "
+        //         + root.animationsNeedBothAxis + ", " + root.animationsNeedLength + ", " + root.animationsNeedThickness +", "
+        //         + mainLayout.animatedLength);
 
         var tempLength = root.isHorizontal ? width : height;
         var tempThickness = root.isHorizontal ? height : width;
@@ -115,10 +131,14 @@ NowDock.PanelWindow{
             else
                 tempLength = mainLayout.height + space;
 
-            tempThickness = normalThickness;
+            tempThickness = thicknessNormal;
 
             if (root.animationsNeedThickness > 0) {
-                tempThickness = midThickness;
+                tempThickness = thicknessMid;
+            }
+
+            if (window.isAutoHidden) {
+                tempThickness = thicknessAutoHidden;
             }
 
             //configure the x,y position based on thickness
@@ -141,10 +161,10 @@ NowDock.PanelWindow{
 
             //grow only on length and not thickness
             if(mainLayout.animatedLength) {
-                tempThickness = normalThickness;
+                tempThickness = thicknessNormal;
 
                 if (root.animationsNeedThickness > 0) {
-                    tempThickness = midThickness;
+                    tempThickness = thicknessMid;
                 }
 
                 //configure the x,y position based on thickness
@@ -154,7 +174,7 @@ NowDock.PanelWindow{
                     localY = window.height - tempThickness;
             } else{
                 //use all thickness space
-                tempThickness = thickness;
+                tempThickness = thicknessZoom;
             }
         }
 
@@ -172,7 +192,6 @@ NowDock.PanelWindow{
         if( maskArea.x !== localX || maskArea.y !== localY
                 || maskLength !== tempLength || maskThickness !== tempThickness) {
 
-            // FIXME: For the height(thickness) and hovering we could do better...
             // console.log("Updating mask...");
             var newMaskArea = Qt.rect(-1,-1,0,0);
             newMaskArea.x = localX;
@@ -200,6 +219,7 @@ NowDock.PanelWindow{
 
         visible: root.debugMode
     }
+
     Rectangle{
         x: maskArea.x
         y: maskArea.y
@@ -218,33 +238,32 @@ NowDock.PanelWindow{
     SequentialAnimation{
         id: slidingAnimation
 
-        property int speed: root.durationTime * 1.4 * units.longDuration
         property bool inHalf: false
         property bool raiseFlag: false
 
         SequentialAnimation{
-                PropertyAnimation {
-                    target: layoutsContainer
-                    property: root.isVertical ? "x" : "y"
-                    to: ((location===PlasmaCore.Types.LeftEdge)||(location===PlasmaCore.Types.TopEdge)) ? -normalThickness : normalThickness
-                    duration: slidingAnimation.speed
-                    easing.type: Easing.OutQuad
-                }
+            PropertyAnimation {
+                target: layoutsContainer
+                property: root.isVertical ? "x" : "y"
+                to: ((location===PlasmaCore.Types.LeftEdge)||(location===PlasmaCore.Types.TopEdge)) ? -thicknessNormal : thicknessNormal
+                duration: window.animationSpeed
+                easing.type: Easing.OutQuad
+            }
 
-                PropertyAnimation {
-                    target: slidingAnimation
-                    property: "inHalf"
-                    to: true
-                    duration: 200
-                }
+            PropertyAnimation {
+                target: slidingAnimation
+                property: "inHalf"
+                to: true
+                duration: 200
+            }
 
-                PropertyAnimation {
-                    target: layoutsContainer
-                    property: root.isVertical ? "x" : "y"
-                    to: 0
-                    duration: slidingAnimation.speed
-                    easing.type: Easing.OutQuad
-                }
+            PropertyAnimation {
+                target: layoutsContainer
+                property: root.isVertical ? "x" : "y"
+                to: 0
+                duration: window.animationSpeed
+                easing.type: Easing.OutQuad
+            }
         }
 
         onStopped: {
@@ -276,8 +295,46 @@ NowDock.PanelWindow{
                 start();
             }
         }
-    }   
+    }
+    //////////////// Auto Hide Animations - Slide In - Out
+    SequentialAnimation{
+        id: slidingAnimationAutoHiddenOut
 
+        PropertyAnimation {
+            target: layoutsContainer
+            property: root.isVertical ? "x" : "y"
+            to: ((location===PlasmaCore.Types.LeftEdge)||(location===PlasmaCore.Types.TopEdge)) ? -thicknessNormal : thicknessNormal
+            duration: window.animationSpeed
+            easing.type: Easing.OutQuad
+        }
+
+        onStopped: {
+            window.isAutoHidden = true;
+            updateMaskArea();
+        }
+
+        function init() {
+            start();
+        }
+    }
+
+    SequentialAnimation{
+        id: slidingAnimationAutoHiddenIn
+
+        PropertyAnimation {
+            target: layoutsContainer
+            property: root.isVertical ? "x" : "y"
+            to: 0
+            duration: window.animationSpeed
+            easing.type: Easing.OutQuad
+        }
+
+        function init() {
+            window.isAutoHidden = false;
+            updateMaskArea();
+            start();
+        }
+    }
 
     ////////////// Timers //////
     //Timer to delay onLeave event
@@ -287,7 +344,7 @@ NowDock.PanelWindow{
         onTriggered: {
             root.clearZoom();
             if (root.nowDock) {
-               nowDock.clearZoom();
+                nowDock.clearZoom();
             }
         }
     }
@@ -298,7 +355,11 @@ NowDock.PanelWindow{
         interval: window.inStartup ? 1000 : 500
         onTriggered: {
             layoutsContainer.opacity = 1;
-            slidingAnimation.init(true);
+            if (panelVisibility !== NowDock.PanelWindow.AutoHide) {
+                slidingAnimation.init(true);
+            } else {
+                slidingAnimationAutoHiddenIn.init();
+            }
         }
     }
 }

@@ -53,13 +53,12 @@ DragDrop.DropArea {
     property bool smallAutomaticIconJumps: plasmoid.configuration.smallAutomaticIconJumps
     property bool useThemePanel: noApplets === 0 ? true : plasmoid.configuration.useThemePanel
 
+
+    property int animationsNeedBothAxis:0 //animations need space in both axes, e.g zooming a task
+    property int animationsNeedLength: 0 // animations need length, e.g. adding a task
+    property int animationsNeedThickness: 0 // animations need thickness, e.g. bouncing animation
     property int appletsAnimations: 0 //zoomed applets it is used basically on masking for magic window
     property int automaticIconSizeBasedSize: 0
-    /// FIXME : The icon size situation
-   /* property int iconSize: automaticSize ? ( (automaticIconSizeBasedSize>0 && plasmoid.immutable)  ?
-                                                Math.min(automaticIconSizeBasedSize, automaticIconSizeBasedZoom) : automaticIconSizeBasedZoom ):
-                                           Math.min(automaticIconSizeBasedZoom,plasmoid.configuration.iconSize)*/
-
     property int iconSize: (automaticIconSizeBasedSize>0 && plasmoid.immutable) ? Math.min(automaticIconSizeBasedSize, plasmoid.configuration.iconSize) :
                                                                                   plasmoid.configuration.iconSize
     property int iconStep: 8
@@ -70,7 +69,9 @@ DragDrop.DropArea {
     property int mainLayoutPosition: !plasmoid.immutable ? 0 : (root.isVertical ? 3 : 1)
     property int userPanelPosition: plasmoid.configuration.panelPosition !== 10 ? plasmoid.configuration.panelPosition : mainLayoutPosition
 
+
     property real zoomFactor: ( 1 + (plasmoid.configuration.zoomLevel / 20) )
+
 
     property var iconsArray: [16, 22, 32, 48, 64, 96, 128, 256]
     property var layoutManager: LayoutManager
@@ -86,13 +87,7 @@ DragDrop.DropArea {
     ///BEGIN properties from nowDock
     property bool reverseLinesPosition: nowDock ? nowDock.reverseLinesPosition : false
 
-    //property int animationsNeedOnlyThickness: 0 //animations that need only thickness*/
-    property int animationsNeedBothAxis:0 //animations need space in both axes, e.g zooming a task
-    property int animationsNeedLength: 0 // animations need length, e.g. adding a task
-    property int animationsNeedThickness: 0 // animations need thickness, e.g. bouncing animation
-
     property int durationTime: nowDock ? nowDock.durationTime : 2
-//    property int nowDockAnimations: nowDock ? nowDock.animations : 0
     property int nowDockHoveredIndex: nowDock ? nowDock.hoveredIndex : -1
     property int iconMargin: nowDock ? nowDock.iconMargin : 0.12 * iconSize
     property int statesLineSize: nowDock ? nowDock.statesLineSize : 0
@@ -476,6 +471,10 @@ DragDrop.DropArea {
 
         updateLayouts();
         updateNowDockConfiguration();
+
+        if (!plasmoid.immutable && magicWin && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) {
+            magicWin.mustBeRaised();
+        }
     }
     //////////////END OF CONNECTIONS
 

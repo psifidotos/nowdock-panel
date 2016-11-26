@@ -18,6 +18,7 @@ namespace NowDock
 PanelWindow::PanelWindow(QQuickWindow *parent) :
     QQuickWindow(parent),
     m_secondInitPass(false),
+    m_isAutoHidden(false),
     m_demandsAttention(-1),
     m_windowIsInAttention(false),
     m_isHovered(false)
@@ -50,6 +51,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     updateVisibilityFlags();
 
     connect(this, SIGNAL(locationChanged()), this, SLOT(updateWindowPosition()));
+    connect(this, SIGNAL(windowInAttentionChanged()), this, SLOT(updateState()));
 }
 
 PanelWindow::~PanelWindow()
@@ -106,6 +108,21 @@ void PanelWindow::setPanelVisibility(PanelWindow::PanelVisibility state)
 QRect PanelWindow::screenGeometry() const
 {
     return (m_screen ? m_screen->geometry() : QRect());
+}
+
+bool PanelWindow::isAutoHidden() const
+{
+    return m_isAutoHidden;
+}
+
+void PanelWindow::setIsAutoHidden(bool state)
+{
+    if (m_isAutoHidden == state) {
+        return;
+    }
+
+    m_isAutoHidden = state;
+    emit isAutoHiddenChanged();
 }
 
 
@@ -225,6 +242,12 @@ void PanelWindow::updateVisibilityFlags()
         showOnTop();
         m_updateStateTimer.start();
     }
+
+    if (m_panelVisibility == AutoHide) {
+        m_updateStateTimer.setInterval(2200);
+    } else {
+        m_updateStateTimer.setInterval(1500);
+    }
 }
 
 /*
@@ -317,7 +340,11 @@ void PanelWindow::updateState()
         //Do nothing, the dock is OnTop state in every case
         break;
     case AutoHide:
-        //FIXME, the AutoHide state is an ontop window which hides its contents and updates its maskArea
+        if (m_windowIsInAttention && m_isAutoHidden) {
+            emit mustBeRaised();
+        } else if (!m_isHovered) {
+            emit mustBeLowered();
+        }
         break;
     case AlwaysVisible:
         //Do nothing, the dock in OnTop state in every case
@@ -534,15 +561,21 @@ bool PanelWindow::event(QEvent *e)
     QQuickWindow::event(e);
 
     if (e->type() == QEvent::Enter) {
-        setIsHovered(true);
         m_updateStateTimer.stop();
         shrinkTransient();
-        showOnTop();
+
+        if (!m_isHovered && m_panelVisibility == AutoHide) {
+            emit mustBeRaised();
+        } else {
+            showOnTop();
+        }
+
+        setIsHovered(true);
     } else if ((e->type() == QEvent::Leave) && (!isActive()) ) {
         setIsHovered(false);
+
         if ( (m_panelVisibility != WindowsGoBelow)
-             && (m_panelVisibility != AlwaysVisible)
-             && (m_panelVisibility != AutoHide) ) {
+             && (m_panelVisibility != AlwaysVisible) ) {
             m_updateStateTimer.start();
         }
     }
