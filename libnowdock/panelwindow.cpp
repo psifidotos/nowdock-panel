@@ -216,18 +216,14 @@ void PanelWindow::updateWindowPosition()
 void PanelWindow::updateVisibilityFlags()
 {
     setFlags(Qt::Tool|Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
-    updateWindowPosition();
 
-    if (m_panelVisibility == LetWindowsCover) {
-        m_updateStateTimer.start();
-    } else if (m_panelVisibility == WindowsGoBelow) {
-        showOnTop();
-    } else if (m_panelVisibility == BelowActive) {
-        showOnTop();
-        m_updateStateTimer.start();
-    } else if (m_panelVisibility == AlwaysVisible) {
+    if (m_panelVisibility == AlwaysVisible) {
         KWindowSystem::setType(winId(), NET::Dock);
         updateWindowPosition();
+    } else {
+        updateWindowPosition();
+        showOnTop();
+        m_updateStateTimer.start();
     }
 }
 
@@ -239,10 +235,10 @@ void PanelWindow::updateVisibilityFlags()
 void PanelWindow::updateState()
 {
     KWindowInfo dockInfo(winId(), NET::WMState);
+    KWindowInfo activeInfo(m_activeWindow, NET::WMGeometry | NET::WMState);
 
-    if (m_panelVisibility == BelowActive) {
-        KWindowInfo activeInfo(m_activeWindow, NET::WMGeometry);
-
+    switch (m_panelVisibility) {
+    case BelowActive:
         if ( activeInfo.valid() ) {
             QRect maskSize;
 
@@ -270,9 +266,8 @@ void PanelWindow::updateState()
                 }
             }
         }
-    } else if (m_panelVisibility == BelowMaximized) {
-        KWindowInfo activeInfo(m_activeWindow, NET::WMGeometry | NET::WMState);
-
+        break;
+    case BelowMaximized:
         if ( activeInfo.valid() ) {
             QRect maskSize;
 
@@ -300,7 +295,8 @@ void PanelWindow::updateState()
                 }
             }
         }
-    } else if (m_panelVisibility == LetWindowsCover) {
+        break;
+    case LetWindowsCover:
         if (!m_isHovered && isOnTop(&dockInfo)) {
             if( dockIsCovering() ) {
                 mustBeLowered();
@@ -316,6 +312,16 @@ void PanelWindow::updateState()
                 }
             }
         }
+        break;
+    case WindowsGoBelow:
+        //Do nothing, the dock is in OnTop state in every case
+        break;
+    case AutoHide:
+        //FIXME
+        break;
+    case AlwaysVisible:
+        //FIXME
+        break;
     }
 }
 
@@ -511,6 +517,11 @@ bool PanelWindow::activeWindowAboveDock()
 void PanelWindow::activeWindowChanged(WId win)
 {
     m_activeWindow = win;
+
+    if (m_panelVisibility == WindowsGoBelow) {
+        return;
+    }
+
     if (!m_updateStateTimer.isActive()) {
         m_updateStateTimer.start();
     }
@@ -527,7 +538,9 @@ bool PanelWindow::event(QEvent *e)
         showOnTop();
     } else if ((e->type() == QEvent::Leave) && (!isActive()) ) {
         setIsHovered(false);
-        m_updateStateTimer.start();
+        if (m_panelVisibility != WindowsGoBelow) {
+            m_updateStateTimer.start();
+        }
     }
 }
 

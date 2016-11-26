@@ -250,7 +250,7 @@ NowDock.PanelWindow{
 
         onInHalfChanged: {
             if (inHalf) {
-                if (panelVisibility === NowDock.LetWindowsCover) {
+                if (window.panelVisibility === NowDock.PanelWindow.LetWindowsCover) {
                     if (raiseFlag) {
                         window.showOnTop();
                     } else {

@@ -316,7 +316,7 @@ Item{
                     }
 
                     //user set Panel Visibility
-                    // 0-BelowActive, 1-LetWindowsCover, 2-WindowsGoBelow, 3-AutoHide, 4-AlwaysVisible, 5-AlwaysVisibleFree
+                    // 0-BelowActive, 1-BelowMaximized, 2-LetWindowsCover, 3-WindowsGoBelow, 4-AutoHide, 5-AlwaysVisible
                     Flow{
                         width: parent.width
                         spacing: 2
