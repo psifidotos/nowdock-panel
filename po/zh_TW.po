@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
 "POT-Creation-Date: 2016-11-25 00:06+0200\n"
-"PO-Revision-Date: 2016-10-30 22:28+0800\n"
+"PO-Revision-Date: 2016-11-26 17:31+0800\n"
 "Last-Translator: Jeff Huang <s8321414@gmail.com>\n"
 "Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
 "Language: zh_TW\n"
@@ -23,7 +23,7 @@ msgstr "小程式對齊"
 
 #: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:182
 msgid "ver: "
-msgstr ""
+msgstr "版本："
 
 #: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:239
 #: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:285
@@ -51,31 +51,31 @@ msgstr "右邊"
 
 #: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:314
 msgid "Visibility"
-msgstr ""
+msgstr "可見度"
 
 #: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:370
 msgid "Below Active"
-msgstr ""
+msgstr "在作用中的視窗後"
 
 #: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:383
 msgid "Below Maximized"
-msgstr ""
+msgstr "在最大化的視窗後"
 
 #: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:396
 msgid "Let Windows Cover"
-msgstr ""
+msgstr " 讓視窗蓋過"
 
 #: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:410
 msgid "Windows Go Below"
-msgstr ""
+msgstr "視窗在下面"
 
 #: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:424
 msgid "Auto Hide"
-msgstr ""
+msgstr "自動隱藏"
 
 #: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:437
 msgid "Always Visible"
-msgstr ""
+msgstr "永遠可見"
 
 #: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:458
 msgid "Zoom On Hover"
