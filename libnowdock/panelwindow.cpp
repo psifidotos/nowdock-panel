@@ -304,27 +304,23 @@ void PanelWindow::updateState()
                 showOnBottom();
             }
         } else if ( m_windowIsInAttention ) {
-            qDebug() << "in attention state...";
             if( !isOnTop(&dockInfo) ) {
-                qDebug() << "in attention state 1...";
                 if (dockIsCovered()) {
-                    qDebug() << "in attention state 2...";
                     mustBeRaised();
                 } else {
-                    qDebug() << "in attention state 3...";
                     showOnTop();
                 }
             }
         }
         break;
     case WindowsGoBelow:
-        //Do nothing, the dock is in OnTop state in every case
+        //Do nothing, the dock is OnTop state in every case
         break;
     case AutoHide:
-        //FIXME
+        //FIXME, the AutoHide state is an ontop window which hides its contents and updates its maskArea
         break;
     case AlwaysVisible:
-        //FIXME
+        //Do nothing, the dock in OnTop state in every case
         break;
     }
 }
@@ -522,7 +518,9 @@ void PanelWindow::activeWindowChanged(WId win)
 {
     m_activeWindow = win;
 
-    if (m_panelVisibility == WindowsGoBelow) {
+    if ( (m_panelVisibility == WindowsGoBelow)
+         || (m_panelVisibility == AlwaysVisible)
+         || (m_panelVisibility == AutoHide)) {
         return;
     }
 
@@ -542,7 +540,9 @@ bool PanelWindow::event(QEvent *e)
         showOnTop();
     } else if ((e->type() == QEvent::Leave) && (!isActive()) ) {
         setIsHovered(false);
-        if (m_panelVisibility != WindowsGoBelow) {
+        if ( (m_panelVisibility != WindowsGoBelow)
+             && (m_panelVisibility != AlwaysVisible)
+             && (m_panelVisibility != AutoHide) ) {
             m_updateStateTimer.start();
         }
     }
