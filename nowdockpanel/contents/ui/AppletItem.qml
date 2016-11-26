@@ -358,13 +358,13 @@ Item {
                 if ((zoomScale > 1) && !container.isZoomed) {
                     container.isZoomed = true;
                     if (plasmoid.immutable && !animationWasSent) {
-                        root.animations++;
+                        root.appletsAnimations++;
                         animationWasSent = true;
                     }
                 } else if ((zoomScale == 1) && container.isZoomed) {
                     container.isZoomed = false;
                     if (plasmoid.immutable && animationWasSent) {
-                        root.animations--;
+                        root.appletsAnimations--;
                         animationWasSent = false;
                     }
                 }

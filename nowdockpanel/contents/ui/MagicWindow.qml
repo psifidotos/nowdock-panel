@@ -93,11 +93,15 @@ NowDock.PanelWindow{
         var localY = 0;
 
         var normalState = (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
-                && (root.nowDockAnimations === 0) && (root.animations === 0) && (!mainLayout.animatedLength)
+                && (root.appletsAnimations === 0)
+                && (root.animationsNeedBothAxis === 0) && (root.animationsNeedLength === 0)
+                && (!mainLayout.animatedLength)
 
         // debug maskArea criteria
-        //console.log(root.nowDockHoveredIndex + " - " + layoutsContainer.hoveredIndex + " - "
-          //         + root.nowDockAnimations+ " - " + root.animations + " - " + mainLayout.animatedLength);
+        //console.log(root.nowDockHoveredIndex + ", " + layoutsContainer.hoveredIndex + ", "
+          //         + root.appletsAnimations+ ", "
+          //         + root.animationsNeedBothAxis + ", " + root.animationsNeedLength + ", " + root.animationsNeedThickness +", "
+          //         + mainLayout.animatedLength);
 
         var tempLength = root.isHorizontal ? width : height;
         var tempThickness = root.isHorizontal ? height : width;
@@ -113,7 +117,7 @@ NowDock.PanelWindow{
 
             tempThickness = normalThickness;
 
-            if (root.animationsNeedOnlyThickness > 0) {
+            if (root.animationsNeedThickness > 0) {
                 tempThickness = midThickness;
             }
 
@@ -139,7 +143,7 @@ NowDock.PanelWindow{
             if(mainLayout.animatedLength) {
                 tempThickness = normalThickness;
 
-                if (root.animationsNeedOnlyThickness > 0) {
+                if (root.animationsNeedThickness > 0) {
                     tempThickness = midThickness;
                 }
 

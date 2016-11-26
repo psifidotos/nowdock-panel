@@ -53,11 +53,7 @@ DragDrop.DropArea {
     property bool smallAutomaticIconJumps: plasmoid.configuration.smallAutomaticIconJumps
     property bool useThemePanel: noApplets === 0 ? true : plasmoid.configuration.useThemePanel
 
-
-
-
-    property int animations: 0 //zoomed applets it is used basically on masking for magic window
-    property int animationsNeedOnlyThickness: 0 //animations that need only thickness
+    property int appletsAnimations: 0 //zoomed applets it is used basically on masking for magic window
     property int automaticIconSizeBasedSize: 0
     /// FIXME : The icon size situation
    /* property int iconSize: automaticSize ? ( (automaticIconSizeBasedSize>0 && plasmoid.immutable)  ?
@@ -90,8 +86,13 @@ DragDrop.DropArea {
     ///BEGIN properties from nowDock
     property bool reverseLinesPosition: nowDock ? nowDock.reverseLinesPosition : false
 
+    //property int animationsNeedOnlyThickness: 0 //animations that need only thickness*/
+    property int animationsNeedBothAxis:0 //animations need space in both axes, e.g zooming a task
+    property int animationsNeedLength: 0 // animations need length, e.g. adding a task
+    property int animationsNeedThickness: 0 // animations need thickness, e.g. bouncing animation
+
     property int durationTime: nowDock ? nowDock.durationTime : 2
-    property int nowDockAnimations: nowDock ? nowDock.animations : 0
+//    property int nowDockAnimations: nowDock ? nowDock.animations : 0
     property int nowDockHoveredIndex: nowDock ? nowDock.hoveredIndex : -1
     property int iconMargin: nowDock ? nowDock.iconMargin : 0.12 * iconSize
     property int statesLineSize: nowDock ? nowDock.statesLineSize : 0
@@ -309,7 +310,7 @@ DragDrop.DropArea {
     //// END OF Behaviors
 
     //////////////START OF CONNECTIONS
-    onAnimationsChanged: magicWin.updateMaskArea();
+    onAppletsAnimationsChanged: magicWin.updateMaskArea();
 
     onDragEnter: {
         if (plasmoid.immutable) {
@@ -359,12 +360,14 @@ DragDrop.DropArea {
     }
 
     onNowDockChanged: {
-        if (nowDock) {
-            nowDock.signalForAnimationsNeedThickness.connect(slotAnimationsNeedThickness);
+        if (nowDock) {            
+            nowDock.signalAnimationsNeedBothAxis.connect(slotAnimationsNeedBothAxis);
+            nowDock.signalAnimationsNeedLength.connect(slotAnimationsNeedLength);
+            nowDock.signalAnimationsNeedThickness.connect(slotAnimationsNeedThickness);
         }
     }
 
-    onNowDockAnimationsChanged: magicWin.updateMaskArea();
+  //  onNowDockAnimationsChanged: magicWin.updateMaskArea();
 
     onToolBoxChanged: {
         containmentSizeSyncTimer.restart();
@@ -598,7 +601,7 @@ DragDrop.DropArea {
     }
 
     function checkLayoutsAnimatedLength() {
-        if (!magicWin.isHovered && (root.nowDockAnimations === 0) && (root.animations === 0)) {
+        if (!magicWin.isHovered && (root.animationsNeedBothAxis === 0) && (root.animationsNeedLength===0) && (root.appletsAnimations === 0)) {
             mainLayout.animatedLength = true;
         } else {
             mainLayout.animatedLength = false;
@@ -695,8 +698,30 @@ DragDrop.DropArea {
         return false;
     }
 
+    function slotAnimationsNeedBothAxis(value) {
+        if (animationsNeedBothAxis === value) {
+            return;
+        }
+
+        animationsNeedBothAxis = value;
+        magicWin.updateMaskArea();
+    }
+
+    function slotAnimationsNeedLength(value) {
+        if (animationsNeedLength === value) {
+            return;
+        }
+
+        animationsNeedLength = value;
+        magicWin.updateMaskArea();
+    }
+
     function slotAnimationsNeedThickness(value) {
-        animationsNeedOnlyThickness = value;
+        if (animationsNeedThickness === value) {
+            return;
+        }
+
+        animationsNeedThickness = value;
         magicWin.updateMaskArea();
     }
 
@@ -1092,9 +1117,10 @@ DragDrop.DropArea {
     ///////////////BEGIN TIMER elements
     Timer {
         id: animatedLengthTimer
-        interval: 200
+        interval: 150
         onTriggered: {
-            if (!magicWin.isHovered && (nowDockAnimations === 0) && (root.animations === 0)) {
+            if (!magicWin.isHovered && (appletsAnimations === 0)
+                    && (root.animationsNeedLength === 0) && (root.animationsNeedBothAxis ===0)) {
                 mainLayout.animatedLength = false;
                 magicWin.updateMaskArea();
             }

@@ -304,10 +304,14 @@ void PanelWindow::updateState()
                 showOnBottom();
             }
         } else if ( m_windowIsInAttention ) {
+            qDebug() << "in attention state...";
             if( !isOnTop(&dockInfo) ) {
+                qDebug() << "in attention state 1...";
                 if (dockIsCovered()) {
+                    qDebug() << "in attention state 2...";
                     mustBeRaised();
                 } else {
+                    qDebug() << "in attention state 3...";
                     showOnTop();
                 }
             }
