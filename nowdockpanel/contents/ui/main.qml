@@ -66,8 +66,11 @@ DragDrop.DropArea {
     property int previousAllTasks: -1    //is used to forbit updateAutomaticIconSize when hovering
     property int realSize: iconSize + iconMargin
     property int themePanelSize: plasmoid.configuration.panelSize
-    property int mainLayoutPosition: !plasmoid.immutable ? 0 : (root.isVertical ? 3 : 1)
+
+    ///FIXME: I can't remember why this is needed, maybe for the anchorings!!! In order for the Double Layout to not mess the anchorings...
+    property int mainLayoutPosition: !plasmoid.immutable ? 0 : (root.isVertical ? NowDock.PanelWindow.Top : NowDock.PanelWindow.Left)
     property int panelAlignment: plasmoid.configuration.panelPosition !== 10 ? plasmoid.configuration.panelPosition : mainLayoutPosition
+   // property int panelAlignment: plasmoid.configuration.panelPosition
 
 
     property real zoomFactor: ( 1 + (plasmoid.configuration.zoomLevel / 20) )
@@ -465,10 +468,6 @@ DragDrop.DropArea {
         plasmoid.action("configure").visible = !plasmoid.immutable;
         plasmoid.action("configure").enabled = !plasmoid.immutable;
 
-        if(plasmoid.immutable){
-            updateIndexes();
-        }
-
         updateLayouts();
         updateNowDockConfiguration();
 
@@ -822,7 +821,7 @@ DragDrop.DropArea {
     }
 
     function updateLayouts(){
-        if(immutable){
+        if(plasmoid.immutable){
             var splitter = -1;
 
             var totalChildren = mainLayout.children.length;
@@ -835,19 +834,21 @@ DragDrop.DropArea {
                     item.parent = secondLayout;
                 }
 
-                if(item.isInternalViewSplitter)
+                if(item.isInternalViewSplitter) {
                     splitter = i;
+                }
             }
-
-            updateIndexes();
         }
         else{
             var totalChildren2 = secondLayout.children.length;
-            for (var i=0; i<totalChildren2; ++i) {
+
+            for (var i=totalChildren2-1; i>=0; --i) {
                 var item2 = secondLayout.children[0];
                 item2.parent = mainLayout;
             }
         }
+
+        updateIndexes();
     }
 
     function updateNowDockConfiguration(){
@@ -1058,8 +1059,8 @@ DragDrop.DropArea {
             Layout.preferredWidth: width
             Layout.preferredHeight: height
 
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
+           // anchors.right: parent.right
+           // anchors.bottom: parent.bottom
 
             property int beginIndex: 100
             property int count: children.length
@@ -1067,7 +1068,7 @@ DragDrop.DropArea {
             states:[
                 State {
                     name: "bottom"
-                    when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(plasmoid.configuration.panelPosition === 10)
+                    when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double)
 
                     AnchorChanges {
                         target: secondLayout
@@ -1079,7 +1080,7 @@ DragDrop.DropArea {
                 },
                 State {
                     name: "left"
-                    when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(plasmoid.configuration.panelPosition === 10)
+                    when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double)
 
                     AnchorChanges {
                         target: secondLayout
@@ -1091,7 +1092,7 @@ DragDrop.DropArea {
                 },
                 State {
                     name: "right"
-                    when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(plasmoid.configuration.panelPosition === 10)
+                    when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double)
 
                     AnchorChanges {
                         target: secondLayout
@@ -1103,7 +1104,7 @@ DragDrop.DropArea {
                 },
                 State {
                     name: "top"
-                    when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.panelAlignment === 2)
+                    when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double)
 
                     AnchorChanges {
                         target: secondLayout

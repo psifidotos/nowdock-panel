@@ -127,10 +127,11 @@ NowDock.PanelWindow{
 
         if (normalState) {
             //count panel length
-            if(root.isHorizontal)
-                tempLength = root.panelAlignment === NowDock.PanelWindow.Double ? screenGeometry.width : mainLayout.width + space;
-            else
-                tempLength = root.panelAlignment === NowDock.PanelWindow.Double ? screenGeometry.height : mainLayout.height + space;
+            if(root.isHorizontal) {
+                tempLength = plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ? screenGeometry.width : mainLayout.width + space;
+            } else {
+                tempLength = plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ? screenGeometry.height : mainLayout.height + space;
+            }
 
             tempThickness = thicknessNormal;
 
@@ -172,19 +173,6 @@ NowDock.PanelWindow{
                     localY = window.height - mainLayout.height - (space/2);
                 }
             }
-
-            //configure the x,y position based on thickness
-            /*   if(plasmoid.location === PlasmaCore.Types.RightEdge)
-                localX = window.width - tempThickness;
-            else if(plasmoid.location === PlasmaCore.Types.BottomEdge)
-                localY = window.height - tempThickness;*/
-
-            //configure the x,y Position based on length
-            /*if (root.isHorizontal) {
-                localX = (window.width/2) - (mainLayout.width/2) - (space/2);
-            } else {
-                localY = (window.height/2) - (mainLayout.height/2) - (space/2);
-            }*/
         } else {
             if(root.isHorizontal)
                 tempLength = screenGeometry.width;

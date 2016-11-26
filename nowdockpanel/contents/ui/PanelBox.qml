@@ -18,6 +18,8 @@
 
 import QtQuick 2.1
 import QtQuick.Layouts 1.1
+import QtQuick.Window 2.2
+
 import org.kde.plasma.plasmoid 2.0
 
 import org.kde.plasma.core 2.0 as PlasmaCore
@@ -33,13 +35,15 @@ Item{
   //  parent: root
     z:0
 
-    property int panelWidth: secondLayout.count > 0 && root.isHorizontal && plasmoid.immutable ? root.width+spacing : mainLayout.width + spacing
-    property int panelHeight: secondLayout.count > 0 && root.isVertical && plasmoid.immutable ? root.height+spacing : mainLayout.height + spacing
+    property int panelWidth: secondLayout.count > 0 && root.isHorizontal && plasmoid.immutable ?
+                                 Screen.width + 2*spacing : mainLayout.width + spacing
+    property int panelHeight: secondLayout.count > 0 && root.isVertical && plasmoid.immutable ?
+                                  Screen.height + 2*spacing : mainLayout.height + spacing
 
     width: root.isHorizontal ? panelWidth : smallSize
     height: root.isVertical ? panelHeight : smallSize
 
-    property int spacing: (root.panelAlignment === 0) ? root.panelEdgeSpacing : root.panelEdgeSpacing/2
+    property int spacing: (root.panelAlignment === NowDock.PanelWindow.Center) ? root.panelEdgeSpacing : root.panelEdgeSpacing/2
     property int smallSize: Math.max(3.7*root.statesLineSize, 16)
 
     Behavior on opacity{

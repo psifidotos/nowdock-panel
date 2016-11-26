@@ -375,7 +375,7 @@ Item {
                     if(plasmoid.immutable)
                         layoutHeight = 0;
                     else
-                        layoutHeight = root.iconSize + moreHeight + root.statesLineSize;
+                        layoutHeight = root.iconSize;// + moreHeight + root.statesLineSize;
                 }
                 else if(applet && applet.pluginName === "org.kde.plasma.panelspacer"){
                     layoutHeight = root.iconSize + moreHeight;
@@ -419,7 +419,7 @@ Item {
                     if(plasmoid.immutable)
                         layoutWidth = 0;
                     else
-                        layoutWidth = root.iconSize + moreWidth+ root.statesLineSize;
+                        layoutWidth = root.iconSize; //+ moreWidth+ root.statesLineSize;
                 }
                 else if(applet && applet.pluginName === "org.kde.plasma.panelspacer"){
                     layoutWidth = root.iconSize + moreWidth;
@@ -461,8 +461,8 @@ Item {
 
             Item{
                 id:wrapperContainer
-                width: parent.zoomScaleWidth * wrapper.layoutWidth
-                height: parent.zoomScaleHeight * wrapper.layoutHeight
+                width: container.isInternalViewSplitter ? wrapper.layoutWidth : parent.zoomScaleWidth * wrapper.layoutWidth
+                height: container.isInternalViewSplitter ? wrapper.layoutHeight : parent.zoomScaleHeight * wrapper.layoutHeight
 
                 anchors.centerIn: parent
             }
@@ -516,13 +516,14 @@ Item {
                         property int shadowSize : Math.ceil(root.iconSize / 20)
                     }
 
-                    Component.onCompleted: wrapper.zoomScale = 1+ 0.85*(root.zoomFactor - 1)
+                  Component.onCompleted: wrapper.zoomScale = 1.1
                 }
             }
 
             ///Shadow in applets
             Loader{
                 anchors.fill: container.appletWrapper
+
                 active: container.applet
                         &&((plasmoid.configuration.shadows === 1 /*Locked Applets*/
                             && (!container.canBeHovered || (container.lockZoom && (applet.pluginName !== "org.kde.store.nowdock.plasmoid"))) )
@@ -716,7 +717,7 @@ Item {
         id: appletMouseArea
 
         anchors.fill: parent
-        enabled: (!nowDock)&&(canBeHovered)&&(!lockZoom)
+        enabled: (!nowDock)&&(canBeHovered)&&(!lockZoom)&&(plasmoid.immutable)
         hoverEnabled: plasmoid.immutable && (!nowDock) && canBeHovered ? true : false
         propagateComposedEvents: true
 
@@ -787,7 +788,6 @@ Item {
         State {
             name: "left"
             when: (plasmoid.location === PlasmaCore.Types.LeftEdge)
-
 
             AnchorChanges {
                 target: appletFlow

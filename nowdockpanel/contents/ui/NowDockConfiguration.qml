@@ -288,10 +288,7 @@ Item{
 
                             onCheckedChanged: {
                                 if(checked && !parent.inStartup){
-                                    //  if(root.isVertical)
-                                    plasmoid.configuration.panelPosition = NowDock.PanelWindow.Double
-                                    //    else
-                                    //     plasmoid.configuration.panelPosition = 2
+                                    plasmoid.configuration.panelPosition = NowDock.PanelWindow.Double;
                                 }
                             }
                             onClicked: checked=true;
