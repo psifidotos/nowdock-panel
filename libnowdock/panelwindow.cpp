@@ -72,9 +72,7 @@ void PanelWindow::setMaskArea(QRect area)
     }
 
     m_maskArea = area;
-    setMask(m_maskArea);
-
-    shrinkTransient();
+    setMask(m_maskArea);   
 
     emit maskAreaChanged();
 }

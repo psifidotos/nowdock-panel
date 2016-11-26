@@ -7,6 +7,7 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControlAddons
 
+import org.kde.nowdock 0.1 as NowDock
 
 Item{
     id: settingsButtonContainer
@@ -195,28 +196,28 @@ Item{
 
 
                         function updatePanelPositionVisual(){
-                            if((panelPosition == 1)||(panelPosition == 3)){
+                            if((panelPosition == NowDock.PanelWindow.Left)||(panelPosition == NowDock.PanelWindow.Top)){
                                 firstPosition.checked = true;
                                 centerPosition.checked = false;
                                 lastPosition.checked = false;
                                 splitTwoPosition.checked = false;
                                 root.removeInternalViewSplitter();
                             }
-                            else if(panelPosition == 0){
+                            else if(panelPosition == NowDock.PanelWindow.Center){
                                 firstPosition.checked = false;
                                 centerPosition.checked = true;
                                 lastPosition.checked = false;
                                 splitTwoPosition.checked = false;
                                 root.removeInternalViewSplitter();
                             }
-                            else if((panelPosition == 2)||(panelPosition == 4)){
+                            else if((panelPosition == NowDock.PanelWindow.Right)||(panelPosition == NowDock.PanelWindow.Bottom)){
                                 firstPosition.checked = false;
                                 centerPosition.checked = false;
                                 lastPosition.checked = true;
                                 splitTwoPosition.checked = false;
                                 root.removeInternalViewSplitter();
                             }
-                            else if (panelPosition == 10){
+                            else if (panelPosition == NowDock.PanelWindow.Double){
                                 firstPosition.checked = false;
                                 centerPosition.checked = false;
                                 lastPosition.checked = false;
@@ -242,9 +243,9 @@ Item{
                             onCheckedChanged: {
                                 if(checked && !parent.inStartup){
                                     if(root.isVertical)
-                                        plasmoid.configuration.panelPosition = 3
+                                        plasmoid.configuration.panelPosition = NowDock.PanelWindow.Top
                                     else
-                                        plasmoid.configuration.panelPosition = 1
+                                        plasmoid.configuration.panelPosition = NowDock.PanelWindow.Left
                                 }
                             }
                             onClicked: checked=true;
@@ -257,7 +258,7 @@ Item{
 
                             onCheckedChanged: {
                                 if(checked && !parent.inStartup){
-                                    plasmoid.configuration.panelPosition = 0
+                                    plasmoid.configuration.panelPosition = NowDock.PanelWindow.Center
                                 }
                             }
                             onClicked: checked=true;
@@ -271,9 +272,9 @@ Item{
                             onCheckedChanged: {
                                 if(checked && !parent.inStartup){
                                     if(root.isVertical)
-                                        plasmoid.configuration.panelPosition = 4
+                                        plasmoid.configuration.panelPosition = NowDock.PanelWindow.Bottom
                                     else
-                                        plasmoid.configuration.panelPosition = 2
+                                        plasmoid.configuration.panelPosition = NowDock.PanelWindow.Right
                                 }
                             }
                             onClicked: checked=true;
@@ -288,7 +289,7 @@ Item{
                             onCheckedChanged: {
                                 if(checked && !parent.inStartup){
                                     //  if(root.isVertical)
-                                    plasmoid.configuration.panelPosition = 10
+                                    plasmoid.configuration.panelPosition = NowDock.PanelWindow.Double
                                     //    else
                                     //     plasmoid.configuration.panelPosition = 2
                                 }

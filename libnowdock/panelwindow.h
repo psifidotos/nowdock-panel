@@ -16,6 +16,7 @@ namespace NowDock
 class PanelWindow : public QQuickWindow {
     Q_OBJECT
     Q_ENUMS(PanelVisibility)
+    Q_ENUMS(Alignment)
 
     Q_PROPERTY(bool isAutoHidden READ isAutoHidden WRITE setIsAutoHidden NOTIFY isAutoHiddenChanged)
 
@@ -49,6 +50,15 @@ public:
         WindowsGoBelow, /** default, always visible, windows will go under the panel, no area reserved */
         AutoHide, /** the panel will be shownn only if the mouse cursor is on screen edges */
         AlwaysVisible,  /** always visible panel, "Normal" plasma panel, accompanies plasma's "Always Visible"  */
+    };
+
+    enum Alignment {
+        Center = 0,
+        Left,
+        Right,
+        Top,
+        Bottom,
+        Double=10
     };
 
     explicit PanelWindow(QQuickWindow *parent = Q_NULLPTR);

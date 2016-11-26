@@ -24,6 +24,8 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
 import org.kde.kquickcontrolsaddons 2.0
 
+import org.kde.nowdock 0.1 as NowDock
+
 Item{
     id:barLine
 
@@ -111,7 +113,7 @@ Item{
         ///Left
         State {
             name: "leftCenter"
-            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 0)
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Center)
 
             AnchorChanges {
                 target: barLine
@@ -129,7 +131,7 @@ Item{
         ///Left
         State {
             name: "leftTop"
-            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 3)
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Top)
 
             AnchorChanges {
                 target: barLine
@@ -147,7 +149,7 @@ Item{
         ///Left
         State {
             name: "leftBottom"
-            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 4)
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Bottom)
 
             AnchorChanges {
                 target: barLine
@@ -165,7 +167,7 @@ Item{
         ///Right
         State {
             name: "rightCenter"
-            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 0)
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Center)
 
             AnchorChanges {
                 target: barLine
@@ -182,7 +184,7 @@ Item{
         },
         State {
             name: "rightTop"
-            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 3)
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Top)
 
             AnchorChanges {
                 target: barLine
@@ -199,7 +201,7 @@ Item{
         },
         State {
             name: "rightBottom"
-            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 4)
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Bottom)
 
             AnchorChanges {
                 target: barLine
@@ -217,7 +219,7 @@ Item{
         ///Bottom
         State {
             name: "bottomCenter"
-            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 0)
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Center)
 
             AnchorChanges {
                 target: barLine
@@ -234,7 +236,7 @@ Item{
         },
         State {
             name: "bottomLeft"
-            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 1)
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Left)
 
             AnchorChanges {
                 target: barLine
@@ -251,7 +253,7 @@ Item{
         },
         State {
             name: "bottomRight"
-            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 2)
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Right)
 
             AnchorChanges {
                 target: barLine
@@ -269,7 +271,7 @@ Item{
         ///Top
         State {
             name: "topCenter"
-            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 0)
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Center)
 
             AnchorChanges {
                 target: barLine
@@ -286,7 +288,7 @@ Item{
         },
         State {
             name: "topLeft"
-            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 1)
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Left)
 
             AnchorChanges {
                 target: barLine
@@ -303,7 +305,7 @@ Item{
         },
         State {
             name: "topRight"
-            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 2)
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Right)
 
             AnchorChanges {
                 target: barLine

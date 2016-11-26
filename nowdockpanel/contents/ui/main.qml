@@ -149,7 +149,7 @@ DragDrop.DropArea {
         ///Left Edge
         State {
             name: "leftCenter"
-            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 0)
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Center)
 
             AnchorChanges {
                 target: mainLayout
@@ -161,7 +161,7 @@ DragDrop.DropArea {
         },
         State {
             name: "leftTop"
-            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 3)
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Top)
 
             AnchorChanges {
                 target: mainLayout
@@ -173,7 +173,7 @@ DragDrop.DropArea {
         },
         State {
             name: "leftBottom"
-            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === 4)
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Bottom)
 
             AnchorChanges {
                 target: mainLayout
@@ -186,7 +186,7 @@ DragDrop.DropArea {
         ///Right Edge
         State {
             name: "rightCenter"
-            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 0)
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Center)
 
             AnchorChanges {
                 target: mainLayout
@@ -198,7 +198,7 @@ DragDrop.DropArea {
         },
         State {
             name: "rightTop"
-            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 3)
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Top)
 
             AnchorChanges {
                 target: mainLayout
@@ -210,7 +210,7 @@ DragDrop.DropArea {
         },
         State {
             name: "rightBottom"
-            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === 4)
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Bottom)
 
             AnchorChanges {
                 target: mainLayout
@@ -223,7 +223,7 @@ DragDrop.DropArea {
         ///Bottom Edge
         State {
             name: "bottomCenter"
-            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 0)
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Center)
 
             AnchorChanges {
                 target: mainLayout
@@ -235,7 +235,7 @@ DragDrop.DropArea {
         },
         State {
             name: "bottomLeft"
-            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 1)
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Left)
 
             AnchorChanges {
                 target: mainLayout
@@ -247,7 +247,7 @@ DragDrop.DropArea {
         },
         State {
             name: "bottomRight"
-            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === 2)
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Right)
 
             AnchorChanges {
                 target: mainLayout
@@ -260,7 +260,7 @@ DragDrop.DropArea {
         ///Top Edge
         State {
             name: "topCenter"
-            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 0)
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Center)
 
             AnchorChanges {
                 target: mainLayout
@@ -272,7 +272,7 @@ DragDrop.DropArea {
         },
         State {
             name: "topLeft"
-            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 1)
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Left)
 
             AnchorChanges {
                 target: mainLayout
@@ -284,7 +284,7 @@ DragDrop.DropArea {
         },
         State {
             name: "topRight"
-            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === 2)
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.userPanelPosition === NowDock.PanelWindow.Right)
 
             AnchorChanges {
                 target: mainLayout
