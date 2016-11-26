@@ -301,9 +301,8 @@ void PanelWindow::updateState()
             }
         }
     } else if (m_panelVisibility == LetWindowsCover) {
-        //FIXME::: This must be updated....
-        /*if (!m_isHovered && isOnTop(&dockInfo)) {
-            if( !dockIsCovered() ) {
+        if (!m_isHovered && isOnTop(&dockInfo)) {
+            if( dockIsCovering() ) {
                 mustBeLowered();
             } else {
                 showOnBottom();
@@ -316,7 +315,7 @@ void PanelWindow::updateState()
                     showOnTop();
                 }
             }
-        }*/
+        }
     }
 }
 
@@ -341,6 +340,18 @@ void PanelWindow::showOnBottom()
     KWindowSystem::setState(winId(), NET::KeepBelow);
 }
 
+bool PanelWindow::isDesktop(WId id)
+{
+    KWindowInfo info(id, NET::WMWindowType);
+
+    if ( !info.valid() ) {
+        return false;
+    }
+
+    NET::WindowType type = info.windowType(NET::DesktopMask|NET::DockMask|NET::DialogMask);
+
+    return type == NET::Desktop;
+}
 
 bool PanelWindow::isMaximized(KWindowInfo *info)
 {
@@ -403,12 +414,18 @@ bool PanelWindow::dockIsCovered()
             maskSize = QRect(x(), y(), width(), height());
         }
 
+        WId transient;
+
+        if (transientParent()) {
+            transient = transientParent()->winId();
+        }
+
         for(int j=size-1; j>currentDockPos; --j) {
             WId window = windows.at(j);
 
-            KWindowInfo info(window, NET::WMGeometry);
+            KWindowInfo info(window, NET::WMState | NET::XAWMState | NET::WMGeometry);
 
-            if ( info.valid() && maskSize.intersects(info.geometry()) ) {
+            if ( info.valid() && !isDesktop(window) && transient!=window && !info.isMinimized() && maskSize.intersects(info.geometry()) ) {
                 return true;
             }
         }
@@ -416,6 +433,51 @@ bool PanelWindow::dockIsCovered()
 
     return false;
 }
+
+bool PanelWindow::dockIsCovering()
+{
+    int currentDockPos = -1;
+
+    QList<WId> windows = KWindowSystem::stackingOrder();
+    int size = windows.count();
+
+    for(int i=size-1; i>=0; --i) {
+        WId window = windows.at(i);
+        if (window == winId()) {
+            currentDockPos = i;
+            break;
+        }
+    }
+
+    if (currentDockPos >=0) {
+        QRect maskSize;
+
+        if ( !m_maskArea.isNull() ) {
+            maskSize = QRect(x()+m_maskArea.x(), y()+m_maskArea.y(), m_maskArea.width(), m_maskArea.height());
+        } else {
+            maskSize = QRect(x(), y(), width(), height());
+        }
+
+        WId transient;
+
+        if (transientParent()) {
+            transient = transientParent()->winId();
+        }
+
+        for(int j=currentDockPos-1; j>=0; --j) {
+            WId window = windows.at(j);
+
+            KWindowInfo info(window, NET::WMState | NET::XAWMState | NET::WMGeometry);
+
+            if ( info.valid() && !isDesktop(window) && transient!=window && !info.isMinimized() && maskSize.intersects(info.geometry()) ) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 
 bool PanelWindow::activeWindowAboveDock()
 {
@@ -443,20 +505,6 @@ bool PanelWindow::activeWindowAboveDock()
 
     return false;
 }
-
-bool PanelWindow::isDesktop(WId id)
-{
-    KWindowInfo info(id, NET::WMWindowType);
-
-    if ( !info.valid() ) {
-        return false;
-    }
-
-    NET::WindowType type = info.windowType(NET::DesktopMask|NET::DockMask|NET::DialogMask);
-
-    return type == NET::Desktop;
-}
-
 
 /***************/
 

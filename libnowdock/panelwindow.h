@@ -120,6 +120,7 @@ private:
 
     bool activeWindowAboveDock();
     bool dockIsCovered();
+    bool dockIsCovering();
 
     bool isDesktop(WId id);
     bool isMaximized(KWindowInfo *info);
