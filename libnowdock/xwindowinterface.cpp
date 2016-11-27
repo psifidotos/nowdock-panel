@@ -97,7 +97,7 @@ bool XWindowInterface::desktopIsActive()
     return isDesktop(m_activeWindow);
 }
 
-bool XWindowInterface::dockIsCovered(QRect windowMaskArea)
+bool XWindowInterface::dockIsCovered()
 {
     int currentDockPos = -1;
 
@@ -115,8 +115,8 @@ bool XWindowInterface::dockIsCovered(QRect windowMaskArea)
     if (currentDockPos >=0) {
         QRect maskSize;
 
-        if ( !windowMaskArea.isNull() ) {
-            maskSize = QRect(m_dockWindow->x()+windowMaskArea.x(), m_dockWindow->y()+windowMaskArea.y(), windowMaskArea.width(), windowMaskArea.height());
+        if ( m_maskArea.isNull() ) {
+            maskSize = QRect(m_dockWindow->x()+m_maskArea.x(), m_dockWindow->y()+m_maskArea.y(), m_maskArea.width(), m_maskArea.height());
         } else {
             maskSize = QRect(m_dockWindow->x(), m_dockWindow->y(), m_dockWindow->width(), m_dockWindow->height());
         }
@@ -141,7 +141,7 @@ bool XWindowInterface::dockIsCovered(QRect windowMaskArea)
     return false;
 }
 
-bool XWindowInterface::dockIsCovering(QRect windowMaskArea)
+bool XWindowInterface::dockIsCovering()
 {
     int currentDockPos = -1;
 
@@ -159,8 +159,8 @@ bool XWindowInterface::dockIsCovering(QRect windowMaskArea)
     if (currentDockPos >=0) {
         QRect maskSize;
 
-        if ( !windowMaskArea.isNull() ) {
-            maskSize = QRect(m_dockWindow->x()+windowMaskArea.x(), m_dockWindow->y()+windowMaskArea.y(), windowMaskArea.width(), windowMaskArea.height());
+        if ( !m_maskArea.isNull() ) {
+            maskSize = QRect(m_dockWindow->x()+m_maskArea.x(), m_dockWindow->y()+m_maskArea.y(), m_maskArea.width(), m_maskArea.height());
         } else {
             maskSize = QRect(m_dockWindow->x(), m_dockWindow->y(), m_dockWindow->width(), m_dockWindow->height());
         }

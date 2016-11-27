@@ -14,12 +14,14 @@ public:
     explicit AbstractInterface(QQuickWindow *dock);
 
     virtual bool desktopIsActive() = 0;
-    virtual bool dockIsCovered(QRect windowMaskArea = QRect()) = 0;
-    virtual bool dockIsCovering(QRect windowMaskArea= QRect()) = 0;
+    virtual bool dockIsCovered() = 0;
+    virtual bool dockIsCovering() = 0;
 
     virtual void showDockAsNormal() = 0;
     virtual void showDockOnBottom() = 0;
     virtual void showDockOnTop() = 0;
+
+    void setMaskArea(QRect area);
 
 Q_SIGNALS:
     void activeWindowChanged();
@@ -27,8 +29,9 @@ Q_SIGNALS:
     void windowChanged();
 
 protected:
-    QQuickWindow *m_dockWindow;
+    QRect m_maskArea;
 
+    QQuickWindow *m_dockWindow;
 };
 
 }

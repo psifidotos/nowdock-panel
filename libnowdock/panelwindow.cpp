@@ -78,6 +78,8 @@ void PanelWindow::setMaskArea(QRect area)
     }
 
     m_maskArea = area;
+    m_interface->setMaskArea(area);
+
     setMask(m_maskArea);   
 
     emit maskAreaChanged();
@@ -347,7 +349,7 @@ void PanelWindow::updateState()
                     }
                 }
             } else if (isNormal(&dockInfo)){
-                if(!m_interface->desktopIsActive() && m_interface->dockIsCovered(m_maskArea)) {
+                if(!m_interface->desktopIsActive() && m_interface->dockIsCovered()) {
                     mustBeRaised();
                 } else {
                     showOnTop();
@@ -376,7 +378,7 @@ void PanelWindow::updateState()
                     }
                 }
             } else if (isNormal(&dockInfo)){
-                if(!m_interface->desktopIsActive() && m_interface->dockIsCovered(m_maskArea)) {
+                if(!m_interface->desktopIsActive() && m_interface->dockIsCovered()) {
                     mustBeRaised();
                 } else {
                     showOnTop();
@@ -386,7 +388,7 @@ void PanelWindow::updateState()
         break;
     case LetWindowsCover:
         if (!m_isHovered && isOnTop(&dockInfo)) {
-            if( m_interface->dockIsCovering(m_maskArea)  ) {
+            if( m_interface->dockIsCovering()  ) {
                 if (!m_disableHiding) {
                     mustBeLowered();
                 }
@@ -395,7 +397,7 @@ void PanelWindow::updateState()
             }
         } else if ( m_windowIsInAttention ) {
             if( !isOnTop(&dockInfo) ) {
-                if (m_interface->dockIsCovered(m_maskArea)) {
+                if (m_interface->dockIsCovered()) {
                     mustBeRaised();
                 } else {
                     showOnTop();

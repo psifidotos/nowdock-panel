@@ -12,4 +12,13 @@ AbstractInterface::AbstractInterface(QQuickWindow *dock) :
     m_dockWindow = dock;
 }
 
+void AbstractInterface::setMaskArea(QRect area)
+{
+    if (m_maskArea == area) {
+        return;
+    }
+
+    m_maskArea = area;
+}
+
 }

@@ -22,8 +22,8 @@ public:
     void showDockOnTop();
 
     bool desktopIsActive();
-    bool dockIsCovered(QRect windowMaskArea = QRect());
-    bool dockIsCovering(QRect windowMaskArea= QRect());
+    bool dockIsCovered();
+    bool dockIsCovering();
 
 private Q_SLOTS:
     void activeWindowChanged(WId win);
