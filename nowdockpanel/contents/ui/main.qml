@@ -472,8 +472,13 @@ DragDrop.DropArea {
         updateLayouts();
         updateNowDockConfiguration();
 
-        if (!plasmoid.immutable && magicWin && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) {
-            magicWin.mustBeRaised();
+        if (magicWin && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) {
+            if (plasmoid.immutable) {
+                magicWin.disableHiding = false;
+            } else {
+                magicWin.disableHiding = true;
+                magicWin.mustBeRaised();
+            }
         }
     }
     //////////////END OF CONNECTIONS
