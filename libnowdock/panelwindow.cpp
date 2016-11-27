@@ -12,14 +12,21 @@
 namespace NowDock
 {
 
+bool m_disableHiding;
+bool m_isAutoHidden;
+bool m_isHovered;
+//second pass of the initialization
+bool m_secondInitPass;
+bool m_windowIsInAttention;
+
 PanelWindow::PanelWindow(QQuickWindow *parent) :
     QQuickWindow(parent),
-    m_secondInitPass(false),
-    m_isAutoHidden(false),
-    m_childrenLength(-1),
-    m_windowIsInAttention(false),
     m_disableHiding(false),
-    m_isHovered(false)
+    m_isAutoHidden(false),
+    m_isHovered(false),
+    m_secondInitPass(false),
+    m_windowIsInAttention(false),
+    m_childrenLength(-1)
 {    
     setClearBeforeRendering(true);
     setColor(QColor(Qt::transparent));
@@ -448,6 +455,8 @@ bool PanelWindow::event(QEvent *e)
             m_updateStateTimer.start();
         }
     }
+
+    return true;
 }
 
 void PanelWindow::screenChanged(QScreen *screen)

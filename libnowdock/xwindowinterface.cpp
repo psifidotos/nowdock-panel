@@ -8,7 +8,7 @@ namespace NowDock
 
 XWindowInterface::XWindowInterface(QQuickWindow *parent) :
     AbstractInterface(parent),
-    m_demandsAttention(-1)
+    m_demandsAttention(0)
 {
     m_activeWindow = KWindowSystem::activeWindow();
 
@@ -169,7 +169,7 @@ bool XWindowInterface::dockIsCovered() const
             maskSize = QRect(m_dockWindow->x(), m_dockWindow->y(), m_dockWindow->width(), m_dockWindow->height());
         }
 
-        WId transient;
+        WId transient=0;
 
         if (m_dockWindow->transientParent()) {
             transient = m_dockWindow->transientParent()->winId();
@@ -213,7 +213,7 @@ bool XWindowInterface::dockIsCovering() const
             maskSize = QRect(m_dockWindow->x(), m_dockWindow->y(), m_dockWindow->width(), m_dockWindow->height());
         }
 
-        WId transient;
+        WId transient=0;
 
         if (m_dockWindow->transientParent()) {
             transient = m_dockWindow->transientParent()->winId();
@@ -249,11 +249,11 @@ void XWindowInterface::windowChanged (WId id, NET::Properties properties, NET::P
     KWindowInfo info(id, NET::WMState|NET::CloseWindow);
 
     if (info.valid()) {
-        if ((m_demandsAttention == -1) && info.hasState(NET::DemandsAttention)) {
+        if ((m_demandsAttention == 0) && info.hasState(NET::DemandsAttention)) {
             m_demandsAttention = id;
             emit windowInAttention(true);
         } else if ((m_demandsAttention == id) && !info.hasState(NET::DemandsAttention)) {
-            m_demandsAttention = -1;
+            m_demandsAttention = 0;
             emit windowInAttention(false);
         }
     }
@@ -268,7 +268,7 @@ void XWindowInterface::windowChanged (WId id, NET::Properties properties, NET::P
 void XWindowInterface::windowRemoved (WId id)
 {
     if (id==m_demandsAttention) {
-        m_demandsAttention = -1;
+        m_demandsAttention = 0;
         emit AbstractInterface::windowInAttention(false);
     }
 }
