@@ -623,16 +623,17 @@ bool PanelWindow::event(QEvent *e)
     QQuickWindow::event(e);
 
     if (e->type() == QEvent::Enter) {
+        setIsHovered(true);
         m_updateStateTimer.stop();
         shrinkTransient();
 
-        if (!m_isHovered && m_panelVisibility == AutoHide) {
-            emit mustBeRaised();
+        if (m_panelVisibility == AutoHide) {
+            if (m_isAutoHidden) {
+                emit mustBeRaised();
+            }
         } else {
             showOnTop();
         }
-
-        setIsHovered(true);
     } else if ((e->type() == QEvent::Leave) && (!isActive()) ) {
         setIsHovered(false);
 

@@ -8,10 +8,10 @@ NowDock.PanelWindow{
     id: window
 
     property bool inStartup: root.inStartup
-    property bool  normalState : (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
-                                 && (root.appletsAnimations === 0)
-                                 && (root.animationsNeedBothAxis === 0) && (root.animationsNeedLength === 0)
-                                 && (!mainLayout.animatedLength)
+    property bool normalState : (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
+                                && (root.appletsAnimations === 0)
+                                && (root.animationsNeedBothAxis === 0) && (root.animationsNeedLength === 0)
+                                && (!mainLayout.animatedLength)
 
 
     property int animationSpeed: root.durationTime * 1.2 * units.longDuration
@@ -54,6 +54,11 @@ NowDock.PanelWindow{
 
     onIsHoveredChanged: {
         if(isHovered) {
+            //stop parent window timer for auto hiding
+            if (panelVisibility === NowDock.PanelWindow.AutoHide) {
+                hideMagicWindowInAutoHide.stop();
+            }
+
             if (delayerTimer.running) {
                 delayerTimer.stop();
             }
@@ -120,7 +125,7 @@ NowDock.PanelWindow{
         var localX = 0;
         var localY = 0;
 
-       /* var normalState = (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
+        /* var normalState = (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
                 && (root.appletsAnimations === 0)
                 && (root.animationsNeedBothAxis === 0) && (root.animationsNeedLength === 0)
                 && (!mainLayout.animatedLength)*/

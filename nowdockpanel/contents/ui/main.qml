@@ -1128,7 +1128,7 @@ DragDrop.DropArea {
     ///////////////BEGIN TIMER elements
     Timer {
         id:hideMagicWindowInAutoHide
-        interval:1500
+        interval:2000
         onTriggered: {
             if (plasmoid.immutable && magicWin && !magicWin.isHovered && !wholeArea.containsMouse
                     && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) {
