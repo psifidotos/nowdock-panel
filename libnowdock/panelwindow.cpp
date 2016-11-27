@@ -329,17 +329,9 @@ void PanelWindow::updateState()
 
     switch (m_panelVisibility) {
     case BelowActive:
-        if ( activeInfo.valid() ) {
-            QRect maskSize;
-
-            if ( !m_maskArea.isNull() ) {
-                maskSize = QRect(x()+m_maskArea.x(), y()+m_maskArea.y(), m_maskArea.width(), m_maskArea.height());
-            } else {
-                maskSize = QRect(x(), y(), width(), height());
-            }
-
-            if ( !m_interface->desktopIsActive() && maskSize.intersects(activeInfo.geometry()) ) {
-                if ( isOnTop(&dockInfo) ) {
+      //  if ( activeInfo.valid() ) {
+            if ( !m_interface->desktopIsActive() && m_interface->dockIntersectsActiveWindow() ) {
+                if ( m_interface->dockIsOnTop() ) {
                     if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
                         mustBeLowered();                    //showNormal();
                     }
@@ -348,26 +340,18 @@ void PanelWindow::updateState()
                         mustBeRaised();                     //showOnTop();
                     }
                 }
-            } else if (isNormal(&dockInfo)){
+            } else if (m_interface->dockInNormalState()){
                 if(!m_interface->desktopIsActive() && m_interface->dockIsCovered()) {
                     mustBeRaised();
                 } else {
                     showOnTop();
                 }
             }
-        }
+    //    }
         break;
     case BelowMaximized:
         if ( activeInfo.valid() ) {
-            QRect maskSize;
-
-            if ( !m_maskArea.isNull() ) {
-                maskSize = QRect(x()+m_maskArea.x(), y()+m_maskArea.y(), m_maskArea.width(), m_maskArea.height());
-            } else {
-                maskSize = QRect(x(), y(), width(), height());
-            }
-
-            if ( !m_interface->desktopIsActive() && isMaximized(&activeInfo) && maskSize.intersects(activeInfo.geometry()) ) {
+            if ( !m_interface->desktopIsActive() && isMaximized(&activeInfo) && m_interface->dockIntersectsActiveWindow() ) {
                 if ( isOnTop(&dockInfo) ) {
                     if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
                         mustBeLowered();                    //showNormal();

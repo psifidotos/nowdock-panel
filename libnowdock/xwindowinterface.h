@@ -21,9 +21,13 @@ public:
     void showDockOnBottom();
     void showDockOnTop();
 
-    bool desktopIsActive();
-    bool dockIsCovered();
-    bool dockIsCovering();
+    bool dockIntersectsActiveWindow() const;
+    bool desktopIsActive() const;
+    bool dockIsCovered() const;
+    bool dockIsCovering() const;
+    bool dockIsOnTop() const;
+    bool dockInNormalState() const;
+    bool dockIsBelow() const;
 
 private Q_SLOTS:
     void activeWindowChanged(WId win);
@@ -34,11 +38,11 @@ private:
     WId m_activeWindow;
     WId m_demandsAttention;
 
-    bool isDesktop(WId id);
-    bool isMaximized(KWindowInfo *info);
-    bool isNormal(KWindowInfo *info);
-    bool isOnBottom(KWindowInfo *info);
-    bool isOnTop(KWindowInfo *info);
+    bool isDesktop(WId id) const;
+    bool isMaximized(WId id) const;
+    bool isNormal(WId id) const;
+    bool isOnBottom(WId id) const;
+    bool isOnTop(WId id) const;
 };
 
 }

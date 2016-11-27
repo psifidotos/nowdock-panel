@@ -42,7 +42,7 @@ void XWindowInterface::showDockOnBottom()
 }
 
 
-bool XWindowInterface::isDesktop(WId id)
+bool XWindowInterface::isDesktop(WId id) const
 {
     KWindowInfo info(id, NET::WMWindowType);
 
@@ -56,48 +56,85 @@ bool XWindowInterface::isDesktop(WId id)
 }
 
 
-bool XWindowInterface::isMaximized(KWindowInfo *info)
+bool XWindowInterface::isMaximized(WId id) const
 {
-    if ( !info || !info->valid() ) {
+    KWindowInfo info(id, NET::WMState);
+
+    if ( !info.valid() ) {
+        return false;
+    }
+    return ( info.hasState(NET::Max) );
+}
+
+bool XWindowInterface::isNormal(WId id) const
+{
+    return ( !isOnBottom(id) && !isOnTop(id) );
+}
+
+bool XWindowInterface::isOnBottom(WId id) const
+{
+    KWindowInfo info(id, NET::WMState);
+
+    if ( !info.valid() ) {
         return false;
     }
 
-    return ( info->hasState(NET::Max) );
+    return ( info.hasState(NET::KeepBelow) );
 }
 
-bool XWindowInterface::isNormal(KWindowInfo *info)
+bool XWindowInterface::isOnTop(WId id) const
 {
-    if ( !info || !info->valid() ) {
+    KWindowInfo info(id, NET::WMState);
+
+    if ( !info.valid() ) {
         return false;
     }
 
-    return ( !isOnBottom(info) && !isOnTop(info) );
+    return ( info.hasState(NET::KeepAbove) );
 }
 
-bool XWindowInterface::isOnBottom(KWindowInfo *info)
-{
-    if ( !info || !info->valid() ) {
-        return false;
-    }
-
-    return ( info->hasState(NET::KeepBelow) );
-}
-
-bool XWindowInterface::isOnTop(KWindowInfo *info)
-{
-    if ( !info || !info->valid() ) {
-        return false;
-    }
-
-    return ( info->hasState(NET::KeepAbove) );
-}
-
-bool XWindowInterface::desktopIsActive()
+bool XWindowInterface::desktopIsActive() const
 {
     return isDesktop(m_activeWindow);
 }
 
-bool XWindowInterface::dockIsCovered()
+bool XWindowInterface::dockIsOnTop() const
+{
+    return isOnTop(m_dockWindow->winId());
+
+}
+
+bool XWindowInterface::dockInNormalState() const
+{
+    return isNormal(m_dockWindow->winId());
+}
+
+bool XWindowInterface::dockIsBelow() const
+{
+    return isOnBottom(m_dockWindow->winId());
+}
+
+bool XWindowInterface::dockIntersectsActiveWindow() const
+{
+    KWindowInfo activeInfo(m_activeWindow, NET::WMGeometry);
+
+    if ( activeInfo.valid() ) {
+        QRect maskSize;
+
+        if ( !m_maskArea.isNull() ) {
+            maskSize = QRect(m_dockWindow->x()+m_maskArea.x(), m_dockWindow->y()+m_maskArea.y(), m_maskArea.width(), m_maskArea.height());
+        } else {
+            maskSize = QRect(m_dockWindow->x(), m_dockWindow->y(), m_dockWindow->width(), m_dockWindow->height());
+        }
+
+        return maskSize.intersects(activeInfo.geometry());
+    } else {
+        return false;
+    }
+}
+
+
+bool XWindowInterface::dockIsCovered() const
 {
     int currentDockPos = -1;
 
@@ -141,7 +178,7 @@ bool XWindowInterface::dockIsCovered()
     return false;
 }
 
-bool XWindowInterface::dockIsCovering()
+bool XWindowInterface::dockIsCovering() const
 {
     int currentDockPos = -1;
 

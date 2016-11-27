@@ -13,9 +13,13 @@ class AbstractInterface : public QObject {
 public:
     explicit AbstractInterface(QQuickWindow *dock);
 
-    virtual bool desktopIsActive() = 0;
-    virtual bool dockIsCovered() = 0;
-    virtual bool dockIsCovering() = 0;
+    virtual bool desktopIsActive() const = 0;
+    virtual bool dockIntersectsActiveWindow() const = 0;
+    virtual bool dockIsCovered() const = 0;
+    virtual bool dockIsCovering() const = 0;
+    virtual bool dockIsOnTop() const = 0;
+    virtual bool dockInNormalState() const = 0;
+    virtual bool dockIsBelow() const = 0;
 
     virtual void showDockAsNormal() = 0;
     virtual void showDockOnBottom() = 0;
