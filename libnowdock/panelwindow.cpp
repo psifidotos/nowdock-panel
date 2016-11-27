@@ -302,7 +302,7 @@ void PanelWindow::updateVisibilityFlags()
     }
 
     if (m_panelVisibility == AutoHide) {
-        m_updateStateTimer.setInterval(2200);
+        m_updateStateTimer.setInterval(2500);
     } else {
         m_updateStateTimer.setInterval(1500);
     }

@@ -2,6 +2,8 @@ import QtQuick 2.1
 
 import org.kde.plasma.core 2.0 as PlasmaCore
 
+import org.kde.taskmanager 0.1 as TaskManager
+
 import org.kde.nowdock 0.1 as NowDock
 
 NowDock.PanelWindow{
@@ -56,6 +58,11 @@ NowDock.PanelWindow{
         if(isHovered) {
             //stop parent window timer for auto hiding
             if (panelVisibility === NowDock.PanelWindow.AutoHide) {
+                if(hideMagicWindowInAutoHide.forcedDisableHiding) {
+                    hideMagicWindowInAutoHide.forcedDisableHiding = false;
+                    window.disableHiding = false;
+                }
+
                 hideMagicWindowInAutoHide.stop();
             }
 
@@ -369,6 +376,20 @@ NowDock.PanelWindow{
             window.isAutoHidden = false;
             updateMaskArea();
             start();
+        }
+    }
+
+    ///////////// External Connections //////
+    TaskManager.ActivityInfo {
+        onCurrentActivityChanged: {
+            window.disableHiding = true;
+
+            if (window.isAutoHidden) {
+                window.mustBeRaised();
+            }
+
+            hideMagicWindowInAutoHide.forcedDisableHiding = true;
+            hideMagicWindowInAutoHide.start();
         }
     }
 

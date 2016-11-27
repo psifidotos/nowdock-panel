@@ -1133,8 +1133,17 @@ DragDrop.DropArea {
     ///////////////BEGIN TIMER elements
     Timer {
         id:hideMagicWindowInAutoHide
-        interval:2000
+        interval:2500
+
+        //it is used in activity change situation
+        property bool forcedDisableHiding: false
+
         onTriggered: {
+            if (forcedDisableHiding) {
+                forcedDisableHiding = false;
+                magicWin.disableHiding = false;
+            }
+
             if (plasmoid.immutable && magicWin && !magicWin.isHovered && !wholeArea.containsMouse
                     && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) {
                 magicWin.mustBeLowered();
