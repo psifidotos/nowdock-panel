@@ -1,12 +1,12 @@
 find_package(ECM 1.8.0 REQUIRED NO_MODULE)
 
 set (REQUIRED_QT_VERSION "5.3.0")
-find_package(Qt5 ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE COMPONENTS Quick Gui Sql Qml Svg)
-find_package(KF5WindowSystem REQUIRED)
+find_package(Qt5 ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE COMPONENTS Quick Qml)
 
 find_package(KF5 REQUIRED COMPONENTS
     Plasma
     PlasmaQuick
+    WindowSystem
 )
 
 set(CMAKE_AUTOMOC ON)
