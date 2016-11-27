@@ -21,6 +21,11 @@ XWindowInterface::~XWindowInterface()
 {
 }
 
+void XWindowInterface::setDockToAlwaysVisible()
+{
+    KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
+}
+
 void XWindowInterface::showDockOnTop()
 {
     KWindowSystem::clearState(m_dockWindow->winId(), NET::KeepBelow);
@@ -253,7 +258,7 @@ void XWindowInterface::windowChanged (WId id, NET::Properties properties, NET::P
         }
     }
 
-    emit AbstractInterface::windowChanged();
+  //  emit AbstractInterface::windowChanged();
 
     if (id==m_activeWindow) {
         emit AbstractInterface::activeWindowChanged();
@@ -267,6 +272,5 @@ void XWindowInterface::windowRemoved (WId id)
         emit AbstractInterface::windowInAttention(false);
     }
 }
-
 
 }

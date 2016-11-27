@@ -17,10 +17,6 @@ public:
     explicit XWindowInterface(QQuickWindow *parent);
     ~XWindowInterface();
 
-    void showDockAsNormal();
-    void showDockOnBottom();
-    void showDockOnTop();
-
     bool activeIsMaximized() const;
     bool dockIntersectsActiveWindow() const;
     bool desktopIsActive() const;
@@ -29,6 +25,11 @@ public:
     bool dockIsOnTop() const;
     bool dockInNormalState() const;
     bool dockIsBelow() const;
+
+    void setDockToAlwaysVisible();
+    void showDockAsNormal();
+    void showDockOnBottom();
+    void showDockOnTop();
 
 private Q_SLOTS:
     void activeWindowChanged(WId win);

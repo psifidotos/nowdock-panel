@@ -1,12 +1,8 @@
 #ifndef PANELWINDOW_H
 #define PANELWINDOW_H
 
-#include <QQuickItem>
 #include <QQuickWindow>
 #include <QTimer>
-#include <QWindow>
-
-#include <KWindowInfo>
 
 #include <plasma/plasma.h>
 
@@ -121,7 +117,6 @@ protected:
   //  void mouseMoveEvent(QMouseEvent *ev);
 
 private Q_SLOTS:
-    void activeWindowChanged(WId win);
     void activeWindowChanged();
     void updateState();
     void initWindow();
@@ -140,8 +135,6 @@ private:
 
     int m_childrenLength;
 
-    AbstractInterface *m_interface;
-
     QRect m_maskArea;
     QScreen *m_screen;
     QTimer m_initTimer;
@@ -149,15 +142,9 @@ private:
 
     Plasma::Types::Location m_location;
 
-    WId m_activeWindow;
-    WId m_demandsAttention;
-
     PanelVisibility m_panelVisibility;
 
-    bool isMaximized(KWindowInfo *info);
-    bool isNormal(KWindowInfo *info);
-    bool isOnBottom(KWindowInfo *info);
-    bool isOnTop(KWindowInfo *info);
+    AbstractInterface *m_interface;
 };
 
 } //NowDock namespace

@@ -2,15 +2,10 @@
 
 #include "xwindowinterface.h"
 
-#include <QGuiApplication>
 #include <QQuickWindow>
 #include <QScreen>
 #include <QTimer>
 #include <QWindow>
-
-//#include <KWindowEffects>
-#include <KWindowInfo>
-#include <KWindowSystem>
 
 #include <QDebug>
 
@@ -22,7 +17,6 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     m_secondInitPass(false),
     m_isAutoHidden(false),
     m_childrenLength(-1),
-    m_demandsAttention(-1),
     m_windowIsInAttention(false),
     m_disableHiding(false),
     m_isHovered(false)
@@ -33,11 +27,8 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
 
     m_interface = new XWindowInterface(this);
     connect(m_interface, SIGNAL(windowInAttention(bool)), this, SLOT(setWindowInAttention(bool)));
-    connect(m_interface, SIGNAL(windowChanged()), this, SLOT(windowChanged()));
+    //connect(m_interface, SIGNAL(windowChanged()), this, SLOT(windowChanged()));
     connect(m_interface, SIGNAL(activeWindowChanged()), this, SLOT(activeWindowChanged()));
-
-    connect(KWindowSystem::self(), SIGNAL(activeWindowChanged(WId)), this, SLOT(activeWindowChanged(WId)));
-    m_activeWindow = KWindowSystem::activeWindow();
 
     m_screen = screen();
     connect(this, SIGNAL(screenChanged(QScreen *)), this, SLOT(screenChanged(QScreen *)));
@@ -300,7 +291,7 @@ void PanelWindow::updateVisibilityFlags()
     setFlags(Qt::Tool|Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
 
     if (m_panelVisibility == AlwaysVisible) {
-        KWindowSystem::setType(winId(), NET::Dock);
+        m_interface->setDockToAlwaysVisible();
         updateWindowPosition();
     } else {
         updateWindowPosition();
@@ -322,9 +313,6 @@ void PanelWindow::updateVisibilityFlags()
  */
 void PanelWindow::updateState()
 {
- //   KWindowInfo dockInfo(winId(), NET::WMState);
- //   KWindowInfo activeInfo(m_activeWindow, NET::WMGeometry | NET::WMState);
-
     //qDebug() << "in update state disableHiding:" <<m_disableHiding;
 
     switch (m_panelVisibility) {
@@ -420,59 +408,7 @@ void PanelWindow::showOnBottom()
 }
 
 
-bool PanelWindow::isMaximized(KWindowInfo *info)
-{
-    if ( !info || !info->valid() ) {
-        return false;
-    }
-
-    return ( info->hasState(NET::Max) );
-}
-
-bool PanelWindow::isNormal(KWindowInfo *info)
-{
-    if ( !info || !info->valid() ) {
-        return false;
-    }
-
-    return ( !isOnBottom(info) && !isOnTop(info) );
-}
-
-bool PanelWindow::isOnBottom(KWindowInfo *info)
-{
-    if ( !info || !info->valid() ) {
-        return false;
-    }
-
-    return ( info->hasState(NET::KeepBelow) );
-}
-
-bool PanelWindow::isOnTop(KWindowInfo *info)
-{
-    if ( !info || !info->valid() ) {
-        return false;
-    }
-
-    return ( info->hasState(NET::KeepAbove) );
-}
-
 /***************/
-
-void PanelWindow::activeWindowChanged(WId win)
-{
-    m_activeWindow = win;
-
-    /*   if ( (m_panelVisibility == WindowsGoBelow)
-         || (m_panelVisibility == AlwaysVisible)
-         || (m_panelVisibility == AutoHide)) {
-        return;
-    }
-
-    if (!m_updateStateTimer.isActive()) {
-        m_updateStateTimer.start();
-    }*/
-}
-
 void PanelWindow::activeWindowChanged()
 {
     if ( (m_panelVisibility == WindowsGoBelow)
@@ -481,7 +417,9 @@ void PanelWindow::activeWindowChanged()
         return;
     }
 
-    if (!m_updateStateTimer.isActive()) {
+    //this check is important because otherwise the signals are so often
+    //that the timer is never triggered
+    if ( !m_updateStateTimer.isActive() ) {
         m_updateStateTimer.start();
     }
 }
