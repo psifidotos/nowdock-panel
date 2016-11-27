@@ -10,6 +10,8 @@
 
 #include <plasma/plasma.h>
 
+#include "abstractinterface.h"
+
 namespace NowDock
 {
 
@@ -137,6 +139,8 @@ private:
     bool m_windowIsInAttention;
 
     int m_childrenLength;
+
+    AbstractInterface *m_interface;
 
     QRect m_maskArea;
     QScreen *m_screen;

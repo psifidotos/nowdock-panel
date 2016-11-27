@@ -1,12 +1,14 @@
 #include "panelwindow.h"
 
+#include "xwindowinterface.h"
+
 #include <QGuiApplication>
 #include <QQuickWindow>
 #include <QScreen>
 #include <QTimer>
 #include <QWindow>
 
-#include <KWindowEffects>
+//#include <KWindowEffects>
 #include <KWindowInfo>
 #include <KWindowSystem>
 
@@ -28,6 +30,8 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     setClearBeforeRendering(true);
     setColor(QColor(Qt::transparent));
     setFlags(Qt::Tool|Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
+
+    m_interface = new XWindowInterface(this);
 
     connect(KWindowSystem::self(), SIGNAL(activeWindowChanged(WId)), this, SLOT(activeWindowChanged(WId)));
     connect(KWindowSystem::self(), SIGNAL(windowChanged (WId,NET::Properties,NET::Properties2)), this, SLOT(windowChanged (WId,NET::Properties,NET::Properties2)));
@@ -417,22 +421,19 @@ void PanelWindow::updateState()
 void PanelWindow::showOnTop()
 {
     //    qDebug() << "reached make top...";
-    KWindowSystem::clearState(winId(), NET::KeepBelow);
-    KWindowSystem::setState(winId(), NET::KeepAbove);
+    m_interface->showDockOnTop();
 }
 
 void PanelWindow::showNormal()
 {
     //    qDebug() << "reached make normal...";
-    KWindowSystem::clearState(winId(), NET::KeepAbove);
-    KWindowSystem::clearState(winId(), NET::KeepBelow);
+    m_interface->showDockAsNormal();
 }
 
 void PanelWindow::showOnBottom()
 {
     //    qDebug() << "reached make bottom...";
-    KWindowSystem::clearState(winId(), NET::KeepAbove);
-    KWindowSystem::setState(winId(), NET::KeepBelow);
+    m_interface->showDockOnBottom();
 }
 
 bool PanelWindow::isDesktop(WId id)

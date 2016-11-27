@@ -14,6 +14,8 @@ set(CMAKE_AUTOMOC ON)
 set(nowdock_SRCS
     nowdockplugin.cpp
     panelwindow.cpp
+    xwindowinterface.cpp
+    abstractinterface.cpp
 )
     
 add_library(nowdockplugin SHARED ${nowdock_SRCS})
