@@ -77,7 +77,7 @@ public:
     bool isHovered() const;
 
     bool windowInAttention() const;
-    void setWindowInAttention(bool state);
+   // void setWindowInAttention(bool state);
 
     int childrenLength() const;
     void setChildrenLength(int value);
@@ -112,6 +112,7 @@ public slots:
     Q_INVOKABLE void showOnTop();
     Q_INVOKABLE void showOnBottom();
     Q_INVOKABLE void shrinkTransient();
+    void setWindowInAttention(bool state);
 
 
 protected:
@@ -121,14 +122,14 @@ protected:
 
 private Q_SLOTS:
     void activeWindowChanged(WId win);
+    void activeWindowChanged();
     void updateState();
     void initWindow();
     void setIsHovered(bool state);
     void screenChanged(QScreen *screen);
     void updateVisibilityFlags();
     void updateWindowPosition();
-    void windowChanged (WId id, NET::Properties properties, NET::Properties2 properties2);
-    void windowRemoved (WId id);
+    void windowChanged ();
 
 private:
     bool m_disableHiding;

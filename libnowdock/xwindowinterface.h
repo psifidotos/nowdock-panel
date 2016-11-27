@@ -21,6 +21,9 @@ public:
     void showDockOnBottom();
     void showDockOnTop();
 
+    bool dockIsCovered(QRect windowMaskArea = QRect());
+    bool dockIsCovering(QRect windowMaskArea= QRect());
+
 private Q_SLOTS:
     void activeWindowChanged(WId win);
     void windowChanged (WId id, NET::Properties properties, NET::Properties2 properties2);
@@ -29,6 +32,8 @@ private Q_SLOTS:
 private:
     WId m_activeWindow;
     WId m_demandsAttention;
+
+    bool isDesktop(WId id);
 };
 
 }

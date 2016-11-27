@@ -32,10 +32,11 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     setFlags(Qt::Tool|Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
 
     m_interface = new XWindowInterface(this);
+    connect(m_interface, SIGNAL(windowInAttention(bool)), this, SLOT(setWindowInAttention(bool)));
+    connect(m_interface, SIGNAL(windowChanged()), this, SLOT(windowChanged()));
+    connect(m_interface, SIGNAL(activeWindowChanged()), this, SLOT(activeWindowChanged()));
 
     connect(KWindowSystem::self(), SIGNAL(activeWindowChanged(WId)), this, SLOT(activeWindowChanged(WId)));
-    connect(KWindowSystem::self(), SIGNAL(windowChanged (WId,NET::Properties,NET::Properties2)), this, SLOT(windowChanged (WId,NET::Properties,NET::Properties2)));
-    connect(KWindowSystem::self(), SIGNAL(windowRemoved(WId)), this, SLOT(windowRemoved(WId)));
     m_activeWindow = KWindowSystem::activeWindow();
 
     m_screen = screen();
@@ -575,7 +576,7 @@ bool PanelWindow::dockIsCovering()
 }
 
 
-bool PanelWindow::activeWindowAboveDock()
+/*bool PanelWindow::activeWindowAboveDock()
 {
     int currentDockPos = -1;
 
@@ -600,7 +601,7 @@ bool PanelWindow::activeWindowAboveDock()
     }
 
     return false;
-}
+}*/
 
 /***************/
 
@@ -608,6 +609,19 @@ void PanelWindow::activeWindowChanged(WId win)
 {
     m_activeWindow = win;
 
+ /*   if ( (m_panelVisibility == WindowsGoBelow)
+         || (m_panelVisibility == AlwaysVisible)
+         || (m_panelVisibility == AutoHide)) {
+        return;
+    }
+
+    if (!m_updateStateTimer.isActive()) {
+        m_updateStateTimer.start();
+    }*/
+}
+
+void PanelWindow::activeWindowChanged()
+{
     if ( (m_panelVisibility == WindowsGoBelow)
          || (m_panelVisibility == AlwaysVisible)
          || (m_panelVisibility == AutoHide)) {
@@ -667,34 +681,16 @@ void PanelWindow::showEvent(QShowEvent *event)
 }
 
 
-void PanelWindow::windowChanged (WId id, NET::Properties properties, NET::Properties2 properties2)
+void PanelWindow::windowChanged ()
 {
-    KWindowInfo info(id, NET::WMState|NET::CloseWindow);
-    if (info.valid()) {
-        if ((m_demandsAttention == -1) && info.hasState(NET::DemandsAttention)) {
-            m_demandsAttention = id;
-            setWindowInAttention(true);
-        } else if ((m_demandsAttention == id) && !info.hasState(NET::DemandsAttention)) {
-            m_demandsAttention = -1;
-            setWindowInAttention(false);
-        }
-    }
-
-    if ((m_panelVisibility!=BelowActive)&&(m_panelVisibility!=BelowMaximized)) {
+/*    if ((m_panelVisibility!=BelowActive)&&(m_panelVisibility!=BelowMaximized)) {
         return;
     }
 
     if ((id==m_activeWindow) && (!m_updateStateTimer.isActive())) {
         m_updateStateTimer.start();
-    }
+    }*/
 }
 
-void PanelWindow::windowRemoved (WId id)
-{
-    if (id==m_demandsAttention) {
-        m_demandsAttention = -1;
-        setWindowInAttention(false);
-    }
-}
 
 } //NowDock namespace

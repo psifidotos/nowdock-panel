@@ -13,12 +13,17 @@ class AbstractInterface : public QObject {
 public:
     explicit AbstractInterface(QQuickWindow *parent);
 
+    virtual bool dockIsCovered(QRect windowMaskArea = QRect()) = 0;
+    virtual bool dockIsCovering(QRect windowMaskArea= QRect()) = 0;
+
     virtual void showDockAsNormal() = 0;
     virtual void showDockOnBottom() = 0;
     virtual void showDockOnTop() = 0;
 
 Q_SIGNALS:
+    void activeWindowChanged();
     void windowInAttention(bool);
+    void windowChanged();
 
 protected:
     QQuickWindow *m_dockWindow;
