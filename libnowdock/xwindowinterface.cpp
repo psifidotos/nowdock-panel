@@ -93,6 +93,12 @@ bool XWindowInterface::isOnTop(WId id) const
     return ( info.hasState(NET::KeepAbove) );
 }
 
+bool XWindowInterface::activeIsMaximized() const
+{
+    return isMaximized(m_activeWindow);
+}
+
+
 bool XWindowInterface::desktopIsActive() const
 {
     return isDesktop(m_activeWindow);

@@ -80,7 +80,7 @@ void PanelWindow::setMaskArea(QRect area)
     m_maskArea = area;
     m_interface->setMaskArea(area);
 
-    setMask(m_maskArea);   
+    setMask(m_maskArea);
 
     emit maskAreaChanged();
 }
@@ -322,56 +322,52 @@ void PanelWindow::updateVisibilityFlags()
  */
 void PanelWindow::updateState()
 {
-    KWindowInfo dockInfo(winId(), NET::WMState);
-    KWindowInfo activeInfo(m_activeWindow, NET::WMGeometry | NET::WMState);
+ //   KWindowInfo dockInfo(winId(), NET::WMState);
+ //   KWindowInfo activeInfo(m_activeWindow, NET::WMGeometry | NET::WMState);
 
     //qDebug() << "in update state disableHiding:" <<m_disableHiding;
 
     switch (m_panelVisibility) {
     case BelowActive:
-      //  if ( activeInfo.valid() ) {
-            if ( !m_interface->desktopIsActive() && m_interface->dockIntersectsActiveWindow() ) {
-                if ( m_interface->dockIsOnTop() ) {
-                    if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
-                        mustBeLowered();                    //showNormal();
-                    }
-                } else {
-                    if ( m_windowIsInAttention ) {
-                        mustBeRaised();                     //showOnTop();
-                    }
+        if ( !m_interface->desktopIsActive() && m_interface->dockIntersectsActiveWindow() ) {
+            if ( m_interface->dockIsOnTop() ) {
+                if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
+                    mustBeLowered();                    //showNormal();
                 }
-            } else if (m_interface->dockInNormalState()){
-                if(!m_interface->desktopIsActive() && m_interface->dockIsCovered()) {
-                    mustBeRaised();
-                } else {
-                    showOnTop();
+            } else {
+                if ( m_windowIsInAttention ) {
+                    mustBeRaised();                     //showOnTop();
                 }
             }
-    //    }
+        } else if (m_interface->dockInNormalState()){
+            if(!m_interface->desktopIsActive() && m_interface->dockIsCovered()) {
+                mustBeRaised();
+            } else {
+                showOnTop();
+            }
+        }
         break;
     case BelowMaximized:
-        if ( activeInfo.valid() ) {
-            if ( !m_interface->desktopIsActive() && isMaximized(&activeInfo) && m_interface->dockIntersectsActiveWindow() ) {
-                if ( isOnTop(&dockInfo) ) {
-                    if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
-                        mustBeLowered();                    //showNormal();
-                    }
-                } else {
-                    if ( m_windowIsInAttention ) {
-                        mustBeRaised();                     //showOnTop();
-                    }
+        if ( !m_interface->desktopIsActive() && m_interface->activeIsMaximized() && m_interface->dockIntersectsActiveWindow() ) {
+            if ( m_interface->dockIsOnTop() ) {
+                if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
+                    mustBeLowered();                    //showNormal();
                 }
-            } else if (isNormal(&dockInfo)){
-                if(!m_interface->desktopIsActive() && m_interface->dockIsCovered()) {
-                    mustBeRaised();
-                } else {
-                    showOnTop();
+            } else {
+                if ( m_windowIsInAttention ) {
+                    mustBeRaised();                     //showOnTop();
                 }
+            }
+        } else if ( m_interface->dockInNormalState() ) {
+            if(!m_interface->desktopIsActive() && m_interface->dockIsCovered()) {
+                mustBeRaised();
+            } else {
+                showOnTop();
             }
         }
         break;
     case LetWindowsCover:
-        if (!m_isHovered && isOnTop(&dockInfo)) {
+        if (!m_isHovered && m_interface->dockIsOnTop()) {
             if( m_interface->dockIsCovering()  ) {
                 if (!m_disableHiding) {
                     mustBeLowered();
@@ -380,7 +376,7 @@ void PanelWindow::updateState()
                 showOnBottom();
             }
         } else if ( m_windowIsInAttention ) {
-            if( !isOnTop(&dockInfo) ) {
+            if( !m_interface->dockIsOnTop() ) {
                 if (m_interface->dockIsCovered()) {
                     mustBeRaised();
                 } else {
@@ -466,7 +462,7 @@ void PanelWindow::activeWindowChanged(WId win)
 {
     m_activeWindow = win;
 
- /*   if ( (m_panelVisibility == WindowsGoBelow)
+    /*   if ( (m_panelVisibility == WindowsGoBelow)
          || (m_panelVisibility == AlwaysVisible)
          || (m_panelVisibility == AutoHide)) {
         return;

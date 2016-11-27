@@ -21,6 +21,7 @@ public:
     void showDockOnBottom();
     void showDockOnTop();
 
+    bool activeIsMaximized() const;
     bool dockIntersectsActiveWindow() const;
     bool desktopIsActive() const;
     bool dockIsCovered() const;
