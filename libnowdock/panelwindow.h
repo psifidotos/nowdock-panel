@@ -129,7 +129,6 @@ private Q_SLOTS:
     void screenChanged(QScreen *screen);
     void updateVisibilityFlags();
     void updateWindowPosition();
-    void windowChanged ();
 
 private:
     bool m_disableHiding;
@@ -155,7 +154,6 @@ private:
 
     PanelVisibility m_panelVisibility;
 
-    bool isDesktop(WId id);
     bool isMaximized(KWindowInfo *info);
     bool isNormal(KWindowInfo *info);
     bool isOnBottom(KWindowInfo *info);

@@ -56,6 +56,47 @@ bool XWindowInterface::isDesktop(WId id)
 }
 
 
+bool XWindowInterface::isMaximized(KWindowInfo *info)
+{
+    if ( !info || !info->valid() ) {
+        return false;
+    }
+
+    return ( info->hasState(NET::Max) );
+}
+
+bool XWindowInterface::isNormal(KWindowInfo *info)
+{
+    if ( !info || !info->valid() ) {
+        return false;
+    }
+
+    return ( !isOnBottom(info) && !isOnTop(info) );
+}
+
+bool XWindowInterface::isOnBottom(KWindowInfo *info)
+{
+    if ( !info || !info->valid() ) {
+        return false;
+    }
+
+    return ( info->hasState(NET::KeepBelow) );
+}
+
+bool XWindowInterface::isOnTop(KWindowInfo *info)
+{
+    if ( !info || !info->valid() ) {
+        return false;
+    }
+
+    return ( info->hasState(NET::KeepAbove) );
+}
+
+bool XWindowInterface::desktopIsActive()
+{
+    return isDesktop(m_activeWindow);
+}
+
 bool XWindowInterface::dockIsCovered(QRect windowMaskArea)
 {
     int currentDockPos = -1;

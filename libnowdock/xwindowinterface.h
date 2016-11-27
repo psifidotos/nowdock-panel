@@ -21,6 +21,7 @@ public:
     void showDockOnBottom();
     void showDockOnTop();
 
+    bool desktopIsActive();
     bool dockIsCovered(QRect windowMaskArea = QRect());
     bool dockIsCovering(QRect windowMaskArea= QRect());
 
@@ -34,6 +35,10 @@ private:
     WId m_demandsAttention;
 
     bool isDesktop(WId id);
+    bool isMaximized(KWindowInfo *info);
+    bool isNormal(KWindowInfo *info);
+    bool isOnBottom(KWindowInfo *info);
+    bool isOnTop(KWindowInfo *info);
 };
 
 }

@@ -336,7 +336,7 @@ void PanelWindow::updateState()
                 maskSize = QRect(x(), y(), width(), height());
             }
 
-            if ( !isDesktop(m_activeWindow) && maskSize.intersects(activeInfo.geometry()) ) {
+            if ( !m_interface->desktopIsActive() && maskSize.intersects(activeInfo.geometry()) ) {
                 if ( isOnTop(&dockInfo) ) {
                     if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
                         mustBeLowered();                    //showNormal();
@@ -347,7 +347,7 @@ void PanelWindow::updateState()
                     }
                 }
             } else if (isNormal(&dockInfo)){
-                if(!isDesktop(m_activeWindow) && m_interface->dockIsCovered(m_maskArea)) {
+                if(!m_interface->desktopIsActive() && m_interface->dockIsCovered(m_maskArea)) {
                     mustBeRaised();
                 } else {
                     showOnTop();
@@ -365,7 +365,7 @@ void PanelWindow::updateState()
                 maskSize = QRect(x(), y(), width(), height());
             }
 
-            if ( !isDesktop(m_activeWindow) && isMaximized(&activeInfo) && maskSize.intersects(activeInfo.geometry()) ) {
+            if ( !m_interface->desktopIsActive() && isMaximized(&activeInfo) && maskSize.intersects(activeInfo.geometry()) ) {
                 if ( isOnTop(&dockInfo) ) {
                     if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
                         mustBeLowered();                    //showNormal();
@@ -376,7 +376,7 @@ void PanelWindow::updateState()
                     }
                 }
             } else if (isNormal(&dockInfo)){
-                if(!isDesktop(m_activeWindow) && m_interface->dockIsCovered(m_maskArea)) {
+                if(!m_interface->desktopIsActive() && m_interface->dockIsCovered(m_maskArea)) {
                     mustBeRaised();
                 } else {
                     showOnTop();
@@ -437,18 +437,6 @@ void PanelWindow::showOnBottom()
     m_interface->showDockOnBottom();
 }
 
-bool PanelWindow::isDesktop(WId id)
-{
-    KWindowInfo info(id, NET::WMWindowType);
-
-    if ( !info.valid() ) {
-        return false;
-    }
-
-    NET::WindowType type = info.windowType(NET::DesktopMask|NET::DockMask|NET::DialogMask);
-
-    return type == NET::Desktop;
-}
 
 bool PanelWindow::isMaximized(KWindowInfo *info)
 {
@@ -485,7 +473,6 @@ bool PanelWindow::isOnTop(KWindowInfo *info)
 
     return ( info->hasState(NET::KeepAbove) );
 }
-
 
 /***************/
 
@@ -563,18 +550,5 @@ void PanelWindow::showEvent(QShowEvent *event)
         setMask(m_maskArea);
     }
 }
-
-
-void PanelWindow::windowChanged ()
-{
-/*    if ((m_panelVisibility!=BelowActive)&&(m_panelVisibility!=BelowMaximized)) {
-        return;
-    }
-
-    if ((id==m_activeWindow) && (!m_updateStateTimer.isActive())) {
-        m_updateStateTimer.start();
-    }*/
-}
-
 
 } //NowDock namespace

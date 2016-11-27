@@ -6,10 +6,10 @@
 namespace NowDock
 {
 
-AbstractInterface::AbstractInterface(QQuickWindow *parent) :
-    QObject(parent)
+AbstractInterface::AbstractInterface(QQuickWindow *dock) :
+    QObject(dock)
 {
-    m_dockWindow = parent;
+    m_dockWindow = dock;
 }
 
 }
