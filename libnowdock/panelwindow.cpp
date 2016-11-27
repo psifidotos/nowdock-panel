@@ -347,7 +347,7 @@ void PanelWindow::updateState()
                     }
                 }
             } else if (isNormal(&dockInfo)){
-                if(!isDesktop(m_activeWindow) && dockIsCovered()) {
+                if(!isDesktop(m_activeWindow) && m_interface->dockIsCovered(m_maskArea)) {
                     mustBeRaised();
                 } else {
                     showOnTop();
@@ -376,7 +376,7 @@ void PanelWindow::updateState()
                     }
                 }
             } else if (isNormal(&dockInfo)){
-                if(!isDesktop(m_activeWindow) && dockIsCovered()) {
+                if(!isDesktop(m_activeWindow) && m_interface->dockIsCovered(m_maskArea)) {
                     mustBeRaised();
                 } else {
                     showOnTop();
@@ -386,7 +386,7 @@ void PanelWindow::updateState()
         break;
     case LetWindowsCover:
         if (!m_isHovered && isOnTop(&dockInfo)) {
-            if( dockIsCovering()  ) {
+            if( m_interface->dockIsCovering(m_maskArea)  ) {
                 if (!m_disableHiding) {
                     mustBeLowered();
                 }
@@ -395,7 +395,7 @@ void PanelWindow::updateState()
             }
         } else if ( m_windowIsInAttention ) {
             if( !isOnTop(&dockInfo) ) {
-                if (dockIsCovered()) {
+                if (m_interface->dockIsCovered(m_maskArea)) {
                     mustBeRaised();
                 } else {
                     showOnTop();
@@ -486,122 +486,6 @@ bool PanelWindow::isOnTop(KWindowInfo *info)
     return ( info->hasState(NET::KeepAbove) );
 }
 
-
-bool PanelWindow::dockIsCovered()
-{
-    int currentDockPos = -1;
-
-    QList<WId> windows = KWindowSystem::stackingOrder();
-    int size = windows.count();
-
-    for(int i=size-1; i>=0; --i) {
-        WId window = windows.at(i);
-        if (window == winId()) {
-            currentDockPos = i;
-            break;
-        }
-    }
-
-    if (currentDockPos >=0) {
-        QRect maskSize;
-
-        if ( !m_maskArea.isNull() ) {
-            maskSize = QRect(x()+m_maskArea.x(), y()+m_maskArea.y(), m_maskArea.width(), m_maskArea.height());
-        } else {
-            maskSize = QRect(x(), y(), width(), height());
-        }
-
-        WId transient;
-
-        if (transientParent()) {
-            transient = transientParent()->winId();
-        }
-
-        for(int j=size-1; j>currentDockPos; --j) {
-            WId window = windows.at(j);
-
-            KWindowInfo info(window, NET::WMState | NET::XAWMState | NET::WMGeometry);
-
-            if ( info.valid() && !isDesktop(window) && transient!=window && !info.isMinimized() && maskSize.intersects(info.geometry()) ) {
-                return true;
-            }
-        }
-    }
-
-    return false;
-}
-
-bool PanelWindow::dockIsCovering()
-{
-    int currentDockPos = -1;
-
-    QList<WId> windows = KWindowSystem::stackingOrder();
-    int size = windows.count();
-
-    for(int i=size-1; i>=0; --i) {
-        WId window = windows.at(i);
-        if (window == winId()) {
-            currentDockPos = i;
-            break;
-        }
-    }
-
-    if (currentDockPos >=0) {
-        QRect maskSize;
-
-        if ( !m_maskArea.isNull() ) {
-            maskSize = QRect(x()+m_maskArea.x(), y()+m_maskArea.y(), m_maskArea.width(), m_maskArea.height());
-        } else {
-            maskSize = QRect(x(), y(), width(), height());
-        }
-
-        WId transient;
-
-        if (transientParent()) {
-            transient = transientParent()->winId();
-        }
-
-        for(int j=currentDockPos-1; j>=0; --j) {
-            WId window = windows.at(j);
-
-            KWindowInfo info(window, NET::WMState | NET::XAWMState | NET::WMGeometry);
-
-            if ( info.valid() && !isDesktop(window) && transient!=window && !info.isMinimized() && maskSize.intersects(info.geometry()) ) {
-                return true;
-            }
-        }
-    }
-
-    return false;
-}
-
-
-/*bool PanelWindow::activeWindowAboveDock()
-{
-    int currentDockPos = -1;
-
-    QList<WId> windows = KWindowSystem::stackingOrder();
-    int size = windows.count();
-
-    for(int i=size-1; i>=0; --i) {
-        WId window = windows.at(i);
-        if (window == winId()) {
-            currentDockPos = i;
-            break;
-        }
-    }
-
-    if (currentDockPos >=0) {
-        for(int j=size-1; j>currentDockPos; --j) {
-            WId window = windows.at(j);
-            if (window == m_activeWindow) {
-                return true;
-            }
-        }
-    }
-
-    return false;
-}*/
 
 /***************/
 
