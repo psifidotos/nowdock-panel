@@ -180,7 +180,7 @@ Item{
                             horizontalAlignment: Text.AlignRight
                            // width: parent.width
 
-                            text: i18n("ver: ") +"0.4.90"
+                            text: i18n("ver: ") +"@VERSION@"
 
                         }
                     }

@@ -2,13 +2,16 @@ project(nowdockpanel)
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 set (CMAKE_CXX_STANDARD 11)
 
+set(VERSION 0.4.90)
+set(AUTHOR "Michail Vourlakos")
+set(EMAIL "mvourlakos@gmail.com")
+set(WEBSITE "https://store.kde.org/p/1154578/")
+
 find_package(ECM 0.0.11 REQUIRED NO_MODULE)
 
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
 
 find_package(KF5Plasma)
-
-plasma_install_package(nowdockpanel org.kde.store.nowdock.panel)
 
 FIND_PROGRAM(GETTEXT_MSGFMT_EXECUTABLE msgfmt)
 
@@ -45,4 +48,7 @@ ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
 ENDIF(NOT GETTEXT_MSGFMT_EXECUTABLE) 
 
 add_subdirectory(libnowdock)
+add_subdirectory(nowdockpanel)
+plasma_install_package(build/nowdockpanel/release org.kde.store.nowdock.panel) 
+
 add_subdirectory(layout-templates)
