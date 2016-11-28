@@ -47,7 +47,7 @@ Item {
                                || root.reverseLinesPosition ? 0 : root.statesLineSize
     property int maxWidth: root.isHorizontal ? root.height : root.width
     property int maxHeight: root.isHorizontal ? root.height : root.width
-    property int shownAppletMargin: applet && (applet.pluginName === "org.kde.plasma.systemtray") ? appletMargin/2 : appletMargin
+    property int shownAppletMargin: applet && (applet.pluginName === "org.kde.plasma.systemtray") ? 0 : appletMargin
     property int status: applet ? applet.status : -1
 
     //property real animationStep: root.iconSize / 8
@@ -381,7 +381,7 @@ Item {
                     layoutHeight = root.iconSize + moreHeight;
                 }
                 else if(applet && applet.pluginName === "org.kde.plasma.systemtray" && root.isHorizontal){
-                    layoutHeight = root.iconSize+root.iconMargin+root.statesLineSize;
+                    layoutHeight = root.iconSize+root.iconMargin+root.statesLineSize/2;
                 }
                 else{
                     if(applet && (applet.Layout.minimumHeight > root.iconSize) && root.isVertical && (!canBeHovered)){
@@ -425,7 +425,7 @@ Item {
                     layoutWidth = root.iconSize + moreWidth;
                 }
                 else if(applet && applet.pluginName === "org.kde.plasma.systemtray" && root.isVertical){
-                    layoutWidth = root.iconSize+root.iconMargin+root.statesLineSize;
+                    layoutWidth = root.iconSize+root.iconMargin+root.statesLineSize/2;
                 }
                 else{
                     if(applet && (applet.Layout.minimumWidth > root.iconSize) && root.isHorizontal && (!canBeHovered)){
