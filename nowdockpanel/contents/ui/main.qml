@@ -50,7 +50,10 @@ DragDrop.DropArea {
     property bool isHovered: nowDock ? ((nowDockHoveredIndex !== -1) && (layoutsContainer.hoveredIndex !== -1)) || wholeArea.containsMouse
                                      : (layoutsContainer.hoveredIndex !== -1) || wholeArea.containsMouse
     property bool onlyAddingStarup: true //is used for the initialization phase in startup where there arent removals, this variable provides a way to grow icon size
-    property bool smallAutomaticIconJumps: plasmoid.configuration.smallAutomaticIconJumps
+    //FIXME: possibly this is going to be the default behavior, this user choice
+    //has been dropped from the Dock Configuration Window
+    //property bool smallAutomaticIconJumps: plasmoid.configuration.smallAutomaticIconJumps
+    property bool smallAutomaticIconJumps: true
     property bool useThemePanel: noApplets === 0 ? true : plasmoid.configuration.useThemePanel
 
 
