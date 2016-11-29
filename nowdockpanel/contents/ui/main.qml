@@ -434,6 +434,7 @@ DragDrop.DropArea {
         }
 
         LayoutManager.save();
+        magicWin.removeAppletItem(applet);
     }
 
     Plasmoid.onUserConfiguringChanged: {
@@ -505,6 +506,10 @@ DragDrop.DropArea {
         })
 
         addContainerInLayout(container, applet, x, y);
+
+        // adding the AppletQuickItem to the Now Dock in order to be
+        // used for right clicking events
+        magicWin.addAppletItem(applet);
     }
 
     function addContainerInLayout(container, applet, x, y){

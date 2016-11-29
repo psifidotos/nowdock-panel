@@ -1,10 +1,14 @@
 #ifndef PANELWINDOW_H
 #define PANELWINDOW_H
 
+#include <QMenu>
 #include <QQuickWindow>
 #include <QTimer>
 
 #include <plasma/plasma.h>
+
+#include <Plasma/Applet>
+#include <PlasmaQuick/AppletQuickItem>
 
 #include "abstractinterface.h"
 
@@ -103,7 +107,9 @@ Q_SIGNALS:
     void windowInAttentionChanged();
 
 public slots:
+    Q_INVOKABLE void addAppletItem(QObject *item);
     Q_INVOKABLE void initialize();
+    Q_INVOKABLE void removeAppletItem(QObject *item);
     Q_INVOKABLE void showNormal();
     Q_INVOKABLE void showOnTop();
     Q_INVOKABLE void showOnBottom();
@@ -112,8 +118,9 @@ public slots:
 
 
 protected:
-    void showEvent(QShowEvent *event) override;
     bool event(QEvent *e) override;
+    void mousePressEvent(QMouseEvent *event) override;
+    void showEvent(QShowEvent *event) override;
   //  void mouseMoveEvent(QMouseEvent *ev);
 
 private Q_SLOTS:
@@ -137,6 +144,7 @@ private:
 
     QRect m_maskArea;
     QScreen *m_screen;
+    QList<PlasmaQuick::AppletQuickItem *> m_appletItems;
     QTimer m_initTimer;
     QTimer m_updateStateTimer;
 
@@ -145,6 +153,8 @@ private:
     PanelVisibility m_panelVisibility;
 
     AbstractInterface *m_interface;
+
+    void addAppletActions(QMenu *desktopMenu, Plasma::Applet *applet, QEvent *event);
 };
 
 } //NowDock namespace

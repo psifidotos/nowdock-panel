@@ -4,9 +4,11 @@ find_package(ECM 1.8.0 REQUIRED NO_MODULE)
 find_package(Qt5 ${REQUIRED_QT_VERSION} REQUIRED NO_MODULE COMPONENTS Quick Qml)
 
 find_package(KF5 REQUIRED COMPONENTS
+    CoreAddons
     Plasma
     PlasmaQuick
     WindowSystem
+    KDELibs4Support
 )
 
 set(CMAKE_AUTOMOC ON)
@@ -23,9 +25,11 @@ add_library(nowdockplugin SHARED ${nowdock_SRCS})
 target_link_libraries(nowdockplugin
         Qt5::Quick
         Qt5::Qml
+        KF5::CoreAddons
         KF5::Plasma
         KF5::PlasmaQuick
         KF5::WindowSystem
+        KF5::KDELibs4Support
 )
 
 install(TARGETS nowdockplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/nowdock)
