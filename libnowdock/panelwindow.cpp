@@ -20,13 +20,6 @@
 namespace NowDock
 {
 
-bool m_disableHiding;
-bool m_isAutoHidden;
-bool m_isHovered;
-//second pass of the initialization
-bool m_secondInitPass;
-bool m_windowIsInAttention;
-
 PanelWindow::PanelWindow(QQuickWindow *parent) :
     QQuickWindow(parent),
     m_disableHiding(false),
