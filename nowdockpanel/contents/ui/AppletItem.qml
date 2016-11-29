@@ -509,11 +509,11 @@ Item {
                     layer.effect: DropShadow {
                         radius: shadowSize
                         samples: 2 * radius
-                        color: "#cc080808"
+                        color: "#ff080808"
 
                         verticalOffset: 2
 
-                        property int shadowSize : Math.ceil(root.iconSize / 20)
+                        property int shadowSize : Math.ceil(root.iconSize / 10)
                     }
 
                   Component.onCompleted: wrapper.zoomScale = 1.1
@@ -532,13 +532,13 @@ Item {
 
                 sourceComponent: DropShadow{
                     anchors.fill: parent
-                    color: "#cc080808"
+                    color: "#ff080808"
                     samples: 2 * radius
                     source: container.applet
                     radius: shadowSize
                     verticalOffset: 2
 
-                    property int shadowSize : Math.ceil(root.iconSize / 30)
+                    property int shadowSize : Math.ceil(root.iconSize / 12)
                 }
             }
 
