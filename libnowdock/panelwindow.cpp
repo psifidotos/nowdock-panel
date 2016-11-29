@@ -4,6 +4,7 @@
 
 #include <QMenu>
 #include <QQuickWindow>
+#include <QRegion>
 #include <QScreen>
 #include <QTimer>
 #include <QWindow>
@@ -530,10 +531,22 @@ void PanelWindow::mousePressEvent(QMouseEvent *event)
     if (applet) {
         desktopMenu->adjustSize();
 
-        QRect geo = m_screen->availableGeometry();
+        QRect scr = m_screen->availableGeometry();
 
-        pos = QPoint(qBound(geo.left(), pos.x(), geo.right() + 1 - desktopMenu->width()),
-                     qBound(geo.top(), pos.y(), geo.bottom() + 1 - desktopMenu->height()));
+        int x = event->globalPos().x();
+        int y = event->globalPos().y();
+
+        qDebug()<<x << " - "<<y;
+
+        if (event->globalPos().x() > scr.center().x()) {
+            x = event->globalPos().x() - desktopMenu->width();
+        }
+
+        if (event->globalPos().y() > scr.center().y()) {
+            y = event->globalPos().y() - desktopMenu->height();
+        }
+
+        pos = QPoint(x,y);
     }
 
     if (desktopMenu->isEmpty()) {
