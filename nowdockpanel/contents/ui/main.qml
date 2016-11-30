@@ -971,7 +971,8 @@ DragDrop.DropArea {
 
         signal updateScale(int delegateIndex, real newScale, real step)
 
-        property bool parentMagicWinFlag: plasmoid.immutable && magicWin && !root.inStartup
+        property bool parentMagicWinFlag: plasmoid.immutable && magicWin
+                                          && !(root.inStartup && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide)
 
         property int allCount: root.nowDock ? mainLayout.count-1+nowDock.tasksCount : mainLayout.count
         property int currentSpot: -1000
