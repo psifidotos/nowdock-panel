@@ -8,6 +8,7 @@ find_package(KF5 REQUIRED COMPONENTS
     PlasmaQuick
     WindowSystem
     KDELibs4Support
+    CoreAddons
 )
 
 set(CMAKE_AUTOMOC ON)
@@ -28,6 +29,7 @@ target_link_libraries(nowdockplugin
         KF5::PlasmaQuick
         KF5::WindowSystem
         KF5::KDELibs4Support
+        KF5::CoreAddons
 )
 
 install(TARGETS nowdockplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/nowdock)

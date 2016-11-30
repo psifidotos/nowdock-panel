@@ -12,6 +12,7 @@
 #include <QDebug>
 
 #include <KActionCollection>
+#include <KPluginInfo>
 
 #include <Plasma/Applet>
 #include <PlasmaQuick/AppletQuickItem>
@@ -356,6 +357,12 @@ void PanelWindow::updateVisibilityFlags()
     }
 }
 
+void PanelWindow::menuAboutToHide()
+{
+    m_disableHiding = false;
+    m_updateStateTimer.start();
+}
+
 /*
  * It is used from the m_updateStateTimer in order to check the dock's
  * visibility and trigger events and actions which are needed to
@@ -506,6 +513,13 @@ void PanelWindow::mousePressEvent(QMouseEvent *event)
 {
     QQuickWindow::mousePressEvent(event);
 
+    //even if the menu is executed synchronously, other events may be processed
+    //by the qml incubator when plasma is loading, so we need to guard there
+    if (m_contextMenu) {
+        m_contextMenu.data()->close();
+        return;
+    }
+
     if (event->buttons() != Qt::RightButton) {
         return;
     }
@@ -525,14 +539,19 @@ void PanelWindow::mousePressEvent(QMouseEvent *event)
         return;
     }
 
-    /*KPluginInfo info = applet->pluginInfo();
 
+    //FIXME, this must be fixed, this is a workaround in order to not show
+    //two menu's in right click... Unfortunately I am not wise enough yet in
+    //order to find a way to support it for all plasmoids...
+    KPluginInfo info = applet->pluginInfo();
     if (info.pluginName() == "org.kde.store.nowdock.plasmoid" ) {
         return;
-    }*/
+    }
 
     QMenu *desktopMenu = new QMenu;
     desktopMenu->setAttribute(Qt::WA_DeleteOnClose);
+
+    m_contextMenu = desktopMenu;
 
     emit applet->contextualActionsAboutToShow();
     addAppletActions(desktopMenu, applet, event);
@@ -542,10 +561,9 @@ void PanelWindow::mousePressEvent(QMouseEvent *event)
     desktopMenu->setAttribute(Qt::WA_TranslucentBackground);
     //end workaround
 
-    /*
-    if (window() && window()->mouseGrabberItem()) {
-        window()->mouseGrabberItem()->ungrabMouse();
-    }*/
+    if (this->mouseGrabberItem()) {
+        this->mouseGrabberItem()->ungrabMouse();
+    }
 
     QPoint pos = event->globalPos();
     if (applet) {
@@ -575,7 +593,10 @@ void PanelWindow::mousePressEvent(QMouseEvent *event)
         return;
     }
 
+    connect(desktopMenu, SIGNAL(aboutToHide()), this, SLOT(menuAboutToHide()));
+    m_disableHiding = true;
     desktopMenu->popup(pos);
+
     event->setAccepted(true);
 }
 

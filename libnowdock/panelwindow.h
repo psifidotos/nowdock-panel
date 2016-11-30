@@ -133,6 +133,7 @@ private Q_SLOTS:
     void activeWindowChanged();
     void updateState();
     void initWindow();
+    void menuAboutToHide();
     void setIsHovered(bool state);
     void screenChanged(QScreen *screen);
     void updateVisibilityFlags();
@@ -154,6 +155,7 @@ private:
     QList<PlasmaQuick::AppletQuickItem *> m_appletItems;
     QTimer m_initTimer;
     QTimer m_updateStateTimer;
+    QWeakPointer<QMenu> m_contextMenu;
 
     Plasma::Types::Location m_location;
 
