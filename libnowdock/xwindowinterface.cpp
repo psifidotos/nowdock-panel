@@ -21,6 +21,11 @@ XWindowInterface::~XWindowInterface()
 {
 }
 
+void XWindowInterface::setDockToAllDesktops()
+{
+    KWindowSystem::setOnAllDesktops(m_dockWindow->winId(), true);
+}
+
 void XWindowInterface::setDockToAlwaysVisible()
 {
     KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);

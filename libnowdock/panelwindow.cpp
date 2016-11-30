@@ -37,6 +37,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     connect(m_interface, SIGNAL(windowInAttention(bool)), this, SLOT(setWindowInAttention(bool)));
     //connect(m_interface, SIGNAL(windowChanged()), this, SLOT(windowChanged()));
     connect(m_interface, SIGNAL(activeWindowChanged()), this, SLOT(activeWindowChanged()));
+    m_interface->setDockToAllDesktops();
 
     m_screen = screen();
     connect(this, SIGNAL(screenChanged(QScreen *)), this, SLOT(screenChanged(QScreen *)));
@@ -58,6 +59,8 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
 
     connect(this, SIGNAL(locationChanged()), this, SLOT(updateWindowPosition()));
     connect(this, SIGNAL(windowInAttentionChanged()), this, SLOT(updateState()));
+
+    initialize();
 }
 
 PanelWindow::~PanelWindow()
@@ -335,6 +338,7 @@ void PanelWindow::updateWindowPosition()
 void PanelWindow::updateVisibilityFlags()
 {
     setFlags(Qt::Tool|Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
+    m_interface->setDockToAllDesktops();
 
     if (m_panelVisibility == AlwaysVisible) {
         m_interface->setDockToAlwaysVisible();
@@ -552,7 +556,7 @@ void PanelWindow::mousePressEvent(QMouseEvent *event)
         int x = event->globalPos().x();
         int y = event->globalPos().y();
 
-        qDebug()<<x << " - "<<y;
+        //qDebug()<<x << " - "<<y;
 
         if (event->globalPos().x() > scr.center().x()) {
             x = event->globalPos().x() - desktopMenu->width();
