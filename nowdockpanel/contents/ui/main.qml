@@ -40,7 +40,7 @@ DragDrop.DropArea {
     ////
 
     ////BEGIN properties
-    property bool debugMode: false
+    property bool debugMode: true
 
     property bool automaticSize: plasmoid.configuration.automaticIconSize
     property bool immutable: plasmoid.immutable
@@ -963,16 +963,15 @@ DragDrop.DropArea {
     MagicWindow{
         id: magicWin
 
-        visible: false
+        visible: true
     }
 
     Item{
         id: layoutsContainer
 
         signal updateScale(int delegateIndex, real newScale, real step)
-
-        property bool parentMagicWinFlag: plasmoid.immutable && magicWin
-                                          && !(root.inStartup && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide)
+        property bool parentMagicWinFlag: plasmoid.immutable && magicWin && !root.inStartup
+                                          //&& !(root.inStartup && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide)
 
         property int allCount: root.nowDock ? mainLayout.count-1+nowDock.tasksCount : mainLayout.count
         property int currentSpot: -1000
@@ -1005,7 +1004,9 @@ DragDrop.DropArea {
                 magicWin.initializeSlidingInAnimation();
             } else {
                 parent = root;
-                magicWin.visible = false;
+                if(magicWin.panelVisibility !== NowDock.PanelWindow.AutoHide) {
+                    magicWin.visible = false;
+                }
             }
         }
 

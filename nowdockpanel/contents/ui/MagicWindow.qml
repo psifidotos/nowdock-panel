@@ -25,6 +25,7 @@ NowDock.PanelWindow{
     property int thicknessZoom: root.statesLineSize + ((root.iconSize+root.iconMargin) * root.zoomFactor) + 2
 
     childrenLength: root.isHorizontal ? mainLayout.width : mainLayout.height
+    immutable: plasmoid.immutable
     location: plasmoid.location
     panelVisibility: plasmoid.configuration.panelVisibility
 
@@ -47,6 +48,8 @@ NowDock.PanelWindow{
     width: root.isHorizontal ? length : thicknessZoom
     height: root.isHorizontal ? thicknessZoom : length
 
+
+    onImmutableChanged: updateMaskArea();
 
     onInStartupChanged: {
         if (!inStartup) {
@@ -99,6 +102,14 @@ NowDock.PanelWindow{
         }
     }
 
+    onPanelVisibilityChanged: {
+        if (panelVisibility === NowDock.PanelWindow.AutoHide) {
+            visible = true;
+        } else {
+            isAutoHidden = false;
+        }
+    }
+
     onVisibleChanged:{
         if (visible) {  //shrink the parent panel window
             initialize();
@@ -122,6 +133,7 @@ NowDock.PanelWindow{
         }
 
         layoutsContainer.opacity = 1;
+        visible = true;
 
         if (!inStartup) {
             delayAnimationTimer.start();
@@ -162,8 +174,12 @@ NowDock.PanelWindow{
                 tempThickness = thicknessMid;
             }
 
-            if (window.isAutoHidden) {
+            if (window.isAutoHidden && (panelVisibility === NowDock.PanelWindow.AutoHide)) {
                 tempThickness = thicknessAutoHidden;
+            }
+
+            if (!immutable) {
+                tempThickness = 2;
             }
 
             //configure x,y based on plasmoid position and root.panelAlignment(Alignment)

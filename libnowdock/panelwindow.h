@@ -20,6 +20,8 @@ class PanelWindow : public QQuickWindow {
     Q_ENUMS(PanelVisibility)
     Q_ENUMS(Alignment)
 
+    Q_PROPERTY(bool immutable READ immutable WRITE setImmutable NOTIFY immutableChanged)
+
     Q_PROPERTY(bool isAutoHidden READ isAutoHidden WRITE setIsAutoHidden NOTIFY isAutoHiddenChanged)
 
     Q_PROPERTY(bool isHovered READ isHovered NOTIFY isHoveredChanged)
@@ -71,6 +73,9 @@ public:
     bool disableHiding() const;
     void setDisableHiding(bool state);
 
+    bool immutable() const;
+    void setImmutable(bool state);
+
     bool isAutoHidden() const;
     void setIsAutoHidden(bool state);
 
@@ -96,6 +101,7 @@ public:
 Q_SIGNALS:
     void childrenLengthChanged();
     void disableHidingChanged();
+    void immutableChanged();
     void isAutoHiddenChanged();
     void isHoveredChanged();
     void locationChanged();
@@ -134,6 +140,7 @@ private Q_SLOTS:
 
 private:
     bool m_disableHiding;
+    bool m_immutable;
     bool m_isAutoHidden;
     bool m_isHovered;
     //second pass of the initialization

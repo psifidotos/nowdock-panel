@@ -23,6 +23,7 @@ namespace NowDock
 
 PanelWindow::PanelWindow(QQuickWindow *parent) :
     QQuickWindow(parent),
+    m_immutable(true),
     m_disableHiding(false),
     m_isAutoHidden(false),
     m_isHovered(false),
@@ -186,6 +187,23 @@ void PanelWindow::setDisableHiding(bool value)
     }
 }
 
+bool PanelWindow::immutable() const
+{
+    return m_immutable;
+}
+
+void PanelWindow::setImmutable(bool state)
+{
+    if (m_immutable == state) {
+        return;
+    }
+
+    m_immutable = state;
+
+    emit immutableChanged();
+}
+
+
 bool PanelWindow::isHovered() const
 {
     return m_isHovered;
@@ -248,7 +266,7 @@ void PanelWindow::initWindow()
 
 void PanelWindow::shrinkTransient()
 {
-    if (transientParent()) {
+    if (m_immutable && transientParent()) {
         int newSize = 15;
         int transWidth = transientParent()->width();
         int transHeight = transientParent()->height();
