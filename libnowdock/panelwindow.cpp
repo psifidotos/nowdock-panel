@@ -12,8 +12,6 @@
 #include <QDebug>
 
 #include <KActionCollection>
-#include <KPluginInfo>
-#include <KPluginMetaData>
 
 #include <Plasma/Applet>
 #include <PlasmaQuick/AppletQuickItem>
@@ -523,11 +521,11 @@ void PanelWindow::mousePressEvent(QMouseEvent *event)
         return;
     }
 
-    KPluginInfo info = applet->pluginInfo();
+    /*KPluginInfo info = applet->pluginInfo();
 
     if (info.pluginName() == "org.kde.store.nowdock.plasmoid" ) {
         return;
-    }
+    }*/
 
     QMenu *desktopMenu = new QMenu;
     desktopMenu->setAttribute(Qt::WA_DeleteOnClose);
