@@ -739,21 +739,22 @@ DragDrop.DropArea {
         if (magicWin && magicWin.normalState && !animatedLengthTimer.running && plasmoid.immutable
                 && (iconSize===plasmoid.configuration.iconSize || iconSize === automaticIconSizeBasedSize) ) {
             var layoutLength;
-            var maxLength;
-          //  console.log("------Entered check-----");
+            var maxLength = magicWin.maximumLength;
+            console.log("------Entered check-----");
 
             if (root.isVertical) {
                 layoutLength = (plasmoid.configuration.panelPosition === 10) ? mainLayout.height+secondLayout.height : mainLayout.height
-                maxLength = magicWin.height;
+              //  maxLength = magicWin.height;
             } else {
                 layoutLength = (plasmoid.configuration.panelPosition === 10) ? mainLayout.width+secondLayout.width : mainLayout.width
-                maxLength = magicWin.width;
+              //  maxLength = magicWin.width;
             }
 
-            var spaceForAnimations = (zoomFactor*(iconSize+2*iconMargin));
+            var toShrinkLimit = maxLength-(zoomFactor*(iconSize+2*iconMargin));
+            var toGrowLimit = maxLength-1.5*(zoomFactor*(iconSize+2*iconMargin));
 
-            if (layoutLength > (maxLength-spaceForAnimations)) { //must shrink
-               // console.log("step3");
+            if (layoutLength > toShrinkLimit) { //must shrink
+                console.log("step3");
                 var nextIconSize = plasmoid.configuration.iconSize;
 
                 do {
@@ -761,13 +762,13 @@ DragDrop.DropArea {
                   var factor = nextIconSize / iconSize;
                   var nextLength = factor * layoutLength;
 
-                } while ( (nextLength>(maxLength-spaceForAnimations)) && (nextIconSize !== 16));
+                } while ( (nextLength>toShrinkLimit) && (nextIconSize !== 16));
 
                 automaticIconSizeBasedSize = nextIconSize;
-            //    console.log("Step 3 - found:"+automaticIconSizeBasedSize);
-            } else if ((layoutLength<maxLength-spaceForAnimations
+                console.log("Step 3 - found:"+automaticIconSizeBasedSize);
+            } else if ((layoutLength<toGrowLimit
                         && (iconSize === automaticIconSizeBasedSize)) ) { //must grow probably
-            //    console.log("step4");
+                console.log("step4");
                 var nextIconSize2 = automaticIconSizeBasedSize;
                 var foundGoodSize = -1;
 
@@ -776,10 +777,10 @@ DragDrop.DropArea {
                   var factor2 = nextIconSize2 / automaticIconSizeBasedSize;
                   var nextLength2 = factor2 * layoutLength;
 
-                  if (nextLength2 < (maxLength - spaceForAnimations)) {
+                  if (nextLength2 < toGrowLimit) {
                       foundGoodSize = nextIconSize2;
                   }
-                } while ( (nextLength2<(maxLength-spaceForAnimations)) && (nextIconSize2 !== plasmoid.configuration.iconSize ));
+                } while ( (nextLength2<toGrowLimit) && (nextIconSize2 !== plasmoid.configuration.iconSize ));
 
                 if (foundGoodSize > 0) {
                     if (foundGoodSize === plasmoid.configuration.iconSize) {
@@ -787,9 +788,9 @@ DragDrop.DropArea {
                     } else {
                         automaticIconSizeBasedSize = foundGoodSize;
                     }
-              //      console.log("Step 4 - found:"+automaticIconSizeBasedSize);
+                    console.log("Step 4 - found:"+automaticIconSizeBasedSize);
                 } else {
-              //      console.log("Step 4 - did not found...");
+                    console.log("Step 4 - did not found...");
                 }
             }
         }
