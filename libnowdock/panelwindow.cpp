@@ -100,7 +100,38 @@ void PanelWindow::setLocation(Plasma::Types::Location location)
     }
 
     m_location = location;
+
+    setPanelOrientation(m_location);
+
     emit locationChanged();
+}
+
+unsigned int PanelWindow::maximumLength() const
+{
+    return m_maximumLength;
+}
+
+void PanelWindow::updateMaximumLength()
+{
+    if (!transientParent()) {
+        return;
+    }
+
+    unsigned int length = 0;
+
+    if (m_panelOrientation == Qt::Horizontal) {
+        length = transientParent()->maximumWidth();
+    } else {
+        length = transientParent()->maximumHeight();
+    }
+
+    if (m_maximumLength == length) {
+        return;
+    }
+
+    m_maximumLength = length;
+
+    emit maximumLengthChanged();
 }
 
 PanelWindow::PanelVisibility PanelWindow::panelVisibility() const
@@ -220,6 +251,17 @@ void PanelWindow::setIsHovered(bool state)
     m_isHovered = state;
     emit isHoveredChanged();
 }
+
+void PanelWindow::setPanelOrientation(Plasma::Types::Location location)
+{
+    if ((location == Plasma::Types::LeftEdge) || (location == Plasma::Types::RightEdge)) {
+        m_panelOrientation = Qt::Vertical;
+    } else {
+        m_panelOrientation = Qt::Horizontal;
+    }
+
+}
+
 /******************************/
 void PanelWindow::addAppletItem(QObject *item)
 {
@@ -269,6 +311,8 @@ void PanelWindow::initWindow()
 void PanelWindow::shrinkTransient()
 {
     if (m_immutable && transientParent()) {
+        updateMaximumLength();
+
         int newSize = 15;
         int transWidth = transientParent()->width();
         int transHeight = transientParent()->height();

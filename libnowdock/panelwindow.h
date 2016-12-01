@@ -32,6 +32,8 @@ class PanelWindow : public QQuickWindow {
 
     Q_PROPERTY(int childrenLength READ childrenLength WRITE setChildrenLength NOTIFY childrenLengthChanged)
 
+    Q_PROPERTY(unsigned int maximumLength READ maximumLength NOTIFY maximumLengthChanged)
+
     /**
      * the window mask, can be used in real transparent panels that set only the visual area
      * of the window
@@ -87,6 +89,8 @@ public:
     int childrenLength() const;
     void setChildrenLength(int value);
 
+    unsigned int maximumLength() const;
+
     QRect maskArea() const;
     void setMaskArea(QRect area);
 
@@ -106,6 +110,7 @@ Q_SIGNALS:
     void isHoveredChanged();
     void locationChanged();
     void maskAreaChanged();
+    void maximumLengthChanged();
     void mustBeRaised(); //are used to triger the sliding animations from the qml part
     void mustBeLowered();
     void panelVisibilityChanged();
@@ -149,6 +154,7 @@ private:
     bool m_windowIsInAttention;
 
     int m_childrenLength;
+    unsigned int m_maximumLength;
 
     QRect m_maskArea;
     QScreen *m_screen;
@@ -157,6 +163,8 @@ private:
     QTimer m_updateStateTimer;
     QWeakPointer<QMenu> m_contextMenu;
 
+    Qt::Orientations m_panelOrientation;
+
     Plasma::Types::Location m_location;
 
     PanelVisibility m_panelVisibility;
@@ -164,6 +172,8 @@ private:
     AbstractInterface *m_interface;
 
     void addAppletActions(QMenu *desktopMenu, Plasma::Applet *applet, QEvent *event);
+    void setPanelOrientation(Plasma::Types::Location location);
+    void updateMaximumLength();
 };
 
 } //NowDock namespace

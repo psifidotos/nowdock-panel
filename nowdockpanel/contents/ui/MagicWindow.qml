@@ -85,6 +85,10 @@ NowDock.PanelWindow{
         }
     }
 
+    onMaximumLengthChanged: {
+        console.log(maximumLength);
+    }
+
     onMustBeRaised: {
         if (panelVisibility === NowDock.PanelWindow.AutoHide) {
             slidingAnimationAutoHiddenIn.init();
