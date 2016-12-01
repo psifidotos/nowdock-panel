@@ -85,10 +85,6 @@ NowDock.PanelWindow{
         }
     }
 
-    onMaximumLengthChanged: {
-        console.log(maximumLength);
-    }
-
     onMustBeRaised: {
         if (panelVisibility === NowDock.PanelWindow.AutoHide) {
             slidingAnimationAutoHiddenIn.init();
@@ -177,9 +173,9 @@ NowDock.PanelWindow{
         if (normalState) {
             //count panel length
             if(root.isHorizontal) {
-                tempLength = plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ? layoutsContainer.width+space : mainLayout.width + space;
+                tempLength = plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ? layoutsContainer.width : mainLayout.width + space;
             } else {
-                tempLength = plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ? layoutsContainer.height+space : mainLayout.height + space;
+                tempLength = plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ? layoutsContainer.height : mainLayout.height + space;
             }
 
             tempThickness = thicknessNormalOriginal;
@@ -205,7 +201,7 @@ NowDock.PanelWindow{
                 }
 
                 if (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) {
-                    localX = (window.width/2) - (layoutsContainer.width/2) - (space/2);
+                    localX = (window.width/2) - (layoutsContainer.width/2);
                 } else if (root.panelAlignment === NowDock.PanelWindow.Left) {
                     localX = 0;
                 } else if (root.panelAlignment === NowDock.PanelWindow.Center) {
@@ -221,7 +217,7 @@ NowDock.PanelWindow{
                 }
 
                 if (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) {
-                    localX = (window.height/2) - (layoutsContainer.height/2) - (space/2);
+                    localY = (window.height/2) - (layoutsContainer.height/2);
                 } else if (root.panelAlignment === NowDock.PanelWindow.Top) {
                     localY = 0;
                 } else if (root.panelAlignment === NowDock.PanelWindow.Center) {

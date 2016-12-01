@@ -71,9 +71,12 @@ DragDrop.DropArea {
     property int realSize: iconSize + iconMargin
     property int themePanelSize: plasmoid.configuration.panelSize
 
-    ///FIXME: I can't remember why this is needed, maybe for the anchorings!!! In order for the Double Layout to not mess the anchorings...
+    ///FIXME: <delete> I can't remember why this is needed, maybe for the anchorings!!! In order for the Double Layout to not mess the anchorings...
     property int mainLayoutPosition: !plasmoid.immutable ? NowDock.PanelWindow.Center : (root.isVertical ? NowDock.PanelWindow.Top : NowDock.PanelWindow.Left)
-    property int panelAlignment: plasmoid.configuration.panelPosition !== NowDock.PanelWindow.Double ? plasmoid.configuration.panelPosition : mainLayoutPosition
+    ///FIXME: <delete>
+    //property int panelAlignment: plasmoid.configuration.panelPosition !== NowDock.PanelWindow.Double ? plasmoid.configuration.panelPosition : mainLayoutPosition
+
+    property int panelAlignment: plasmoid.immutable ? plasmoid.configuration.panelPosition : NowDock.PanelWindow.Center
    // property int panelAlignment: plasmoid.configuration.panelPosition
 
 
@@ -164,6 +167,7 @@ DragDrop.DropArea {
             }
             PropertyChanges{
                 target: mainLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
+                anchors.leftMargin: 0;    anchors.rightMargin:0;     anchors.topMargin:0;    anchors.bottomMargin:0;
             }
         },
         State {
@@ -176,6 +180,7 @@ DragDrop.DropArea {
             }
             PropertyChanges{
                 target: mainLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
+                anchors.leftMargin: 0;    anchors.rightMargin:0;     anchors.topMargin:0;    anchors.bottomMargin:0;
             }
         },
         State {
@@ -188,6 +193,20 @@ DragDrop.DropArea {
             }
             PropertyChanges{
                 target: mainLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
+                anchors.leftMargin: 0;    anchors.rightMargin:0;     anchors.topMargin:0;    anchors.bottomMargin:0;
+            }
+        },
+        State {
+            name: "leftDouble"
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
+
+            AnchorChanges {
+                target: mainLayout
+                anchors{ top:parent.top; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: mainLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
+                anchors.leftMargin: 0;    anchors.rightMargin:0;     anchors.topMargin:panelEdgeSpacing/2;    anchors.bottomMargin:0;
             }
         },
         ///Right Edge
@@ -201,6 +220,7 @@ DragDrop.DropArea {
             }
             PropertyChanges{
                 target: mainLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
+                anchors.leftMargin: 0;    anchors.rightMargin:0;     anchors.topMargin:0;    anchors.bottomMargin:0;
             }
         },
         State {
@@ -213,6 +233,7 @@ DragDrop.DropArea {
             }
             PropertyChanges{
                 target: mainLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
+                anchors.leftMargin: 0;    anchors.rightMargin:0;     anchors.topMargin:0;    anchors.bottomMargin:0;
             }
         },
         State {
@@ -225,6 +246,20 @@ DragDrop.DropArea {
             }
             PropertyChanges{
                 target: mainLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
+                anchors.leftMargin: 0;    anchors.rightMargin:0;     anchors.topMargin:0;    anchors.bottomMargin:0;
+            }
+        },
+        State {
+            name: "rightDouble"
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
+
+            AnchorChanges {
+                target: mainLayout
+                anchors{ top:parent.top; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: mainLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
+                anchors.leftMargin: 0;    anchors.rightMargin:0;     anchors.topMargin:panelEdgeSpacing/2;    anchors.bottomMargin:0;
             }
         },
         ///Bottom Edge
@@ -238,6 +273,7 @@ DragDrop.DropArea {
             }
             PropertyChanges{
                 target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
+                anchors.leftMargin: 0;    anchors.rightMargin:0;     anchors.topMargin:0;    anchors.bottomMargin:0;
             }
         },
         State {
@@ -250,6 +286,7 @@ DragDrop.DropArea {
             }
             PropertyChanges{
                 target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
+                anchors.leftMargin: 0;    anchors.rightMargin:0;     anchors.topMargin:0;    anchors.bottomMargin:0;
             }
         },
         State {
@@ -262,6 +299,20 @@ DragDrop.DropArea {
             }
             PropertyChanges{
                 target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
+                anchors.leftMargin: 0;    anchors.rightMargin:0;     anchors.topMargin:0;    anchors.bottomMargin:0;
+            }
+        },
+        State {
+            name: "bottomDouble"
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
+
+            AnchorChanges {
+                target: mainLayout
+                anchors{ top:undefined; bottom:parent.bottom; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
+                anchors.leftMargin: panelEdgeSpacing/2;    anchors.rightMargin:0;     anchors.topMargin:0;    anchors.bottomMargin:0;
             }
         },
         ///Top Edge
@@ -275,6 +326,7 @@ DragDrop.DropArea {
             }
             PropertyChanges{
                 target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
+                anchors.leftMargin: 0;    anchors.rightMargin:0;     anchors.topMargin:0;    anchors.bottomMargin:0;
             }
         },
         State {
@@ -287,6 +339,7 @@ DragDrop.DropArea {
             }
             PropertyChanges{
                 target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
+                anchors.leftMargin: 0;    anchors.rightMargin:0;     anchors.topMargin:0;    anchors.bottomMargin:0;
             }
         },
         State {
@@ -299,6 +352,20 @@ DragDrop.DropArea {
             }
             PropertyChanges{
                 target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
+                anchors.leftMargin: 0;    anchors.rightMargin:0;     anchors.topMargin:0;    anchors.bottomMargin:0;
+            }
+        },
+        State {
+            name: "topDouble"
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
+
+            AnchorChanges {
+                target: mainLayout
+                anchors{ top:parent.top; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+            PropertyChanges{
+                target: mainLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
+                anchors.leftMargin: panelEdgeSpacing/2;    anchors.rightMargin:0;     anchors.topMargin:0;    anchors.bottomMargin:0;
             }
         }
     ]
@@ -740,21 +807,19 @@ DragDrop.DropArea {
                 && (iconSize===plasmoid.configuration.iconSize || iconSize === automaticIconSizeBasedSize) ) {
             var layoutLength;
             var maxLength = magicWin.maximumLength;
-            console.log("------Entered check-----");
+           // console.log("------Entered check-----");
 
             if (root.isVertical) {
                 layoutLength = (plasmoid.configuration.panelPosition === 10) ? mainLayout.height+secondLayout.height : mainLayout.height
-              //  maxLength = magicWin.height;
             } else {
                 layoutLength = (plasmoid.configuration.panelPosition === 10) ? mainLayout.width+secondLayout.width : mainLayout.width
-              //  maxLength = magicWin.width;
             }
 
             var toShrinkLimit = maxLength-(zoomFactor*(iconSize+2*iconMargin));
             var toGrowLimit = maxLength-1.5*(zoomFactor*(iconSize+2*iconMargin));
 
             if (layoutLength > toShrinkLimit) { //must shrink
-                console.log("step3");
+              //  console.log("step3");
                 var nextIconSize = plasmoid.configuration.iconSize;
 
                 do {
@@ -765,10 +830,10 @@ DragDrop.DropArea {
                 } while ( (nextLength>toShrinkLimit) && (nextIconSize !== 16));
 
                 automaticIconSizeBasedSize = nextIconSize;
-                console.log("Step 3 - found:"+automaticIconSizeBasedSize);
+             //   console.log("Step 3 - found:"+automaticIconSizeBasedSize);
             } else if ((layoutLength<toGrowLimit
                         && (iconSize === automaticIconSizeBasedSize)) ) { //must grow probably
-                console.log("step4");
+             //   console.log("step4");
                 var nextIconSize2 = automaticIconSizeBasedSize;
                 var foundGoodSize = -1;
 
@@ -788,9 +853,9 @@ DragDrop.DropArea {
                     } else {
                         automaticIconSizeBasedSize = foundGoodSize;
                     }
-                    console.log("Step 4 - found:"+automaticIconSizeBasedSize);
+              //      console.log("Step 4 - found:"+automaticIconSizeBasedSize);
                 } else {
-                    console.log("Step 4 - did not found...");
+              //     console.log("Step 4 - did not found...");
                 }
             }
         }
@@ -1036,7 +1101,7 @@ DragDrop.DropArea {
             states:[
                 State {
                     name: "bottom"
-                    when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double)
+                    when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
 
                     AnchorChanges {
                         target: secondLayout
@@ -1044,11 +1109,12 @@ DragDrop.DropArea {
                     }
                     PropertyChanges{
                         target: secondLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignBottom
+                        anchors.leftMargin: 0;    anchors.rightMargin:panelEdgeSpacing/2;     anchors.topMargin:0;    anchors.bottomMargin:0;
                     }
                 },
                 State {
                     name: "left"
-                    when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double)
+                    when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
 
                     AnchorChanges {
                         target: secondLayout
@@ -1056,11 +1122,12 @@ DragDrop.DropArea {
                     }
                     PropertyChanges{
                         target: secondLayout; horizontalItemAlignment: Grid.AlignLeft; verticalItemAlignment: Grid.AlignVCenter;
+                        anchors.leftMargin: 0;    anchors.rightMargin:0;     anchors.topMargin:0;    anchors.bottomMargin:panelEdgeSpacing/2;
                     }
                 },
                 State {
                     name: "right"
-                    when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double)
+                    when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
 
                     AnchorChanges {
                         target: secondLayout
@@ -1068,11 +1135,12 @@ DragDrop.DropArea {
                     }
                     PropertyChanges{
                         target: secondLayout; horizontalItemAlignment: Grid.AlignRight; verticalItemAlignment: Grid.AlignVCenter;
+                        anchors.leftMargin: 0;    anchors.rightMargin:0;     anchors.topMargin:0;    anchors.bottomMargin:panelEdgeSpacing/2;
                     }
                 },
                 State {
                     name: "top"
-                    when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double)
+                    when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
 
                     AnchorChanges {
                         target: secondLayout
@@ -1080,6 +1148,7 @@ DragDrop.DropArea {
                     }
                     PropertyChanges{
                         target: secondLayout; horizontalItemAlignment: Grid.AlignHCenter; verticalItemAlignment: Grid.AlignTop
+                        anchors.leftMargin: 0;    anchors.rightMargin:panelEdgeSpacing/2;     anchors.topMargin:0;    anchors.bottomMargin:0;
                     }
                 }
             ]

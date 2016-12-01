@@ -170,6 +170,23 @@ Item{
                 anchors{ top:undefined; bottom:belower.bottom; left:belower.left; right:undefined; horizontalCenter:undefined; verticalCenter:undefined}
             }
         },
+        State {
+            name: "leftDouble"
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
+
+            AnchorChanges {
+                target: barLine
+                anchors{ top:undefined; bottom:undefined; left:parent.left; right:undefined; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
+            }
+            AnchorChanges {
+                target: belower
+                anchors{ top:undefined; bottom:undefined; left:undefined; right:parent.left; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
+            }
+            AnchorChanges {
+                target: shadowsSvgItem
+                anchors{ top:undefined; bottom:undefined; left:belower.left; right:undefined; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
+            }
+        },
         ///Right
         State {
             name: "rightCenter"
@@ -220,6 +237,23 @@ Item{
             AnchorChanges {
                 target: shadowsSvgItem
                 anchors{ top:undefined; bottom:belower.bottom; left:undefined; right:belower.right; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+        },
+        State {
+            name: "rightDouble"
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
+
+            AnchorChanges {
+                target: barLine
+                anchors{ top:undefined; bottom:undefined; left:undefined; right:parent.right; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
+            }
+            AnchorChanges {
+                target: belower
+                anchors{ top:undefined; bottom:undefined; left:parent.right; right:undefined; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
+            }
+            AnchorChanges {
+                target: shadowsSvgItem
+                anchors{ top:undefined; bottom:undefined; left:undefined; right:belower.right; horizontalCenter:undefined; verticalCenter:parent.verticalCenter}
             }
         },
         ///Bottom
@@ -274,6 +308,23 @@ Item{
                 anchors{ top:undefined; bottom:belower.bottom; left:undefined; right:belower.right; horizontalCenter:undefined; verticalCenter:undefined}
             }
         },
+        State {
+            name: "bottomDouble"
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
+
+            AnchorChanges {
+                target: barLine
+                anchors{ top:undefined; bottom:parent.bottom; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
+            }
+            AnchorChanges {
+                target: belower
+                anchors{ top:parent.bottom; bottom:undefined; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
+            }
+            AnchorChanges {
+                target: shadowsSvgItem
+                anchors{ top:undefined; bottom:belower.bottom; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
+            }
+        },
         ///Top
         State {
             name: "topCenter"
@@ -324,6 +375,23 @@ Item{
             AnchorChanges {
                 target: shadowsSvgItem
                 anchors{ top:belower.top; bottom:undefined; left:undefined; right:belower.right; horizontalCenter:undefined; verticalCenter:undefined}
+            }
+        },
+        State {
+            name: "topDouble"
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
+
+            AnchorChanges {
+                target: barLine
+                anchors{ top:parent.top; bottom:undefined; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
+            }
+            AnchorChanges {
+                target: belower
+                anchors{ top:undefined; bottom:parent.top; left:undefined; right:undefined;  horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
+            }
+            AnchorChanges {
+                target: shadowsSvgItem
+                anchors{ top:belower.top; bottom:undefined; left:undefined; right:undefined; horizontalCenter:parent.horizontalCenter; verticalCenter:undefined}
             }
         }
     ]
