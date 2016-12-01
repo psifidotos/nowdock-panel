@@ -40,7 +40,7 @@ DragDrop.DropArea {
     ////
 
     ////BEGIN properties
-    property bool debugMode: true
+    property bool debugMode: false
 
     property bool automaticSize: plasmoid.configuration.automaticIconSize
     property bool immutable: plasmoid.immutable
@@ -65,7 +65,7 @@ DragDrop.DropArea {
     property int iconSize: (automaticIconSizeBasedSize > 0 && plasmoid.immutable) ? Math.min(automaticIconSizeBasedSize, plasmoid.configuration.iconSize) :
                                                                                   plasmoid.configuration.iconSize
     property int iconStep: 8
-    property int panelEdgeSpacing: iconSize / 2
+    property int panelEdgeSpacing: iconSize / 3
     //FIXME: this is not needed any more probably
     property int previousAllTasks: -1    //is used to forbit updateAutomaticIconSize when hovering
     property int realSize: iconSize + iconMargin

@@ -168,7 +168,7 @@ NowDock.PanelWindow{
         var tempLength = root.isHorizontal ? width : height;
         var tempThickness = root.isHorizontal ? height : width;
 
-        var space = root.panelEdgeSpacing + 6;
+        var space = root.panelEdgeSpacing + 10;
 
         if (normalState) {
             //count panel length

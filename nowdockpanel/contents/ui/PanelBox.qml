@@ -84,8 +84,8 @@ Item{
     PlasmaCore.FrameSvgItem{
         id: shadowsSvgItem
 
-        width: root.isVertical ? panelSize + margins.left + margins.right: parent.width
-        height: root.isVertical ? parent.height : panelSize + margins.top + margins.bottom
+        width: root.isVertical ? panelSize + margins.left + margins.right: parent.width + margins.left + margins.right
+        height: root.isVertical ? parent.height + margins.left + margins.right : panelSize + margins.top + margins.bottom
 
         imagePath: "translucent/widgets/panel-background"
         prefix:"shadow"
