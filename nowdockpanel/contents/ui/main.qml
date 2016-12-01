@@ -40,7 +40,7 @@ DragDrop.DropArea {
     ////
 
     ////BEGIN properties
-    property bool debugMode: true
+    property bool debugMode: false
 
     property bool automaticSize: plasmoid.configuration.automaticIconSize
     property bool immutable: plasmoid.immutable
@@ -66,6 +66,7 @@ DragDrop.DropArea {
                                                                                   plasmoid.configuration.iconSize
     property int iconStep: 8
     property int panelEdgeSpacing: iconSize / 2
+    //FIXME: this is not needed any more probably
     property int previousAllTasks: -1    //is used to forbit updateAutomaticIconSize when hovering
     property int realSize: iconSize + iconMargin
     property int themePanelSize: plasmoid.configuration.panelSize
@@ -355,9 +356,6 @@ DragDrop.DropArea {
         if (startupTimer.running) {
             startupTimer.restart();
         }
-
-        //  if(isVertical)
-        //    updateAutomaticIconSizeZoom();
     }
 
     onNowDockChanged: {
@@ -383,12 +381,8 @@ DragDrop.DropArea {
         if (startupTimer.running) {
             startupTimer.restart();
         }
-
-        //  if(isHorizontal)
-        //   updateAutomaticIconSizeZoom();
     }
 
-    //  onZoomFactorChanged: updateAutomaticIconSizeZoom();
     //  onIconSizeChanged: console.log("Icon Size Changed:"+iconSize);
 
     Component.onCompleted: {
@@ -741,104 +735,7 @@ DragDrop.DropArea {
         magicWin.disableHiding = value;
     }
 
-    //sizeViolation variable is used when for any reason the mainLayout
-    //exceeds the panel size
-    function updateAutomaticIconSize(sizeViolation){
-        if(((layoutsContainer.hoveredIndex == -1)
-            && (nowDockHoveredIndex == -1)
-            && ((smallAutomaticIconJumps && (iconSize % iconStep) == 0 ) || (!smallAutomaticIconJumps && sizeIsFromAutomaticMode(iconSize)) )
-            && previousAllTasks !== layoutsContainer.allCount)
-                || (sizeViolation && (iconSize % iconStep == 0))){
-
-            //  console.log("In .... :"+previousAllTasks+" - "+currentLayout.allCount);
-            //  console.log("Currect icon size :"+iconSize+"  - "+(iconSize % iconStep));
-
-            var removedItem = previousAllTasks > layoutsContainer.allCount;
-
-            if (removedItem)
-                onlyAddingStarup = false;
-
-            previousAllTasks = layoutsContainer.allCount;
-
-            var layoutSize;
-            var rootSize;
-
-            if(root.isHorizontal){
-                layoutSize = mainLayout.width + secondLayout.width;
-                //rootSize = root.width;
-                rootSize = magicWin && magicWin.visible ? magicWin.width : root.width;
-            }
-            else{
-                layoutSize = mainLayout.height + secondLayout.height;
-                //rootSize = root.height;
-                rootSize = magicWin && magicWin.visible ? magicWin.height : root.height;
-            }
-
-            //compute how big is going to be layout with the new icon size
-            //1+zoomFactor is used because when the signal is received
-            //everything is unzoomed
-
-            // console.log(iconSize);
-
-            var nextIconSize
-
-            if(smallAutomaticIconJumps)
-                nextIconSize = Math.max(iconSize - iconStep, 16);
-            else{
-                if(currentIconIndex == 0)
-                    nextIconSize = iconsArray[0];
-                else
-                    nextIconSize = iconsArray[currentIconIndex-1];
-            }
-
-            var dif1 = nextIconSize / iconSize;
-            var limitToShrink = (1+zoomFactor)*(nextIconSize+2*dif1*iconMargin);
-            var futureSizeSmaller = dif1*layoutSize + limitToShrink;
-            var currentPredictedSize = layoutSize+(1+zoomFactor)*(iconSize+2*iconMargin)
-
-            var result=0;
-
-            if( (!removedItem || sizeViolation)
-                    && currentPredictedSize>rootSize
-                    && (futureSizeSmaller<rootSize|| sizeViolation)){
-                result = nextIconSize;
-                //   console.log("Should Decrease: "+result);
-            }
-
-            if((result===0)||(onlyAddingStarup)){
-
-                if(smallAutomaticIconJumps){
-                    nextIconSize = iconSize + iconStep;
-                } else{
-                    if(currentIconIndex == iconsArray.length -1)
-                        nextIconSize = iconsArray[iconsArray.length -1];
-                    else
-                        nextIconSize = iconsArray[currentIconIndex+1];
-                }
-
-                var dif2 = nextIconSize / iconSize ;
-                var limitToGrow = zoomFactor*(nextIconSize+2*dif2*iconMargin);
-                var futureSize = dif2*layoutSize //- limitToGrow;
-
-                if((removedItem || onlyAddingStarup || !sizeViolation)
-                        && layoutSize<=rootSize
-                        && futureSize<=rootSize) {
-                    if(onlyAddingStarup) {
-                        //result = automaticIconSizeBasedZoom;
-                        result = plasmoid.configuration.iconSize;
-                    } else {
-                        result = nextIconSize;
-                    }
-                    //    console.log("Should Increase: "+result);
-                }
-            }
-
-            if(result>0)
-                automaticIconSizeBasedSize = result;
-        }
-    }
-
-    function updateAutomaticIconSize2() {
+    function updateAutomaticIconSize() {
         if (magicWin && magicWin.normalState && !animatedLengthTimer.running && plasmoid.immutable
                 && (iconSize===plasmoid.configuration.iconSize || iconSize === automaticIconSizeBasedSize) ) {
             var layoutLength;
@@ -1102,26 +999,12 @@ DragDrop.DropArea {
                 if (root.isVertical && magicWin && plasmoid.immutable) {
                     checkLayoutsAnimatedLength();
                 }
-
-                /*if(root.isVertical && plasmoid.immutable && magicWin && magicWin.visible && !root.inStartup) {
-                    if (mainLayout.height > magicWin.height)
-                        updateAutomaticIconSize(true);
-                    else
-                        updateAutomaticIconSize(false);
-                }*/
             }
 
             onWidthChanged: {
                 if (root.isHorizontal && magicWin && plasmoid.immutable) {
                     checkLayoutsAnimatedLength();
                 }
-
-                /*if(root.isHorizontal && plasmoid.immutable && magicWin && magicWin.visible && !root.inStartup) {
-                    if (mainLayout.width > magicWin.width)
-                        updateAutomaticIconSize(true);
-                    else
-                        updateAutomaticIconSize(false);
-                }*/
             }
 
         }

@@ -107,7 +107,7 @@ NowDock.PanelWindow{
         }
 
         if (normalState) {
-            root.updateAutomaticIconSize2();
+            root.updateAutomaticIconSize();
         }
     }
 
