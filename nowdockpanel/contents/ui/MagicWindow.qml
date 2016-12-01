@@ -177,9 +177,9 @@ NowDock.PanelWindow{
         if (normalState) {
             //count panel length
             if(root.isHorizontal) {
-                tempLength = plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ? screenGeometry.width : mainLayout.width + space;
+                tempLength = plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ? layoutsContainer.width+space : mainLayout.width + space;
             } else {
-                tempLength = plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ? screenGeometry.height : mainLayout.height + space;
+                tempLength = plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ? layoutsContainer.height+space : mainLayout.height + space;
             }
 
             tempThickness = thicknessNormalOriginal;
@@ -204,7 +204,9 @@ NowDock.PanelWindow{
                     localY = 0;
                 }
 
-                if (root.panelAlignment === NowDock.PanelWindow.Left) {
+                if (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) {
+                    localX = (window.width/2) - (layoutsContainer.width/2) - (space/2);
+                } else if (root.panelAlignment === NowDock.PanelWindow.Left) {
                     localX = 0;
                 } else if (root.panelAlignment === NowDock.PanelWindow.Center) {
                     localX = (window.width/2) - (mainLayout.width/2) - (space/2);
@@ -218,7 +220,9 @@ NowDock.PanelWindow{
                     localX = window.width - tempThickness;
                 }
 
-                if (root.panelAlignment === NowDock.PanelWindow.Top) {
+                if (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) {
+                    localX = (window.height/2) - (layoutsContainer.height/2) - (space/2);
+                } else if (root.panelAlignment === NowDock.PanelWindow.Top) {
                     localY = 0;
                 } else if (root.panelAlignment === NowDock.PanelWindow.Center) {
                     localY = (window.height/2) - (mainLayout.height/2) - (space/2);

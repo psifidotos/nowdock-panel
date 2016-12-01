@@ -40,7 +40,7 @@ DragDrop.DropArea {
     ////
 
     ////BEGIN properties
-    property bool debugMode: false
+    property bool debugMode: true
 
     property bool automaticSize: plasmoid.configuration.automaticIconSize
     property bool immutable: plasmoid.immutable
@@ -72,8 +72,8 @@ DragDrop.DropArea {
     property int themePanelSize: plasmoid.configuration.panelSize
 
     ///FIXME: I can't remember why this is needed, maybe for the anchorings!!! In order for the Double Layout to not mess the anchorings...
-    property int mainLayoutPosition: !plasmoid.immutable ? 0 : (root.isVertical ? NowDock.PanelWindow.Top : NowDock.PanelWindow.Left)
-    property int panelAlignment: plasmoid.configuration.panelPosition !== 10 ? plasmoid.configuration.panelPosition : mainLayoutPosition
+    property int mainLayoutPosition: !plasmoid.immutable ? NowDock.PanelWindow.Center : (root.isVertical ? NowDock.PanelWindow.Top : NowDock.PanelWindow.Left)
+    property int panelAlignment: plasmoid.configuration.panelPosition !== NowDock.PanelWindow.Double ? plasmoid.configuration.panelPosition : mainLayoutPosition
    // property int panelAlignment: plasmoid.configuration.panelPosition
 
 
@@ -935,10 +935,14 @@ DragDrop.DropArea {
         property int currentSpot: -1000
         property int hoveredIndex: -1
 
-        x: 0
-        y: 0
-        width: parent.width
-        height: parent.height
+        x: (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) && root.isHorizontal && plasmoid.immutable ?
+               (magicWin.width/2) - (magicWin.maximumLength/2): 0
+        y: (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) && root.isVertical && plasmoid.immutable ?
+               (magicWin.height/2) - (magicWin.maximumLength/2): 0
+        width: (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) && root.isHorizontal && plasmoid.immutable ?
+                   magicWin.maximumLength : parent.width
+        height: (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) && root.isVertical && plasmoid.immutable ?
+                    magicWin.maximumLength : parent.height
 
         Component.onCompleted: {
             if(plasmoid.immutable) {

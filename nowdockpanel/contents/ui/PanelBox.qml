@@ -36,14 +36,16 @@ Item{
     z:0
 
     property int panelWidth: secondLayout.count > 0 && root.isHorizontal && plasmoid.immutable ?
-                                 Screen.width + 2*spacing : mainLayout.width + spacing
+                                 layoutsContainer.width + 4*spacing : mainLayout.width + spacing
     property int panelHeight: secondLayout.count > 0 && root.isVertical && plasmoid.immutable ?
-                                  Screen.height + 2*spacing : mainLayout.height + spacing
+                                  layoutsContainer.height + 2*spacing : mainLayout.height + spacing
 
     width: root.isHorizontal ? panelWidth : smallSize
     height: root.isVertical ? panelHeight : smallSize
 
-    property int spacing: (root.panelAlignment === NowDock.PanelWindow.Center) ? root.panelEdgeSpacing : root.panelEdgeSpacing/2
+    property int spacing: (root.panelAlignment === NowDock.PanelWindow.Center
+                           || plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) ?
+                              root.panelEdgeSpacing : root.panelEdgeSpacing/2
     property int smallSize: Math.max(3.7*root.statesLineSize, 16)
 
     Behavior on opacity{
