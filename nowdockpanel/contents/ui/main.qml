@@ -40,7 +40,7 @@ DragDrop.DropArea {
     ////
 
     ////BEGIN properties
-    property bool debugMode: false
+    property bool debugMode: true
 
     property bool automaticSize: plasmoid.configuration.automaticIconSize
     property bool immutable: plasmoid.immutable
@@ -61,8 +61,8 @@ DragDrop.DropArea {
     property int animationsNeedLength: 0 // animations need length, e.g. adding a task
     property int animationsNeedThickness: 0 // animations need thickness, e.g. bouncing animation
     property int appletsAnimations: 0 //zoomed applets it is used basically on masking for magic window
-    property int automaticIconSizeBasedSize: 0
-    property int iconSize: (automaticIconSizeBasedSize>0 && plasmoid.immutable) ? Math.min(automaticIconSizeBasedSize, plasmoid.configuration.iconSize) :
+    property int automaticIconSizeBasedSize: -1 //it is not set, this is the defautl
+    property int iconSize: (automaticIconSizeBasedSize > 0 && plasmoid.immutable) ? Math.min(automaticIconSizeBasedSize, plasmoid.configuration.iconSize) :
                                                                                   plasmoid.configuration.iconSize
     property int iconStep: 8
     property int panelEdgeSpacing: iconSize / 2
@@ -613,18 +613,18 @@ DragDrop.DropArea {
     }
 
     function checkLayoutsAnimatedLength() {
-        if (!magicWin.isHovered && (root.animationsNeedBothAxis === 0) && (root.animationsNeedLength===0) && (root.appletsAnimations === 0)) {
-            mainLayout.animatedLength = true;
-        } else {
-            mainLayout.animatedLength = false;
-        }
-
         //After the last animations we must check again after a small delay in order
         //to disable the automaticSizeUpdate
         if (animatedLengthTimer.running) {
             animatedLengthTimer.restart();
         } else {
             animatedLengthTimer.start();
+        }
+
+        if (!magicWin.isHovered && (root.animationsNeedBothAxis === 0) && (root.animationsNeedLength===0) && (root.appletsAnimations === 0)) {
+            mainLayout.animatedLength = true;
+        } else {
+            mainLayout.animatedLength = false;
         }
 
         magicWin.updateMaskArea();
@@ -838,6 +838,66 @@ DragDrop.DropArea {
         }
     }
 
+    function updateAutomaticIconSize2() {
+        if (magicWin && magicWin.normalState && !animatedLengthTimer.running && plasmoid.immutable
+                && (iconSize===plasmoid.configuration.iconSize || iconSize === automaticIconSizeBasedSize) ) {
+            var layoutLength;
+            var maxLength;
+          //  console.log("------Entered check-----");
+
+            if (root.isVertical) {
+                layoutLength = (plasmoid.configuration.panelPosition === 10) ? mainLayout.height+secondLayout.height : mainLayout.height
+                maxLength = magicWin.height;
+            } else {
+                layoutLength = (plasmoid.configuration.panelPosition === 10) ? mainLayout.width+secondLayout.width : mainLayout.width
+                maxLength = magicWin.width;
+            }
+
+            var spaceForAnimations = (zoomFactor*(iconSize+2*iconMargin));
+
+            if (layoutLength > (maxLength-spaceForAnimations)) { //must shrink
+               // console.log("step3");
+                var nextIconSize = plasmoid.configuration.iconSize;
+
+                do {
+                  nextIconSize = nextIconSize - iconStep;
+                  var factor = nextIconSize / iconSize;
+                  var nextLength = factor * layoutLength;
+
+                } while ( (nextLength>(maxLength-spaceForAnimations)) && (nextIconSize !== 16));
+
+                automaticIconSizeBasedSize = nextIconSize;
+            //    console.log("Step 3 - found:"+automaticIconSizeBasedSize);
+            } else if ((layoutLength<maxLength-spaceForAnimations
+                        && (iconSize === automaticIconSizeBasedSize)) ) { //must grow probably
+            //    console.log("step4");
+                var nextIconSize2 = automaticIconSizeBasedSize;
+                var foundGoodSize = -1;
+
+                do {
+                  nextIconSize2 = nextIconSize2 + iconStep;
+                  var factor2 = nextIconSize2 / automaticIconSizeBasedSize;
+                  var nextLength2 = factor2 * layoutLength;
+
+                  if (nextLength2 < (maxLength - spaceForAnimations)) {
+                      foundGoodSize = nextIconSize2;
+                  }
+                } while ( (nextLength2<(maxLength-spaceForAnimations)) && (nextIconSize2 !== plasmoid.configuration.iconSize ));
+
+                if (foundGoodSize > 0) {
+                    if (foundGoodSize === plasmoid.configuration.iconSize) {
+                        automaticIconSizeBasedSize = -1;
+                    } else {
+                        automaticIconSizeBasedSize = foundGoodSize;
+                    }
+              //      console.log("Step 4 - found:"+automaticIconSizeBasedSize);
+                } else {
+              //      console.log("Step 4 - did not found...");
+                }
+            }
+        }
+    }
+
     function updateLayouts(){
         if(plasmoid.immutable){
             var splitter = -1;
@@ -1043,12 +1103,12 @@ DragDrop.DropArea {
                     checkLayoutsAnimatedLength();
                 }
 
-                if(root.isVertical && plasmoid.immutable && magicWin && magicWin.visible && !root.inStartup) {
+                /*if(root.isVertical && plasmoid.immutable && magicWin && magicWin.visible && !root.inStartup) {
                     if (mainLayout.height > magicWin.height)
                         updateAutomaticIconSize(true);
                     else
                         updateAutomaticIconSize(false);
-                }
+                }*/
             }
 
             onWidthChanged: {
@@ -1056,12 +1116,12 @@ DragDrop.DropArea {
                     checkLayoutsAnimatedLength();
                 }
 
-                if(root.isHorizontal && plasmoid.immutable && magicWin && magicWin.visible && !root.inStartup) {
+                /*if(root.isHorizontal && plasmoid.immutable && magicWin && magicWin.visible && !root.inStartup) {
                     if (mainLayout.width > magicWin.width)
                         updateAutomaticIconSize(true);
                     else
                         updateAutomaticIconSize(false);
-                }
+                }*/
             }
 
         }

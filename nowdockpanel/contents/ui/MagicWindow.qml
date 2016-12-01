@@ -10,19 +10,25 @@ NowDock.PanelWindow{
     id: window
 
     property bool inStartup: root.inStartup
-    property bool normalState : (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
-                                && (root.appletsAnimations === 0)
-                                && (root.animationsNeedBothAxis === 0) && (root.animationsNeedLength === 0)
-                                && (!mainLayout.animatedLength)
-
+    property bool normalState : false  // this is being set from updateMaskArea
 
     property int animationSpeed: root.durationTime * 1.2 * units.longDuration
     property int length: root.isVertical ? screenGeometry.height : screenGeometry.width
+
+    //it is used in order to not break the calculations for the thickness placement
+    //especially in automatic icon sizes calculations
+    property int iconMarginOriginal: 0.12*plasmoid.configuration.iconSize
+    property int statesLineSizeOriginal: root.nowDock ? Math.ceil( plasmoid.configuration.iconSize/13 ) : 0
 
     property int thicknessAutoHidden: 8
     property int thicknessMid: root.statesLineSize + (1 + (0.65 * (root.zoomFactor-1)))*(root.iconSize+root.iconMargin) //needed in some animations
     property int thicknessNormal: root.statesLineSize + root.iconSize + root.iconMargin + 1
     property int thicknessZoom: root.statesLineSize + ((root.iconSize+root.iconMargin) * root.zoomFactor) + 2
+    //it is used to keep thickness solid e.g. when iconSize changes from auto functions
+    property int thicknessMidOriginal: statesLineSizeOriginal + (1 + (0.65 * (root.zoomFactor-1)))*(plasmoid.configuration.iconSize+iconMarginOriginal) //needed in some animations
+    property int thicknessNormalOriginal: statesLineSizeOriginal + plasmoid.configuration.iconSize + iconMarginOriginal + 1
+    property int thicknessZoomOriginal: statesLineSizeOriginal + ((plasmoid.configuration.iconSize+iconMarginOriginal) * root.zoomFactor) + 2
+
 
     childrenLength: root.isHorizontal ? mainLayout.width : mainLayout.height
     immutable: plasmoid.immutable
@@ -45,9 +51,8 @@ NowDock.PanelWindow{
         }
     }*/
 
-    width: root.isHorizontal ? length : thicknessZoom
-    height: root.isHorizontal ? thicknessZoom : length
-
+    width: root.isHorizontal ? length : thicknessZoomOriginal
+    height: root.isHorizontal ? thicknessZoomOriginal : length
 
     onImmutableChanged: updateMaskArea();
 
@@ -100,6 +105,10 @@ NowDock.PanelWindow{
         if(normalState && nowDock) {
             nowDock.publishTasksGeometries();
         }
+
+        if (normalState) {
+            root.updateAutomaticIconSize2();
+        }
     }
 
     onPanelVisibilityChanged: {
@@ -144,10 +153,11 @@ NowDock.PanelWindow{
         var localX = 0;
         var localY = 0;
 
-        /* var normalState = (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
+
+        normalState = (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
                 && (root.appletsAnimations === 0)
                 && (root.animationsNeedBothAxis === 0) && (root.animationsNeedLength === 0)
-                && (!mainLayout.animatedLength)*/
+                && (!mainLayout.animatedLength)
 
         // debug maskArea criteria
         //console.log(root.nowDockHoveredIndex + ", " + layoutsContainer.hoveredIndex + ", "
@@ -168,10 +178,10 @@ NowDock.PanelWindow{
                 tempLength = plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ? screenGeometry.height : mainLayout.height + space;
             }
 
-            tempThickness = thicknessNormal;
+            tempThickness = thicknessNormalOriginal;
 
             if (root.animationsNeedThickness > 0) {
-                tempThickness = thicknessMid;
+                tempThickness = thicknessMidOriginal;
             }
 
             if (window.isAutoHidden && (panelVisibility === NowDock.PanelWindow.AutoHide)) {
@@ -220,10 +230,10 @@ NowDock.PanelWindow{
 
             //grow only on length and not thickness
             if(mainLayout.animatedLength) {
-                tempThickness = thicknessNormal;
+                tempThickness = thicknessNormalOriginal;
 
                 if (root.animationsNeedThickness > 0) {
-                    tempThickness = thicknessMid;
+                    tempThickness = thicknessMidOriginal;
                 }
 
                 //configure the x,y position based on thickness
@@ -233,7 +243,7 @@ NowDock.PanelWindow{
                     localY = window.height - tempThickness;
             } else{
                 //use all thickness space
-                tempThickness = thicknessZoom;
+                tempThickness = thicknessZoomOriginal;
             }
         }
 
