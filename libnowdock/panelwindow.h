@@ -124,7 +124,7 @@ public slots:
 
 
 protected:
-    bool event(QEvent *e) override;
+    bool event(QEvent *event) override;
     void mousePressEvent(QMouseEvent *event) override;
     void showEvent(QShowEvent *event) override;
   //  void mouseMoveEvent(QMouseEvent *ev);

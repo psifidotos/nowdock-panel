@@ -481,11 +481,15 @@ void PanelWindow::activeWindowChanged()
     }
 }
 
-bool PanelWindow::event(QEvent *e)
+bool PanelWindow::event(QEvent *event)
 {
-    QQuickWindow::event(e);
+    QQuickWindow::event(event);
 
-    if (e->type() == QEvent::Enter) {
+    if (!event) {
+        return false;
+    }
+
+    if (event->type() == QEvent::Enter) {
         setIsHovered(true);
         m_updateStateTimer.stop();
         shrinkTransient();
@@ -497,7 +501,7 @@ bool PanelWindow::event(QEvent *e)
         } else {
             showOnTop();
         }
-    } else if ((e->type() == QEvent::Leave) && (!isActive()) ) {
+    } else if ((event->type() == QEvent::Leave) && (!isActive()) ) {
         setIsHovered(false);
 
         if ( (m_panelVisibility != WindowsGoBelow)
@@ -520,14 +524,14 @@ void PanelWindow::mousePressEvent(QMouseEvent *event)
         return;
     }
 
-    if (event->buttons() != Qt::RightButton) {
+    if (!event || event->buttons() != Qt::RightButton) {
         return;
     }
 
     //FIXME: very inefficient appletAt() implementation
     Plasma::Applet *applet = 0;
     foreach (PlasmaQuick::AppletQuickItem *ai, m_appletItems) {
-        if (ai->isVisible() && ai->contains(ai->mapFromItem(contentItem(), event->pos()))) {
+        if (ai && ai->isVisible() && ai->contains(ai->mapFromItem(contentItem(), event->pos()))) {
             applet = ai->applet();
             break;
         } else {
