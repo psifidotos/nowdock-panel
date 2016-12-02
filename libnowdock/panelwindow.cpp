@@ -12,9 +12,14 @@
 #include <QDebug>
 
 #include <KActionCollection>
+#include <KAuthorized>
+#include <KLocalizedString>
 #include <KPluginInfo>
 
 #include <Plasma/Applet>
+#include <Plasma/Containment>
+#include <Plasma/ContainmentActions>
+#include <Plasma/Corona>
 #include <PlasmaQuick/AppletQuickItem>
 
 namespace NowDock
@@ -266,6 +271,13 @@ void PanelWindow::setPanelOrientation(Plasma::Types::Location location)
 void PanelWindow::addAppletItem(QObject *item)
 {
     PlasmaQuick::AppletQuickItem *dynItem = qobject_cast<PlasmaQuick::AppletQuickItem *>(item);
+
+    if (dynItem && !m_containment) {
+        Plasma::Applet *applet = dynItem->applet();
+        if (applet) {
+            m_containment = applet->containment();
+        }
+    }
 
     if (!dynItem || m_appletItems.contains(dynItem)) {
         return;
@@ -557,6 +569,13 @@ bool PanelWindow::event(QEvent *event)
     return true;
 }
 
+void PanelWindow::mouseReleaseEvent(QMouseEvent *event)
+{
+    QQuickWindow::mouseReleaseEvent(event);
+
+    event->setAccepted(m_containment->containmentActions().contains(Plasma::ContainmentActions::eventToString(event)));
+}
+
 void PanelWindow::mousePressEvent(QMouseEvent *event)
 {
     QQuickWindow::mousePressEvent(event);
@@ -568,7 +587,22 @@ void PanelWindow::mousePressEvent(QMouseEvent *event)
         return;
     }
 
-    if (!event || event->buttons() != Qt::RightButton) {
+    const QString trigger = Plasma::ContainmentActions::eventToString(event);
+    Plasma::ContainmentActions *plugin = m_containment->containmentActions().value(trigger);
+
+    if (!plugin || plugin->contextualActions().isEmpty()) {
+        event->setAccepted(false);
+        return;
+    }
+
+    //the plugin can be a single action or a context menu
+    //Don't have an action list? execute as single action
+    //and set the event position as action data
+    if (plugin->contextualActions().length() == 1) {
+        QAction *action = plugin->contextualActions().at(0);
+        action->setData(event->pos());
+        action->trigger();
+        event->accept();
         return;
     }
 
@@ -583,26 +617,30 @@ void PanelWindow::mousePressEvent(QMouseEvent *event)
         }
     }
 
-    if (!applet) {
-        return;
-    }
-
-
-    //FIXME, this must be fixed, this is a workaround in order to not show
-    //two menu's in right click... Unfortunately I am not wise enough yet in
-    //order to find a way to support it for all plasmoids...
-    KPluginInfo info = applet->pluginInfo();
-    if (info.pluginName() == "org.kde.store.nowdock.plasmoid" ) {
-        return;
-    }
-
     QMenu *desktopMenu = new QMenu;
     desktopMenu->setAttribute(Qt::WA_DeleteOnClose);
 
+    if (applet) {
+        //FIXME, this must be fixed, this is a workaround in order to not show
+        //two menu's in right click... Unfortunately I am not wise enough yet in
+        //order to find a way to support it for all plasmoids...
+        KPluginInfo info = applet->pluginInfo();
+
+        if ((info.pluginName() == "org.kde.store.nowdock.plasmoid") ||
+            (info.pluginName() == "org.kde.plasma.systemtray")){
+            return;
+        }
+    }
+
     m_contextMenu = desktopMenu;
 
-    emit applet->contextualActionsAboutToShow();
-    addAppletActions(desktopMenu, applet, event);
+    if (applet) {
+        emit applet->contextualActionsAboutToShow();
+        addAppletActions(desktopMenu, applet, event);
+    } else {
+        emit m_containment->contextualActionsAboutToShow();
+        addContainmentActions(desktopMenu, event);
+    }
 
     //this is a workaround where Qt now creates the menu widget
     //in .exec before oxygen can polish it and set the following attribute
@@ -672,9 +710,9 @@ void PanelWindow::addAppletActions(QMenu *desktopMenu, Plasma::Applet *applet, Q
         }
     }
 
-    // QMenu *containmentMenu = new QMenu(i18nc("%1 is the name of the containment", "%1 Options", m_containment->title()), desktopMenu);
-    //  addContainmentActions(containmentMenu, event);
-    /*
+    QMenu *containmentMenu = new QMenu(i18nc("%1 is the name of the containment", "%1 Options", m_containment->title()), desktopMenu);
+    addContainmentActions(containmentMenu, event);
+
     if (!containmentMenu->isEmpty()) {
         int enabled = 0;
         //count number of real actions
@@ -698,9 +736,7 @@ void PanelWindow::addAppletActions(QMenu *desktopMenu, Plasma::Applet *applet, Q
                 desktopMenu->addMenu(containmentMenu);
             }
         }
-    }*/
-
-    /*
+    }
 
     if (m_containment->immutability() == Plasma::Types::Mutable &&
         (m_containment->containmentType() != Plasma::Types::PanelContainment || m_containment->isUserConfiguring())) {
@@ -714,7 +750,51 @@ void PanelWindow::addAppletActions(QMenu *desktopMenu, Plasma::Applet *applet, Q
             //qDebug() << "adding close action" << closeApplet->isEnabled() << closeApplet->isVisible();
             desktopMenu->addAction(closeApplet);
         }
-    }*/
+    }
+}
+
+
+void PanelWindow::addContainmentActions(QMenu *desktopMenu, QEvent *event)
+{
+    if (m_containment->corona()->immutability() != Plasma::Types::Mutable &&
+            !KAuthorized::authorizeKAction(QStringLiteral("plasma/containment_actions"))) {
+        //qDebug() << "immutability";
+        return;
+    }
+
+    //this is what ContainmentPrivate::prepareContainmentActions was
+    const QString trigger = Plasma::ContainmentActions::eventToString(event);
+    Plasma::ContainmentActions *plugin = m_containment->containmentActions().value(trigger);
+
+    if (!plugin) {
+        return;
+    }
+
+    if (plugin->containment() != m_containment) {
+        plugin->setContainment(m_containment);
+
+        // now configure it
+        KConfigGroup cfg(m_containment->corona()->config(), "ActionPlugins");
+        cfg = KConfigGroup(&cfg, QString::number(m_containment->containmentType()));
+        KConfigGroup pluginConfig = KConfigGroup(&cfg, trigger);
+        plugin->restore(pluginConfig);
+    }
+
+    QList<QAction *> actions = plugin->contextualActions();
+
+    if (actions.isEmpty()) {
+        //it probably didn't bother implementing the function. give the user a chance to set
+        //a better plugin.  note that if the user sets no-plugin this won't happen...
+        if ((m_containment->containmentType() != Plasma::Types::PanelContainment &&
+                m_containment->containmentType() != Plasma::Types::CustomPanelContainment) &&
+                m_containment->actions()->action(QStringLiteral("configure"))) {
+            desktopMenu->addAction(m_containment->actions()->action(QStringLiteral("configure")));
+        }
+    } else {
+        desktopMenu->addActions(actions);
+    }
+
+    return;
 }
 
 

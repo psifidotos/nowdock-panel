@@ -8,6 +8,7 @@
 #include <plasma/plasma.h>
 
 #include <Plasma/Applet>
+#include <Plasma/Containment>
 #include <PlasmaQuick/AppletQuickItem>
 
 #include "abstractinterface.h"
@@ -130,7 +131,8 @@ public slots:
 
 protected:
     bool event(QEvent *event) override;
-    void mousePressEvent(QMouseEvent *event) override;
+    void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
+    void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void showEvent(QShowEvent *event) override;
   //  void mouseMoveEvent(QMouseEvent *ev);
 
@@ -156,6 +158,7 @@ private:
     int m_childrenLength;
     unsigned int m_maximumLength;
 
+    QPointer<Plasma::Containment> m_containment;
     QRect m_maskArea;
     QScreen *m_screen;
     QList<PlasmaQuick::AppletQuickItem *> m_appletItems;
@@ -172,6 +175,7 @@ private:
     AbstractInterface *m_interface;
 
     void addAppletActions(QMenu *desktopMenu, Plasma::Applet *applet, QEvent *event);
+    void addContainmentActions(QMenu *desktopMenu, QEvent *event);
     void setPanelOrientation(Plasma::Types::Location location);
     void updateMaximumLength();
 };
