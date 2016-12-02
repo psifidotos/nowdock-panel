@@ -112,9 +112,7 @@ NowDock.PanelWindow{
     }
 
     onPanelVisibilityChanged: {
-        if (panelVisibility === NowDock.PanelWindow.AutoHide) {
-            visible = true;
-        } else {
+        if (panelVisibility !== NowDock.PanelWindow.AutoHide) {
             isAutoHidden = false;
         }
     }
@@ -142,7 +140,6 @@ NowDock.PanelWindow{
         }
 
         layoutsContainer.opacity = 1;
-        visible = true;
 
         if (!inStartup) {
             delayAnimationTimer.start();
