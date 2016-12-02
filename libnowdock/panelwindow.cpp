@@ -283,6 +283,10 @@ void PanelWindow::addAppletItem(QObject *item)
         return;
     }
 
+    if(dynItem->applet()) {
+        connect(dynItem->applet(), SIGNAL(contextualActionsAboutToShow()), this, SLOT(contextualActionsAboutToShow()));
+    }
+
     m_appletItems.append(dynItem);
 }
 
@@ -567,6 +571,14 @@ bool PanelWindow::event(QEvent *event)
     }
 
     return true;
+}
+
+void PanelWindow::contextualActionsAboutToShow()
+{
+    //unfortunately this is not triggered in order to use it
+    //in a way that those providing a menu should not show a second menu and
+    //make for all the rest trigger the default menu
+    //qDebug() << "in here....";
 }
 
 void PanelWindow::mouseReleaseEvent(QMouseEvent *event)
