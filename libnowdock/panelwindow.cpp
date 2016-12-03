@@ -278,25 +278,25 @@ void PanelWindow::setTransientThickness(unsigned int thickness)
             if (m_location == Plasma::Types::BottomEdge) {
                 transient->setMinimumHeight(newSize);
                 transient->setMaximumHeight(newSize);
-                transient->setY(screen()->size().height() - newSize);
+                transient->setY(screen()->geometry().y()+screen()->size().height() - newSize);
             } else if (m_location == Plasma::Types::TopEdge) {
                 transient->setMinimumHeight(newSize);
                 transient->setMaximumHeight(newSize);
                 transient->setHeight(newSize);
 
-                transient->setY(0);
+                transient->setY(screen()->geometry().y());
             } else if (m_location == Plasma::Types::LeftEdge) {
                 transient->setMinimumWidth(newSize);
                 transient->setMaximumWidth(newSize);
                 transient->setWidth(newSize);
 
-                transient->setX(0);
+                transient->setX(screen()->geometry().x());
             } else if (m_location == Plasma::Types::RightEdge) {
                 transient->setMinimumWidth(newSize);
                 transient->setMaximumWidth(newSize);
                 transient->setWidth(newSize);
 
-                transient->setX(screen()->size().width() - newSize);
+                transient->setX(screen()->geometry().x()+screen()->size().width() - newSize);
             }
 
             if (m_tempThickness < 0) {
@@ -393,7 +393,7 @@ void PanelWindow::shrinkTransient()
                 transient->setMinimumWidth(tempLength);
                 transient->setWidth(tempLength);
 
-                transient->setY(screen()->size().height() - newSize);
+                transient->setY(screen()->geometry().y()+screen()->size().height() - newSize);
                 transient->setX(centerX - transWidth/2);
             } else if (m_location == Plasma::Types::TopEdge) {
                 transient->setMinimumHeight(0);
@@ -401,7 +401,7 @@ void PanelWindow::shrinkTransient()
                 transient->setMinimumWidth(tempLength);
                 transient->setWidth(tempLength);
 
-                transient->setY(0);
+                transient->setY(screen()->geometry().y());
                 transient->setX(centerX - transWidth/2);
             } else if (m_location == Plasma::Types::LeftEdge) {
                 transient->setMinimumWidth(0);
@@ -409,7 +409,7 @@ void PanelWindow::shrinkTransient()
                 transient->setMinimumHeight(tempLength);
                 transient->setHeight(tempLength);
 
-                transient->setX(0);
+                transient->setX(screen()->geometry().x());
                 transient->setY(centerY - transHeight/2);
             } else if (m_location == Plasma::Types::RightEdge) {
                 transient->setMinimumWidth(0);
@@ -417,7 +417,7 @@ void PanelWindow::shrinkTransient()
                 transient->setMinimumHeight(tempLength);
                 transient->setHeight(tempLength);
 
-                transient->setX(screen()->size().width() - newSize);
+                transient->setX(screen()->geometry().x()+screen()->size().width() - newSize);
                 transient->setY(centerY - transHeight/2);
             }
         }
@@ -714,17 +714,19 @@ void PanelWindow::mousePressEvent(QMouseEvent *event)
 
         QRect scr = m_screen->availableGeometry();
 
-        int x = event->globalPos().x();
-        int y = event->globalPos().y();
+        int smallStep = 3;
+
+        int x = event->globalPos().x() + smallStep;
+        int y = event->globalPos().y() + smallStep;
 
         //qDebug()<<x << " - "<<y;
 
         if (event->globalPos().x() > scr.center().x()) {
-            x = event->globalPos().x() - desktopMenu->width();
+            x = event->globalPos().x() - desktopMenu->width() - smallStep;
         }
 
         if (event->globalPos().y() > scr.center().y()) {
-            y = event->globalPos().y() - desktopMenu->height();
+            y = event->globalPos().y() - desktopMenu->height() - smallStep;
         }
 
         pos = QPoint(x,y);
