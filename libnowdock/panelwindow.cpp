@@ -14,7 +14,6 @@
 #include <KActionCollection>
 #include <KAuthorized>
 #include <KLocalizedString>
-#include <KPluginInfo>
 
 #include <Plasma/Applet>
 #include <Plasma/Containment>
@@ -283,10 +282,6 @@ void PanelWindow::addAppletItem(QObject *item)
         return;
     }
 
-    if(dynItem->applet()) {
-        connect(dynItem->applet(), SIGNAL(contextualActionsAboutToShow()), this, SLOT(contextualActionsAboutToShow()));
-    }
-
     m_appletItems.append(dynItem);
 }
 
@@ -432,6 +427,7 @@ void PanelWindow::updateState()
 {
     //qDebug() << "in update state disableHiding:" <<m_disableHiding;
 
+    //update the dock behavior
     switch (m_panelVisibility) {
     case BelowActive:
         if ( !m_interface->desktopIsActive() && m_interface->dockIntersectsActiveWindow() ) {
@@ -504,6 +500,7 @@ void PanelWindow::updateState()
         //Do nothing, the dock in OnTop state in every case
         break;
     }
+
 }
 
 void PanelWindow::showOnTop()
@@ -573,14 +570,6 @@ bool PanelWindow::event(QEvent *event)
     return true;
 }
 
-void PanelWindow::contextualActionsAboutToShow()
-{
-    //unfortunately this is not triggered in order to use it
-    //in a way that those providing a menu should not show a second menu and
-    //make for all the rest trigger the default menu
-    //qDebug() << "in here....";
-}
-
 void PanelWindow::mouseReleaseEvent(QMouseEvent *event)
 {
     QQuickWindow::mouseReleaseEvent(event);
@@ -632,19 +621,13 @@ void PanelWindow::mousePressEvent(QMouseEvent *event)
     QMenu *desktopMenu = new QMenu;
     desktopMenu->setAttribute(Qt::WA_DeleteOnClose);
 
-    if (applet) {
-        //FIXME, this must be fixed, this is a workaround in order to not show
-        //two menu's in right click... Unfortunately I am not wise enough yet in
-        //order to find a way to support it for all plasmoids...
-        KPluginInfo info = applet->pluginInfo();
-
-        if ((info.pluginName() == "org.kde.store.nowdock.plasmoid") ||
-            (info.pluginName() == "org.kde.plasma.systemtray")){
-            return;
-        }
-    }
-
     m_contextMenu = desktopMenu;
+
+    if (this->mouseGrabberItem()) {
+        //workaround, this fixes for me most of the right click menu behavior
+        return;
+        //this->mouseGrabberItem()->ungrabMouse();
+    }
 
     if (applet) {
         emit applet->contextualActionsAboutToShow();
@@ -658,10 +641,6 @@ void PanelWindow::mousePressEvent(QMouseEvent *event)
     //in .exec before oxygen can polish it and set the following attribute
     desktopMenu->setAttribute(Qt::WA_TranslucentBackground);
     //end workaround
-
-    if (this->mouseGrabberItem()) {
-        this->mouseGrabberItem()->ungrabMouse();
-    }
 
     QPoint pos = event->globalPos();
     if (applet) {
@@ -751,7 +730,7 @@ void PanelWindow::addAppletActions(QMenu *desktopMenu, Plasma::Applet *applet, Q
     }
 
     if (m_containment->immutability() == Plasma::Types::Mutable &&
-        (m_containment->containmentType() != Plasma::Types::PanelContainment || m_containment->isUserConfiguring())) {
+            (m_containment->containmentType() != Plasma::Types::PanelContainment || m_containment->isUserConfiguring())) {
         QAction *closeApplet = applet->actions()->action(QStringLiteral("remove"));
         //qDebug() << "checking for removal" << closeApplet;
         if (closeApplet) {
@@ -798,7 +777,7 @@ void PanelWindow::addContainmentActions(QMenu *desktopMenu, QEvent *event)
         //it probably didn't bother implementing the function. give the user a chance to set
         //a better plugin.  note that if the user sets no-plugin this won't happen...
         if ((m_containment->containmentType() != Plasma::Types::PanelContainment &&
-                m_containment->containmentType() != Plasma::Types::CustomPanelContainment) &&
+             m_containment->containmentType() != Plasma::Types::CustomPanelContainment) &&
                 m_containment->actions()->action(QStringLiteral("configure"))) {
             desktopMenu->addAction(m_containment->actions()->action(QStringLiteral("configure")));
         }

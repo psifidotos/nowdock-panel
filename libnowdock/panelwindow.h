@@ -138,7 +138,6 @@ protected:
 
 private Q_SLOTS:
     void activeWindowChanged();
-    void contextualActionsAboutToShow();
     void updateState();
     void initWindow();
     void menuAboutToHide();
