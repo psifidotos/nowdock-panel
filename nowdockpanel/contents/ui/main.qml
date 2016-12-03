@@ -951,7 +951,7 @@ DragDrop.DropArea {
     Item {
         id: dndSpacer
 
-        property int normalSize: magicWin.statesLineSizeOriginal + plasmoid.configuration.iconSize
+        property int normalSize: magicWin.statesLineSizeOriginal + plasmoid.configuration.iconSize + magicWin.iconMarginOriginal - 1
 
         width: normalSize
         height: normalSize
