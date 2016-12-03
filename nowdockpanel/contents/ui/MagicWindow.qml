@@ -177,9 +177,9 @@ NowDock.PanelWindow{
         if (normalState) {
             //count panel length
             if(root.isHorizontal) {
-                tempLength = plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ? layoutsContainer.width : mainLayout.width + space;
+                tempLength = plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ? layoutsContainer.width + 0.5*space : mainLayout.width + space;
             } else {
-                tempLength = plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ? layoutsContainer.height : mainLayout.height + space;
+                tempLength = plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ? layoutsContainer.height + 0.5*space : mainLayout.height + space;
             }
 
             tempThickness = thicknessNormalOriginal;
@@ -205,7 +205,7 @@ NowDock.PanelWindow{
                 }
 
                 if (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) {
-                    localX = (window.width/2) - (layoutsContainer.width/2);
+                    localX = (window.width/2) - (layoutsContainer.width/2) - 0.25*space;
                 } else if (root.panelAlignment === NowDock.PanelWindow.Left) {
                     localX = 0;
                 } else if (root.panelAlignment === NowDock.PanelWindow.Center) {
@@ -221,7 +221,7 @@ NowDock.PanelWindow{
                 }
 
                 if (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) {
-                    localY = (window.height/2) - (layoutsContainer.height/2);
+                    localY = (window.height/2) - (layoutsContainer.height/2) - 0.25*space;
                 } else if (root.panelAlignment === NowDock.PanelWindow.Top) {
                     localY = 0;
                 } else if (root.panelAlignment === NowDock.PanelWindow.Center) {

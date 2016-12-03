@@ -36,7 +36,7 @@ Item{
     z:0
 
     property int panelWidth: secondLayout.count > 0 && root.isHorizontal && plasmoid.immutable ?
-                                 layoutsContainer.width + 4*spacing : mainLayout.width + spacing
+                                 layoutsContainer.width + 2*spacing : mainLayout.width + spacing
     property int panelHeight: secondLayout.count > 0 && root.isVertical && plasmoid.immutable ?
                                   layoutsContainer.height + 2*spacing : mainLayout.height + spacing
 
