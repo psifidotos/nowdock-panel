@@ -54,6 +54,13 @@ NowDock.PanelWindow{
     width: root.isHorizontal ? length : thicknessZoomOriginal
     height: root.isHorizontal ? thicknessZoomOriginal : length
 
+    // it is used in order to restore applets after right click menu
+    onDisableHidingChanged: {
+        if (!disableHiding) {
+            checkListHovered.restart();
+        }
+    }
+
     onImmutableChanged: updateMaskArea();
 
     onInStartupChanged: {

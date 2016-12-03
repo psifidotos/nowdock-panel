@@ -693,6 +693,10 @@ DragDrop.DropArea {
 
     function clearZoom(){
         //console.log("Panel clear....");
+        if (magicWin.disableHiding) {
+            return;
+        }
+
         layoutsContainer.currentSpot = -1000;
         layoutsContainer.hoveredIndex = -1;
         root.clearZoomSignal();

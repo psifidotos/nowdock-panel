@@ -415,7 +415,7 @@ void PanelWindow::updateVisibilityFlags()
 
 void PanelWindow::menuAboutToHide()
 {
-    m_disableHiding = false;
+    setDisableHiding(false);
     m_updateStateTimer.start();
 }
 
@@ -688,7 +688,7 @@ void PanelWindow::mousePressEvent(QMouseEvent *event)
     }
 
     connect(desktopMenu, SIGNAL(aboutToHide()), this, SLOT(menuAboutToHide()));
-    m_disableHiding = true;
+    setDisableHiding(true);
     desktopMenu->popup(pos);
 
     event->setAccepted(true);
