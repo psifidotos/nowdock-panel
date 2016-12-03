@@ -63,7 +63,7 @@ DragDrop.DropArea {
     property int appletsAnimations: 0 //zoomed applets it is used basically on masking for magic window
     property int automaticIconSizeBasedSize: -1 //it is not set, this is the defautl
     property int iconSize: (automaticIconSizeBasedSize > 0 && plasmoid.immutable) ? Math.min(automaticIconSizeBasedSize, plasmoid.configuration.iconSize) :
-                                                                                  plasmoid.configuration.iconSize
+                                                                                    plasmoid.configuration.iconSize
     property int iconStep: 8
     property int panelEdgeSpacing: iconSize / 3
     //FIXME: this is not needed any more probably
@@ -77,7 +77,7 @@ DragDrop.DropArea {
     //property int panelAlignment: plasmoid.configuration.panelPosition !== NowDock.PanelWindow.Double ? plasmoid.configuration.panelPosition : mainLayoutPosition
 
     property int panelAlignment: plasmoid.immutable ? plasmoid.configuration.panelPosition : NowDock.PanelWindow.Center
-   // property int panelAlignment: plasmoid.configuration.panelPosition
+    // property int panelAlignment: plasmoid.configuration.panelPosition
 
 
     property real zoomFactor: ( 1 + (plasmoid.configuration.zoomLevel / 20) )
@@ -426,7 +426,7 @@ DragDrop.DropArea {
     }
 
     onNowDockChanged: {
-        if (nowDock) {            
+        if (nowDock) {
             nowDock.signalAnimationsNeedBothAxis.connect(slotAnimationsNeedBothAxis);
             nowDock.signalAnimationsNeedLength.connect(slotAnimationsNeedLength);
             nowDock.signalAnimationsNeedThickness.connect(slotAnimationsNeedThickness);
@@ -434,7 +434,7 @@ DragDrop.DropArea {
         }
     }
 
-  //  onNowDockAnimationsChanged: magicWin.updateMaskArea();
+    //  onNowDockAnimationsChanged: magicWin.updateMaskArea();
 
     onToolBoxChanged: {
         containmentSizeSyncTimer.restart();
@@ -537,7 +537,7 @@ DragDrop.DropArea {
         updateLayouts();
         updateNowDockConfiguration();
 
-        if (magicWin && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) {
+        if (magicWin) {
             if (plasmoid.immutable) {
                 magicWin.disableHiding = false;
             } else {
@@ -807,7 +807,7 @@ DragDrop.DropArea {
                 && (iconSize===plasmoid.configuration.iconSize || iconSize === automaticIconSizeBasedSize) ) {
             var layoutLength;
             var maxLength = magicWin.maximumLength;
-           // console.log("------Entered check-----");
+            // console.log("------Entered check-----");
 
             if (root.isVertical) {
                 layoutLength = (plasmoid.configuration.panelPosition === 10) ? mainLayout.height+secondLayout.height : mainLayout.height
@@ -819,32 +819,32 @@ DragDrop.DropArea {
             var toGrowLimit = maxLength-1.5*(zoomFactor*(iconSize+2*iconMargin));
 
             if (layoutLength > toShrinkLimit) { //must shrink
-              //  console.log("step3");
+                //  console.log("step3");
                 var nextIconSize = plasmoid.configuration.iconSize;
 
                 do {
-                  nextIconSize = nextIconSize - iconStep;
-                  var factor = nextIconSize / iconSize;
-                  var nextLength = factor * layoutLength;
+                    nextIconSize = nextIconSize - iconStep;
+                    var factor = nextIconSize / iconSize;
+                    var nextLength = factor * layoutLength;
 
                 } while ( (nextLength>toShrinkLimit) && (nextIconSize !== 16));
 
                 automaticIconSizeBasedSize = nextIconSize;
-             //   console.log("Step 3 - found:"+automaticIconSizeBasedSize);
+                //   console.log("Step 3 - found:"+automaticIconSizeBasedSize);
             } else if ((layoutLength<toGrowLimit
                         && (iconSize === automaticIconSizeBasedSize)) ) { //must grow probably
-             //   console.log("step4");
+                //   console.log("step4");
                 var nextIconSize2 = automaticIconSizeBasedSize;
                 var foundGoodSize = -1;
 
                 do {
-                  nextIconSize2 = nextIconSize2 + iconStep;
-                  var factor2 = nextIconSize2 / automaticIconSizeBasedSize;
-                  var nextLength2 = factor2 * layoutLength;
+                    nextIconSize2 = nextIconSize2 + iconStep;
+                    var factor2 = nextIconSize2 / automaticIconSizeBasedSize;
+                    var nextLength2 = factor2 * layoutLength;
 
-                  if (nextLength2 < toGrowLimit) {
-                      foundGoodSize = nextIconSize2;
-                  }
+                    if (nextLength2 < toGrowLimit) {
+                        foundGoodSize = nextIconSize2;
+                    }
                 } while ( (nextLength2<toGrowLimit) && (nextIconSize2 !== plasmoid.configuration.iconSize ));
 
                 if (foundGoodSize > 0) {
@@ -853,9 +853,9 @@ DragDrop.DropArea {
                     } else {
                         automaticIconSizeBasedSize = foundGoodSize;
                     }
-              //      console.log("Step 4 - found:"+automaticIconSizeBasedSize);
+                    //      console.log("Step 4 - found:"+automaticIconSizeBasedSize);
                 } else {
-              //     console.log("Step 4 - did not found...");
+                    //     console.log("Step 4 - did not found...");
                 }
             }
         }
@@ -994,7 +994,7 @@ DragDrop.DropArea {
 
         signal updateScale(int delegateIndex, real newScale, real step)
         property bool parentMagicWinFlag: plasmoid.immutable && magicWin && !root.inStartup
-                                          //&& !(root.inStartup && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide)
+        //&& !(root.inStartup && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide)
 
         property int allCount: root.nowDock ? mainLayout.count-1+nowDock.tasksCount : mainLayout.count
         property int currentSpot: -1000
@@ -1027,13 +1027,9 @@ DragDrop.DropArea {
             if (parentMagicWinFlag) {
                 opacity = 0;
                 parent = magicWin.contentItem;
-                magicWin.visible = true;
                 magicWin.initializeSlidingInAnimation();
             } else {
                 parent = root;
-                if(magicWin.panelVisibility !== NowDock.PanelWindow.AutoHide) {
-                    magicWin.visible = false;
-                }
             }
         }
 
@@ -1092,8 +1088,8 @@ DragDrop.DropArea {
             Layout.preferredWidth: width
             Layout.preferredHeight: height
 
-           // anchors.right: parent.right
-           // anchors.bottom: parent.bottom
+            // anchors.right: parent.right
+            // anchors.bottom: parent.bottom
 
             property int beginIndex: 100
             property int count: children.length
