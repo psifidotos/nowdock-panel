@@ -14,6 +14,7 @@
 #include <KActionCollection>
 #include <KAuthorized>
 #include <KLocalizedString>
+#include <KPluginInfo>
 
 #include <Plasma/Applet>
 #include <Plasma/Containment>
@@ -625,8 +626,16 @@ void PanelWindow::mousePressEvent(QMouseEvent *event)
 
     if (this->mouseGrabberItem()) {
         //workaround, this fixes for me most of the right click menu behavior
+        if (applet) {
+            KPluginInfo info = applet->pluginInfo();
+
+            //gives the systemtray direct right click behavior for its applets
+            if (info.pluginName() != "org.kde.plasma.systemtray"){
+                this->mouseGrabberItem()->ungrabMouse();
+            }
+        }
+
         return;
-        //this->mouseGrabberItem()->ungrabMouse();
     }
 
     if (applet) {
