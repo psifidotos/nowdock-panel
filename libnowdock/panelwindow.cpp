@@ -33,7 +33,8 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     m_isHovered(false),
     m_secondInitPass(false),
     m_windowIsInAttention(false),
-    m_childrenLength(-1)
+    m_childrenLength(-1),
+    m_tempThickness(-1)
 {    
     setClearBeforeRendering(true);
     setColor(QColor(Qt::transparent));
@@ -56,7 +57,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     connect(&m_updateStateTimer, &QTimer::timeout, this, &PanelWindow::updateState);
 
     m_initTimer.setSingleShot(true);
-    m_initTimer.setInterval(500);
+    m_initTimer.setInterval(400);
     connect(&m_initTimer, &QTimer::timeout, this, &PanelWindow::initWindow);
 
     connect(this, SIGNAL(panelVisibilityChanged()), this, SLOT(updateVisibilityFlags()));
@@ -264,7 +265,49 @@ void PanelWindow::setPanelOrientation(Plasma::Types::Location location)
     } else {
         m_panelOrientation = Qt::Horizontal;
     }
+}
 
+void PanelWindow::setTransientThickness(unsigned int thickness)
+{
+    QWindow *transient = transientParent();
+
+    if ((thickness>0) && transient) {
+        unsigned int newSize = thickness;
+
+        if (transient) {
+            if (m_location == Plasma::Types::BottomEdge) {
+                transient->setMinimumHeight(newSize);
+                transient->setMaximumHeight(newSize);
+                transient->setY(screen()->size().height() - newSize);
+            } else if (m_location == Plasma::Types::TopEdge) {
+                transient->setMinimumHeight(newSize);
+                transient->setMaximumHeight(newSize);
+                transient->setHeight(newSize);
+
+                transient->setY(0);
+            } else if (m_location == Plasma::Types::LeftEdge) {
+                transient->setMinimumWidth(newSize);
+                transient->setMaximumWidth(newSize);
+                transient->setWidth(newSize);
+
+                transient->setX(0);
+            } else if (m_location == Plasma::Types::RightEdge) {
+                transient->setMinimumWidth(newSize);
+                transient->setMaximumWidth(newSize);
+                transient->setWidth(newSize);
+
+                transient->setX(screen()->size().width() - newSize);
+            }
+
+            if (m_tempThickness < 0) {
+                m_tempThickness=newSize;
+                m_secondInitPass = false;
+                m_initTimer.start();
+            } else {
+                m_tempThickness = -1;
+            }
+        }
+    }
 }
 
 /******************************/
@@ -308,7 +351,13 @@ void PanelWindow::initialize()
 void PanelWindow::initWindow()
 {
     updateVisibilityFlags();
-    shrinkTransient();
+
+    if (m_tempThickness < 0) {
+        shrinkTransient();
+    } else {
+        setTransientThickness(m_tempThickness);
+    }
+
     updateWindowPosition();
 
     // The initialization phase makes two passes because

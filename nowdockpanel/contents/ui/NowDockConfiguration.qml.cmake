@@ -11,6 +11,9 @@ import org.kde.nowdock 0.1 as NowDock
 
 Item{
     id: settingsButtonContainer
+
+    signal updateThickness();
+
     anchors.margins: 8
     //in  Left Edge the button is appearing bigger with no reason!!!!
     anchors.horizontalCenterOffset: (plasmoid.location === PlasmaCore.Types.LeftEdge) ? 6 : 0
@@ -493,6 +496,7 @@ Item{
                             onValueChanged:{
                                 if(!inStartup){
                                     plasmoid.configuration.iconSize = value;
+                                    updateThickness();
                                 }
                             }
                         }

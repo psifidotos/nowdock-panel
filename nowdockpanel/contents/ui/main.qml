@@ -539,6 +539,7 @@ DragDrop.DropArea {
 
         if (magicWin) {
             if (plasmoid.immutable) {
+                magicWin.initialize();
                 magicWin.disableHiding = false;
             } else {
                 magicWin.disableHiding = true;
@@ -909,6 +910,8 @@ DragDrop.DropArea {
             var component = Qt.createComponent("NowDockConfiguration.qml");
             if (component.status == Component.Ready) {
                 nowDockConfiguration = component.createObject(root);
+                nowDockConfiguration.updateThickness.connect(magicWin.updateTransientThickness);
+
             } else {
                 console.log("Could not create NowDockConfiguration.qml");
                 console.log(component.errorString());
@@ -948,7 +951,7 @@ DragDrop.DropArea {
     Item {
         id: dndSpacer
 
-        property int normalSize: root.statesLineSize + root.iconSize+2*root.iconMargin
+        property int normalSize: magicWin.statesLineSizeOriginal + plasmoid.configuration.iconSize
 
         width: normalSize
         height: normalSize
@@ -960,11 +963,17 @@ DragDrop.DropArea {
         AddWidgetVisual{}
     }
 
-    Rectangle{
+    Loader{
         anchors.fill: parent
-        color: "yellow"
-        opacity: 0.15
-        visible: root.debugMode
+        active: root.debugMode
+
+        sourceComponent: Item{
+            Rectangle{
+                anchors.fill: parent
+                color: "yellow"
+                opacity: 0.15
+            }
+        }
     }
 
     MouseArea{

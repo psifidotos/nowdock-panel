@@ -148,7 +148,7 @@ NowDock.PanelWindow{
 
         layoutsContainer.opacity = 1;
 
-        if (!inStartup) {
+        if (!inStartup) {initialize();
             delayAnimationTimer.start();
         }
     }
@@ -287,27 +287,48 @@ NowDock.PanelWindow{
 
     }
 
-    Rectangle{
-        id: windowBackground
-        anchors.fill: parent
-        border.color: "red"
-        border.width: 1
-        color: "transparent"
+    function updateTransientThickness() {
+        var thickness;
 
-        visible: root.debugMode
+        if (root.isVertical) {
+            thickness = root.width;
+        } else {
+            thickness = root.height;
+        }
+
+        var newThickness = statesLineSizeOriginal + plasmoid.configuration.iconSize + iconMarginOriginal;
+
+        if (thickness<newThickness) {
+            setTransientThickness(newThickness);
+        }
     }
 
-    Rectangle{
-        x: maskArea.x
-        y: maskArea.y
-        height: maskArea.height
-        width: maskArea.width
+    Loader{
+        anchors.fill: parent
+        active: root.debugMode
 
-        border.color: "green"
-        border.width: 1
-        color: "transparent"
+        sourceComponent: Item{
+            anchors.fill:parent
 
-        visible: root.debugMode
+            Rectangle{
+                id: windowBackground
+                anchors.fill: parent
+                border.color: "red"
+                border.width: 1
+                color: "transparent"
+            }
+
+            Rectangle{
+                x: maskArea.x
+                y: maskArea.y
+                height: maskArea.height
+                width: maskArea.width
+
+                border.color: "green"
+                border.width: 1
+                color: "transparent"
+            }
+        }
     }
 
     /***Hiding/Showing Animations*****/
@@ -346,6 +367,10 @@ NowDock.PanelWindow{
         onStopped: {
             inHalf = false;
             raiseFlag = false;
+
+            if (!plasmoid.immutable) {
+                updateTransientThickness();
+            }
         }
 
         onInHalfChanged: {
@@ -404,6 +429,12 @@ NowDock.PanelWindow{
             to: 0
             duration: window.animationSpeed
             easing.type: Easing.OutQuad
+        }
+
+        onStopped: {
+            if (!plasmoid.immutable) {
+                updateTransientThickness();
+            }
         }
 
         function init() {

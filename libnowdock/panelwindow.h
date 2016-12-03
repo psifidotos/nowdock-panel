@@ -122,6 +122,7 @@ public slots:
     Q_INVOKABLE void addAppletItem(QObject *item);
     Q_INVOKABLE void initialize();
     Q_INVOKABLE void removeAppletItem(QObject *item);
+    Q_INVOKABLE void setTransientThickness(unsigned int thickness);
     Q_INVOKABLE void showNormal();
     Q_INVOKABLE void showOnTop();
     Q_INVOKABLE void showOnBottom();
@@ -156,6 +157,7 @@ private:
     bool m_windowIsInAttention;
 
     int m_childrenLength;
+    int m_tempThickness;
     unsigned int m_maximumLength;
 
     QPointer<Plasma::Containment> m_containment;
