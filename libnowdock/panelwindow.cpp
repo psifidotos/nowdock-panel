@@ -541,11 +541,11 @@ void PanelWindow::activeWindowChanged()
 
 bool PanelWindow::event(QEvent *event)
 {
-    QQuickWindow::event(event);
-
     if (!event) {
         return false;
     }
+
+    QQuickWindow::event(event);
 
     if (event->type() == QEvent::Enter) {
         setIsHovered(true);
@@ -573,6 +573,10 @@ bool PanelWindow::event(QEvent *event)
 
 void PanelWindow::mouseReleaseEvent(QMouseEvent *event)
 {
+    if (!event) {
+        return;
+    }
+
     QQuickWindow::mouseReleaseEvent(event);
 
     event->setAccepted(m_containment->containmentActions().contains(Plasma::ContainmentActions::eventToString(event)));
@@ -580,6 +584,10 @@ void PanelWindow::mouseReleaseEvent(QMouseEvent *event)
 
 void PanelWindow::mousePressEvent(QMouseEvent *event)
 {
+    if (!event) {
+        return;
+    }
+
     QQuickWindow::mousePressEvent(event);
 
     //even if the menu is executed synchronously, other events may be processed
