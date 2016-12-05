@@ -540,7 +540,11 @@ DragDrop.DropArea {
 
         if (magicWin) {
             if (plasmoid.immutable) {
-                magicWin.initialize();
+                if (windowSystem.compositingActive) {
+                    magicWin.initialize();
+                } else {
+                    magicWin.updateTransientThickness();
+                }
                 magicWin.disableHiding = false;
             } else {
                 magicWin.disableHiding = true;
@@ -1047,10 +1051,15 @@ DragDrop.DropArea {
         onParentMagicWinFlagChanged: {
             if (parentMagicWinFlag) {
                 opacity = 0;
+                magicWin.visible = true;
                 parent = magicWin.contentItem;
                 magicWin.initializeSlidingInAnimation();
             } else {
                 parent = root;
+                if (!windowSystem.compositingActive) {
+                    magicWin.visible = false;
+                    magicWin.updateTransientThickness();
+                }
             }
         }
 
@@ -1060,7 +1069,7 @@ DragDrop.DropArea {
             // FIX IT && TEST IT: it is crashing Plasma with two Now Docks one of which has only
             // task manager (small)
             //active: root.useThemePanel
-            active: true
+            active: windowSystem.compositingActive
 
             sourceComponent: PanelBox{}
         }

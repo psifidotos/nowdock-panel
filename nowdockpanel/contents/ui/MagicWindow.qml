@@ -156,10 +156,6 @@ NowDock.PanelWindow{
 
     function updateMaskArea() {
         if (!windowSystem.compositingActive) {
-            var ghostMaskArea = Qt.rect(maskArea.x,maskArea.y,0,0);
-            if (maskArea !== ghostMaskArea){
-                maskArea = ghostMaskArea;
-            }
             return;
         }
 
@@ -305,6 +301,10 @@ NowDock.PanelWindow{
         }
 
         var newThickness = statesLineSizeOriginal + plasmoid.configuration.iconSize + iconMarginOriginal;
+
+        if (!windowSystem.compositingActive) {
+            newThickness += iconMarginOriginal;
+        }
 
         if (thickness<newThickness) {
             setTransientThickness(newThickness);
