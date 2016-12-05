@@ -26,7 +26,8 @@ NowDock.PanelWindow{
     property int thicknessZoom: root.statesLineSize + ((root.iconSize+root.iconMargin) * root.zoomFactor) + 2
     //it is used to keep thickness solid e.g. when iconSize changes from auto functions
     property int thicknessMidOriginal: statesLineSizeOriginal + (1 + (0.65 * (root.zoomFactor-1)))*(plasmoid.configuration.iconSize+iconMarginOriginal) //needed in some animations
-    property int thicknessNormalOriginal: statesLineSizeOriginal + plasmoid.configuration.iconSize + iconMarginOriginal + 1
+    property int thicknessNormalOriginal: root.useThemePanel ? Math.max(thicknessNormalOriginalValue, root.realPanelSize) : thicknessNormalOriginalValue
+    property int thicknessNormalOriginalValue: statesLineSizeOriginal + plasmoid.configuration.iconSize + iconMarginOriginal + 1
     property int thicknessZoomOriginal: statesLineSizeOriginal + ((plasmoid.configuration.iconSize+iconMarginOriginal) * root.zoomFactor) + 2
 
 

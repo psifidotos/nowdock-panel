@@ -69,6 +69,7 @@ DragDrop.DropArea {
     //FIXME: this is not needed any more probably
     property int previousAllTasks: -1    //is used to forbit updateAutomaticIconSize when hovering
     property int realSize: iconSize + iconMargin
+    property int realPanelSize
     property int themePanelSize: plasmoid.configuration.panelSize
 
     ///FIXME: <delete> I can't remember why this is needed, maybe for the anchorings!!! In order for the Double Layout to not mess the anchorings...

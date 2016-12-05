@@ -102,6 +102,20 @@ Item{
             NumberAnimation { duration: 200 }
         }
 
+        Binding {
+            target: root
+            property: "realPanelSize"
+            when: shadowsSvgItem
+            value: {
+                var space = ((plasmoid.location === PlasmaCore.Types.BottomEdge) ||
+                             (plasmoid.location === PlasmaCore.Types.TopEdge)) ?
+                                belower.height : belower.width
+
+                return shadowsSvgItem.panelSize + space;
+            }
+
+        }
+
 
         PlasmaCore.FrameSvgItem{
             anchors.margins: belower.width-1
