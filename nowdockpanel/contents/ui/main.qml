@@ -108,8 +108,14 @@ DragDrop.DropArea {
     width: 640
     height: 90
 
-    Layout.preferredWidth: plasmoid.immutable ? 0 : Screen.width //on unlocked state use the maximum
-    Layout.preferredHeight: plasmoid.immutable ? 0 : Screen.height
+    Layout.preferredWidth: plasmoid.immutable ?
+                               (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ?
+                                    layoutsContainer.width + 0.5*iconMargin : mainLayout.width + iconMargin) :
+                               Screen.width //on unlocked state use the maximum
+    Layout.preferredHeight: plasmoid.immutable ?
+                                (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ?
+                                     layoutsContainer.height + 0.5*iconMargin : mainLayout.height + iconMargin) :
+                                Screen.height //on unlocked state use the maximum
 
     Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
 
@@ -1011,7 +1017,7 @@ DragDrop.DropArea {
     MagicWindow{
         id: magicWin
 
-        visible: true
+        visible: windowSystem.compositingActive
     }
 
     Item{
@@ -1025,9 +1031,11 @@ DragDrop.DropArea {
         property int currentSpot: -1000
         property int hoveredIndex: -1
 
-        x: (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) && root.isHorizontal && plasmoid.immutable ?
+        x: (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) && root.isHorizontal
+           && plasmoid.immutable && windowSystem.compositingActive ?
                (magicWin.width/2) - (magicWin.maximumLength/2): 0
-        y: (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) && root.isVertical && plasmoid.immutable ?
+        y: (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) && root.isVertical
+           && plasmoid.immutable && windowSystem.compositingActive ?
                (magicWin.height/2) - (magicWin.maximumLength/2): 0
         width: (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) && root.isHorizontal && plasmoid.immutable ?
                    magicWin.maximumLength : parent.width
@@ -1051,13 +1059,13 @@ DragDrop.DropArea {
         onParentMagicWinFlagChanged: {
             if (parentMagicWinFlag) {
                 opacity = 0;
-                magicWin.visible = true;
+                //   magicWin.visible = true;
                 parent = magicWin.contentItem;
                 magicWin.initializeSlidingInAnimation();
             } else {
                 parent = root;
                 if (!windowSystem.compositingActive) {
-                    magicWin.visible = false;
+                    // magicWin.visible = false;
                     magicWin.updateTransientThickness();
                 }
             }
