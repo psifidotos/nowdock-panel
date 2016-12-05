@@ -16,6 +16,7 @@ set(CMAKE_AUTOMOC ON)
 set(nowdock_SRCS
     nowdockplugin.cpp
     panelwindow.cpp
+    windowsystem.cpp
     xwindowinterface.cpp
     abstractinterface.cpp
 )

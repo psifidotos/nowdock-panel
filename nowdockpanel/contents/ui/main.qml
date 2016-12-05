@@ -81,7 +81,7 @@ DragDrop.DropArea {
     // property int panelAlignment: plasmoid.configuration.panelPosition
 
 
-    property real zoomFactor: ( 1 + (plasmoid.configuration.zoomLevel / 20) )
+    property real zoomFactor: windowSystem.compositingActive ? ( 1 + (plasmoid.configuration.zoomLevel / 20) ) : 1
 
 
     property var iconsArray: [16, 22, 32, 48, 64, 96, 128, 256]
@@ -926,6 +926,13 @@ DragDrop.DropArea {
     //END functions
 
 
+    ////BEGIN interfaces
+    NowDock.WindowSystem{
+        id:windowSystem
+    }
+
+    ////END interfaces
+
     ///////////////BEGIN components
     Component {
         id: appletContainerComponent
@@ -1007,7 +1014,7 @@ DragDrop.DropArea {
         id: layoutsContainer
 
         signal updateScale(int delegateIndex, real newScale, real step)
-        property bool parentMagicWinFlag: plasmoid.immutable && magicWin && !root.inStartup
+        property bool parentMagicWinFlag: plasmoid.immutable && magicWin && !root.inStartup && windowSystem.compositingActive
         //&& !(root.inStartup && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide)
 
         property int allCount: root.nowDock ? mainLayout.count-1+nowDock.tasksCount : mainLayout.count

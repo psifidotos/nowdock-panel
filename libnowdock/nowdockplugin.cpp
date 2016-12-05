@@ -1,5 +1,6 @@
 #include "nowdockplugin.h"
 #include "panelwindow.h"
+#include "windowsystem.h"
 //#include "types.h"
 
 #include <qqml.h>
@@ -11,5 +12,6 @@ void NowDockPlugin::registerTypes(const char *uri)
   //  qmlRegisterUncreatableType<NowDock::Types>(uri, 0, 1, "Types", "");
 
     qmlRegisterType<NowDock::PanelWindow>(uri, 0, 1, "PanelWindow");
+    qmlRegisterType<NowDock::WindowSystem>(uri, 0, 1, "WindowSystem");
 }
 

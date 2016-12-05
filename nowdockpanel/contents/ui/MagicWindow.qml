@@ -155,9 +155,16 @@ NowDock.PanelWindow{
     }
 
     function updateMaskArea() {
+        if (!windowSystem.compositingActive) {
+            var ghostMaskArea = Qt.rect(maskArea.x,maskArea.y,0,0);
+            if (maskArea !== ghostMaskArea){
+                maskArea = ghostMaskArea;
+            }
+            return;
+        }
+
         var localX = 0;
         var localY = 0;
-
 
         normalState = (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
                 && (root.appletsAnimations === 0)
