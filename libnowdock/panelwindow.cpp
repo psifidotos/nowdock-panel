@@ -482,17 +482,18 @@ void PanelWindow::updateState()
     case BelowActive:
         if ( !m_interface->desktopIsActive() && m_interface->dockIntersectsActiveWindow() ) {
             if ( m_interface->dockIsOnTop() ) {
+                //qDebug() << m_isHovered  << " - " << m_windowIsInAttention << " - "<< m_disableHiding;
                 if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
-                    mustBeLowered();                    //showNormal();
+                    emit mustBeLowered();                    //showNormal();
                 }
             } else {
                 if ( m_windowIsInAttention ) {
-                    mustBeRaised();                     //showOnTop();
+                    emit mustBeRaised();                     //showOnTop();
                 }
             }
         } else if (m_interface->dockInNormalState()){
             if(!m_interface->desktopIsActive() && m_interface->dockIsCovered()) {
-                mustBeRaised();
+                emit mustBeRaised();
             } else {
                 showOnTop();
             }
@@ -502,16 +503,16 @@ void PanelWindow::updateState()
         if ( !m_interface->desktopIsActive() && m_interface->activeIsMaximized() && m_interface->dockIntersectsActiveWindow() ) {
             if ( m_interface->dockIsOnTop() ) {
                 if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
-                    mustBeLowered();                    //showNormal();
+                    emit mustBeLowered();                    //showNormal();
                 }
             } else {
                 if ( m_windowIsInAttention ) {
-                    mustBeRaised();                     //showOnTop();
+                    emit mustBeRaised();                     //showOnTop();
                 }
             }
         } else if ( m_interface->dockInNormalState() ) {
             if(!m_interface->desktopIsActive() && m_interface->dockIsCovered()) {
-                mustBeRaised();
+                emit mustBeRaised();
             } else {
                 showOnTop();
             }
@@ -521,7 +522,7 @@ void PanelWindow::updateState()
         if (!m_isHovered && m_interface->dockIsOnTop()) {
             if( m_interface->dockIsCovering()  ) {
                 if (!m_disableHiding) {
-                    mustBeLowered();
+                    emit mustBeLowered();
                 }
             } else {
                 showOnBottom();
@@ -529,7 +530,7 @@ void PanelWindow::updateState()
         } else if ( m_windowIsInAttention ) {
             if( !m_interface->dockIsOnTop() ) {
                 if (m_interface->dockIsCovered()) {
-                    mustBeRaised();
+                    emit mustBeRaised();
                 } else {
                     showOnTop();
                 }
@@ -608,7 +609,7 @@ bool PanelWindow::event(QEvent *event)
         } else {
             showOnTop();
         }
-    } else if ((event->type() == QEvent::Leave) && (!isActive()) ) {
+    } else if (event->type() == QEvent::Leave) {
         setIsHovered(false);
 
         if ( (m_panelVisibility != WindowsGoBelow)
