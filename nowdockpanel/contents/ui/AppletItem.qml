@@ -253,10 +253,10 @@ Item {
         Item{
             id: wrapper
 
-            width: nowDock ? ((container.showZoomed && root.isVertical) ?
-                                  scaledWidth : nowDock.tasksWidth) : scaledWidth
-            height: nowDock ? ((container.showZoomed && root.isHorizontal) ?
-                                   scaledHeight : nowDock.tasksHeight ): scaledHeight
+            width: Math.round( nowDock ? ((container.showZoomed && root.isVertical) ?
+                                              scaledWidth : nowDock.tasksWidth) : scaledWidth )
+            height: Math.round( nowDock ? ((container.showZoomed && root.isHorizontal) ?
+                                               scaledHeight : nowDock.tasksHeight ): scaledHeight )
 
             property bool disableScaleWidth: false
             property bool disableScaleHeight: false
@@ -461,8 +461,8 @@ Item {
 
             Item{
                 id:wrapperContainer
-                width: container.isInternalViewSplitter ? wrapper.layoutWidth : parent.zoomScaleWidth * wrapper.layoutWidth
-                height: container.isInternalViewSplitter ? wrapper.layoutHeight : parent.zoomScaleHeight * wrapper.layoutHeight
+                width: Math.round( container.isInternalViewSplitter ? wrapper.layoutWidth : parent.zoomScaleWidth * wrapper.layoutWidth )
+                height: Math.round( container.isInternalViewSplitter ? wrapper.layoutHeight : parent.zoomScaleHeight * wrapper.layoutHeight )
 
                 anchors.centerIn: parent
             }
@@ -516,7 +516,7 @@ Item {
                         property int shadowSize : Math.ceil(root.iconSize / 10)
                     }
 
-                  Component.onCompleted: wrapper.zoomScale = 1.1
+                    Component.onCompleted: wrapper.zoomScale = 1.1
                 }
             }
 
@@ -839,7 +839,7 @@ Item {
                 duration: units.longDuration
                 easing.type: Easing.OutQuad
             }
-         /*   PropertyAnimation {
+            /*   PropertyAnimation {
                 target: wrapper
                 property: "zoomScale"
                 to: wrapper.zoomScale - (root.zoomFactor - 1) / 10
@@ -855,7 +855,7 @@ Item {
                 duration: units.longDuration
                 easing.type: Easing.OutQuad
             }
-       /*     PropertyAnimation {
+            /*     PropertyAnimation {
                 target: wrapper
                 property: "zoomScale"
                 to: root.zoomFactor
