@@ -40,7 +40,7 @@ DragDrop.DropArea {
     ////
 
     ////BEGIN properties
-    property bool debugMode: true
+    property bool debugMode: false
 
     property bool automaticSize: plasmoid.configuration.automaticIconSize
     property bool compositingActive: windowSystem.compositingActive
@@ -533,7 +533,7 @@ DragDrop.DropArea {
         updateLayouts();
         updateNowDockConfiguration();
 
-        console.log(magicWin.visible + " - "+magicWin.x+" - " + magicWin.y+" - "+magicWin.width+" - "+magicWin.height);
+      //  console.log(magicWin.visible + " - "+magicWin.x+" - " + magicWin.y+" - "+magicWin.width+" - "+magicWin.height);
         if (magicWin) {
             if (plasmoid.immutable) {
                 if (windowSystem.compositingActive) {

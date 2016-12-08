@@ -38,6 +38,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
 {    
     setClearBeforeRendering(true);
     setColor(QColor(Qt::transparent));
+    setFlags(Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
 
     m_interface = new XWindowInterface(this);
     connect(m_interface, SIGNAL(windowInAttention(bool)), this, SLOT(setWindowInAttention(bool)));
@@ -269,12 +270,12 @@ void PanelWindow::setTransientThickness(unsigned int thickness)
 
     if ((thickness>0) && transient) {
         unsigned int newSize = thickness;
-        qDebug() << "inside setTransientThickness";
+        //   qDebug() << "inside setTransientThickness";
         m_screen = screen();
         if (transientParent() && transientParent()->screen() && transientParent()->screen() != m_screen) {
-            qDebug() <<  "setTransientThickness: transientParent setting screen position...";
+            //     qDebug() <<  "setTransientThickness: transientParent setting screen position...";
             m_screen = transientParent()->screen();
-        }        
+        }
         
         if (transient) {
             if (m_location == Plasma::Types::BottomEdge) {
@@ -380,17 +381,17 @@ void PanelWindow::initWindow()
 void PanelWindow::shrinkTransient()
 {
     if (m_immutable && transientParent()) {
-        qDebug() <<"shrinkTransient: start...";
+        //   qDebug() <<"shrinkTransient: start...";
         m_screen = screen();
         if (transientParent() && transientParent()->screen() && transientParent()->screen() != m_screen) {
-            qDebug() <<  "transientParent: setting screen position...";
+            //       qDebug() <<  "transientParent: setting screen position...";
             m_screen = transientParent()->screen();
         }
         
         if (!m_screen) {
             return;
         }
-         
+
         updateMaximumLength();
 
         int newSize = 15;
@@ -416,7 +417,7 @@ void PanelWindow::shrinkTransient()
                 transient->setY(m_screen->geometry().y()+m_screen->geometry().height() - newSize);
                 transient->setX(centerX - transWidth/2);
             } else if (m_location == Plasma::Types::TopEdge) {
-                transient->setMinimumHeight(0);    
+                transient->setMinimumHeight(0);
                 transient->setMaximumHeight(newSize);
                 transient->setHeight(newSize);
                 transient->setMinimumWidth(tempLength);
@@ -450,21 +451,21 @@ void PanelWindow::shrinkTransient()
 void PanelWindow::updateWindowPosition()
 {
     m_screen = screen();
-    qDebug() <<  "updateWindowPosition: start...";
+    //   qDebug() <<  "updateWindowPosition: start...";
     if (!transientParent() || !transientParent()->screen()) {
-        qDebug() <<  "updateWindowPosition: break transient...";
+        //       qDebug() <<  "updateWindowPosition: break transient...";
         return;
     } else if (transientParent()->screen() != m_screen) {
-        qDebug() <<  "updateWindowPosition: transientParent setting screen position...";
+        //      qDebug() <<  "updateWindowPosition: transientParent setting screen position...";
         m_screen = transientParent()->screen();
     }
     
     if (!m_screen || m_screen->geometry().isNull()) {
-        qDebug() <<  "updateWindowPosition: break m_screen...";
+        //      qDebug() <<  "updateWindowPosition: break m_screen...";
         return;
     }
-    qDebug() <<  "updateWindowPosition: check passed...";
-   // qDebug() << m_screen->geometry().x() << " - " << m_screen->geometry().y() << " - " << m_screen->geometry().width() << " - " << m_screen->geometry().height();
+    //   qDebug() <<  "updateWindowPosition: check passed...";
+    // qDebug() << m_screen->geometry().x() << " - " << m_screen->geometry().y() << " - " << m_screen->geometry().width() << " - " << m_screen->geometry().height();
     
     if (m_location == Plasma::Types::BottomEdge) {
         setX(m_screen->geometry().x());
@@ -484,13 +485,13 @@ void PanelWindow::updateWindowPosition()
     //that on start up in some cases dock's contents are not shown,
     //needs a timer maybe?
     if (m_screen != screen()) {
-      // setScreen(m_screen);
+        setScreen(m_screen);
     }
 }
 
 void PanelWindow::updateVisibilityFlags()
 {
-    qDebug() << "updateVisibilityFlags: start...";
+    //  qDebug() << "updateVisibilityFlags: start...";
     //setFlags(Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
     m_interface->setDockToAllDesktops();
 
@@ -606,19 +607,19 @@ void PanelWindow::updateState()
 
 void PanelWindow::showOnTop()
 {
-        qDebug() << "reached make top...";
+  //  qDebug() << "reached make top...";
     m_interface->showDockOnTop();
 }
 
 void PanelWindow::showNormal()
 {
-        qDebug() << "reached make normal...";
+ //   qDebug() << "reached make normal...";
     m_interface->showDockAsNormal();
 }
 
 void PanelWindow::showOnBottom()
 {
-        qDebug() << "reached make bottom...";
+ //   qDebug() << "reached make bottom...";
     m_interface->showDockOnBottom();
 }
 
@@ -909,7 +910,7 @@ void PanelWindow::addContainmentActions(QMenu *desktopMenu, QEvent *event)
 
 void PanelWindow::screenChanged(QScreen *screen)
 {
-    qDebug() << "screen changed...";
+  //  qDebug() << "screen changed...";
     if (screen) {
         updateWindowPosition();
         emit screenGeometryChanged();

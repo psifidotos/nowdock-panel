@@ -33,6 +33,9 @@ void XWindowInterface::setDockToAlwaysVisible()
 
 void XWindowInterface::setDockDefaultFlags()
 {
+    KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
+    //m_dockWindow->setFlags(Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus|~Qt::StaysOnTopHint);
+    m_dockWindow->setFlags(m_dockWindow->flags() ^ (Qt::WindowStaysOnTopHint));
     KWindowSystem::setState(m_dockWindow->winId(), NET::SkipTaskbar | NET::SkipPager);
 }
 
