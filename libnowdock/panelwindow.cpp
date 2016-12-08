@@ -666,7 +666,9 @@ bool PanelWindow::event(QEvent *event)
     if (event->type() == QEvent::Enter) {
         setIsHovered(true);
         m_updateStateTimer.stop();
-        //shrinkTransient();
+        if (m_immutable) {
+            shrinkTransient();
+        }
 
         if (m_panelVisibility == AutoHide) {
             if (m_isAutoHidden) {
