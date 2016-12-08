@@ -30,6 +30,9 @@ public:
     virtual void showDockOnBottom() = 0;
     virtual void showDockOnTop() = 0;
 
+    void setDockNumber(unsigned int no);
+    unsigned int dockNumber() const;
+
     void setMaskArea(QRect area);
 
 Q_SIGNALS:
@@ -39,6 +42,8 @@ Q_SIGNALS:
     void windowChanged();
 
 protected:
+    int m_dockNumber;
+
     QRect m_maskArea;
 
     QQuickWindow *m_dockWindow;

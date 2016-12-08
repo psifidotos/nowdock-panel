@@ -1,5 +1,7 @@
 #include "xwindowinterface.h"
 
+#include <QDebug>
+
 #include <KWindowInfo>
 #include <KWindowSystem>
 
@@ -28,7 +30,14 @@ void XWindowInterface::setDockToAllDesktops()
 
 void XWindowInterface::setDockDefaultFlags()
 {
-    KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
+    //Notice: the Qt::Tool flag even though it works perfectly for a single Now Dock
+    //it creates a strange situation when there are two and more Now Dock's
+    //in that case it is used only for the first created Now Dock
+    if (m_dockNumber==1) {
+        m_dockWindow->setFlags(Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint);
+    } else {
+        KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
+    }
 }
 
 void XWindowInterface::showDockOnTop()
@@ -36,7 +45,12 @@ void XWindowInterface::showDockOnTop()
     //this is the only way in order to not break the case of two and more NowDocks
     //there is a small issue that the pop ups from locked plasmoids are opened
     //on the maximum thickness
-    KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
+
+    //qDebug() << "Docknumber:" << m_dockNumber;
+    if (m_dockNumber>1) {
+        KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
+    }
+
     KWindowSystem::clearState(m_dockWindow->winId(), NET::KeepBelow);
     KWindowSystem::setState(m_dockWindow->winId(), NET::KeepAbove);
 }

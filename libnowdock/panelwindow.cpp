@@ -17,6 +17,7 @@
 #include <KPluginInfo>
 
 #include <Plasma/Applet>
+#include <Plasma/Corona>
 #include <Plasma/Containment>
 #include <Plasma/ContainmentActions>
 #include <Plasma/Corona>
@@ -328,6 +329,29 @@ void PanelWindow::addAppletItem(QObject *item)
         Plasma::Applet *applet = dynItem->applet();
         if (applet) {
             m_containment = applet->containment();
+
+            //count the NowDock's
+            Plasma::Corona *corona = m_containment->corona();
+            int docks = 0;
+            foreach (Plasma::Containment *con, corona->containments()) {
+
+                KPluginInfo info = con->pluginInfo();
+                if (info.pluginName() == "org.kde.store.nowdock.panel"){
+                    docks++;
+                    if (m_containment == con) {
+                        m_interface->setDockNumber(docks);
+                        m_interface->showDockOnTop();
+                        m_updateStateTimer.start();
+                        qDebug() << "Now Dock Panels counter :" << docks;
+                        break;
+                    }
+                }
+            }
+
+            //m_interface->setDocksNumber(docks);
+            //m_interface->showDockOnTop();
+            //m_updateStateTimer.start();
+            //
         }
     }
 
@@ -518,7 +542,7 @@ void PanelWindow::menuAboutToHide()
  */
 void PanelWindow::updateState()
 {
- //   qDebug() << "in update state disableHiding:" <<m_disableHiding;
+    //   qDebug() << "in update state disableHiding:" <<m_disableHiding;
 
     //update the dock behavior
     switch (m_panelVisibility) {
