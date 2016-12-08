@@ -491,8 +491,6 @@ void PanelWindow::updateWindowPosition()
 
 void PanelWindow::updateVisibilityFlags()
 {
-    //  qDebug() << "updateVisibilityFlags: start...";
-    //setFlags(Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
     m_interface->setDockToAllDesktops();
 
     if (m_panelVisibility == AutoHide) {
@@ -501,15 +499,10 @@ void PanelWindow::updateVisibilityFlags()
         m_updateStateTimer.setInterval(1500);
     }
     
-    if (m_panelVisibility == AlwaysVisible) {
-        m_interface->setDockToAlwaysVisible();
-        updateWindowPosition();
-    } else {
-        m_interface->setDockDefaultFlags();
-        updateWindowPosition();
-        showOnTop();
-        m_updateStateTimer.start();
-    }
+    m_interface->setDockDefaultFlags();
+    updateWindowPosition();
+    showOnTop();
+    m_updateStateTimer.start();
 }
 
 void PanelWindow::menuAboutToHide()
@@ -525,16 +518,16 @@ void PanelWindow::menuAboutToHide()
  */
 void PanelWindow::updateState()
 {
-    //qDebug() << "in update state disableHiding:" <<m_disableHiding;
+    qDebug() << "in update state disableHiding:" <<m_disableHiding;
 
     //update the dock behavior
     switch (m_panelVisibility) {
     case BelowActive:
         if ( !m_interface->desktopIsActive() && m_interface->dockIntersectsActiveWindow() ) {
             if ( m_interface->dockIsOnTop() ) {
-              //  qDebug() << m_isHovered  << " - " << m_windowIsInAttention << " - "<< m_disableHiding;
+                //  qDebug() << m_isHovered  << " - " << m_windowIsInAttention << " - "<< m_disableHiding;
                 if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
-               //     qDebug() << "must be lowered....";
+                    //     qDebug() << "must be lowered....";
                     emit mustBeLowered();                    //showNormal();
                 }
             } else {
@@ -607,19 +600,19 @@ void PanelWindow::updateState()
 
 void PanelWindow::showOnTop()
 {
-  //  qDebug() << "reached make top...";
+    //  qDebug() << "reached make top...";
     m_interface->showDockOnTop();
 }
 
 void PanelWindow::showNormal()
 {
- //   qDebug() << "reached make normal...";
+    //   qDebug() << "reached make normal...";
     m_interface->showDockAsNormal();
 }
 
 void PanelWindow::showOnBottom()
 {
- //   qDebug() << "reached make bottom...";
+    //   qDebug() << "reached make bottom...";
     m_interface->showDockOnBottom();
 }
 
@@ -661,7 +654,7 @@ bool PanelWindow::event(QEvent *event)
             showOnTop();
         }
     } else if (event->type() == QEvent::Leave) {
-        setIsHovered(false);        
+        setIsHovered(false);
 
         if ( (m_panelVisibility != WindowsGoBelow)
              && (m_panelVisibility != AlwaysVisible) ) {
@@ -910,7 +903,7 @@ void PanelWindow::addContainmentActions(QMenu *desktopMenu, QEvent *event)
 
 void PanelWindow::screenChanged(QScreen *screen)
 {
-  //  qDebug() << "screen changed...";
+    //  qDebug() << "screen changed...";
     if (screen) {
         updateWindowPosition();
         emit screenGeometryChanged();

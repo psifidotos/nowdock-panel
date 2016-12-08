@@ -26,7 +26,6 @@ public:
     //its behavior when setting the window type to NET::Dock
     virtual void setDockDefaultFlags() = 0;
     virtual void setDockToAllDesktops() = 0;
-    virtual void setDockToAlwaysVisible() = 0;
     virtual void showDockAsNormal() = 0;
     virtual void showDockOnBottom() = 0;
     virtual void showDockOnTop() = 0;

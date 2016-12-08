@@ -26,31 +26,14 @@ void XWindowInterface::setDockToAllDesktops()
     KWindowSystem::setOnAllDesktops(m_dockWindow->winId(), true);
 }
 
-void XWindowInterface::setDockToAlwaysVisible()
+void XWindowInterface::setDockDefaultFlags()
 {
     KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
 }
 
-void XWindowInterface::setDockDefaultFlags()
-{
-    /*KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
-    //m_dockWindow->setFlags(Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus|~Qt::StaysOnTopHint);
-    m_dockWindow->setFlags(m_dockWindow->flags() ^ (Qt::WindowStaysOnTopHint));
-    KWindowSystem::setState(m_dockWindow->winId(), NET::SkipTaskbar | NET::SkipPager);
-    */
-    //KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
-    //KWindowSystem::setState(m_dockWindow->winId(), NET::KeepAbove);
-
-    //m_dockWindow->setFlags(Qt::WindowFlags((m_dockWindow->flags() | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint) & (~Qt::WindowDoesNotAcceptFocus)));
-    //m_dockWindow->setFlags(Qt::WindowFlags(m_dockWindow->flags() | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus));
-
-    KWindowSystem::setState(m_dockWindow->winId(), NET::SkipTaskbar | NET::SkipPager);
-    m_dockWindow->setFlags(Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint);
-   // KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
-}
-
 void XWindowInterface::showDockOnTop()
 {
+    KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
     KWindowSystem::clearState(m_dockWindow->winId(), NET::KeepBelow);
     KWindowSystem::setState(m_dockWindow->winId(), NET::KeepAbove);
 }
@@ -58,6 +41,7 @@ void XWindowInterface::showDockOnTop()
 void XWindowInterface::showDockAsNormal()
 {
     //    qDebug() << "reached make normal...";
+    m_dockWindow->setFlags(Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint);
     KWindowSystem::clearState(m_dockWindow->winId(), NET::KeepAbove);
     KWindowSystem::clearState(m_dockWindow->winId(), NET::KeepBelow);
 }
@@ -65,6 +49,7 @@ void XWindowInterface::showDockAsNormal()
 void XWindowInterface::showDockOnBottom()
 {
     //    qDebug() << "reached make bottom...";
+    m_dockWindow->setFlags(Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint);
     KWindowSystem::clearState(m_dockWindow->winId(), NET::KeepAbove);
     KWindowSystem::setState(m_dockWindow->winId(), NET::KeepBelow);
 }
