@@ -40,7 +40,7 @@ DragDrop.DropArea {
     ////
 
     ////BEGIN properties
-    property bool debugMode: false
+    property bool debugMode: true
 
     property bool automaticSize: plasmoid.configuration.automaticIconSize
     property bool compositingActive: windowSystem.compositingActive
@@ -105,18 +105,6 @@ DragDrop.DropArea {
     property int statesLineSize: nowDock ? nowDock.statesLineSize : 0
     property int tasksCount: nowDock ? nowDock.tasksCount : 0
     ///END properties from nowDock
-
-    width: 640
-    height: 90
-
-    Layout.preferredWidth: plasmoid.immutable ?
-                               (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ?
-                                    layoutsContainer.width + 0.5*iconMargin : mainLayout.width + iconMargin) :
-                               Screen.width //on unlocked state use the maximum
-    Layout.preferredHeight: plasmoid.immutable ?
-                                (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ?
-                                     layoutsContainer.height + 0.5*iconMargin : mainLayout.height + iconMargin) :
-                                Screen.height //on unlocked state use the maximum
 
     Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
 
@@ -545,6 +533,7 @@ DragDrop.DropArea {
         updateLayouts();
         updateNowDockConfiguration();
 
+        console.log(magicWin.visible + " - "+magicWin.x+" - " + magicWin.y+" - "+magicWin.width+" - "+magicWin.height);
         if (magicWin) {
             if (plasmoid.immutable) {
                 if (windowSystem.compositingActive) {

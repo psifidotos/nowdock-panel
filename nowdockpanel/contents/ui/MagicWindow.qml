@@ -393,6 +393,7 @@ NowDock.PanelWindow{
                     if (raiseFlag) {
                         window.showOnTop();
                     } else {
+                        console.log("showNormal flag...");
                         window.showNormal();
                     }
                 }

@@ -36,7 +36,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     m_childrenLength(-1),
     m_tempThickness(-1)
 {    
-    setClearBeforeRendering(true);
+  //  setClearBeforeRendering(true);
     setColor(QColor(Qt::transparent));
     setFlags(Qt::Tool|Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
 
@@ -44,13 +44,10 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     connect(m_interface, SIGNAL(windowInAttention(bool)), this, SLOT(setWindowInAttention(bool)));
     //connect(m_interface, SIGNAL(windowChanged()), this, SLOT(windowChanged()));
     connect(m_interface, SIGNAL(activeWindowChanged()), this, SLOT(activeWindowChanged()));
-    m_interface->setDockToAllDesktops();
+   // m_interface->setDockToAllDesktops();
 
     m_screen = screen();
     connect(this, SIGNAL(screenChanged(QScreen *)), this, SLOT(screenChanged(QScreen *)));
-    if (m_screen) {
-        connect(m_screen, SIGNAL(geometryChanged(const QRect &)), this, SIGNAL(screenGeometryChanged()));
-    }
 
     m_updateStateTimer.setSingleShot(true);
     m_updateStateTimer.setInterval(1500);
@@ -61,13 +58,13 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     connect(&m_initTimer, &QTimer::timeout, this, &PanelWindow::initWindow);
 
     connect(this, SIGNAL(panelVisibilityChanged()), this, SLOT(updateVisibilityFlags()));
-    setPanelVisibility(BelowActive);
-    updateVisibilityFlags();
+   // setPanelVisibility(BelowActive);
+   // updateVisibilityFlags();
 
     connect(this, SIGNAL(locationChanged()), this, SLOT(updateWindowPosition()));
     connect(this, SIGNAL(windowInAttentionChanged()), this, SLOT(updateState()));
 
-    initialize();
+    //initialize();
 }
 
 PanelWindow::~PanelWindow()
@@ -157,7 +154,7 @@ void PanelWindow::setPanelVisibility(PanelWindow::PanelVisibility state)
 
 QRect PanelWindow::screenGeometry() const
 {
-    return (m_screen ? m_screen->geometry() : QRect());
+    return (screen() ? screen()->geometry() : QRect());
 }
 
 bool PanelWindow::isAutoHidden() const
@@ -273,30 +270,42 @@ void PanelWindow::setTransientThickness(unsigned int thickness)
 
     if ((thickness>0) && transient) {
         unsigned int newSize = thickness;
-
+        qDebug() << "inside setTransientThickness";
+        m_screen = screen();
+        if (transientParent() && transientParent()->screen() && transientParent()->screen() != m_screen) {
+            qDebug() <<  "setTransientThickness: transientParent setting screen position...";
+            m_screen = transientParent()->screen();
+        }        
+        
         if (transient) {
             if (m_location == Plasma::Types::BottomEdge) {
                 transient->setMinimumHeight(newSize);
                 transient->setMaximumHeight(newSize);
-                transient->setY(screen()->geometry().y()+screen()->size().height() - newSize);
+                transient->setHeight(newSize);
+                transient->setWidth(m_maximumLength);
+                
+                transient->setY(m_screen->geometry().y()+m_screen->geometry().height() - newSize);
             } else if (m_location == Plasma::Types::TopEdge) {
                 transient->setMinimumHeight(newSize);
                 transient->setMaximumHeight(newSize);
                 transient->setHeight(newSize);
+                transient->setWidth(m_maximumLength);
 
-                transient->setY(screen()->geometry().y());
+                transient->setY(m_screen->geometry().y());
             } else if (m_location == Plasma::Types::LeftEdge) {
                 transient->setMinimumWidth(newSize);
                 transient->setMaximumWidth(newSize);
                 transient->setWidth(newSize);
+                transient->setHeight(m_maximumLength);
 
-                transient->setX(screen()->geometry().x());
+                transient->setX(m_screen->geometry().x());
             } else if (m_location == Plasma::Types::RightEdge) {
                 transient->setMinimumWidth(newSize);
                 transient->setMaximumWidth(newSize);
                 transient->setWidth(newSize);
+                transient->setHeight(m_maximumLength);
 
-                transient->setX(screen()->geometry().x()+screen()->size().width() - newSize);
+                transient->setX(m_screen->geometry().x()+m_screen->geometry().width() - newSize);
             }
 
             if (m_tempThickness < 0) {
@@ -372,6 +381,17 @@ void PanelWindow::initWindow()
 void PanelWindow::shrinkTransient()
 {
     if (m_immutable && transientParent()) {
+        qDebug() <<"shrinkTransient: start...";
+        m_screen = screen();
+        if (transientParent() && transientParent()->screen() && transientParent()->screen() != m_screen) {
+            qDebug() <<  "transientParent: setting screen position...";
+            m_screen = transientParent()->screen();
+        }
+        
+        if (!m_screen) {
+            return;
+        }
+         
         updateMaximumLength();
 
         int newSize = 15;
@@ -389,35 +409,39 @@ void PanelWindow::shrinkTransient()
         if (transient) {
             if (m_location == Plasma::Types::BottomEdge) {
                 transient->setMinimumHeight(0);
+                transient->setMaximumHeight(newSize);
                 transient->setHeight(newSize);
                 transient->setMinimumWidth(tempLength);
                 transient->setWidth(tempLength);
 
-                transient->setY(screen()->geometry().y()+screen()->size().height() - newSize);
+                transient->setY(m_screen->geometry().y()+m_screen->geometry().height() - newSize);
                 transient->setX(centerX - transWidth/2);
             } else if (m_location == Plasma::Types::TopEdge) {
-                transient->setMinimumHeight(0);
+                transient->setMinimumHeight(0);    
+                transient->setMaximumHeight(newSize);
                 transient->setHeight(newSize);
                 transient->setMinimumWidth(tempLength);
                 transient->setWidth(tempLength);
 
-                transient->setY(screen()->geometry().y());
+                transient->setY(m_screen->geometry().y());
                 transient->setX(centerX - transWidth/2);
             } else if (m_location == Plasma::Types::LeftEdge) {
                 transient->setMinimumWidth(0);
+                transient->setMaximumWidth(newSize);
                 transient->setWidth(newSize);
                 transient->setMinimumHeight(tempLength);
                 transient->setHeight(tempLength);
 
-                transient->setX(screen()->geometry().x());
+                transient->setX(m_screen->geometry().x());
                 transient->setY(centerY - transHeight/2);
             } else if (m_location == Plasma::Types::RightEdge) {
                 transient->setMinimumWidth(0);
+                transient->setMaximumWidth(newSize);
                 transient->setWidth(newSize);
                 transient->setMinimumHeight(tempLength);
                 transient->setHeight(tempLength);
 
-                transient->setX(screen()->geometry().x()+screen()->size().width() - newSize);
+                transient->setX(m_screen->geometry().x()+m_screen->geometry().width() - newSize);
                 transient->setY(centerY - transHeight/2);
             }
         }
@@ -426,6 +450,23 @@ void PanelWindow::shrinkTransient()
 
 void PanelWindow::updateWindowPosition()
 {
+    m_screen = screen();
+    qDebug() <<  "updateWindowPosition: start...";
+    if (!transientParent() || !transientParent()->screen()) {
+        qDebug() <<  "updateWindowPosition: break transient...";
+        return;
+    } else if (transientParent()->screen() != m_screen) {
+        qDebug() <<  "updateWindowPosition: transientParent setting screen position...";
+        m_screen = transientParent()->screen();
+    }
+    
+    if (!m_screen || m_screen->geometry().isNull()) {
+        qDebug() <<  "updateWindowPosition: break m_screen...";
+        return;
+    }
+    qDebug() <<  "updateWindowPosition: check passed...";
+   // qDebug() << m_screen->geometry().x() << " - " << m_screen->geometry().y() << " - " << m_screen->geometry().width() << " - " << m_screen->geometry().height();
+    
     if (m_location == Plasma::Types::BottomEdge) {
         setX(m_screen->geometry().x());
         setY(m_screen->geometry().height() - height());
@@ -439,13 +480,27 @@ void PanelWindow::updateWindowPosition()
         setX(m_screen->geometry().width() - width());
         setY(m_screen->geometry().y());
     }
+    
+    ///FIXME: in come cases the below can not catch up and this may be the reason
+    //that on start up in some cases dock's contents are not shown,
+    //needs a timer maybe?
+    if (m_screen != screen()) {
+      // setScreen(m_screen);
+    }
 }
 
 void PanelWindow::updateVisibilityFlags()
 {
+    qDebug() << "updateVisibilityFlags: start...";
     setFlags(Qt::Tool|Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
     m_interface->setDockToAllDesktops();
 
+    if (m_panelVisibility == AutoHide) {
+        m_updateStateTimer.setInterval(2500);
+    } else {
+        m_updateStateTimer.setInterval(1500);
+    }
+    
     if (m_panelVisibility == AlwaysVisible) {
         m_interface->setDockToAlwaysVisible();
         updateWindowPosition();
@@ -453,12 +508,6 @@ void PanelWindow::updateVisibilityFlags()
         updateWindowPosition();
         showOnTop();
         m_updateStateTimer.start();
-    }
-
-    if (m_panelVisibility == AutoHide) {
-        m_updateStateTimer.setInterval(2500);
-    } else {
-        m_updateStateTimer.setInterval(1500);
     }
 }
 
@@ -482,8 +531,9 @@ void PanelWindow::updateState()
     case BelowActive:
         if ( !m_interface->desktopIsActive() && m_interface->dockIntersectsActiveWindow() ) {
             if ( m_interface->dockIsOnTop() ) {
-                //qDebug() << m_isHovered  << " - " << m_windowIsInAttention << " - "<< m_disableHiding;
+                qDebug() << m_isHovered  << " - " << m_windowIsInAttention << " - "<< m_disableHiding;
                 if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
+                    qDebug() << "must be lowered....";
                     emit mustBeLowered();                    //showNormal();
                 }
             } else {
@@ -556,19 +606,19 @@ void PanelWindow::updateState()
 
 void PanelWindow::showOnTop()
 {
-    //    qDebug() << "reached make top...";
+        qDebug() << "reached make top...";
     m_interface->showDockOnTop();
 }
 
 void PanelWindow::showNormal()
 {
-    //    qDebug() << "reached make normal...";
+        qDebug() << "reached make normal...";
     m_interface->showDockAsNormal();
 }
 
 void PanelWindow::showOnBottom()
 {
-    //    qDebug() << "reached make bottom...";
+        qDebug() << "reached make bottom...";
     m_interface->showDockOnBottom();
 }
 
@@ -600,7 +650,7 @@ bool PanelWindow::event(QEvent *event)
     if (event->type() == QEvent::Enter) {
         setIsHovered(true);
         m_updateStateTimer.stop();
-        shrinkTransient();
+        //shrinkTransient();
 
         if (m_panelVisibility == AutoHide) {
             if (m_isAutoHidden) {
@@ -713,7 +763,7 @@ void PanelWindow::mousePressEvent(QMouseEvent *event)
     if (applet) {
         desktopMenu->adjustSize();
 
-        QRect scr = m_screen->availableGeometry();
+        QRect scr = screen()->availableGeometry();
 
         int smallStep = 3;
 
@@ -857,17 +907,11 @@ void PanelWindow::addContainmentActions(QMenu *desktopMenu, QEvent *event)
     return;
 }
 
-
 void PanelWindow::screenChanged(QScreen *screen)
 {
+    qDebug() << "screen changed...";
     if (screen) {
-        if (m_screen) {
-            disconnect(m_screen, SIGNAL(geometryChanged(const QRect &)), this, SIGNAL(screenGeometryChanged()));
-        }
-
-        m_screen = screen;
-        connect(m_screen, SIGNAL(geometryChanged(const QRect &)), this, SIGNAL(screenGeometryChanged()));
-
+        updateWindowPosition();
         emit screenGeometryChanged();
     }
 }
