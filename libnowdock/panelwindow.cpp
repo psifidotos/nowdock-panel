@@ -330,11 +330,14 @@ void PanelWindow::addAppletItem(QObject *item)
         if (applet) {
             m_containment = applet->containment();
 
-            //count the NowDock's
+            //Count the NowDock's
+            //Notice: the Qt::Tool flag even though it works perfectly for a single Now Dock
+            //it creates a strange situation when there are two and more Now Dock's
+            //in that case it is used only for the first created Now Dock
+            //the following code sets the dock's number
             Plasma::Corona *corona = m_containment->corona();
             int docks = 0;
             foreach (Plasma::Containment *con, corona->containments()) {
-
                 KPluginInfo info = con->pluginInfo();
                 if (info.pluginName() == "org.kde.store.nowdock.panel"){
                     docks++;
@@ -342,16 +345,11 @@ void PanelWindow::addAppletItem(QObject *item)
                         m_interface->setDockNumber(docks);
                         m_interface->showDockOnTop();
                         m_updateStateTimer.start();
-                        qDebug() << "Now Dock Panels counter :" << docks;
+                       // qDebug() << "Now Dock Panels counter :" << docks;
                         break;
                     }
                 }
             }
-
-            //m_interface->setDocksNumber(docks);
-            //m_interface->showDockOnTop();
-            //m_updateStateTimer.start();
-            //
         }
     }
 
