@@ -36,15 +36,14 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     m_childrenLength(-1),
     m_tempThickness(-1)
 {    
-  //  setClearBeforeRendering(true);
+    setClearBeforeRendering(true);
     setColor(QColor(Qt::transparent));
-    setFlags(Qt::Tool|Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
 
     m_interface = new XWindowInterface(this);
     connect(m_interface, SIGNAL(windowInAttention(bool)), this, SLOT(setWindowInAttention(bool)));
     //connect(m_interface, SIGNAL(windowChanged()), this, SLOT(windowChanged()));
     connect(m_interface, SIGNAL(activeWindowChanged()), this, SLOT(activeWindowChanged()));
-   // m_interface->setDockToAllDesktops();
+    m_interface->setDockToAllDesktops();
 
     m_screen = screen();
     connect(this, SIGNAL(screenChanged(QScreen *)), this, SLOT(screenChanged(QScreen *)));
@@ -58,13 +57,13 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     connect(&m_initTimer, &QTimer::timeout, this, &PanelWindow::initWindow);
 
     connect(this, SIGNAL(panelVisibilityChanged()), this, SLOT(updateVisibilityFlags()));
-   // setPanelVisibility(BelowActive);
-   // updateVisibilityFlags();
+    setPanelVisibility(BelowActive);
+    updateVisibilityFlags();
 
     connect(this, SIGNAL(locationChanged()), this, SLOT(updateWindowPosition()));
     connect(this, SIGNAL(windowInAttentionChanged()), this, SLOT(updateState()));
 
-    //initialize();
+    initialize();
 }
 
 PanelWindow::~PanelWindow()
@@ -492,7 +491,7 @@ void PanelWindow::updateWindowPosition()
 void PanelWindow::updateVisibilityFlags()
 {
     qDebug() << "updateVisibilityFlags: start...";
-    setFlags(Qt::Tool|Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
+    //setFlags(Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
     m_interface->setDockToAllDesktops();
 
     if (m_panelVisibility == AutoHide) {
@@ -505,6 +504,7 @@ void PanelWindow::updateVisibilityFlags()
         m_interface->setDockToAlwaysVisible();
         updateWindowPosition();
     } else {
+        m_interface->setDockDefaultFlags();
         updateWindowPosition();
         showOnTop();
         m_updateStateTimer.start();

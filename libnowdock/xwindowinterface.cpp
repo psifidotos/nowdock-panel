@@ -31,6 +31,11 @@ void XWindowInterface::setDockToAlwaysVisible()
     KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
 }
 
+void XWindowInterface::setDockDefaultFlags()
+{
+    KWindowSystem::setState(m_dockWindow->winId(), NET::SkipTaskbar | NET::SkipPager);
+}
+
 void XWindowInterface::showDockOnTop()
 {
     KWindowSystem::clearState(m_dockWindow->winId(), NET::KeepBelow);
