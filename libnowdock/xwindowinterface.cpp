@@ -33,6 +33,9 @@ void XWindowInterface::setDockDefaultFlags()
 
 void XWindowInterface::showDockOnTop()
 {
+    //this is the only way in order to not break the case of two and more NowDocks
+    //there is a small issue that the pop ups from locked plasmoids are opened
+    //on the maximum thickness
     KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
     KWindowSystem::clearState(m_dockWindow->winId(), NET::KeepBelow);
     KWindowSystem::setState(m_dockWindow->winId(), NET::KeepAbove);

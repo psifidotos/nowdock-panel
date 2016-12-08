@@ -518,7 +518,7 @@ void PanelWindow::menuAboutToHide()
  */
 void PanelWindow::updateState()
 {
-    qDebug() << "in update state disableHiding:" <<m_disableHiding;
+ //   qDebug() << "in update state disableHiding:" <<m_disableHiding;
 
     //update the dock behavior
     switch (m_panelVisibility) {

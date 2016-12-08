@@ -106,6 +106,16 @@ DragDrop.DropArea {
     property int tasksCount: nowDock ? nowDock.tasksCount : 0
     ///END properties from nowDock
 
+   /* Layout.preferredWidth: plasmoid.immutable ?
+                               (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ?
+                                    layoutsContainer.width + 0.5*iconMargin : mainLayout.width + iconMargin) :
+                               Screen.width //on unlocked state use the maximum
+
+    Layout.preferredHeight: plasmoid.immutable ?
+                               (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ?
+                                    layoutsContainer.height + 0.5*iconMargin : mainLayout.height + iconMargin) :
+                               Screen.height //on unlocked state use the maximum*/
+
     Plasmoid.backgroundHints: PlasmaCore.Types.NoBackground
 
     //// BEGIN properties in functions
@@ -533,7 +543,27 @@ DragDrop.DropArea {
         updateLayouts();
         updateNowDockConfiguration();
 
-      //  console.log(magicWin.visible + " - "+magicWin.x+" - " + magicWin.y+" - "+magicWin.width+" - "+magicWin.height);
+        ///Set Preferred Sizes///
+        ///Notice: they are set here because if they are set with a binding
+        ///they break the !immutable experience, the dock becomes too small
+        ///to add applets
+        if (plasmoid.immutable) {
+            if(root.isHorizontal) {
+                root.Layout.preferredWidth = (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ?
+                                               layoutsContainer.width + 0.5*iconMargin : mainLayout.width + iconMargin);
+            } else {
+                root.Layout.preferredHeight = (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ?
+                                               layoutsContainer.height + 0.5*iconMargin : mainLayout.height + iconMargin);
+            }
+        } else {
+            if (root.isHorizontal) {
+                root.Layout.preferredWidth = Screen.width;
+            } else {
+                root.Layout.preferredHeight = Screen.height;
+            }
+        }
+
+        //  console.log(magicWin.visible + " - "+magicWin.x+" - " + magicWin.y+" - "+magicWin.width+" - "+magicWin.height);
         if (magicWin) {
             if (plasmoid.immutable) {
                 if (windowSystem.compositingActive) {
