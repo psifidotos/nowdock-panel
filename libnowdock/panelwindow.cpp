@@ -532,9 +532,9 @@ void PanelWindow::updateState()
     case BelowActive:
         if ( !m_interface->desktopIsActive() && m_interface->dockIntersectsActiveWindow() ) {
             if ( m_interface->dockIsOnTop() ) {
-                qDebug() << m_isHovered  << " - " << m_windowIsInAttention << " - "<< m_disableHiding;
+              //  qDebug() << m_isHovered  << " - " << m_windowIsInAttention << " - "<< m_disableHiding;
                 if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
-                    qDebug() << "must be lowered....";
+               //     qDebug() << "must be lowered....";
                     emit mustBeLowered();                    //showNormal();
                 }
             } else {
@@ -661,7 +661,7 @@ bool PanelWindow::event(QEvent *event)
             showOnTop();
         }
     } else if (event->type() == QEvent::Leave) {
-        setIsHovered(false);
+        setIsHovered(false);        
 
         if ( (m_panelVisibility != WindowsGoBelow)
              && (m_panelVisibility != AlwaysVisible) ) {

@@ -33,10 +33,20 @@ void XWindowInterface::setDockToAlwaysVisible()
 
 void XWindowInterface::setDockDefaultFlags()
 {
-    KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
+    /*KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
     //m_dockWindow->setFlags(Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus|~Qt::StaysOnTopHint);
     m_dockWindow->setFlags(m_dockWindow->flags() ^ (Qt::WindowStaysOnTopHint));
     KWindowSystem::setState(m_dockWindow->winId(), NET::SkipTaskbar | NET::SkipPager);
+    */
+    //KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
+    //KWindowSystem::setState(m_dockWindow->winId(), NET::KeepAbove);
+
+    //m_dockWindow->setFlags(Qt::WindowFlags((m_dockWindow->flags() | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint) & (~Qt::WindowDoesNotAcceptFocus)));
+    //m_dockWindow->setFlags(Qt::WindowFlags(m_dockWindow->flags() | Qt::FramelessWindowHint | Qt::WindowStaysOnTopHint | Qt::WindowDoesNotAcceptFocus));
+
+    KWindowSystem::setState(m_dockWindow->winId(), NET::SkipTaskbar | NET::SkipPager);
+    m_dockWindow->setFlags(Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint);
+   // KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
 }
 
 void XWindowInterface::showDockOnTop()
