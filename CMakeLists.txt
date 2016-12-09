@@ -2,7 +2,7 @@ project(nowdockpanel)
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 set (CMAKE_CXX_STANDARD 11)
 
-set(VERSION 0.4.90)
+set(VERSION 0.4.91)
 set(AUTHOR "Michail Vourlakos")
 set(EMAIL "mvourlakos@gmail.com")
 set(WEBSITE "https://store.kde.org/p/1154578/")
@@ -35,14 +35,34 @@ ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
 
                 IF( _langCode )
                         GET_FILENAME_COMPONENT(_lang ${_poFile} NAME_WE)
-                        SET(_gmoFile ${CMAKE_CURRENT_BINARY_DIR}/${_lang}.gmo)
+                        SET(_gmoFile ${CMAKE_CURRENT_BINARY_DIR}/nowdockpanel/${_lang}.gmo)
 
                         ADD_CUSTOM_COMMAND(TARGET translations
                                 COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} --check -o ${_gmoFile} ${_poFile}
                                 DEPENDS ${_poFile})
                         INSTALL(FILES ${_gmoFile} DESTINATION ${LOCALE_INSTALL_DIR}/${_langCode}/LC_MESSAGES/ RENAME ${catalogname}.mo)
                 ENDIF( _langCode )
+        ENDFOREACH(_poFile ${PO_FILES})
+        
+        SET(catalogname2 plasma_applet_org.kde.store.nowdock.plasmoid)
+        ADD_CUSTOM_TARGET(translations2 ALL)
 
+        FILE(GLOB PO_FILES2 po/nowdockplasmoid/*.po)
+        
+        FOREACH(_poFile ${PO_FILES2})
+                GET_FILENAME_COMPONENT(_poFileName ${_poFile} NAME)
+                STRING(REGEX REPLACE "^${catalogname2}_?" "" _langCode ${_poFileName} )
+                STRING(REGEX REPLACE "\\.po$" "" _langCode ${_langCode} )
+
+                IF( _langCode )
+                        GET_FILENAME_COMPONENT(_lang ${_poFile} NAME_WE)
+                        SET(_gmoFile ${CMAKE_CURRENT_BINARY_DIR}/nowdockplasmoid/${_lang}.gmo)
+
+                        ADD_CUSTOM_COMMAND(TARGET translations2
+                                COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} --check -o ${_gmoFile} ${_poFile}
+                                DEPENDS ${_poFile})
+                        INSTALL(FILES ${_gmoFile} DESTINATION ${LOCALE_INSTALL_DIR}/${_langCode}/LC_MESSAGES/ RENAME ${catalogname2}.mo)
+                ENDIF( _langCode )
         ENDFOREACH(_poFile ${PO_FILES})
 
 ENDIF(NOT GETTEXT_MSGFMT_EXECUTABLE) 
@@ -50,5 +70,7 @@ ENDIF(NOT GETTEXT_MSGFMT_EXECUTABLE)
 add_subdirectory(libnowdock)
 add_subdirectory(nowdockpanel)
 plasma_install_package(build/nowdockpanel/release org.kde.store.nowdock.panel) 
+add_subdirectory(nowdockplasmoid)
+plasma_install_package(build/nowdockplasmoid/release org.kde.store.nowdock.plasmoid) 
 
 add_subdirectory(layout-templates)

@@ -15,13 +15,15 @@ X-KDE-ServiceTypes=Plasma/Applet
 X-Plasma-API=declarativeappletscript
 X-Plasma-MainScript=ui/main.qml
 X-Plasma-Provides=org.kde.plasma.multitasking
-X-KDE-PluginInfo-Author=Michail Vourlakos
-X-KDE-PluginInfo-Email=mvourlakos@gmail.com
+X-KDE-PluginInfo-Author=@AUTHOR@
+X-KDE-PluginInfo-Email=@EMAIL@
 X-KDE-PluginInfo-Name=org.kde.store.nowdock.plasmoid
-X-KDE-PluginInfo-Version=0.4.90
-X-KDE-PluginInfo-Website=https://store.kde.org/p/1151047/
+X-KDE-PluginInfo-Version=@VERSION@
+X-KDE-PluginInfo-Website=@WEBSITE@
 X-KDE-PluginInfo-Category=Windows and Tasks
 X-KDE-PluginInfo-Depends=
 X-KDE-PluginInfo-License=GPL v2+
 X-KDE-PluginInfo-EnabledByDefault=true
+
+
 

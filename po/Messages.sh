@@ -83,15 +83,15 @@ find "${PROJECTPATHPLASMOID}" -name '*.rc' -o -name '*.ui' -o -name '*.kcfg' | s
 xargs --arg-file="${WDIRPLASMOID}/rcfiles.list" extractrc > "${WDIRPLASMOID}/rc.cpp"
 
 intltool-extract --quiet --type=gettext/ini ../../nowdockplasmoid.metadata.desktop.template
-cat ../nowdockplasmoid.metadata.desktop.template.h >> ${WDIRPLASMOID}/rc.cpp
-rm ../nowdockplasmoid.metadata.desktop.template.h
+cat ../../nowdockplasmoid.metadata.desktop.template.h >> ${WDIRPLASMOID}/rc.cpp
+rm ../../nowdockplasmoid.metadata.desktop.template.h
 
 echo "Done preparing rc files for plasmoid"
 echo "Extracting messages for plasmoid"
 
 # see above on sorting
 
-find "${PROJECTPATHPLASMOID}" -name '*.cpp' -o -name '*.h' -o -name '*.c' -o -name '*.qml' | sort > "${WDIRPLASMOID}/infiles.list"
+find "${PROJECTPATHPLASMOID}" -name '*.cpp' -o -name '*.h' -o -name '*.c' -o -name '*.qml' -o -name '*.qml.cmake' | sort > "${WDIRPLASMOID}/infiles.list"
 echo "rc.cpp" >> "${WDIRPLASMOID}/infiles.list"
 
 xgettext --from-code=UTF-8 -C -kde -ci18n -ki18n:1 -ki18nc:1c,2 -ki18np:1,2 -ki18ncp:1c,2,3 \
@@ -109,7 +109,7 @@ for cat in $catalogs; do
 	mv "$cat.new" "$cat"
 done
 
-intltool-merge --quiet --desktop-style . ../../nowdockplasmoid.desktop.template "${PROJECTPATHPLASMOID}"/metadata.desktop.cmake
+intltool-merge --quiet --desktop-style . ../../nowdockplasmoid.metadata.desktop.template "${PROJECTPATHPLASMOID}"/metadata.desktop.cmake
 
 echo "Done merging translations for plasmoid"
 echo "Cleaning up for plasmoid"

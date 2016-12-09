@@ -153,7 +153,7 @@ Item {
                         Layout.alignment: Qt.AlignRight
                         Layout.fillWidth: true
 
-                        text: i18n("ver: ") + "0.4.90"
+                        text: i18n("ver: ") + "@VERSION@"
                     }
                 }
 
