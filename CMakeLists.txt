@@ -26,7 +26,7 @@ ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
 
         ADD_CUSTOM_TARGET(translations ALL)
 
-        FILE(GLOB PO_FILES po/*.po)
+        FILE(GLOB PO_FILES po/nowdockpanel/*.po)
 
         FOREACH(_poFile ${PO_FILES})
                 GET_FILENAME_COMPONENT(_poFileName ${_poFile} NAME)
