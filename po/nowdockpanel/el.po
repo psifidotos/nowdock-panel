@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
-"POT-Creation-Date: 2016-11-25 00:06+0200\n"
+"POT-Creation-Date: 2016-12-09 18:58+0200\n"
 "PO-Revision-Date: 2016-11-25 00:08+0200\n"
 "Last-Translator: Michail Vοurlakos <mvourlakos@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-doc@kde.org>\n"
@@ -17,120 +17,121 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 2.0\n"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:168
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:172
 msgid "Applets Alignment"
 msgstr "Στοίχιση Εφαρμογών"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:182
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:186
 msgid "ver: "
 msgstr "εκδ: "
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:239
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:285
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:243
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:289
 msgid "Top"
 msgstr "Πάνω"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:239
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:285
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:243
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:289
 msgid "Left"
 msgstr "Αριστερά"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:255
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:259
 msgid "Center"
 msgstr "Κέντρο"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:268
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:285
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:272
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:289
 msgid "Bottom"
 msgstr "Κάτω"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:268
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:285
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:272
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:289
 msgid "Right"
 msgstr "Δεξιά"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:314
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:315
 msgid "Visibility"
 msgstr "Ορατότητα"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:370
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:371
 msgid "Below Active"
 msgstr "Κάτω από Ενεργό"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:383
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:384
 msgid "Below Maximized"
 msgstr "Κάτω από Μεγιστοποίηση"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:396
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:397
 msgid "Let Windows Cover"
 msgstr "Παράθυρα από Πάνω"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:410
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:411
 msgid "Windows Go Below"
 msgstr "Παράθυρα από Κάτω"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:424
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:425
 msgid "Auto Hide"
 msgstr "Αυτόματη Απόκρυψη"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:437
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:438
 msgid "Always Visible"
 msgstr "Πάντα Ορατό"
 
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:458
-msgid "Zoom On Hover"
-msgstr "Εστίαση"
-
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:477
-msgid "Zoom Factor"
-msgstr "Συντελεστής Εστίασης"
-
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:526
-msgid "Background"
-msgstr "Παρασκήνιο"
-
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:532
-msgid "Show Panel Background"
-msgstr "Εμφάνιση Παρασκηνίου"
-
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:562
-msgid "Size"
-msgstr "Μέγεθος"
-
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:608
-msgid "Shadows"
-msgstr "Σκιές"
-
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:646
-msgid "None"
-msgstr "Καμία"
-
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:651
-msgid "Only for locked applets"
-msgstr "Μόνο κλειδωμένες εφαρμογές"
-
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:656
-msgid "All applets"
-msgstr "Παντού"
-
-#: ../nowdockpanel/contents/ui/NowDockConfiguration.qml:684
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:458
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:479
 msgid "Applets Size"
 msgstr "Μέγεθος Εφαρμογών"
 
-#: ../po/rc.cpp:1 rc.cpp:1
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:526
+msgid "Zoom On Hover"
+msgstr "Εστίαση"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:545
+msgid "Zoom Factor"
+msgstr "Συντελεστής Εστίασης"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:594
+msgid "Background"
+msgstr "Παρασκήνιο"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:600
+msgid "Show Panel Background"
+msgstr "Εμφάνιση Παρασκηνίου"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:630
+msgid "Size"
+msgstr "Μέγεθος"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:676
+msgid "Shadows"
+msgstr "Σκιές"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:714
+msgid "None"
+msgstr "Καμία"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:719
+msgid "Only for locked applets"
+msgstr "Μόνο κλειδωμένες εφαρμογές"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:724
+msgid "All applets"
+msgstr "Παντού"
+
+#: rc.cpp:1
 msgid "Now Dock Panel"
 msgstr "Now Dock Πίνακας"
 
-#: ../po/rc.cpp:2 rc.cpp:2
+#: rc.cpp:2
 msgid "A plasma panel that tries to animate its plasmoid on hovering"
 msgstr ""
 "Ένας πίνακας του Plasma που χρησιμοποιεί ποικίλα εφέ για τις εφαρμογές του"
 
-#: ../po/rc.cpp:3 rc.cpp:3
+#: rc.cpp:3
 msgid "Now Dock Default Panel"
 msgstr "Προκαθορισμένος Now Dock"
 
-#: ../po/rc.cpp:4 rc.cpp:4
+#: rc.cpp:4
 msgid "Empty Now Dock Panel"
 msgstr "Κενός Now Dock"
 

@@ -1,0 +1,143 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Damian Kopeć <damikope@gmail.com>, 2016.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
+"POT-Creation-Date: 2016-12-09 18:58+0200\n"
+"PO-Revision-Date: 2016-10-14 14:20+0100\n"
+"Last-Translator: Damian Kopeć <damikope@gmail.com>\n"
+"Language-Team: Polish <kde-i18n-doc@kde.org>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 2.0\n"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:172
+msgid "Applets Alignment"
+msgstr "Wyrównanie Apletów "
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:186
+msgid "ver: "
+msgstr ""
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:243
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:289
+msgid "Top"
+msgstr "Góra"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:243
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:289
+msgid "Left"
+msgstr "Lewa"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:259
+msgid "Center"
+msgstr "Środek"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:272
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:289
+msgid "Bottom"
+msgstr "Dół"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:272
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:289
+msgid "Right"
+msgstr "Prawa"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:315
+msgid "Visibility"
+msgstr ""
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:371
+msgid "Below Active"
+msgstr ""
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:384
+msgid "Below Maximized"
+msgstr ""
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:397
+msgid "Let Windows Cover"
+msgstr ""
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:411
+msgid "Windows Go Below"
+msgstr ""
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:425
+msgid "Auto Hide"
+msgstr ""
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:438
+msgid "Always Visible"
+msgstr ""
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:458
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:479
+msgid "Applets Size"
+msgstr "Wielkość Apletów"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:526
+msgid "Zoom On Hover"
+msgstr "Zbliżenie Przy Najechaniu"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:545
+msgid "Zoom Factor"
+msgstr "Stopień Zbliżenia"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:594
+msgid "Background"
+msgstr "Tło"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:600
+msgid "Show Panel Background"
+msgstr "Pokaż Tło Panelu"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:630
+msgid "Size"
+msgstr "Rozmiar"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:676
+msgid "Shadows"
+msgstr ""
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:714
+msgid "None"
+msgstr ""
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:719
+#, fuzzy
+msgid "Only for locked applets"
+msgstr "Cień dla zablokowanych apletów"
+
+#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:724
+#, fuzzy
+msgid "All applets"
+msgstr "Wielkość Apletów"
+
+#: rc.cpp:1
+msgid "Now Dock Panel"
+msgstr "Panel Now Dock"
+
+#: rc.cpp:2
+msgid "A plasma panel that tries to animate its plasmoid on hovering"
+msgstr "Panel plazmy próbujący animowac plazmoidy podczas najechania na nie"
+
+#: rc.cpp:3
+msgid "Now Dock Default Panel"
+msgstr "Domyślny Panel Now Dock"
+
+#: rc.cpp:4
+msgid "Empty Now Dock Panel"
+msgstr "Pusty Panel Now Dock"
+
+#~ msgid "Automatic"
+#~ msgstr "Automatyczna"
+
+#~ msgid "Small steps for icon sizes in automatic modes"
+#~ msgstr "Mały skok wielkości ikon w tryb automatycznym"

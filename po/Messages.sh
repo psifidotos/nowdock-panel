@@ -1,34 +1,36 @@
 #!/bin/sh
 
-BASEDIR=".." # root of translatable sources
+BASEDIR="../.." # root of translatable sources
 PROJECT="plasma_applet_org.kde.store.nowdock.panel" # project name
-PROJECTPATH="../nowdockpanel" # project path
+PROJECTPATH="../../nowdockpanel" # project path
 BUGADDR="https://github.com/psifidotos/nowdock-panel/" # MSGID-Bugs
-DEFAULTLAYOUT="../layout-templates/org.kde.store.nowdock.defaultPanel"
-EMPTYLAYOUT="../layout-templates/org.kde.store.nowdock.emptyPanel"
-WDIR="`pwd`" # working dir
+DEFAULTLAYOUT="../../layout-templates/org.kde.store.nowdock.defaultPanel"
+EMPTYLAYOUT="../../layout-templates/org.kde.store.nowdock.emptyPanel"
+WDIR="`pwd`/nowdockpanel" # working dir
 
 echo "Preparing rc files"
 
+cd nowdockpanel
+
 # we use simple sorting to make sure the lines do not jump around too much from system to system
-find "${BASEDIR}" -name '*.rc' -o -name '*.ui' -o -name '*.kcfg' | sort > "${WDIR}/rcfiles.list"
+find "${PROJECTPATH}" -name '*.rc' -o -name '*.ui' -o -name '*.kcfg' | sort > "${WDIR}/rcfiles.list"
 xargs --arg-file="${WDIR}/rcfiles.list" extractrc > "${WDIR}/rc.cpp"
 
 # additional string for KAboutData
 # echo 'i18nc("NAME OF TRANSLATORS","Your names");' >> "${WDIR}/rc.cpp"
 # echo 'i18nc("EMAIL OF TRANSLATORS","Your emails");' >> "${WDIR}/rc.cpp"
 
-intltool-extract --quiet --type=gettext/ini ../metadata.desktop.template
-intltool-extract --quiet --type=gettext/ini ../defaultLayout.metadata.desktop.template
-intltool-extract --quiet --type=gettext/ini ../emptyLayout.metadata.desktop.template
+intltool-extract --quiet --type=gettext/ini ../../metadata.desktop.template
+intltool-extract --quiet --type=gettext/ini ../../defaultLayout.metadata.desktop.template
+intltool-extract --quiet --type=gettext/ini ../../emptyLayout.metadata.desktop.template
 
-cat ../metadata.desktop.template.h >> ${WDIR}/rc.cpp
-cat ../defaultLayout.metadata.desktop.template.h >> ${WDIR}/rc.cpp
-cat ../emptyLayout.metadata.desktop.template.h >> ${WDIR}/rc.cpp
+cat ../../metadata.desktop.template.h >> ${WDIR}/rc.cpp
+cat ../../defaultLayout.metadata.desktop.template.h >> ${WDIR}/rc.cpp
+cat ../../emptyLayout.metadata.desktop.template.h >> ${WDIR}/rc.cpp
 
-rm ../metadata.desktop.template.h
-rm ../defaultLayout.metadata.desktop.template.h
-rm ../emptyLayout.metadata.desktop.template.h
+rm ../../metadata.desktop.template.h
+rm ../../defaultLayout.metadata.desktop.template.h
+rm ../../emptyLayout.metadata.desktop.template.h
 
 
 # echo "Done preparing rc files"
@@ -36,7 +38,7 @@ echo "Extracting messages"
 
 # see above on sorting
 
-find "${BASEDIR}" -name '*.cpp' -o -name '*.h' -o -name '*.c' -o -name '*.qml' | sort > "${WDIR}/infiles.list"
+find "${PROJECTPATH}" -name '*.cpp' -o -name '*.h' -o -name '*.c' -o -name '*.qml' -o -name '*.qml.cmake' | sort > "${WDIR}/infiles.list"
 echo "rc.cpp" >> "${WDIR}/infiles.list"
 
 xgettext --from-code=UTF-8 -C -kde -ci18n -ki18n:1 -ki18nc:1c,2 -ki18np:1,2 -ki18ncp:1c,2,3 \
@@ -54,11 +56,9 @@ for cat in $catalogs; do
 	mv "$cat.new" "$cat"
 done
 
-intltool-merge --quiet --desktop-style . ../metadata.desktop.template "${PROJECTPATH}"/metadata.desktop
-
-intltool-merge --quiet --desktop-style . ../defaultLayout.metadata.desktop.template "${DEFAULTLAYOUT}"/metadata.desktop
-intltool-merge --quiet --desktop-style . ../emptyLayout.metadata.desktop.template "${EMPTYLAYOUT}"/metadata.desktop
-
+intltool-merge --quiet --desktop-style . ../../metadata.desktop.template "${PROJECTPATH}"/metadata.desktop.cmake
+intltool-merge --quiet --desktop-style . ../../defaultLayout.metadata.desktop.template "${DEFAULTLAYOUT}"/metadata.desktop.cmake
+intltool-merge --quiet --desktop-style . ../../emptyLayout.metadata.desktop.template "${EMPTYLAYOUT}"/metadata.desktop.cmake
 
 echo "Done merging translations"
 echo "Cleaning up"
