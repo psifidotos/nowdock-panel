@@ -14,7 +14,7 @@
 #include <KActionCollection>
 #include <KAuthorized>
 #include <KLocalizedString>
-#include <KPluginInfo>
+#include <KPluginMetaData>
 
 #include <Plasma/Applet>
 #include <Plasma/Corona>
@@ -338,8 +338,8 @@ void PanelWindow::addAppletItem(QObject *item)
             Plasma::Corona *corona = m_containment->corona();
             int docks = 0;
             foreach (Plasma::Containment *con, corona->containments()) {
-                KPluginInfo info = con->pluginInfo();
-                if (info.pluginName() == "org.kde.store.nowdock.panel"){
+                KPluginMetaData info = con->pluginMetaData();
+                if (info.pluginId() == "org.kde.store.nowdock.panel"){
                     docks++;
                     if (m_containment == con) {
                         m_interface->setDockNumber(docks);
@@ -753,10 +753,10 @@ void PanelWindow::mousePressEvent(QMouseEvent *event)
     if (this->mouseGrabberItem()) {
         //workaround, this fixes for me most of the right click menu behavior
         if (applet) {
-            KPluginInfo info = applet->pluginInfo();
+            KPluginMetaData info= applet->pluginMetaData();
 
             //gives the systemtray direct right click behavior for its applets
-            if (info.pluginName() != "org.kde.plasma.systemtray"){
+            if (info.pluginId() != "org.kde.plasma.systemtray"){
                 this->mouseGrabberItem()->ungrabMouse();
             }
         }
