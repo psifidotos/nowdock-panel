@@ -884,8 +884,12 @@ void PanelWindow::addAppletActions(QMenu *desktopMenu, Plasma::Applet *applet, Q
 
 void PanelWindow::addContainmentActions(QMenu *desktopMenu, QEvent *event)
 {
+    if (!m_containment) {
+        return;
+    }
+
     if (m_containment->corona()->immutability() != Plasma::Types::Mutable &&
-            !KAuthorized::authorizeKAction(QStringLiteral("plasma/containment_actions"))) {
+            !KAuthorized::authorizeAction(QStringLiteral("plasma/containment_actions"))) {
         //qDebug() << "immutability";
         return;
     }
