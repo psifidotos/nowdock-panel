@@ -16,7 +16,6 @@
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  2.010-1301, USA.
  */
 
-
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
 import QtGraphicalEffects 1.0
@@ -29,6 +28,8 @@ import org.kde.taskmanager 0.1 as TaskManager
 import org.kde.plasma.private.taskmanager 0.1 as TaskManagerApplet
 
 import org.kde.activities 0.1 as Activities
+
+import org.kde.nowdock 0.1 as NowDock
 
 import "../code/tools.js" as TaskTools
 import "../code/activitiesTools.js" as ActivitiesTools
@@ -94,7 +95,6 @@ Item {
     property color minimizedDotColor: textColorLuma > 0.5 ? Qt.darker(theme.textColor, 1+ (1-textColorLuma)) : Qt.lighter(theme.textColor, 1+(1-textColorLuma))
 
     //BEGIN Now Dock Panel properties
-    property bool compositingActive: nowDockPanel ? nowDockPanel.compositingActive : true
     property bool forceHidePanel: false
     property bool disableLeftSpacer: false
     property bool disableRightSpacer: false
@@ -216,11 +216,10 @@ Item {
     }
 
     // FIXME: at some point this must be dropped with NowDock plugin
-    Item{
-        id: windowSystem
-        property alias compositingActive: panel.compositingActive
+    ////BEGIN interfaces
+    NowDock.WindowSystem{
+        id:windowSystem
     }
-
 
     PlasmaCore.Dialog{
         id: windowsPreviewDlg

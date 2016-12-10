@@ -43,7 +43,6 @@ DragDrop.DropArea {
     property bool debugMode: false
 
     property bool automaticSize: plasmoid.configuration.automaticIconSize
-    property bool compositingActive: windowSystem.compositingActive
     property bool immutable: plasmoid.immutable
     property bool inStartup: true
     property bool isHorizontal: plasmoid.formFactor == PlasmaCore.Types.Horizontal
