@@ -994,7 +994,7 @@ Item {
         ///Bottom Edge
         State {
             name: "bottomCenter"
-            when: (panel.position === PlasmaCore.Types.BottomPosition && userPanelPosition===0 )
+            when: (panel.position === PlasmaCore.Types.BottomPosition && userPanelPosition===NowDock.PanelWindow.Center)
 
             AnchorChanges {
                 target: barLine
@@ -1007,7 +1007,7 @@ Item {
         },
         State {
             name: "bottomLeft"
-            when: (panel.position === PlasmaCore.Types.BottomPosition && userPanelPosition===1 )
+            when: (panel.position === PlasmaCore.Types.BottomPosition && userPanelPosition===NowDock.PanelWindow.Left)
 
             AnchorChanges {
                 target: barLine
@@ -1020,7 +1020,7 @@ Item {
         },
         State {
             name: "bottomRight"
-            when: (panel.position === PlasmaCore.Types.BottomPosition && userPanelPosition===2 )
+            when: (panel.position === PlasmaCore.Types.BottomPosition && userPanelPosition===NowDock.PanelWindow.Right)
 
             AnchorChanges {
                 target: barLine
@@ -1034,7 +1034,7 @@ Item {
         ///Top Edge
         State {
             name: "topCenter"
-            when: (panel.position === PlasmaCore.Types.TopPosition && userPanelPosition===0 )
+            when: (panel.position === PlasmaCore.Types.TopPosition && userPanelPosition===NowDock.PanelWindow.Center)
 
             AnchorChanges {
                 target: barLine
@@ -1047,7 +1047,7 @@ Item {
         },
         State {
             name: "topLeft"
-            when: (panel.position === PlasmaCore.Types.TopPosition && userPanelPosition===1 )
+            when: (panel.position === PlasmaCore.Types.TopPosition && userPanelPosition===NowDock.PanelWindow.Left)
 
             AnchorChanges {
                 target: barLine
@@ -1060,7 +1060,7 @@ Item {
         },
         State {
             name: "topRight"
-            when: (panel.position === PlasmaCore.Types.TopPosition && userPanelPosition===2 )
+            when: (panel.position === PlasmaCore.Types.TopPosition && userPanelPosition===NowDock.PanelWindow.Right)
 
             AnchorChanges {
                 target: barLine
@@ -1074,7 +1074,7 @@ Item {
         ////Left Edge
         State {
             name: "leftCenter"
-            when: (panel.position === PlasmaCore.Types.LeftPosition && userPanelPosition===0 )
+            when: (panel.position === PlasmaCore.Types.LeftPosition && userPanelPosition===NowDock.PanelWindow.Center)
 
             AnchorChanges {
                 target: barLine
@@ -1087,7 +1087,7 @@ Item {
         },
         State {
             name: "leftTop"
-            when: (panel.position === PlasmaCore.Types.LeftPosition && userPanelPosition===3 )
+            when: (panel.position === PlasmaCore.Types.LeftPosition && userPanelPosition===NowDock.PanelWindow.Top)
 
             AnchorChanges {
                 target: barLine
@@ -1100,7 +1100,7 @@ Item {
         },
         State {
             name: "leftBottom"
-            when: (panel.position === PlasmaCore.Types.LeftPosition && userPanelPosition===4 )
+            when: (panel.position === PlasmaCore.Types.LeftPosition && userPanelPosition===NowDock.PanelWindow.Bottom)
 
             AnchorChanges {
                 target: barLine
@@ -1114,7 +1114,7 @@ Item {
         ///Right Edge
         State {
             name: "rightCenter"
-            when: (panel.position === PlasmaCore.Types.RightPosition && userPanelPosition===0 )
+            when: (panel.position === PlasmaCore.Types.RightPosition && userPanelPosition===NowDock.PanelWindow.Center)
 
             AnchorChanges {
                 target: barLine
@@ -1127,7 +1127,7 @@ Item {
         },
         State {
             name: "rightTop"
-            when: (panel.position === PlasmaCore.Types.RightPosition && userPanelPosition===3 )
+            when: (panel.position === PlasmaCore.Types.RightPosition && userPanelPosition===NowDock.PanelWindow.Top)
 
             AnchorChanges {
                 target: barLine
@@ -1140,7 +1140,7 @@ Item {
         },
         State {
             name: "rightBottom"
-            when: (panel.position === PlasmaCore.Types.RightPosition && userPanelPosition===4 )
+            when: (panel.position === PlasmaCore.Types.RightPosition && userPanelPosition===NowDock.PanelWindow.Bottom)
 
             AnchorChanges {
                 target: barLine
