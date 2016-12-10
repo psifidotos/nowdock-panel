@@ -37,6 +37,7 @@ public:
 
 Q_SIGNALS:
     void activeWindowChanged();
+    void dockNumberChanged(unsigned int no);
     void windowInAttention(bool);
     //FIXME: there is a chance that this signal is not needed at all
     void windowChanged();

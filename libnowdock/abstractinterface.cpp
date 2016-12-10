@@ -20,6 +20,8 @@ void AbstractInterface::setDockNumber(unsigned int no)
     }
 
     m_dockNumber = no;
+
+    emit dockNumberChanged(m_dockNumber);
 }
 
 unsigned int AbstractInterface::dockNumber() const

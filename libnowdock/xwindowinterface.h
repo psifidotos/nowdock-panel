@@ -35,6 +35,7 @@ public:
 
 private Q_SLOTS:
     void activeWindowChanged(WId win);
+    void dockNumberChanged(unsigned int no);
     void windowChanged (WId id, NET::Properties properties, NET::Properties2 properties2);
     void windowRemoved (WId id);
 

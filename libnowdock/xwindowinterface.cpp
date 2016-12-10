@@ -17,10 +17,19 @@ XWindowInterface::XWindowInterface(QQuickWindow *parent) :
     connect(KWindowSystem::self(), SIGNAL(activeWindowChanged(WId)), this, SLOT(activeWindowChanged(WId)));
     connect(KWindowSystem::self(), SIGNAL(windowChanged (WId,NET::Properties,NET::Properties2)), this, SLOT(windowChanged (WId,NET::Properties,NET::Properties2)));
     connect(KWindowSystem::self(), SIGNAL(windowRemoved(WId)), this, SLOT(windowRemoved(WId)));
+
+    connect(this, SIGNAL(dockNumberChanged(uint)), this, SLOT(dockNumberChanged(uint)));
 }
 
 XWindowInterface::~XWindowInterface()
 {
+}
+
+void XWindowInterface::dockNumberChanged(unsigned int no)
+{
+    if (no==1) {
+       m_dockWindow->setFlags(Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint);
+    }
 }
 
 void XWindowInterface::setDockToAllDesktops()
@@ -47,7 +56,7 @@ void XWindowInterface::showDockOnTop()
     //on the maximum thickness
 
     //qDebug() << "Docknumber:" << m_dockNumber;
-    if (m_dockNumber>1) {
+    if ( m_dockNumber!=1 ) {
         KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
     }
 
@@ -58,7 +67,9 @@ void XWindowInterface::showDockOnTop()
 void XWindowInterface::showDockAsNormal()
 {
     //    qDebug() << "reached make normal...";
-    m_dockWindow->setFlags(Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint);
+    if ( m_dockNumber!= 1) {
+        m_dockWindow->setFlags(Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint);
+    }
     KWindowSystem::clearState(m_dockWindow->winId(), NET::KeepAbove);
     KWindowSystem::clearState(m_dockWindow->winId(), NET::KeepBelow);
 }
@@ -66,7 +77,9 @@ void XWindowInterface::showDockAsNormal()
 void XWindowInterface::showDockOnBottom()
 {
     //    qDebug() << "reached make bottom...";
-    m_dockWindow->setFlags(Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint);
+    if ( m_dockNumber!= 1) {
+        m_dockWindow->setFlags(Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint);
+    }
     KWindowSystem::clearState(m_dockWindow->winId(), NET::KeepAbove);
     KWindowSystem::setState(m_dockWindow->winId(), NET::KeepBelow);
 }
