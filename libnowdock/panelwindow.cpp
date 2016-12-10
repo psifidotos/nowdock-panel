@@ -28,8 +28,8 @@ namespace NowDock
 
 PanelWindow::PanelWindow(QQuickWindow *parent) :
     QQuickWindow(parent),
-    m_immutable(true),
     m_disableHiding(false),
+    m_immutable(true),
     m_isAutoHidden(false),
     m_isHovered(false),
     m_secondInitPass(false),
