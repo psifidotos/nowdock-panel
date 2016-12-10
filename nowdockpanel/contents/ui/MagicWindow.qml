@@ -124,6 +124,28 @@ NowDock.PanelWindow{
             isAutoHidden = false;
         }
     }
+    
+    onWidthChanged: {
+        if (plasmoid.immutable) {
+            if (windowSystem.compositingActive) {
+                magicWin.initialize();
+            } else {
+                magicWin.updateTransientThickness();
+            }
+            updateMaskArea();
+        }
+    }
+    
+    onHeightChanged: {
+        if (plasmoid.immutable) {
+            if (windowSystem.compositingActive) {
+                magicWin.initialize();
+            } else {
+                magicWin.updateTransientThickness();
+            }
+            updateMaskArea();
+        } 
+    }
 
     onVisibleChanged:{
         if (visible) {  //shrink the parent panel window

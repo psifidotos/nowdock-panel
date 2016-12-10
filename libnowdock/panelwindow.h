@@ -134,8 +134,6 @@ protected:
     bool event(QEvent *event) override;
     void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
     void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE;
-    void showEvent(QShowEvent *event) override;
-  //  void mouseMoveEvent(QMouseEvent *ev);
 
 private Q_SLOTS:
     void activeWindowChanged();
@@ -144,6 +142,7 @@ private Q_SLOTS:
     void menuAboutToHide();
     void setIsHovered(bool state);
     void screenChanged(QScreen *screen);
+    void setScreenGeometry(QRect geometry);    
     void updateVisibilityFlags();
     void updateWindowPosition();
 
@@ -162,6 +161,7 @@ private:
 
     QPointer<Plasma::Containment> m_containment;
     QRect m_maskArea;
+    QRect m_screenGeometry;
     QScreen *m_screen;
     QList<PlasmaQuick::AppletQuickItem *> m_appletItems;
     QTimer m_initTimer;
@@ -179,6 +179,7 @@ private:
     void addAppletActions(QMenu *desktopMenu, Plasma::Applet *applet, QEvent *event);
     void addContainmentActions(QMenu *desktopMenu, QEvent *event);
     void setPanelOrientation(Plasma::Types::Location location);
+    void setPanelScreen(QScreen *screen);      
     void updateMaximumLength();
 };
 
