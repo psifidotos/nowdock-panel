@@ -461,42 +461,56 @@ void PanelWindow::shrinkTransient()
         int tempLength = qMax(screenLength/2, m_childrenLength);
 
         if (transient) {
-            if (m_location == Plasma::Types::BottomEdge) {
-                transient->setMinimumHeight(0);
-                transient->setMaximumHeight(newSize);
-                transient->setHeight(newSize);
-                transient->setMinimumWidth(tempLength);
-                transient->setWidth(tempLength);
+            if ((m_location == Plasma::Types::BottomEdge) || (m_location == Plasma::Types::TopEdge)) {
+                if(transient->height()!=newSize) {
+                    transient->setMinimumHeight(0);
+                    transient->setHeight(newSize);
+                }
 
-                transient->setY(m_screenGeometry.y()+m_screenGeometry.height() - newSize);
-                transient->setX(centerX - transWidth/2);
-            } else if (m_location == Plasma::Types::TopEdge) {
-                transient->setMinimumHeight(0);
-                transient->setMaximumHeight(newSize);
-                transient->setHeight(newSize);
-                transient->setMinimumWidth(tempLength);
-                transient->setWidth(tempLength);
+                if(transient->width()!=tempLength) {
+                    transient->setWidth(tempLength);
+                }
 
-                transient->setY(m_screenGeometry.y());
-                transient->setX(centerX - transWidth/2);
-            } else if (m_location == Plasma::Types::LeftEdge) {
-                transient->setMinimumWidth(0);
-                transient->setMaximumWidth(newSize);
-                transient->setWidth(newSize);
-                transient->setMinimumHeight(tempLength);
-                transient->setHeight(tempLength);
+                int newX = centerX - transWidth/2;
+                if (transient->x()!=newX) {
+                    transient->setX(centerX - transWidth/2);
+                }
 
-                transient->setX(m_screenGeometry.x());
-                transient->setY(centerY - transHeight/2);
-            } else if (m_location == Plasma::Types::RightEdge) {
-                transient->setMinimumWidth(0);
-                transient->setMaximumWidth(newSize);
-                transient->setWidth(newSize);
-                transient->setMinimumHeight(tempLength);
-                transient->setHeight(tempLength);
+                int newY = 0;
+                if (m_location == Plasma::Types::BottomEdge) {
+                    newY = m_screenGeometry.y()+m_screenGeometry.height() - newSize;
+                } else if (m_location == Plasma::Types::TopEdge) {
+                    newY = m_screenGeometry.y();
+                }
 
-                transient->setX(m_screenGeometry.x()+m_screenGeometry.width() - newSize);
-                transient->setY(centerY - transHeight/2);
+                if (transient->y() != newY) {
+                    transient->setY(newY);
+                }
+            } else if ((m_location == Plasma::Types::LeftEdge) || (m_location == Plasma::Types::RightEdge)) {
+                if (transient->width() != newSize) {
+                    transient->setMinimumWidth(0);
+                    transient->setWidth(newSize);
+                }
+
+                if (transient->height() != tempLength) {
+                    transient->setHeight(tempLength);
+                }
+
+                int newY = centerY - transHeight/2;
+                if (transient->y()!=newY) {
+                    transient->setY(newY);
+                }
+
+                int newX = 0;
+                if (m_location == Plasma::Types::LeftEdge) {
+                    newX = m_screenGeometry.x();
+                } else if (m_location == Plasma::Types::RightEdge) {
+                    newX = m_screenGeometry.x()+m_screenGeometry.width() - newSize;
+                }
+
+                if (transient->x() != newX){
+                    transient->setX(newX);
+                }
             }
         }
     }
@@ -579,9 +593,9 @@ void PanelWindow::updateState()
     case BelowActive:
         if ( !m_interface->desktopIsActive() && m_interface->dockIntersectsActiveWindow() ) {
             if ( m_interface->dockIsOnTop() ) {
-                 // qDebug() << m_isHovered  << " - " << m_windowIsInAttention << " - "<< m_disableHiding;
+                // qDebug() << m_isHovered  << " - " << m_windowIsInAttention << " - "<< m_disableHiding;
                 if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
-                   //  qDebug() << "must be lowered....";
+                    //  qDebug() << "must be lowered....";
                     emit mustBeLowered();                    //showNormal();
                 }
             } else {
@@ -591,7 +605,7 @@ void PanelWindow::updateState()
             }
         } else {
             if(!m_interface->desktopIsActive() && m_interface->dockIsCovered()) {
-               //   qDebug() << "must be raised....";
+                //   qDebug() << "must be raised....";
                 emit mustBeRaised();
             } else {
                 showOnTop();
