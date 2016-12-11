@@ -308,8 +308,8 @@ void PanelWindow::setPanelScreen(QScreen *screen)
     }
     
     if (m_screen) {
-      //  qDebug() << m_screen->geometry();
-        //disconnect(m_screen, SIGNAL(geometryChanged(QRect)), this, SLOT(setScreenGeometry(QRect)));
+        //  qDebug() << m_screen->geometry();
+        disconnect(m_screen, SIGNAL(geometryChanged(QRect)), this, SLOT(setScreenGeometry(QRect)));
     }
     
     m_screen = screen;
