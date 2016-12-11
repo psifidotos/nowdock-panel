@@ -26,7 +26,7 @@ public:
     bool dockInNormalState() const;
     bool dockIsBelow() const;
 
-    void setDockDefaultFlags();
+    void setDockDefaultFlags(bool dock=false);
     void setDockToAllDesktops();
     void setDockToAlwaysVisible();
     void showDockAsNormal();

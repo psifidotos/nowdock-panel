@@ -28,7 +28,7 @@ XWindowInterface::~XWindowInterface()
 void XWindowInterface::dockNumberChanged(unsigned int no)
 {
     if (no==1) {
-       m_dockWindow->setFlags(Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint);
+        m_dockWindow->setFlags(Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint);
     }
 }
 
@@ -37,15 +37,18 @@ void XWindowInterface::setDockToAllDesktops()
     KWindowSystem::setOnAllDesktops(m_dockWindow->winId(), true);
 }
 
-void XWindowInterface::setDockDefaultFlags()
+void XWindowInterface::setDockDefaultFlags(bool dock)
 {
     //Notice: the Qt::Tool flag even though it works perfectly for a single Now Dock
     //it creates a strange situation when there are two and more Now Dock's
     //in that case it is used only for the first created Now Dock
-    if (m_dockNumber==1) {
+    m_isDockWindowType = dock;
+
+    if ((m_dockNumber==1) && (!m_isDockWindowType)) {
         m_dockWindow->setFlags(Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint);
     } else {
         KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
+        KWindowSystem::setState(m_dockWindow->winId(), NET::SkipTaskbar | NET::SkipPager);
     }
 }
 
@@ -56,6 +59,10 @@ void XWindowInterface::showDockOnTop()
     //on the maximum thickness
 
     //qDebug() << "Docknumber:" << m_dockNumber;
+    if (m_isDockWindowType) {
+        return;
+    }
+
     if ( m_dockNumber!=1 ) {
         KWindowSystem::setType(m_dockWindow->winId(), NET::Dock);
     }
@@ -67,6 +74,10 @@ void XWindowInterface::showDockOnTop()
 void XWindowInterface::showDockAsNormal()
 {
     //    qDebug() << "reached make normal...";
+    if (m_isDockWindowType) {
+        return;
+    }
+
     if ( m_dockNumber!= 1) {
         m_dockWindow->setFlags(Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint);
     }
@@ -77,6 +88,10 @@ void XWindowInterface::showDockAsNormal()
 void XWindowInterface::showDockOnBottom()
 {
     //    qDebug() << "reached make bottom...";
+    if (m_isDockWindowType) {
+        return;
+    }
+
     if ( m_dockNumber!= 1) {
         m_dockWindow->setFlags(Qt::Tool | Qt::WindowDoesNotAcceptFocus | Qt::FramelessWindowHint);
     }
@@ -307,7 +322,7 @@ void XWindowInterface::windowChanged (WId id, NET::Properties properties, NET::P
         }
     }
 
-  //  emit AbstractInterface::windowChanged();
+    //  emit AbstractInterface::windowChanged();
 
     if (id==m_activeWindow) {
         emit AbstractInterface::activeWindowChanged();

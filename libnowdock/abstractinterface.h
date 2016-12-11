@@ -24,7 +24,7 @@ public:
 
     //FIXME: This may not be needed, it would be better to investigate in KWindowSystem
     //its behavior when setting the window type to NET::Dock
-    virtual void setDockDefaultFlags() = 0;
+    virtual void setDockDefaultFlags(bool dock=false) = 0;
     virtual void setDockToAllDesktops() = 0;
     virtual void showDockAsNormal() = 0;
     virtual void showDockOnBottom() = 0;
@@ -43,6 +43,7 @@ Q_SIGNALS:
     void windowChanged();
 
 protected:
+    bool m_isDockWindowType;
     int m_dockNumber;
 
     QRect m_maskArea;

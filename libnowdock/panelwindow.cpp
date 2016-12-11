@@ -32,6 +32,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     m_disableHiding(false),
     m_immutable(true),
     m_isAutoHidden(false),
+    m_isDockWindowType(false),
     m_isHovered(false),
     m_secondInitPass(false),
     m_windowIsInAttention(false),
@@ -237,6 +238,27 @@ void PanelWindow::setDisableHiding(bool value)
         m_updateStateTimer.start();
     }
 }
+
+bool PanelWindow::isDockWindowType() const
+{
+    return m_isDockWindowType;
+}
+
+void PanelWindow::setIsDockWindowType(bool state)
+{
+    if (m_isDockWindowType == state) {
+        return;
+    }
+
+    m_isDockWindowType = state;
+
+    updateVisibilityFlags();
+
+    emit isDockWindowTypeChanged();
+
+    m_updateStateTimer.start();
+}
+
 
 bool PanelWindow::immutable() const
 {
@@ -561,15 +583,17 @@ void PanelWindow::updateVisibilityFlags()
 {
     m_interface->setDockToAllDesktops();
 
-    if (m_panelVisibility == AutoHide) {
+    if ((m_panelVisibility == AutoHide)||(m_isDockWindowType)) {
         m_updateStateTimer.setInterval(2500);
     } else {
         m_updateStateTimer.setInterval(1500);
     }
     
-    m_interface->setDockDefaultFlags();
+    m_interface->setDockDefaultFlags(m_isDockWindowType);
     updateWindowPosition();
-    showOnTop();
+    if (!m_isDockWindowType) {
+        showOnTop();
+    }
     m_updateStateTimer.start();
 }
 
@@ -592,7 +616,7 @@ void PanelWindow::updateState()
     switch (m_panelVisibility) {
     case BelowActive:
         if ( !m_interface->desktopIsActive() && m_interface->dockIntersectsActiveWindow() ) {
-            if ( m_interface->dockIsOnTop() ) {
+            if ( m_interface->dockIsOnTop() || (m_isDockWindowType && !m_isAutoHidden) ) {
                 // qDebug() << m_isHovered  << " - " << m_windowIsInAttention << " - "<< m_disableHiding;
                 if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
                     //  qDebug() << "must be lowered....";
@@ -600,11 +624,14 @@ void PanelWindow::updateState()
                 }
             } else {
                 if ( m_windowIsInAttention ) {
-                    emit mustBeRaised();                     //showOnTop();
+                    if (!m_isDockWindowType || (m_isDockWindowType && m_isAutoHidden)) {
+                        emit mustBeRaised();                     //showOnTop();
+                    }
                 }
             }
         } else {
-            if(!m_interface->desktopIsActive() && m_interface->dockIsCovered()) {
+            if((!m_interface->desktopIsActive() && m_interface->dockIsCovered())
+                    || (m_isDockWindowType && m_isAutoHidden)) {
                 //   qDebug() << "must be raised....";
                 emit mustBeRaised();
             } else {
@@ -614,17 +641,20 @@ void PanelWindow::updateState()
         break;
     case BelowMaximized:
         if ( !m_interface->desktopIsActive() && m_interface->activeIsMaximized() && m_interface->dockIntersectsActiveWindow() ) {
-            if ( m_interface->dockIsOnTop() ) {
+            if ( m_interface->dockIsOnTop() || (m_isDockWindowType && !m_isAutoHidden) ) {
                 if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
                     emit mustBeLowered();                    //showNormal();
                 }
             } else {
                 if ( m_windowIsInAttention ) {
-                    emit mustBeRaised();                     //showOnTop();
+                    if (!m_isDockWindowType || (m_isDockWindowType && m_isAutoHidden)) {
+                        emit mustBeRaised();                     //showOnTop();
+                    }
                 }
             }
         } else {
-            if(!m_interface->desktopIsActive() && m_interface->dockIsCovered()) {
+            if( (!m_interface->desktopIsActive() && m_interface->dockIsCovered())
+                    || (m_isDockWindowType && m_isAutoHidden) ){
                 emit mustBeRaised();
             } else {
                 showOnTop();
@@ -632,6 +662,11 @@ void PanelWindow::updateState()
         }
         break;
     case LetWindowsCover:
+        //this is not supported in clean Dock Window Types such as in wayland case
+        if (m_isDockWindowType) {
+            return;
+        }
+
         if (!m_isHovered && m_interface->dockIsOnTop()) {
             if( m_interface->dockIsCovering()  ) {
                 if (!m_disableHiding) {
@@ -735,7 +770,7 @@ bool PanelWindow::event(QEvent *event)
             shrinkTransient();
         }
 
-        if (m_panelVisibility == AutoHide) {
+        if ((m_panelVisibility == AutoHide) || (m_isDockWindowType)) {
             if (m_isAutoHidden) {
                 emit mustBeRaised();
             }
@@ -748,8 +783,7 @@ bool PanelWindow::event(QEvent *event)
         if ( (m_panelVisibility != WindowsGoBelow)
              && (m_panelVisibility != AlwaysVisible) ) {
             m_updateStateTimer.start();
-        }
-    }
+        }    }
 
     return QQuickWindow::event(event);
 }

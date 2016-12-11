@@ -36,21 +36,10 @@ NowDock.PanelWindow{
     location: plasmoid.location
     panelVisibility: plasmoid.configuration.panelVisibility
 
-    /* x: {
-        if (plasmoid.location === PlasmaCore.Types.RightEdge) {
-            return screenGeometry.x + (screenGeometry.width - thickness);
-        } else {
-            return screenGeometry.x;
-        }
-    }
+    //this is used especially in the wayland case or when the user might want
+    //not to make the dock to go below windows but to hide, e.g. intelligent auto-hide
+    //isDockWindowType: true
 
-    y: {
-        if (plasmoid.location === PlasmaCore.Types.BottomEdge) {
-            return screenGeometry.y + (screenGeometry.height - thickness);
-        } else {
-            return screenGeometry.y;
-        }
-    }*/
 
     width: root.isHorizontal ? length : thicknessZoomOriginal
     height: root.isHorizontal ? thicknessZoomOriginal : length
@@ -73,7 +62,7 @@ NowDock.PanelWindow{
     onIsHoveredChanged: {
         if(isHovered) {
             //stop parent window timer for auto hiding
-            if (panelVisibility === NowDock.PanelWindow.AutoHide) {
+            if ((panelVisibility === NowDock.PanelWindow.AutoHide)|| isDockWindowType) {
                 if(hideMagicWindowInAutoHide.forcedDisableHiding) {
                     hideMagicWindowInAutoHide.forcedDisableHiding = false;
                     window.disableHiding = false;
@@ -94,7 +83,7 @@ NowDock.PanelWindow{
     }
 
     onMustBeRaised: {
-        if (panelVisibility === NowDock.PanelWindow.AutoHide) {
+        if ((panelVisibility === NowDock.PanelWindow.AutoHide) || isDockWindowType) {
             slidingAnimationAutoHiddenIn.init();
         } else {
             slidingAnimation.init(true,false);
@@ -106,7 +95,7 @@ NowDock.PanelWindow{
     }
 
     onMustBeLowered: {
-        if (panelVisibility === NowDock.PanelWindow.AutoHide) {
+        if ((panelVisibility === NowDock.PanelWindow.AutoHide) || isDockWindowType ) {
             slidingAnimationAutoHiddenOut.init();
         } else {
             slidingAnimation.init(false,false);
@@ -218,7 +207,7 @@ NowDock.PanelWindow{
                 tempThickness = thicknessMidOriginal;
             }
 
-            if (window.isAutoHidden && (panelVisibility === NowDock.PanelWindow.AutoHide)) {
+            if (window.isAutoHidden && ((panelVisibility === NowDock.PanelWindow.AutoHide) || window.isDockWindowType)) {
                 tempThickness = thicknessAutoHidden;
             }
 
@@ -508,7 +497,7 @@ NowDock.PanelWindow{
         interval: window.inStartup ? 1000 : 500
         onTriggered: {
             layoutsContainer.opacity = 1;
-            if (panelVisibility !== NowDock.PanelWindow.AutoHide) {
+            if ((window.panelVisibility !== NowDock.PanelWindow.AutoHide) && !window.isDockWindowType) {
                 slidingAnimation.init(true,false);
             } else {
                 slidingAnimationAutoHiddenIn.init();

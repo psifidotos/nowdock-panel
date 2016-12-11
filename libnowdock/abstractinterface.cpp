@@ -8,6 +8,7 @@ namespace NowDock
 
 AbstractInterface::AbstractInterface(QQuickWindow *dock) :
     QObject(dock),
+    m_isDockWindowType(false),
     m_dockNumber(0)
 {
     m_dockWindow = dock;

@@ -21,13 +21,15 @@ class PanelWindow : public QQuickWindow {
     Q_ENUMS(PanelVisibility)
     Q_ENUMS(Alignment)
 
+    Q_PROPERTY(bool disableHiding READ disableHiding WRITE setDisableHiding NOTIFY disableHidingChanged)
+
     Q_PROPERTY(bool immutable READ immutable WRITE setImmutable NOTIFY immutableChanged)
 
     Q_PROPERTY(bool isAutoHidden READ isAutoHidden WRITE setIsAutoHidden NOTIFY isAutoHiddenChanged)
 
-    Q_PROPERTY(bool isHovered READ isHovered NOTIFY isHoveredChanged)
+    Q_PROPERTY(bool isDockWindowType READ isDockWindowType WRITE setIsDockWindowType NOTIFY isDockWindowTypeChanged)
 
-    Q_PROPERTY(bool disableHiding READ disableHiding WRITE setDisableHiding NOTIFY disableHidingChanged)
+    Q_PROPERTY(bool isHovered READ isHovered NOTIFY isHoveredChanged)
 
     Q_PROPERTY(bool windowInAttention READ windowInAttention WRITE setWindowInAttention NOTIFY windowInAttentionChanged)
 
@@ -82,6 +84,9 @@ public:
     bool isAutoHidden() const;
     void setIsAutoHidden(bool state);
 
+    bool isDockWindowType() const;
+    void setIsDockWindowType(bool state);
+
     bool isHovered() const;
 
     bool windowInAttention() const;
@@ -108,6 +113,7 @@ Q_SIGNALS:
     void disableHidingChanged();
     void immutableChanged();
     void isAutoHiddenChanged();
+    void isDockWindowTypeChanged();
     void isHoveredChanged();
     void locationChanged();
     void maskAreaChanged();
@@ -152,6 +158,7 @@ private:
     bool m_disableHiding;
     bool m_immutable;
     bool m_isAutoHidden;
+    bool m_isDockWindowType;
     bool m_isHovered;
     //second pass of the initialization
     bool m_secondInitPass;

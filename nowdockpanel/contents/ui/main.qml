@@ -26,7 +26,6 @@ import org.kde.kquickcontrolsaddons 2.0
 import org.kde.draganddrop 2.0 as DragDrop
 import org.kde.plasma.plasmoid 2.0
 
-
 import org.kde.nowdock 0.1 as NowDock
 
 import "LayoutManager.js" as LayoutManager
@@ -40,7 +39,7 @@ DragDrop.DropArea {
     ////
 
     ////BEGIN properties
-    property bool debugMode: true
+    property bool debugMode: false
 
     property bool automaticSize: plasmoid.configuration.automaticIconSize
     property bool immutable: plasmoid.immutable
@@ -1018,7 +1017,8 @@ DragDrop.DropArea {
         anchors.fill: parent
         hoverEnabled: true
         onEntered: {
-            if (plasmoid.immutable && magicWin && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) {
+            if (plasmoid.immutable && magicWin
+                    && ((magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) || magicWin.isDockWindowType) ) {
                 magicWin.updateMaskArea();
                 magicWin.mustBeRaised();
             } else {
@@ -1027,7 +1027,8 @@ DragDrop.DropArea {
         }
 
         onExited: {
-            if (plasmoid.immutable && magicWin && !magicWin.isHovered && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) {
+            if (plasmoid.immutable && magicWin && !magicWin.isHovered
+                    && ((magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) || magicWin.isDockWindowType) ) {
                 hideMagicWindowInAutoHide.start();
             }
         }
@@ -1225,7 +1226,7 @@ DragDrop.DropArea {
             }
 
             if (plasmoid.immutable && magicWin && !magicWin.isHovered && !wholeArea.containsMouse
-                    && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) {
+                    && ((magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) || magicWin.isDockWindowType) ) {
                 magicWin.mustBeLowered();
             }
         }
