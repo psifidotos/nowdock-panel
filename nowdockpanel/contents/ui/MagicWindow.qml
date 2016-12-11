@@ -368,7 +368,7 @@ NowDock.PanelWindow{
                 target: layoutsContainer
                 property: root.isVertical ? "x" : "y"
                 to: ((location===PlasmaCore.Types.LeftEdge)||(location===PlasmaCore.Types.TopEdge)) ? -thicknessNormal : thicknessNormal
-                duration: slidingAnimation.immediateShow ? 0 : window.animationSpeed
+                duration: slidingAnimation.immediateShow ? 100 : window.animationSpeed
                 easing.type: Easing.OutQuad
             }
 
@@ -376,7 +376,7 @@ NowDock.PanelWindow{
                 target: slidingAnimation
                 property: "inHalf"
                 to: true
-                duration: 200
+                duration: 100
             }
 
             PropertyAnimation {

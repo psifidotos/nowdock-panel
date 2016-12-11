@@ -308,7 +308,7 @@ void PanelWindow::setPanelScreen(QScreen *screen)
     }
     
     if (m_screen) {
-        qDebug() << m_screen->geometry();
+      //  qDebug() << m_screen->geometry();
         //disconnect(m_screen, SIGNAL(geometryChanged(QRect)), this, SLOT(setScreenGeometry(QRect)));
     }
     
@@ -745,11 +745,13 @@ void PanelWindow::showOnTopCheck()
     if ((m_panelVisibility == BelowActive) || (m_panelVisibility == BelowMaximized)
             || (m_panelVisibility == LetWindowsCover)) {
         if (m_interface->dockIsCovered(true)) {
-            setIsHovered(true);
             m_updateStateTimer.stop();
+            setIsHovered(true);
+
             if (m_immutable) {
                 shrinkTransient();
             }
+
             emit mustBeRaisedImmediately();
         } else {
             showOnTop();
@@ -763,9 +765,10 @@ bool PanelWindow::event(QEvent *event)
         return false;
     }
 
-    if ((event->type() == QEvent::Enter) &&(!m_isHovered)) {
-        setIsHovered(true);
+    if ((event->type() == QEvent::Enter) && !m_isHovered) {
         m_updateStateTimer.stop();
+        setIsHovered(true);
+
         if (m_immutable) {
             shrinkTransient();
         }

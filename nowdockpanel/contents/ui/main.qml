@@ -416,11 +416,11 @@ DragDrop.DropArea {
         containmentSizeSyncTimer.restart();
     }
 
-    onIsHoveredChanged: {
+   /* onIsHoveredChanged: {
         if (isHovered){
             magicWin.showOnTopCheck();
         }
-    }
+    }*/
 
     onHeightChanged: {
         containmentSizeSyncTimer.restart()
@@ -1017,19 +1017,27 @@ DragDrop.DropArea {
         anchors.fill: parent
         hoverEnabled: true
         onEntered: {
-            if (plasmoid.immutable && magicWin
-                    && ((magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) || magicWin.isDockWindowType) ) {
-                magicWin.updateMaskArea();
-                magicWin.mustBeRaised();
-            } else {
-                magicWin.showOnTop();
-            }
+            showWindow();
         }
 
         onExited: {
             if (plasmoid.immutable && magicWin && !magicWin.isHovered
                     && ((magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) || magicWin.isDockWindowType) ) {
                 hideMagicWindowInAutoHide.start();
+            }
+        }
+
+        onPositionChanged: {
+            showWindow();
+        }
+
+        function showWindow() {
+            if (plasmoid.immutable && magicWin
+                    && ((magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) || magicWin.isDockWindowType) ) {
+                magicWin.updateMaskArea();
+                magicWin.mustBeRaised();
+            } else {
+                magicWin.showOnTopCheck();
             }
         }
     }
