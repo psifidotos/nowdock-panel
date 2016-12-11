@@ -16,7 +16,7 @@ public:
     virtual bool activeIsMaximized() const = 0;
     virtual bool desktopIsActive() const = 0;
     virtual bool dockIntersectsActiveWindow() const = 0;
-    virtual bool dockIsCovered() const = 0;
+    virtual bool dockIsCovered(bool totally = false) const = 0;
     virtual bool dockIsCovering() const = 0;
     virtual bool dockIsOnTop() const = 0;
     virtual bool dockInNormalState() const = 0;

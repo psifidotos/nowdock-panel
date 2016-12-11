@@ -377,7 +377,7 @@ void PanelWindow::addAppletItem(QObject *item)
                         m_interface->setDockNumber(docks);
                         m_interface->showDockOnTop();
                         m_updateStateTimer.start();
-                       // qDebug() << "Now Dock Panels counter :" << docks;
+                        // qDebug() << "Now Dock Panels counter :" << docks;
                         break;
                     }
                 }
@@ -579,9 +579,9 @@ void PanelWindow::updateState()
     case BelowActive:
         if ( !m_interface->desktopIsActive() && m_interface->dockIntersectsActiveWindow() ) {
             if ( m_interface->dockIsOnTop() ) {
-                //  qDebug() << m_isHovered  << " - " << m_windowIsInAttention << " - "<< m_disableHiding;
+                 // qDebug() << m_isHovered  << " - " << m_windowIsInAttention << " - "<< m_disableHiding;
                 if (!m_isHovered && !m_windowIsInAttention && !m_disableHiding) {
-                    //     qDebug() << "must be lowered....";
+                   //  qDebug() << "must be lowered....";
                     emit mustBeLowered();                    //showNormal();
                 }
             } else {
@@ -589,8 +589,9 @@ void PanelWindow::updateState()
                     emit mustBeRaised();                     //showOnTop();
                 }
             }
-        } else if (m_interface->dockInNormalState()){
+        } else {
             if(!m_interface->desktopIsActive() && m_interface->dockIsCovered()) {
+               //   qDebug() << "must be raised....";
                 emit mustBeRaised();
             } else {
                 showOnTop();
@@ -608,7 +609,7 @@ void PanelWindow::updateState()
                     emit mustBeRaised();                     //showOnTop();
                 }
             }
-        } else if ( m_interface->dockInNormalState() ) {
+        } else {
             if(!m_interface->desktopIsActive() && m_interface->dockIsCovered()) {
                 emit mustBeRaised();
             } else {
@@ -687,13 +688,33 @@ void PanelWindow::activeWindowChanged()
     }
 }
 
+
+//It is used in order to trigger a beautiful slide in effect when
+//the dock is totally hidden underneath
+void PanelWindow::showOnTopCheck()
+{
+    if ((m_panelVisibility == BelowActive) || (m_panelVisibility == BelowMaximized)
+            || (m_panelVisibility == LetWindowsCover)) {
+        if (m_interface->dockIsCovered(true)) {
+            setIsHovered(true);
+            m_updateStateTimer.stop();
+            if (m_immutable) {
+                shrinkTransient();
+            }
+            emit mustBeRaisedImmediately();
+        } else {
+            showOnTop();
+        }
+    }
+}
+
 bool PanelWindow::event(QEvent *event)
 {
     if (!event) {
         return false;
     }
 
-    if (event->type() == QEvent::Enter) {
+    if ((event->type() == QEvent::Enter) &&(!m_isHovered)) {
         setIsHovered(true);
         m_updateStateTimer.stop();
         if (m_immutable) {

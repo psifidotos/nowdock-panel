@@ -183,7 +183,7 @@ bool XWindowInterface::dockIntersectsActiveWindow() const
 }
 
 
-bool XWindowInterface::dockIsCovered() const
+bool XWindowInterface::dockIsCovered(bool totally) const
 {
     int currentDockPos = -1;
 
@@ -201,7 +201,7 @@ bool XWindowInterface::dockIsCovered() const
     if (currentDockPos >=0) {
         QRect maskSize;
 
-        if ( m_maskArea.isNull() ) {
+        if ( !m_maskArea.isNull() ) {
             maskSize = QRect(m_dockWindow->x()+m_maskArea.x(), m_dockWindow->y()+m_maskArea.y(), m_maskArea.width(), m_maskArea.height());
         } else {
             maskSize = QRect(m_dockWindow->x(), m_dockWindow->y(), m_dockWindow->width(), m_dockWindow->height());
@@ -218,8 +218,19 @@ bool XWindowInterface::dockIsCovered() const
 
             KWindowInfo info(window, NET::WMState | NET::XAWMState | NET::WMGeometry);
 
-            if ( info.valid() && !isDesktop(window) && transient!=window && !info.isMinimized() && maskSize.intersects(info.geometry()) ) {
-                return true;
+            if ( info.valid() && !isDesktop(window) && transient!=window && !info.isMinimized() ) {
+                if (totally) {
+                    QRect winGeometry = info.geometry();
+
+                    if ((maskSize.left()>=winGeometry.left()) && (maskSize.top()>=winGeometry.top())
+                            && (maskSize.right()<=winGeometry.right()) && (maskSize.bottom()<=winGeometry.bottom())) {
+                        return true;
+                    }
+                } else {
+                    if (maskSize.intersects(info.geometry())) {
+                        return true;
+                    }
+                }
             }
         }
     }

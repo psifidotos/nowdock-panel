@@ -112,8 +112,9 @@ Q_SIGNALS:
     void locationChanged();
     void maskAreaChanged();
     void maximumLengthChanged();
-    void mustBeRaised(); //are used to triger the sliding animations from the qml part
     void mustBeLowered();
+    void mustBeRaised(); //are used to triger the sliding animations from the qml part
+    void mustBeRaisedImmediately();
     void panelVisibilityChanged();
     void screenGeometryChanged();
     void windowInAttentionChanged();
@@ -125,6 +126,7 @@ public slots:
     Q_INVOKABLE void setTransientThickness(unsigned int thickness);
     Q_INVOKABLE void showNormal();
     Q_INVOKABLE void showOnTop();
+    Q_INVOKABLE void showOnTopCheck();
     Q_INVOKABLE void showOnBottom();
     Q_INVOKABLE void shrinkTransient();
     void setWindowInAttention(bool state);

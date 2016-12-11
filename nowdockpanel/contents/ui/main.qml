@@ -419,7 +419,7 @@ DragDrop.DropArea {
 
     onIsHoveredChanged: {
         if (isHovered){
-            magicWin.showOnTop();
+            magicWin.showOnTopCheck();
         }
     }
 

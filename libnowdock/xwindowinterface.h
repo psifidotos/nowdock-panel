@@ -20,7 +20,7 @@ public:
     bool activeIsMaximized() const;
     bool dockIntersectsActiveWindow() const;
     bool desktopIsActive() const;
-    bool dockIsCovered() const;
+    bool dockIsCovered(bool totally = false) const;
     bool dockIsCovering() const;
     bool dockIsOnTop() const;
     bool dockInNormalState() const;

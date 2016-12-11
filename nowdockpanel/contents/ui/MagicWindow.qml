@@ -97,15 +97,19 @@ NowDock.PanelWindow{
         if (panelVisibility === NowDock.PanelWindow.AutoHide) {
             slidingAnimationAutoHiddenIn.init();
         } else {
-            slidingAnimation.init(true);
+            slidingAnimation.init(true,false);
         }
+    }
+
+    onMustBeRaisedImmediately: {
+        slidingAnimation.init(true,true);
     }
 
     onMustBeLowered: {
         if (panelVisibility === NowDock.PanelWindow.AutoHide) {
             slidingAnimationAutoHiddenOut.init();
         } else {
-            slidingAnimation.init(false);
+            slidingAnimation.init(false,false);
         }
     }
 
@@ -144,7 +148,7 @@ NowDock.PanelWindow{
                 magicWin.updateTransientThickness();
             }
             updateMaskArea();
-        } 
+        }
     }
 
     onVisibleChanged:{
@@ -368,13 +372,14 @@ NowDock.PanelWindow{
 
         property bool inHalf: false
         property bool raiseFlag: false
+        property bool immediateShow: false
 
         SequentialAnimation{
             PropertyAnimation {
                 target: layoutsContainer
                 property: root.isVertical ? "x" : "y"
                 to: ((location===PlasmaCore.Types.LeftEdge)||(location===PlasmaCore.Types.TopEdge)) ? -thicknessNormal : thicknessNormal
-                duration: window.animationSpeed
+                duration: slidingAnimation.immediateShow ? 0 : window.animationSpeed
                 easing.type: Easing.OutQuad
             }
 
@@ -397,6 +402,7 @@ NowDock.PanelWindow{
         onStopped: {
             inHalf = false;
             raiseFlag = false;
+            immediateShow = false;
 
             if (!plasmoid.immutable) {
                 updateTransientThickness();
@@ -405,26 +411,21 @@ NowDock.PanelWindow{
 
         onInHalfChanged: {
             if (inHalf) {
-                if (window.panelVisibility === NowDock.PanelWindow.LetWindowsCover) {
-                    if (raiseFlag) {
-                        window.showOnTop();
-                    } else {
-                        window.showOnBottom();
-                    }
+                if (raiseFlag) {
+                    window.showOnTop();
                 } else {
-                    if (raiseFlag) {
-                        window.showOnTop();
-                    } else {
-                        window.showNormal();
-                    }
+                    window.showOnBottom();
                 }
             }
         }
 
-        function init(raise) {
+        function init(raise, immediate) {
             if(window.visible) {
                 raiseFlag = raise;
+                immediateShow = immediate;
+                // if (!running) {
                 start();
+                // }
             }
         }
     }
@@ -508,7 +509,7 @@ NowDock.PanelWindow{
         onTriggered: {
             layoutsContainer.opacity = 1;
             if (panelVisibility !== NowDock.PanelWindow.AutoHide) {
-                slidingAnimation.init(true);
+                slidingAnimation.init(true,false);
             } else {
                 slidingAnimationAutoHiddenIn.init();
             }
