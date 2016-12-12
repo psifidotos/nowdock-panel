@@ -1,6 +1,7 @@
 #include "panelwindow.h"
 
 #include "xwindowinterface.h"
+#include "windowsystem.h"
 
 #include <QMenu>
 #include <QQuickWindow>
@@ -45,9 +46,11 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     setColor(QColor(Qt::transparent));
     setFlags(Qt::FramelessWindowHint|Qt::WindowDoesNotAcceptFocus);
 
+    m_windowSystem = new WindowSystem(this);
+    connect(m_windowSystem, SIGNAL(compositingChanged()), this, SLOT(compositingChanged()));
+
     m_interface = new XWindowInterface(this);
     connect(m_interface, SIGNAL(windowInAttention(bool)), this, SLOT(setWindowInAttention(bool)));
-    //connect(m_interface, SIGNAL(windowChanged()), this, SLOT(windowChanged()));
     connect(m_interface, SIGNAL(activeWindowChanged()), this, SLOT(activeWindowChanged()));
     m_interface->setDockToAllDesktops();
 
@@ -324,6 +327,15 @@ void PanelWindow::setPanelScreen(QScreen *screen)
     connect(m_screen, SIGNAL(geometryChanged(QRect)), this, SLOT(setScreenGeometry(QRect)));
 }
 
+void PanelWindow::compositingChanged()
+{
+    if (m_windowSystem->compositingActive()) {
+        if (!m_triggerShrinkTransient.isActive()){
+            m_triggerShrinkTransient.start();
+        }
+    }
+}
+
 //This calls a timer onX or onY change of the
 //transient. Otherwise a loop is created all the time
 //and hangs the thread
@@ -491,7 +503,7 @@ void PanelWindow::initWindow()
 
 void PanelWindow::shrinkTransient()
 {
-    if (m_immutable && transientParent()) {
+    if (m_immutable && m_windowSystem->compositingActive() && transientParent()) {
         // qDebug() <<"shrinkTransient: start...";
         
         if (transientParent() && transientParent()->screen()) {

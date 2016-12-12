@@ -12,6 +12,7 @@
 #include <PlasmaQuick/AppletQuickItem>
 
 #include "abstractinterface.h"
+#include "windowsystem.h"
 
 namespace NowDock
 {
@@ -144,6 +145,7 @@ protected:
 
 private Q_SLOTS:
     void activeWindowChanged();
+    void compositingChanged();
     void updateState();
     void initWindow();
     void menuAboutToHide();
@@ -187,6 +189,7 @@ private:
     PanelVisibility m_panelVisibility;
 
     AbstractInterface *m_interface;
+    WindowSystem *m_windowSystem;
 
     void addAppletActions(QMenu *desktopMenu, Plasma::Applet *applet, QEvent *event);
     void addContainmentActions(QMenu *desktopMenu, QEvent *event);
