@@ -408,10 +408,12 @@ void PanelWindow::setTransientThickness(unsigned int thickness)
 }
 
 /******************************/
+
 void PanelWindow::addAppletItem(QObject *item)
 {
     PlasmaQuick::AppletQuickItem *dynItem = qobject_cast<PlasmaQuick::AppletQuickItem *>(item);
 
+    //This is used in order to set the local containment variable
     if (dynItem && !m_containment) {
         Plasma::Applet *applet = dynItem->applet();
         if (applet) {
@@ -821,7 +823,7 @@ bool PanelWindow::event(QEvent *event)
 
 void PanelWindow::mouseReleaseEvent(QMouseEvent *event)
 {
-    if (!event) {
+    if (!event || !m_containment) {
         return;
     }
 
@@ -832,7 +834,7 @@ void PanelWindow::mouseReleaseEvent(QMouseEvent *event)
 
 void PanelWindow::mousePressEvent(QMouseEvent *event)
 {
-    if (!event) {
+    if (!event || !m_containment) {
         return;
     }
 
@@ -947,6 +949,10 @@ void PanelWindow::mousePressEvent(QMouseEvent *event)
 
 void PanelWindow::addAppletActions(QMenu *desktopMenu, Plasma::Applet *applet, QEvent *event)
 {
+    if (!m_containment) {
+        return;
+    }
+
     foreach (QAction *action, applet->contextualActions()) {
         if (action) {
             desktopMenu->addAction(action);
