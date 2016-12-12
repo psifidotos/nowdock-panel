@@ -1245,8 +1245,9 @@ DragDrop.DropArea {
         id: animatedLengthTimer
         interval: 150
         onTriggered: {
-            if (!magicWin.isHovered && (appletsAnimations === 0)
-                    && (root.animationsNeedLength === 0) && (root.animationsNeedBothAxis ===0)) {
+         //   if (!magicWin.isHovered && (appletsAnimations === 0)
+         //           && (root.animationsNeedLength === 0) && (root.animationsNeedBothAxis === 0)) {
+            if ((appletsAnimations === 0) && (root.animationsNeedLength === 0) && (root.animationsNeedBothAxis === 0)) {
                 mainLayout.animatedLength = false;
                 magicWin.updateMaskArea();
             }
