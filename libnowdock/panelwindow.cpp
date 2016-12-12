@@ -38,7 +38,8 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     m_windowIsInAttention(false),
     m_childrenLength(-1),
     m_tempThickness(-1),
-    m_screen(0)
+    m_screen(0),
+    m_transient(0)
 {    
     setClearBeforeRendering(true);
     setColor(QColor(Qt::transparent));
@@ -60,6 +61,10 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     m_initTimer.setSingleShot(true);
     m_initTimer.setInterval(400);
     connect(&m_initTimer, &QTimer::timeout, this, &PanelWindow::initWindow);
+
+    m_triggerShrinkTransient.setSingleShot(true);
+    m_triggerShrinkTransient.setInterval(500);
+    connect(&m_triggerShrinkTransient, &QTimer::timeout, this, &PanelWindow::shrinkTransient);
 
     connect(this, SIGNAL(panelVisibilityChanged()), this, SLOT(updateVisibilityFlags()));
     setPanelVisibility(BelowActive);
@@ -319,6 +324,35 @@ void PanelWindow::setPanelScreen(QScreen *screen)
     connect(m_screen, SIGNAL(geometryChanged(QRect)), this, SLOT(setScreenGeometry(QRect)));
 }
 
+//This calls a timer onX or onY change of the
+//transient. Otherwise a loop is created all the time
+//and hangs the thread
+void PanelWindow::transientPositionChanged()
+{
+    if (!m_triggerShrinkTransient.isActive()) {
+        m_triggerShrinkTransient.start();
+    }
+}
+
+void PanelWindow::updateTransient()
+{
+    if (m_transient == transientParent()){
+        return;
+    }
+
+    if (m_transient) {
+        disconnect(m_transient, SIGNAL(xChanged(int)), this, SLOT(setTransient()));
+        disconnect(m_transient, SIGNAL(yChanged(int)), this, SLOT(setTransient()));
+    }
+
+    m_transient = transientParent();
+
+    connect(m_transient, SIGNAL(xChanged(int)), this, SLOT(transientPositionChanged()));
+    connect(m_transient, SIGNAL(yChanged(int)), this, SLOT(transientPositionChanged()));
+
+    shrinkTransient();
+}
+
 void PanelWindow::setTransientThickness(unsigned int thickness)
 {
     QWindow *transient = transientParent();
@@ -436,10 +470,9 @@ void PanelWindow::initialize()
 void PanelWindow::initWindow()
 {
     updateVisibilityFlags();
+    updateTransient();
 
-    if (m_tempThickness < 0) {
-        shrinkTransient();
-    } else {
+    if (m_tempThickness > 0) {
         setTransientThickness(m_tempThickness);
     }
 
@@ -457,7 +490,7 @@ void PanelWindow::initWindow()
 void PanelWindow::shrinkTransient()
 {
     if (m_immutable && transientParent()) {
-        //   qDebug() <<"shrinkTransient: start...";
+        // qDebug() <<"shrinkTransient: start...";
         
         if (transientParent() && transientParent()->screen()) {
             //       qDebug() <<  "transientParent: setting screen position...";
@@ -747,10 +780,7 @@ void PanelWindow::showOnTopCheck()
         if (m_interface->dockIsCovered(true)) {
             m_updateStateTimer.stop();
             setIsHovered(true);
-
-            if (m_immutable) {
-                shrinkTransient();
-            }
+            updateTransient();
 
             emit mustBeRaisedImmediately();
         } else {
@@ -769,9 +799,7 @@ bool PanelWindow::event(QEvent *event)
         m_updateStateTimer.stop();
         setIsHovered(true);
 
-        if (m_immutable) {
-            shrinkTransient();
-        }
+        updateTransient();
 
         if ((m_panelVisibility == AutoHide) || (m_isDockWindowType)) {
             if (m_isAutoHidden) {

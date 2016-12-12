@@ -134,7 +134,6 @@ public slots:
     Q_INVOKABLE void showOnTop();
     Q_INVOKABLE void showOnTopCheck();
     Q_INVOKABLE void showOnBottom();
-    Q_INVOKABLE void shrinkTransient();
     void setWindowInAttention(bool state);
 
 
@@ -150,7 +149,9 @@ private Q_SLOTS:
     void menuAboutToHide();
     void setIsHovered(bool state);
     void screenChanged(QScreen *screen);
-    void setScreenGeometry(QRect geometry);    
+    void setScreenGeometry(QRect geometry);
+    void shrinkTransient();
+    void transientPositionChanged();
     void updateVisibilityFlags();
     void updateWindowPosition();
 
@@ -174,8 +175,10 @@ private:
     QScreen *m_screen;
     QList<PlasmaQuick::AppletQuickItem *> m_appletItems;
     QTimer m_initTimer;
+    QTimer m_triggerShrinkTransient;
     QTimer m_updateStateTimer;
     QWeakPointer<QMenu> m_contextMenu;
+    QWindow *m_transient;
 
     Qt::Orientations m_panelOrientation;
 
@@ -188,8 +191,9 @@ private:
     void addAppletActions(QMenu *desktopMenu, Plasma::Applet *applet, QEvent *event);
     void addContainmentActions(QMenu *desktopMenu, QEvent *event);
     void setPanelOrientation(Plasma::Types::Location location);
-    void setPanelScreen(QScreen *screen);      
+    void setPanelScreen(QScreen *screen);
     void updateMaximumLength();
+    void updateTransient();
 };
 
 } //NowDock namespace
