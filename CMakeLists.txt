@@ -2,7 +2,7 @@ project(nowdockpanel)
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 set (CMAKE_CXX_STANDARD 11)
 
-set(VERSION 0.4.91)
+set(VERSION 0.5.0)
 set(AUTHOR "Michail Vourlakos")
 set(EMAIL "mvourlakos@gmail.com")
 set(WEBSITE "https://store.kde.org/p/1154578/")
