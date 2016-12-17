@@ -58,7 +58,7 @@ PanelWindow::PanelWindow(QQuickWindow *parent) :
     setPanelScreen(screen());
 
     m_updateStateTimer.setSingleShot(true);
-    m_updateStateTimer.setInterval(1500);
+    m_updateStateTimer.setInterval(900);
     connect(&m_updateStateTimer, &QTimer::timeout, this, &PanelWindow::updateState);
 
     m_initTimer.setSingleShot(true);
@@ -630,11 +630,11 @@ void PanelWindow::updateVisibilityFlags()
 {
     m_interface->setDockToAllDesktops();
 
-    if ((m_panelVisibility == AutoHide)||(m_isDockWindowType)) {
+   /* if ((m_panelVisibility == AutoHide)||(m_isDockWindowType)) {
         m_updateStateTimer.setInterval(2500);
     } else {
         m_updateStateTimer.setInterval(1500);
-    }
+    }*/
     
     m_interface->setDockDefaultFlags(m_isDockWindowType);
     updateWindowPosition();
@@ -677,12 +677,14 @@ void PanelWindow::updateState()
                 }
             }
         } else {
-            if((!m_interface->desktopIsActive() && m_interface->dockIsCovered())
-                    || (m_isDockWindowType && m_isAutoHidden)) {
-                //   qDebug() << "must be raised....";
-                emit mustBeRaised();
-            } else {
-                showOnTop();
+            if (!m_interface->activeIsDialog()) {
+                if((!m_interface->desktopIsActive() && m_interface->dockIsCovered())
+                        || (m_isDockWindowType && m_isAutoHidden)) {
+                    //   qDebug() << "must be raised....";
+                    emit mustBeRaised();
+                } else {
+                    showOnTop();
+                }
             }
         }
         break;

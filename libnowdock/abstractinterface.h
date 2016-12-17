@@ -13,6 +13,7 @@ class AbstractInterface : public QObject {
 public:
     explicit AbstractInterface(QQuickWindow *dock);
 
+    virtual bool activeIsDialog() const = 0;
     virtual bool activeIsMaximized() const = 0;
     virtual bool desktopIsActive() const = 0;
     virtual bool dockIntersectsActiveWindow() const = 0;

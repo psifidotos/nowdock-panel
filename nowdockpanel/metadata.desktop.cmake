@@ -27,4 +27,4 @@ X-KDE-PluginInfo-EnabledByDefault=true
 X-KDE-ServiceTypes=Plasma/Applet,Plasma/Containment
 X-Plasma-API=declarativeappletscript
 X-Plasma-MainScript=ui/main.qml
-X-Plasma-ContainmentType=Panel 
+X-Plasma-ContainmentType=Panel

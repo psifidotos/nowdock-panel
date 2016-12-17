@@ -17,6 +17,7 @@ public:
     explicit XWindowInterface(QQuickWindow *parent);
     ~XWindowInterface();
 
+    bool activeIsDialog() const;
     bool activeIsMaximized() const;
     bool dockIntersectsActiveWindow() const;
     bool desktopIsActive() const;
@@ -44,6 +45,7 @@ private:
     WId m_demandsAttention;
 
     bool isDesktop(WId id) const;
+    bool isDialog(WId id) const;
     bool isMaximized(WId id) const;
     bool isNormal(WId id) const;
     bool isOnBottom(WId id) const;

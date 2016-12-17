@@ -113,6 +113,18 @@ bool XWindowInterface::isDesktop(WId id) const
     return type == NET::Desktop;
 }
 
+bool XWindowInterface::isDialog(WId id) const
+{
+    KWindowInfo info(id, NET::WMWindowType);
+
+    if ( !info.valid() ) {
+        return false;
+    }
+
+    NET::WindowType type = info.windowType(NET::DesktopMask|NET::DockMask|NET::DialogMask);
+
+    return type == NET::Dialog;
+}
 
 bool XWindowInterface::isMaximized(WId id) const
 {
@@ -149,6 +161,11 @@ bool XWindowInterface::isOnTop(WId id) const
     }
 
     return ( info.hasState(NET::KeepAbove) );
+}
+
+bool XWindowInterface::activeIsDialog() const
+{
+    return isDialog(m_activeWindow);
 }
 
 bool XWindowInterface::activeIsMaximized() const
