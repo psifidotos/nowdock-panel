@@ -24,14 +24,25 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 PlasmaCore.FrameSvgItem {
     id: root
 
-    imagePath: containment && containment.backgroundHints === PlasmaCore.Types.NoBackground ? "" : "widgets/panel-background"
-    onRepaintNeeded: adjustPrefix();
+    width: 400
+    height: 400
+    //imagePath: containment && containment.backgroundHints === PlasmaCore.Types.NoBackground ? "" : "widgets/panel-background"
+    imagePath: "widgets/panel-background"
+    prefix:""
+   // onRepaintNeeded: adjustPrefix();
 
-    enabledBorders: panel.enabledBorders
+    //enabledBorders: panel.enabledBorders
 
     property Item containment
 
     readonly property bool verticalPanel: containment && containment.formFactor === PlasmaCore.Types.Vertical
+
+    Rectangle{
+        anchors.fill: parent
+        color: "transparent"
+        border.color: "blue"
+        border.width: 1
+    }
 
     function adjustPrefix() {
         if (!containment) {
@@ -88,7 +99,7 @@ PlasmaCore.FrameSvgItem {
         }
     }
 
-    Binding {
+  /*  Binding {
         target: panel
         property: "backgroundHints"
         when: containment
@@ -99,7 +110,7 @@ PlasmaCore.FrameSvgItem {
 
             return containment.backgroundHints; 
         }
-    }    
+    }    */
 
     Item {
         id: containmentParent

@@ -22,43 +22,27 @@
 #ifndef NOWDOCKCORONA_H
 #define NOWDOCKCORONA_H
 
-#include <QObject>
+#include <plasma/corona.h>
+#include "plasmaquick/view.h"
 
-#include "nowdockview.h"
-
-
-namespace Plasma {
-class Corona;
-class Containment;
-class Types;
-}
-
-class NowDockCorona : public Plasma::Corona {
+class NowDockCorona : public Plasma::Corona
+{
     Q_OBJECT
-    
-public:
-    NowDockCorona(QObject *parent = nullptr);
-    ~NowDockCorona() override;
-    
-    int numScreens() const override;
-    QRect screenGeometry(int id) const override;
-    QRegion availableScreenRegion(int id) const override;
-    QRect availableScreenRect(int id) const override;
-    
-    QList<Plasma::Types::Location> freeEdges(int screen) const;
-    
-    int screenForContainment(const Plasma::Containment *containment) const override;
-    
-    void addDock(Plasma::Containment *containment);
-    
-public slots:
-    void loadDefaultLayout() override;
-    
-private:
-    void qmlRegisterTypes() const;
-    
-    std::vector<NowDockView *> m_containments;
-};
 
+public:
+    explicit NowDockCorona(QObject * parent = 0);
+    QRect screenGeometry(int id) const override;
+
+    void setHasStatusNotifier(bool stay);
+    void loadApplet(const QString &applet, const QVariantList &arguments);
+
+public Q_SLOTS:
+    void load();
+    void activateRequested(const QStringList &arguments, const QString &workingDirectory);
+
+private:
+    Plasma::Containment *m_containment;
+    bool m_hasStatusNotifier;
+};
 
 #endif

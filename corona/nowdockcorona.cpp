@@ -21,147 +21,176 @@
 
 #include "nowdockcorona.h"
 #include "nowdockview.h"
-#include <QDebug>
-#include <QAction>
-#include <KActionCollection>
+//#include "visibilitymanager.h"
+#include "packageplugins/shell/nowdockpackage.h"
 
+#include <QScreen>
+#include <QDebug>
+#include <KPluginMetaData>
+
+#include <Plasma>
+#include <Plasma/Corona>
+#include <Plasma/Containment>
+#include <KLocalizedString>
 #include <KPackage/Package>
 #include <KPackage/PackageLoader>
-#include <Plasma/PluginLoader>
 
 NowDockCorona::NowDockCorona(QObject *parent)
-    : Plasma::Corona(parent),
-      m_containment(0),
-      m_hasStatusNotifier(false)
+    : Plasma::Corona(parent)
 {
-    KPackage::Package package = KPackage::PackageLoader::self()->loadPackage(QStringLiteral("Plasma/Shell"));
-    package.setPath(QStringLiteral("org.kde.plasma.desktop"));
+    KPackage::Package package(new NowDockPackage(this));
+    
+    if (!package.isValid()) {
+        qWarning() << staticMetaObject.className()
+                   << "the package" << package.metadata().rawData() << "is invalid!";
+        return;
+    } else {
+        qDebug() << staticMetaObject.className()
+                 << "the package" << package.metadata().rawData() << "is valid!";
+    }
+    
     setKPackage(package);
-    //QMetaObject::invokeMethod(this, "load", Qt::QueuedConnection);
-    load();
+    qmlRegisterTypes();
+    connect(this, &Corona::containmentAdded, this, &NowDockCorona::addDock);
+    loadDefaultLayout();
+    //loadLayout();
 }
 
-void NowDockCorona::loadApplet(const QString &applet, const QVariantList &arguments)
+NowDockCorona::~NowDockCorona()
 {
-    if (containments().isEmpty()) {
-        return;
-    }
-
-    Plasma::Containment *cont = containments().first();
-
-    //forbid more instances per applet (todo: activate the correpsponding already loaded applet)
-    for (Plasma::Applet *a : cont->applets()) {
-        if (a->pluginMetaData().pluginId() == applet) {
-            return;
-        }
-    }
-    NowDockView *v = new NowDockView();
-    v->setHasStatusNotifier(m_hasStatusNotifier);
-    v->show();
-
-    KConfigGroup appletsGroup(KSharedConfig::openConfig(), "Applets");
-    QString plugin;
-    for (const QString &group : appletsGroup.groupList()) {
-        KConfigGroup cg(&appletsGroup, group);
-        plugin = cg.readEntry("plugin", QString());
-
-        if (plugin == applet) {
-            Plasma::Applet *a = Plasma::PluginLoader::self()->loadApplet(applet, group.toInt(), arguments);
-            if (!a) {
-                qWarning() << "Unable to load applet" << applet << "with arguments" <<arguments;
-                v->deleteLater();
-                return;
-            }
-            a->restore(cg);
-
-            //Access a->config() before adding to containment
-            //will cause applets to be saved in palsmawindowedrc
-            //so applets will only be created on demand
-            KConfigGroup cg2 = a->config();
-            cont->addApplet(a);
-
-            v->setApplet(a);
-            return;
-        }
-    }
-
-    Plasma::Applet *a = Plasma::PluginLoader::self()->loadApplet(applet, 0, arguments);
-    if (!a) {
-        qWarning() << "Unable to load applet" << applet << "with arguments" <<arguments;
-        v->deleteLater();
-        return;
-    }
-
-    //Access a->config() before adding to containment
-    //will cause applets to be saved in palsmawindowedrc
-    //so applets will only be created on demand
-    KConfigGroup cg2 = a->config();
-    cont->addApplet(a);
-
-    v->setApplet(a);
+    for (auto c : m_containments)
+        c->deleteLater();
+        
+    qDebug() << "deleted" << this;
 }
 
-void NowDockCorona::activateRequested(const QStringList &arguments, const QString &workingDirectory)
+int NowDockCorona::numScreens() const
 {
-    Q_UNUSED(workingDirectory)
-    if (arguments.count() <= 1) {
-        return;
-    }
-
-    QVariantList args;
-    QStringList::const_iterator constIterator;
-    constIterator = arguments.constBegin();
-    ++constIterator;
-    for (; constIterator != arguments.constEnd();
-           ++constIterator) {
-        args << (*constIterator);
-    }
-
-    loadApplet(arguments[1], args);
+    return qGuiApp->screens().count();
 }
 
 QRect NowDockCorona::screenGeometry(int id) const
 {
-    Q_UNUSED(id);
-    //TODO?
-    return QRect();
+    const auto screens = qGuiApp->screens();
+    
+    if (id >= 0 && id < screens.count()) {
+        return screens[id]->geometry();
+    }
+    
+    return qGuiApp->primaryScreen()->geometry();
 }
 
-void NowDockCorona::load()
+QRegion NowDockCorona::availableScreenRegion(int id) const
 {
-    /*this won't load applets, since applets are in plasmawindowedrc*/
-    loadLayout(QStringLiteral("plasmawindowed-appletsrc"));
-
-
-    bool found = false;
-    for (auto c : containments()) {
-        if (c->containmentType() == Plasma::Types::DesktopContainment) {
-            found = true;
-            break;
-        }
+    const auto screens = qGuiApp->screens();
+    
+    if (id >= 0 && id < screens.count()) {
+        return screens[id]->geometry();
     }
-
-    if (!found) {
-        qDebug() << "Loading default layout";
-        createContainment(QStringLiteral("empty"));
-        saveLayout(QStringLiteral("plasmawindowed-appletsrc"));
-    }
-
-    for (auto c : containments()) {
-        if (c->containmentType() == Plasma::Types::DesktopContainment) {
-            m_containment = c;
-            m_containment->setFormFactor(Plasma::Types::Application);
-            QAction *removeAction = c->actions()->action(QStringLiteral("remove"));
-            if(removeAction) {
-                removeAction->deleteLater();
-            }
-            break;
-        }
-    }
+    
+    return qGuiApp->primaryScreen()->availableGeometry();
 }
 
-void NowDockCorona::setHasStatusNotifier(bool stay)
+QRect NowDockCorona::availableScreenRect(int id) const
 {
-    m_hasStatusNotifier = stay;
+    const auto screens = qGuiApp->screens();
+    
+    if (id >= 0 && id < screens.count()) {
+        return screens[id]->availableGeometry();
+    }
+    
+    return qGuiApp->primaryScreen()->availableGeometry();
+}
+
+QList<Plasma::Types::Location> NowDockCorona::freeEdges(int screen) const
+{
+    using Plasma::Types;
+    QList<Types::Location> edges{Types::TopEdge, Types::BottomEdge
+                                 , Types::LeftEdge, Types::RightEdge};
+                                 
+    for (const NowDockView *cont : m_containments) {
+        if (cont && cont->containment()->screen() == screen)
+            edges.removeOne(cont->location());
+    }
+    
+    return edges;
+}
+
+int NowDockCorona::screenForContainment(const Plasma::Containment *containment) const
+{
+    return 0;
+    
+    while (const auto *parentCont = qobject_cast<const Plasma::Applet *>(containment->parent())) {
+        if (parentCont->isContainment())
+            containment = qobject_cast<const Plasma::Containment *>(parentCont);
+    }
+    
+    for (auto *view : m_containments) {
+        if (view && view->containment() == containment)
+            return containment->screen();
+    }
+    
+    return -1;
+}
+
+void NowDockCorona::addDock(Plasma::Containment *containment)
+{
+    if (!containment || !containment->kPackage().isValid()) {
+        qWarning() << "the requested containment plugin can not be located or loaded";
+        return;
+    }
+    
+    qWarning() << "Adding dock for container...";
+
+    auto dockView = new NowDockView(this);
+    dockView->init();
+    dockView->setContainment(containment);
+    dockView->show();
+    //dockView->showNormal();
+    
+    m_containments.push_back(dockView);
+}
+
+void NowDockCorona::loadDefaultLayout()
+{
+
+    qDebug() << "loading default layout";
+    //! Settting mutable for create a containment
+    setImmutability(Plasma::Types::Mutable);
+    
+    QVariantList args;
+    auto defaultContainment = createContainmentDelayed("org.kde.store.nowdock.panel", args);
+    defaultContainment->setContainmentType(Plasma::Types::PanelContainment);
+    defaultContainment->init();
+    
+    if (!defaultContainment || !defaultContainment->kPackage().isValid()) {
+        qWarning() << "the requested containment plugin can not be located or loaded";
+        return;
+    }
+    
+    auto config = defaultContainment->config();
+    
+   // config.writeEntry("visibility", (int)Dock::Normal);
+   // config.writeEntry("alignment", (int)Dock::Center);
+    config.deleteEntry("wallpaperplugin");
+    
+    defaultContainment->setLocation(Plasma::Types::BottomEdge);
+    
+    auto cfg = defaultContainment->config();
+    defaultContainment->save(cfg);
+    
+    addDock(defaultContainment);
+}
+
+inline void NowDockCorona::qmlRegisterTypes() const
+{
+    /*constexpr auto uri = "audoban.shell.candil";
+    constexpr auto vMajor = 2;
+    constexpr auto vMinor = 0;
+    
+    qmlRegisterUncreatableType<Candil::Dock>(uri, vMajor, vMinor, "Dock", "class Dock uncreatable");
+    qmlRegisterUncreatableType<Candil::VisibilityManager>(uri, vMajor, vMinor, "VisibilityManager", "class VisibilityManager uncreatable");
+    qmlRegisterUncreatableType<Candil::DockView>(uri, vMajor, vMinor, "DockView", "class DockView uncreatable");*/
+    qmlRegisterType<QScreen>();
 }
 

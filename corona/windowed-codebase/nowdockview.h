@@ -19,46 +19,47 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>
  */
 
-#ifndef NOWDOCKCORONA_H
-#define NOWDOCKCORONA_H
+#ifndef NOWDOCKVIEW_H
+#define NOWDOCKVIEW_H
 
-#include <QObject>
+#include <QQuickView>
+#include <QPointer>
+#include "nowdockcorona.h"
+#include "plasmaquick/configview.h"
 
-#include "nowdockview.h"
+class KStatusNotifierItem;
 
-
-namespace Plasma {
-class Corona;
-class Containment;
-class Types;
-}
-
-class NowDockCorona : public Plasma::Corona {
+class NowDockView : public QQuickView
+{
     Q_OBJECT
-    
-public:
-    NowDockCorona(QObject *parent = nullptr);
-    ~NowDockCorona() override;
-    
-    int numScreens() const override;
-    QRect screenGeometry(int id) const override;
-    QRegion availableScreenRegion(int id) const override;
-    QRect availableScreenRect(int id) const override;
-    
-    QList<Plasma::Types::Location> freeEdges(int screen) const;
-    
-    int screenForContainment(const Plasma::Containment *containment) const override;
-    
-    void addDock(Plasma::Containment *containment);
-    
-public slots:
-    void loadDefaultLayout() override;
-    
-private:
-    void qmlRegisterTypes() const;
-    
-    std::vector<NowDockView *> m_containments;
-};
 
+public:
+    NowDockView(QWindow *parent = 0);
+    ~NowDockView() override;
+
+    void setApplet(Plasma::Applet *applet);
+    void setHasStatusNotifier(bool stay);
+
+protected:
+    void resizeEvent(QResizeEvent * ev) override;
+    void mouseReleaseEvent(QMouseEvent *ev) override;
+    void moveEvent(QMoveEvent *ev) override;
+    void hideEvent(QHideEvent *ev) override;
+
+protected Q_SLOTS:
+    void showConfigurationInterface(Plasma::Applet *applet);
+    void minimumWidthChanged();
+    void minimumHeightChanged();
+    void maximumWidthChanged();
+    void maximumHeightChanged();
+
+
+private:
+    Plasma::Applet *m_applet;
+    QPointer<QObject> m_layout;
+    QPointer<PlasmaQuick::ConfigView> m_configView;
+    KStatusNotifierItem* m_statusNotifier;
+    bool m_withStatusNotifier;
+};
 
 #endif

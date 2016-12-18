@@ -19,7 +19,7 @@ void NowDockPackage::initPackage(KPackage::Package *package)
     auto fallback = KPackage::PackageLoader::self()->loadPackage("Plasma/Shell", "org.kde.plasma.desktop");
     
     package->setDefaultPackageRoot(QStringLiteral("plasma/shells/"));
-    package->setPath("org.kde.shell.nowdock");
+    package->setPath("org.kde.nowdock.shell");
     package->addFileDefinition("nowdockui", QStringLiteral("views/Panel.qml"), i18n("Now Dock panel"));
     //Configuration
    // package->addFileDefinition("candildockconfigurationui", QStringLiteral("configuration/NowDockConfiguration.qml"), i18n("Dock configuration UI"));
@@ -35,10 +35,10 @@ void NowDockPackage::pathChanged(KPackage::Package *package)
         
     const QString pluginName = package->metadata().pluginId();
     
-    if (!pluginName.isEmpty() && pluginName != "org.kde.shell.nowdock") {
-        auto fallback = KPackage::PackageLoader::self()->loadPackage("NowDock/Shell", "org.kde.shell.nowdock");
+    if (!pluginName.isEmpty() && pluginName != "org.kde.nowdock.shell") {
+        auto fallback = KPackage::PackageLoader::self()->loadPackage("NowDock/Shell", "org.kde.nowdock.shell");
         package->setFallbackPackage(fallback);
-    } else if (pluginName.isEmpty() || pluginName == "org.kde.shell.nowdock") {
+    } else if (pluginName.isEmpty() || pluginName == "org.kde.nowdock.shell") {
         package->setFallbackPackage(KPackage::Package());
     }
 }

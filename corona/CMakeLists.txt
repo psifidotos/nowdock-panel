@@ -55,6 +55,7 @@ target_link_libraries(
     KF5::XmlGui
     KF5::PlasmaQuick
     KF5::Plasma
+    KF5::QuickAddons
     KF5::DBusAddons    
     KF5::Notifications
 )
