@@ -116,6 +116,9 @@ signals:
     void compositingChanged();
     
 private:
+    bool containmentContainsPosition(const QPointF &point) const;
+    QPointF positionAdjustedForContainment(const QPointF &point) const;
+
     int m_offset{0};
     int m_thickness{0};
     int m_length{0};
@@ -128,6 +131,8 @@ private:
  //   Dock::Alignment m_alignment{Dock::Begin};
     QTimer m_timerGeometry;
     Plasma::Theme *theme{nullptr};
+    Plasma::Corona *m_corona;
+
 };
 
 #endif

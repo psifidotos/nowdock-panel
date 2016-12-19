@@ -24,10 +24,11 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 PlasmaCore.FrameSvgItem {
     id: root
 
-    width: 400
-    height: 400
+   // width: 400
+   // height: 400
     //imagePath: containment && containment.backgroundHints === PlasmaCore.Types.NoBackground ? "" : "widgets/panel-background"
     imagePath: "widgets/panel-background"
+    //imagePath: ""
     prefix:""
    // onRepaintNeeded: adjustPrefix();
 
@@ -37,12 +38,12 @@ PlasmaCore.FrameSvgItem {
 
     readonly property bool verticalPanel: containment && containment.formFactor === PlasmaCore.Types.Vertical
 
-    Rectangle{
+  /*  Rectangle{
         anchors.fill: parent
         color: "transparent"
         border.color: "blue"
         border.width: 1
-    }
+    }*/
 
     function adjustPrefix() {
         if (!containment) {

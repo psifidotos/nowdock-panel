@@ -2,5 +2,6 @@
 .*
 !.gitignore
 build
+corona/build
 *.kdev4
 

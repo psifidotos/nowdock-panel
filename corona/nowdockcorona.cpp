@@ -174,7 +174,7 @@ void NowDockCorona::loadDefaultLayout()
    // config.writeEntry("alignment", (int)Dock::Center);
     config.deleteEntry("wallpaperplugin");
     
-    defaultContainment->setLocation(Plasma::Types::BottomEdge);
+    defaultContainment->setLocation(Plasma::Types::LeftEdge);
     
     auto cfg = defaultContainment->config();
     defaultContainment->save(cfg);

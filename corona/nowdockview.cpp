@@ -31,11 +31,14 @@
 #include <NETWM>
 #include <KWindowSystem>
 #include <Plasma/Containment>
+#include <KActionCollection>
 
+#include "nowdockcorona.h"
 //using Candil::Dock;
 
 NowDockView::NowDockView(Plasma::Corona *corona, QScreen *targetScreen)
-    : PlasmaQuick::ContainmentView(corona)
+    : PlasmaQuick::ContainmentView(corona),
+      m_corona(corona)
 {
     setTitle(corona->kPackage().metadata().name());
     setIcon(QIcon::fromTheme(corona->kPackage().metadata().iconName()));
@@ -59,8 +62,6 @@ NowDockView::NowDockView(Plasma::Corona *corona, QScreen *targetScreen)
     m_timerGeometry.setInterval(100);
 
     setThickness(100);
-
-    this->show();
     
  /*   connect(this, &NowDockView::containmentChanged
     , this, [&]() {
@@ -209,24 +210,13 @@ void NowDockView::showConfigurationInterface(Plasma::Applet *applet)
     m_configView->requestActivate();*/
 }
 
-bool NowDockView::event(QEvent *ev)
-{
-    if (ev->type() == QEvent::Enter/* && m_visibility->state() == Dock::Hidden*/) {
-        //m_visibility->show();
-    } else if (ev->type() == QEvent::Leave) {
-        //m_visibility->restore();
-    }
-    
-    return QQuickWindow::event(ev);
-}
-
 void NowDockView::resizeWindow()
 {
     setVisible(true);
 
     QSize screenSize = screen()->size();
     
-    if (formFactor() == Plasma::Types::Vertical) {
+    /*if (formFactor() == Plasma::Types::Vertical) {
         const QSize size{maxThickness(), screenSize.height()};
         setMinimumSize(size);
         setMaximumSize(size);
@@ -236,9 +226,13 @@ void NowDockView::resizeWindow()
         setMinimumSize(size);
         setMaximumSize(size);
         resize(size);
-    }
+    }*/
+    const QSize size{140, screenSize.height()};
+    setMinimumSize(size);
+    setMaximumSize(size);
+    resize(size);
     
-    qDebug() << "shell size:" << size();
+    qDebug() << "shell size:" << size;
 }
 
 void NowDockView::updateDockGeometry()
@@ -256,7 +250,7 @@ void NowDockView::updateDockGeometry()
     int length = m_length;
     //length = screenGeometry.width();
     length = 500;
-    position = {200, 200};
+    position = {0, 0};
     
     /*switch (location()) {
         case Plasma::Types::TopEdge:
@@ -345,7 +339,9 @@ void NowDockView::updateDockGeometry()
     qDebug() << "updating dock rect:" << m_dockGeometry;
     
     updateDockPosition();
-  //  m_visibility->updateDockRect(m_dockGeometry);
+    resizeWindow();
+
+    //  m_visibility->updateDockRect(m_dockGeometry);
 }
 
 inline void NowDockView::updateDockPosition()
@@ -358,7 +354,7 @@ inline void NowDockView::updateDockPosition()
     
     containment()->setFormFactor(Plasma::Types::Horizontal);
     //position = {screenGeometry.x(), screenGeometry.height() - maxThickness()};
-    position = {200, 400};
+    position = {0, 0};
     m_maxLength = screenGeometry.width();
 
 /*    switch (location()) {
@@ -524,6 +520,176 @@ void NowDockView::updateOffset()
     m_offset = offset;
     emit offsetChanged();
 }
+
+
+bool NowDockView::event(QEvent *e)
+{
+   /* if (edgeActivated()) {
+        if (e->type() == QEvent::Enter) {
+            m_unhideTimer.stop();
+        } else if (e->type() == QEvent::Leave) {
+            m_unhideTimer.start();
+        }
+    }*/
+
+    /*Fitt's law: if the containment has margins, and the mouse cursor clicked
+     * on the mouse edge, forward the click in the containment boundaries
+     */
+    switch (e->type()) {
+        //case QEvent::MouseMove:
+        case QEvent::MouseButtonPress: {
+        containment()->updateConstraints(Plasma::Types::ImmutableConstraint);
+        m_corona->setImmutability(Plasma::Types::UserImmutable);
+
+        /*if (m_corona->immutability() == Plasma::Types::Mutable) {
+            qDebug() << "immutable";
+            containment()->setUserConfiguring(false);
+            //an action is needed to unlock lock widgets
+
+        } else {
+            qDebug() << "mutable";
+            containment()->setUserConfiguring(true);
+        }*/
+
+
+            QMouseEvent *me = static_cast<QMouseEvent *>(e);
+
+            //first, don't mess with position if the cursor is actually outside the view:
+            //somebody is doing a click and drag that must not break when the cursor i outside
+            if (geometry().contains(QCursor::pos(screen()))) {
+                if (!containmentContainsPosition(me->windowPos())) {
+                    auto me2 = new QMouseEvent(me->type(),
+                                    positionAdjustedForContainment(me->windowPos()),
+                                    positionAdjustedForContainment(me->windowPos()),
+                                    positionAdjustedForContainment(me->windowPos()) + position(),
+                                    me->button(), me->buttons(), me->modifiers());
+
+                    QCoreApplication::postEvent(this, me2);
+                    return true;
+                }
+            } else {
+                // discard event if current mouse position is outside the panel
+                return true;
+            }
+            break;
+        }
+        default:
+            break;
+    }
+
+   /*     case QEvent::Enter:
+        case QEvent::Leave:
+            // QtQuick < 5.6 issue:
+            // QEvent::Leave is triggered on MouseButtonPress Qt::LeftButton
+            break;
+
+        case QEvent::Wheel: {
+            QWheelEvent *we = static_cast<QWheelEvent *>(e);
+
+            if (!containmentContainsPosition(we->pos())) {
+                auto we2 = new QWheelEvent(positionAdjustedForContainment(we->pos()),
+                                positionAdjustedForContainment(we->pos()) + position(),
+                                we->pixelDelta(), we->angleDelta(), we->delta(),
+                                we->orientation(), we->buttons(), we->modifiers(), we->phase());
+
+                QCoreApplication::postEvent(this, we2);
+                return true;
+            }
+            break;
+        }
+
+        case QEvent::DragEnter: {
+            QDragEnterEvent *de = static_cast<QDragEnterEvent *>(e);
+            if (!containmentContainsPosition(de->pos())) {
+                auto de2 = new QDragEnterEvent(positionAdjustedForContainment(de->pos()).toPoint(),
+                                    de->possibleActions(), de->mimeData(), de->mouseButtons(), de->keyboardModifiers());
+
+                QCoreApplication::postEvent(this, de2);
+                return true;
+            }
+            break;
+        }
+        //DragLeave just works
+        case QEvent::DragLeave:
+            break;
+        case QEvent::DragMove: {
+            QDragMoveEvent *de = static_cast<QDragMoveEvent *>(e);
+            if (!containmentContainsPosition(de->pos())) {
+                auto de2 = new QDragMoveEvent(positionAdjustedForContainment(de->pos()).toPoint(),
+                                   de->possibleActions(), de->mimeData(), de->mouseButtons(), de->keyboardModifiers());
+
+                QCoreApplication::postEvent(this, de2);
+                return true;
+            }
+            break;
+        }
+        case QEvent::Drop: {
+            QDropEvent *de = static_cast<QDropEvent *>(e);
+            if (!containmentContainsPosition(de->pos())) {
+                auto de2 = new QDropEvent(positionAdjustedForContainment(de->pos()).toPoint(),
+                               de->possibleActions(), de->mimeData(), de->mouseButtons(), de->keyboardModifiers());
+
+                QCoreApplication::postEvent(this, de2);
+                return true;
+            }
+            break;
+        }
+
+        case QEvent::Hide: {
+            if (m_panelConfigView && m_panelConfigView.data()->isVisible()) {
+                m_panelConfigView.data()->hide();
+            }
+            break;
+        }
+        case QEvent::PlatformSurface:
+            if (auto pe = dynamic_cast<QPlatformSurfaceEvent*>(e)) {
+                switch (pe->surfaceEventType()) {
+                case QPlatformSurfaceEvent::SurfaceCreated:
+                    setupWaylandIntegration();
+                    PanelShadows::self()->addWindow(this, enabledBorders());
+                    break;
+                case QPlatformSurfaceEvent::SurfaceAboutToBeDestroyed:
+                    delete m_shellSurface;
+                    m_shellSurface = nullptr;
+                    PanelShadows::self()->removeWindow(this);
+                    break;
+                }
+            }
+            break;
+        default:
+            break;
+    }*/
+
+    return ContainmentView::event(e);
+}
+
+bool NowDockView::containmentContainsPosition(const QPointF &point) const
+{
+    QQuickItem *containmentItem = containment()->property("_plasma_graphicObject").value<QQuickItem *>();
+
+    if (!containmentItem) {
+        return false;
+    }
+
+    return QRectF(containmentItem->mapToScene(QPoint(0,0)), QSizeF(containmentItem->width(), containmentItem->height())).contains(point);
+}
+
+QPointF NowDockView::positionAdjustedForContainment(const QPointF &point) const
+{
+    QQuickItem *containmentItem = containment()->property("_plasma_graphicObject").value<QQuickItem *>();
+
+    if (!containmentItem) {
+        return point;
+    }
+
+    QRectF containmentRect(containmentItem->mapToScene(QPoint(0,0)), QSizeF(containmentItem->width(), containmentItem->height()));
+
+    return QPointF(qBound(containmentRect.left() + 2, point.x(), containmentRect.right() - 2),
+                   qBound(containmentRect.top() + 2, point.y(), containmentRect.bottom() - 2));
+}
+
+
 //!END SLOTS
+
 
 //!END namespace

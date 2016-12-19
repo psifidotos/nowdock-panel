@@ -39,7 +39,7 @@ DragDrop.DropArea {
     ////
 
     ////BEGIN properties
-    property bool debugMode: false
+    property bool debugMode: true
 
     property bool automaticSize: plasmoid.configuration.automaticIconSize
     property bool immutable: plasmoid.immutable
@@ -503,6 +503,7 @@ DragDrop.DropArea {
     }
 
     Plasmoid.onUserConfiguringChanged: {
+        console.log("user configuring:"+plasmoid.userConfiguring);
         if (plasmoid.immutable) {
             if (dragOverlay) {
                 dragOverlay.destroy();
@@ -527,13 +528,16 @@ DragDrop.DropArea {
                 dragOverlay.visible = true;
             }
         } else {
-            dragOverlay.visible = false;
-            dragOverlay.destroy();
+            if (dragOverlay) {
+                dragOverlay.visible = false;
+                dragOverlay.destroy();
+            }
         }
     }
 
     Plasmoid.onFormFactorChanged: containmentSizeSyncTimer.restart();
     Plasmoid.onImmutableChanged: {
+        console.log("immutable: "+plasmoid.immutable);
         containmentSizeSyncTimer.restart();
         plasmoid.action("configure").visible = !plasmoid.immutable;
         plasmoid.action("configure").enabled = !plasmoid.immutable;
