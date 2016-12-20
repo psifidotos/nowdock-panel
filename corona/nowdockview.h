@@ -105,7 +105,7 @@ protected slots:
     void showConfigurationInterface(Plasma::Applet *applet) override;
     
 protected:
-    //bool event(QEvent *ev) override;
+    bool event(QEvent *ev) override;
     void showEvent(QShowEvent *ev) override;
     
 signals:

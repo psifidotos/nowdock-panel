@@ -523,7 +523,7 @@ void NowDockView::updateOffset()
 }
 
 
-/*bool NowDockView::event(QEvent *e)
+bool NowDockView::event(QEvent *e)
 {
 
    /* if (ev->type() == QEvent::Enter) {
@@ -534,15 +534,17 @@ void NowDockView::updateOffset()
         emit exited();
     } */
 
-    //return QQuickWindow::event(ev);
+    //return QQuickWindow::event(e);
 
-    //return ContainmentView::event(e);
-//}
+    return ContainmentView::event(e);
+}
 
 void NowDockView::showEvent(QShowEvent *ev)
 {
     KWindowSystem::setType(winId(), NET::Dock);
     KWindowSystem::setOnAllDesktops(winId(), true);
+
+    //QQuickWindow::showEvent(ev);
     ContainmentView::showEvent(ev);
 }
 

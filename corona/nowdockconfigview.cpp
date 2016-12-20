@@ -49,11 +49,12 @@ NowDockConfigView::NowDockConfigView(Plasma::Containment *containment, NowDockVi
         syncSlideEffect();
     });
     
-    connect(containment, &Plasma::Containment::immutabilityChanged
+    //containment->setLocation(Plasma::Types::LeftEdge);
+    /*connect(containment, &Plasma::Containment::immutabilityChanged
     , [&](Plasma::Types::ImmutabilityType type) {
         if (type != Plasma::Types::Mutable && isVisible())
             hide();
-    });
+    });*/
 }
 
 NowDockConfigView::~NowDockConfigView()

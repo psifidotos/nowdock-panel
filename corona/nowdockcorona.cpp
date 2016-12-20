@@ -52,8 +52,8 @@ NowDockCorona::NowDockCorona(QObject *parent)
     setKPackage(package);
     qmlRegisterTypes();
     connect(this, &Corona::containmentAdded, this, &NowDockCorona::addDock);
-    loadDefaultLayout();
-    //loadLayout();
+   // loadDefaultLayout();
+    loadLayout();
 }
 
 NowDockCorona::~NowDockCorona()
@@ -159,8 +159,8 @@ void NowDockCorona::loadDefaultLayout()
     setImmutability(Plasma::Types::Mutable);
     
     QVariantList args;
-    //auto defaultContainment = createContainmentDelayed("org.kde.store.nowdock.panel", args);
-    auto defaultContainment = createContainmentDelayed("org.kde.panel", args);
+    auto defaultContainment = createContainmentDelayed("org.kde.store.nowdock.panel", args);
+    //auto defaultContainment = createContainmentDelayed("org.kde.panel", args);
     defaultContainment->setContainmentType(Plasma::Types::PanelContainment);
     defaultContainment->init();
     
