@@ -159,7 +159,8 @@ void NowDockCorona::loadDefaultLayout()
     setImmutability(Plasma::Types::Mutable);
     
     QVariantList args;
-    auto defaultContainment = createContainmentDelayed("org.kde.store.nowdock.panel", args);
+    //auto defaultContainment = createContainmentDelayed("org.kde.store.nowdock.panel", args);
+    auto defaultContainment = createContainmentDelayed("org.kde.panel", args);
     defaultContainment->setContainmentType(Plasma::Types::PanelContainment);
     defaultContainment->init();
     
@@ -172,7 +173,7 @@ void NowDockCorona::loadDefaultLayout()
     
    // config.writeEntry("visibility", (int)Dock::Normal);
    // config.writeEntry("alignment", (int)Dock::Center);
-    config.deleteEntry("wallpaperplugin");
+   //  config.deleteEntry("wallpaperplugin");
     
     defaultContainment->setLocation(Plasma::Types::LeftEdge);
     

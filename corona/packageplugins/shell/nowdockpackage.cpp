@@ -22,8 +22,8 @@ void NowDockPackage::initPackage(KPackage::Package *package)
     package->setPath("org.kde.nowdock.shell");
     package->addFileDefinition("nowdockui", QStringLiteral("views/Panel.qml"), i18n("Now Dock panel"));
     //Configuration
-   // package->addFileDefinition("candildockconfigurationui", QStringLiteral("configuration/NowDockConfiguration.qml"), i18n("Dock configuration UI"));
-   // package->addFileDefinition("configmodel", QStringLiteral("configuration/config.qml"), i18n("Config model"));
+    package->addFileDefinition("nowdockconfigurationui", QStringLiteral("configuration/NowDockConfiguration.qml"), i18n("Dock configuration UI"));
+    package->addFileDefinition("configmodel", QStringLiteral("configuration/config.qml"), i18n("Config model"));
     package->setFallbackPackage(fallback);
     qDebug() << "package is valid" << package->isValid();
 }

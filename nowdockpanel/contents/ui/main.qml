@@ -503,7 +503,7 @@ DragDrop.DropArea {
     }
 
     Plasmoid.onUserConfiguringChanged: {
-        console.log("user configuring:"+plasmoid.userConfiguring);
+        console.log("user configuring:"+plasmoid.userConfiguring + " immutable:"+plasmoid.immutable);
         if (plasmoid.immutable) {
             if (dragOverlay) {
                 dragOverlay.destroy();
@@ -512,7 +512,9 @@ DragDrop.DropArea {
         }
 
         if (plasmoid.userConfiguring) {
+            console.log("applets------");
             for (var i = 0; i < plasmoid.applets.length; ++i) {
+                console.log("applet:"+i);
                 plasmoid.applets[i].expanded = false;
             }
             if (!dragOverlay) {
@@ -536,8 +538,9 @@ DragDrop.DropArea {
     }
 
     Plasmoid.onFormFactorChanged: containmentSizeSyncTimer.restart();
+
     Plasmoid.onImmutableChanged: {
-        console.log("immutable: "+plasmoid.immutable);
+        console.log("plasmoid immutable state: "+plasmoid.immutable);
         containmentSizeSyncTimer.restart();
         plasmoid.action("configure").visible = !plasmoid.immutable;
         plasmoid.action("configure").enabled = !plasmoid.immutable;
@@ -932,13 +935,17 @@ DragDrop.DropArea {
 
     function updateNowDockConfiguration(){
         ///BEGIN of Now Dock Configuration Panel
+        console.log("Now Dock Configuration 1");
         if (plasmoid.immutable) {
+            console.log("Now Dock Configuration 2");
             if (nowDockConfiguration){
+                console.log("Now Dock Configuration 3");
                 nowDockConfiguration.destroy();
             }
             return;
         }
 
+        console.log("Now Dock Configuration 5");
         if (!nowDockConfiguration){
             var component = Qt.createComponent("NowDockConfiguration.qml");
             if (component.status == Component.Ready) {

@@ -88,6 +88,8 @@ public:
     void setDockMask(QRect mask);
     
     void resizeWindow();
+    void restoreConfig();
+    void saveConfig();
     void updateDockPosition();
     void updateDockGeometry();
     int maxThickness() const;
@@ -103,7 +105,8 @@ protected slots:
     void showConfigurationInterface(Plasma::Applet *applet) override;
     
 protected:
-    bool event(QEvent *ev) override;
+    //bool event(QEvent *ev) override;
+    void showEvent(QShowEvent *ev) override;
     
 signals:
  //   void visibilityChanged();
@@ -126,7 +129,7 @@ private:
     
     QRect m_dockGeometry;
     QRect m_mask;
-  //  QPointer<PlasmaQuick::ConfigView> m_configView;
+    QPointer<PlasmaQuick::ConfigView> m_configView;
   //  QPointer<Candil::VisibilityManager> m_visibility;
  //   Dock::Alignment m_alignment{Dock::Begin};
     QTimer m_timerGeometry;

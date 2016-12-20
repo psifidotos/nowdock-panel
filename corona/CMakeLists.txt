@@ -37,6 +37,7 @@ include(KDEPackageAppTemplates)
 set(nowdock-app_SRCS
     nowdockcorona.cpp
     nowdockview.cpp
+    nowdockconfigview.cpp
     packageplugins/shell/nowdockpackage.cpp
     main.cpp
 )
