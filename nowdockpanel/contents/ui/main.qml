@@ -104,6 +104,26 @@ DragDrop.DropArea {
     property int tasksCount: nowDock ? nowDock.tasksCount : 0
     ///END properties from nowDock
 
+
+    ///BEGIN properties from old MagicWindow
+    //it is used in order to not break the calculations for the thickness placement
+    //especially in automatic icon sizes calculations
+    property int iconMarginOriginal: 0.12*plasmoid.configuration.iconSize
+    property int statesLineSizeOriginal: root.nowDock ? Math.ceil( plasmoid.configuration.iconSize/13 ) : 0
+
+    property int thicknessAutoHidden: 8
+    property int thicknessMid: root.statesLineSize + (1 + (0.65 * (root.zoomFactor-1)))*(root.iconSize+root.iconMargin) //needed in some animations
+    property int thicknessNormal: root.statesLineSize + root.iconSize + root.iconMargin + 1
+    property int thicknessZoom: root.statesLineSize + ((root.iconSize+root.iconMargin) * root.zoomFactor) + 2
+    //it is used to keep thickness solid e.g. when iconSize changes from auto functions
+    property int thicknessMidOriginal: statesLineSizeOriginal + (1 + (0.65 * (root.zoomFactor-1)))*(plasmoid.configuration.iconSize+iconMarginOriginal) //needed in some animations
+    property int thicknessNormalOriginal: root.useThemePanel ? Math.max(thicknessNormalOriginalValue, root.realPanelSize) : thicknessNormalOriginalValue
+    property int thicknessNormalOriginalValue: statesLineSizeOriginal + plasmoid.configuration.iconSize + iconMarginOriginal + 1
+    property int thicknessZoomOriginal: statesLineSizeOriginal + ((plasmoid.configuration.iconSize+iconMarginOriginal) * root.zoomFactor) + 2
+    ///END properties of old MagicWindow
+
+
+
    /* Layout.preferredWidth: plasmoid.immutable ?
                                (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ?
                                     layoutsContainer.width + 0.5*iconMargin : mainLayout.width + iconMargin) :
@@ -383,7 +403,7 @@ DragDrop.DropArea {
     //// END OF Behaviors
 
     //////////////START OF CONNECTIONS
-    onAppletsAnimationsChanged: magicWin.updateMaskArea();
+  //  onAppletsAnimationsChanged: magicWin.updateMaskArea();
 
     onDragEnter: {
         if (plasmoid.immutable) {
@@ -499,7 +519,7 @@ DragDrop.DropArea {
         }
 
         LayoutManager.save();
-        magicWin.removeAppletItem(applet);
+     //   magicWin.removeAppletItem(applet);
     }
 
     Plasmoid.onUserConfiguringChanged: {
@@ -569,7 +589,7 @@ DragDrop.DropArea {
         }
 
         //  console.log(magicWin.visible + " - "+magicWin.x+" - " + magicWin.y+" - "+magicWin.width+" - "+magicWin.height);
-        if (magicWin) {
+       /* if (magicWin) {
             if (plasmoid.immutable) {
                 if (windowSystem.compositingActive) {
                     magicWin.initialize();
@@ -581,7 +601,7 @@ DragDrop.DropArea {
                 magicWin.disableHiding = true;
                 magicWin.mustBeRaised();
             }
-        }
+        }*/
     }
     //////////////END OF CONNECTIONS
 
@@ -607,7 +627,7 @@ DragDrop.DropArea {
 
         // adding the AppletQuickItem to the Now Dock in order to be
         // used for right clicking events
-        magicWin.addAppletItem(applet);
+      //  magicWin.addAppletItem(applet);
     }
 
     function addContainerInLayout(container, applet, x, y){
@@ -719,20 +739,20 @@ DragDrop.DropArea {
             animatedLengthTimer.start();
         }
 
-        if (!magicWin.isHovered && (root.animationsNeedBothAxis === 0) && (root.animationsNeedLength===0) && (root.appletsAnimations === 0)) {
+      /*  if (!magicWin.isHovered && (root.animationsNeedBothAxis === 0) && (root.animationsNeedLength===0) && (root.appletsAnimations === 0)) {
             mainLayout.animatedLength = true;
         } else {
             mainLayout.animatedLength = false;
         }
 
-        magicWin.updateMaskArea();
+        magicWin.updateMaskArea(); */
     }
 
     function clearZoom(){
         //console.log("Panel clear....");
-        if (magicWin.disableHiding) {
+       /* if (magicWin.disableHiding) {
             return;
-        }
+        }*/
 
         layoutsContainer.currentSpot = -1000;
         layoutsContainer.hoveredIndex = -1;
@@ -818,7 +838,7 @@ DragDrop.DropArea {
         }
 
         animationsNeedBothAxis = value;
-        magicWin.updateMaskArea();
+       // magicWin.updateMaskArea();
     }
 
     function slotAnimationsNeedLength(value) {
@@ -827,7 +847,7 @@ DragDrop.DropArea {
         }
 
         animationsNeedLength = value;
-        magicWin.updateMaskArea();
+      //  magicWin.updateMaskArea();
     }
 
     function slotAnimationsNeedThickness(value) {
@@ -836,15 +856,15 @@ DragDrop.DropArea {
         }
 
         animationsNeedThickness = value;
-        magicWin.updateMaskArea();
+       // magicWin.updateMaskArea();
     }
 
     function slotDisableHiding(value) {
-        magicWin.disableHiding = value;
+      //  magicWin.disableHiding = value;
     }
 
     function updateAutomaticIconSize() {
-        if (magicWin && magicWin.normalState && !animatedLengthTimer.running && plasmoid.immutable
+     /*   if (magicWin && magicWin.normalState && !animatedLengthTimer.running && plasmoid.immutable
                 && (iconSize===plasmoid.configuration.iconSize || iconSize === automaticIconSizeBasedSize) ) {
             var layoutLength;
             var maxLength = magicWin.maximumLength;
@@ -899,7 +919,7 @@ DragDrop.DropArea {
                     //     console.log("Step 4 - did not found...");
                 }
             }
-        }
+        }*/
     }
 
     function updateLayouts(){
@@ -950,7 +970,7 @@ DragDrop.DropArea {
             var component = Qt.createComponent("NowDockConfiguration.qml");
             if (component.status == Component.Ready) {
                 nowDockConfiguration = component.createObject(root);
-                nowDockConfiguration.updateThickness.connect(magicWin.updateTransientThickness);
+            //    nowDockConfiguration.updateThickness.connect(magicWin.updateTransientThickness);
 
             } else {
                 console.log("Could not create NowDockConfiguration.qml");
@@ -998,7 +1018,7 @@ DragDrop.DropArea {
     Item {
         id: dndSpacer
 
-        property int normalSize: magicWin.statesLineSizeOriginal + plasmoid.configuration.iconSize + magicWin.iconMarginOriginal - 1
+        property int normalSize: root.statesLineSizeOriginal + plasmoid.configuration.iconSize + root.iconMarginOriginal - 1
 
         width: normalSize
         height: normalSize
@@ -1023,7 +1043,7 @@ DragDrop.DropArea {
         }
     }
 
-    MouseArea{
+   /* MouseArea{
         id: wholeArea
         anchors.fill: parent
         hoverEnabled: true
@@ -1057,20 +1077,20 @@ DragDrop.DropArea {
         id: magicWin
 
         visible: windowSystem.compositingActive
-    }
+    }*/
 
     Item{
         id: layoutsContainer
 
         signal updateScale(int delegateIndex, real newScale, real step)
-        property bool parentMagicWinFlag: plasmoid.immutable && magicWin && !root.inStartup && windowSystem.compositingActive
+      //  property bool parentMagicWinFlag: plasmoid.immutable && magicWin && !root.inStartup && windowSystem.compositingActive
         //&& !(root.inStartup && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide)
 
         property int allCount: root.nowDock ? mainLayout.count-1+nowDock.tasksCount : mainLayout.count
         property int currentSpot: -1000
         property int hoveredIndex: -1
 
-        x: (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) && root.isHorizontal
+       /* x: (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) && root.isHorizontal
            && plasmoid.immutable && windowSystem.compositingActive ?
                (magicWin.width/2) - (magicWin.maximumLength/2): 0
         y: (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) && root.isVertical
@@ -1079,7 +1099,12 @@ DragDrop.DropArea {
         width: (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) && root.isHorizontal && plasmoid.immutable ?
                    magicWin.maximumLength : parent.width
         height: (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) && root.isVertical && plasmoid.immutable ?
-                    magicWin.maximumLength : parent.height
+                    magicWin.maximumLength : parent.height*/
+
+        x: 0
+        y: 0
+        width: parent.width
+        height: parent.height
 
         Component.onCompleted: {
             if(plasmoid.immutable) {
@@ -1089,7 +1114,7 @@ DragDrop.DropArea {
             }
         }
 
-        onParentChanged: {
+      /*  onParentChanged: {
             if (magicWin && magicWin.contentItem && (parent === magicWin.contentItem)) {
                 magicWin.updateMaskArea();
             }
@@ -1108,7 +1133,7 @@ DragDrop.DropArea {
                     magicWin.updateTransientThickness();
                 }
             }
-        }
+        }*/
 
         Loader{
             anchors.fill: parent
@@ -1138,7 +1163,7 @@ DragDrop.DropArea {
             property bool animatedLength: false
             property int count: children.length
 
-            onHeightChanged: {
+          /*  onHeightChanged: {
                 if (root.isVertical && magicWin && plasmoid.immutable) {
                     checkLayoutsAnimatedLength();
                 }
@@ -1148,7 +1173,7 @@ DragDrop.DropArea {
                 if (root.isHorizontal && magicWin && plasmoid.immutable) {
                     checkLayoutsAnimatedLength();
                 }
-            }
+            }*/
 
         }
 
@@ -1241,13 +1266,13 @@ DragDrop.DropArea {
         onTriggered: {
             if (forcedDisableHiding) {
                 forcedDisableHiding = false;
-                magicWin.disableHiding = false;
+             //   magicWin.disableHiding = false;
             }
 
-            if (plasmoid.immutable && magicWin && !magicWin.isHovered && !wholeArea.containsMouse
+          /*  if (plasmoid.immutable && magicWin && !magicWin.isHovered && !wholeArea.containsMouse
                     && ((magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) || magicWin.isDockWindowType) ) {
                 magicWin.mustBeLowered();
-            }
+            } */
         }
     }
 
@@ -1260,7 +1285,7 @@ DragDrop.DropArea {
          //           && (root.animationsNeedLength === 0) && (root.animationsNeedBothAxis === 0)) {
             if ((appletsAnimations === 0) && (root.animationsNeedLength === 0) && (root.animationsNeedBothAxis === 0)) {
                 mainLayout.animatedLength = false;
-                magicWin.updateMaskArea();
+            //    magicWin.updateMaskArea();
             }
         }
     }
