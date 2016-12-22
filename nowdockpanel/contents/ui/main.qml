@@ -72,11 +72,11 @@ DragDrop.DropArea {
     property int themePanelSize: plasmoid.configuration.panelSize
 
     ///FIXME: <delete> I can't remember why this is needed, maybe for the anchorings!!! In order for the Double Layout to not mess the anchorings...
-    property int mainLayoutPosition: !plasmoid.immutable ? NowDock.PanelWindow.Center : (root.isVertical ? NowDock.PanelWindow.Top : NowDock.PanelWindow.Left)
+    property int mainLayoutPosition: !plasmoid.immutable ? NowDock.Types.Center : (root.isVertical ? NowDock.Types.Top : NowDock.Types.Left)
     ///FIXME: <delete>
-    //property int panelAlignment: plasmoid.configuration.panelPosition !== NowDock.PanelWindow.Double ? plasmoid.configuration.panelPosition : mainLayoutPosition
+    //property int panelAlignment: plasmoid.configuration.panelPosition !== NowDock.Types.Double ? plasmoid.configuration.panelPosition : mainLayoutPosition
 
-    property int panelAlignment: plasmoid.immutable ? plasmoid.configuration.panelPosition : NowDock.PanelWindow.Center
+    property int panelAlignment: plasmoid.immutable ? plasmoid.configuration.panelPosition : NowDock.Types.Center
     // property int panelAlignment: plasmoid.configuration.panelPosition
 
 
@@ -125,12 +125,12 @@ DragDrop.DropArea {
 
 
    /* Layout.preferredWidth: plasmoid.immutable ?
-                               (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ?
+                               (plasmoid.configuration.panelPosition === NowDock.Types.Double ?
                                     layoutsContainer.width + 0.5*iconMargin : mainLayout.width + iconMargin) :
                                Screen.width //on unlocked state use the maximum
 
     Layout.preferredHeight: plasmoid.immutable ?
-                               (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ?
+                               (plasmoid.configuration.panelPosition === NowDock.Types.Double ?
                                     layoutsContainer.height + 0.5*iconMargin : mainLayout.height + iconMargin) :
                                Screen.height //on unlocked state use the maximum*/
 
@@ -183,7 +183,7 @@ DragDrop.DropArea {
         ///Left Edge
         State {
             name: "leftCenter"
-            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.panelAlignment === NowDock.PanelWindow.Center)
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.panelAlignment === NowDock.Types.Center)
 
             AnchorChanges {
                 target: mainLayout
@@ -196,7 +196,7 @@ DragDrop.DropArea {
         },
         State {
             name: "leftTop"
-            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.panelAlignment === NowDock.PanelWindow.Top)
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.panelAlignment === NowDock.Types.Top)
 
             AnchorChanges {
                 target: mainLayout
@@ -209,7 +209,7 @@ DragDrop.DropArea {
         },
         State {
             name: "leftBottom"
-            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.panelAlignment === NowDock.PanelWindow.Bottom)
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.panelAlignment === NowDock.Types.Bottom)
 
             AnchorChanges {
                 target: mainLayout
@@ -222,7 +222,7 @@ DragDrop.DropArea {
         },
         State {
             name: "leftDouble"
-            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
+            when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.panelAlignment === NowDock.Types.Double)
 
             AnchorChanges {
                 target: mainLayout
@@ -236,7 +236,7 @@ DragDrop.DropArea {
         ///Right Edge
         State {
             name: "rightCenter"
-            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.panelAlignment === NowDock.PanelWindow.Center)
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.panelAlignment === NowDock.Types.Center)
 
             AnchorChanges {
                 target: mainLayout
@@ -249,7 +249,7 @@ DragDrop.DropArea {
         },
         State {
             name: "rightTop"
-            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.panelAlignment === NowDock.PanelWindow.Top)
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.panelAlignment === NowDock.Types.Top)
 
             AnchorChanges {
                 target: mainLayout
@@ -262,7 +262,7 @@ DragDrop.DropArea {
         },
         State {
             name: "rightBottom"
-            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.panelAlignment === NowDock.PanelWindow.Bottom)
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.panelAlignment === NowDock.Types.Bottom)
 
             AnchorChanges {
                 target: mainLayout
@@ -275,7 +275,7 @@ DragDrop.DropArea {
         },
         State {
             name: "rightDouble"
-            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
+            when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.panelAlignment === NowDock.Types.Double)
 
             AnchorChanges {
                 target: mainLayout
@@ -289,7 +289,7 @@ DragDrop.DropArea {
         ///Bottom Edge
         State {
             name: "bottomCenter"
-            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.panelAlignment === NowDock.PanelWindow.Center)
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.panelAlignment === NowDock.Types.Center)
 
             AnchorChanges {
                 target: mainLayout
@@ -302,7 +302,7 @@ DragDrop.DropArea {
         },
         State {
             name: "bottomLeft"
-            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.panelAlignment === NowDock.PanelWindow.Left)
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.panelAlignment === NowDock.Types.Left)
 
             AnchorChanges {
                 target: mainLayout
@@ -315,7 +315,7 @@ DragDrop.DropArea {
         },
         State {
             name: "bottomRight"
-            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.panelAlignment === NowDock.PanelWindow.Right)
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.panelAlignment === NowDock.Types.Right)
 
             AnchorChanges {
                 target: mainLayout
@@ -328,7 +328,7 @@ DragDrop.DropArea {
         },
         State {
             name: "bottomDouble"
-            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
+            when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.panelAlignment === NowDock.Types.Double)
 
             AnchorChanges {
                 target: mainLayout
@@ -342,7 +342,7 @@ DragDrop.DropArea {
         ///Top Edge
         State {
             name: "topCenter"
-            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.panelAlignment === NowDock.PanelWindow.Center)
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.panelAlignment === NowDock.Types.Center)
 
             AnchorChanges {
                 target: mainLayout
@@ -355,7 +355,7 @@ DragDrop.DropArea {
         },
         State {
             name: "topLeft"
-            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.panelAlignment === NowDock.PanelWindow.Left)
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.panelAlignment === NowDock.Types.Left)
 
             AnchorChanges {
                 target: mainLayout
@@ -368,7 +368,7 @@ DragDrop.DropArea {
         },
         State {
             name: "topRight"
-            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.panelAlignment === NowDock.PanelWindow.Right)
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.panelAlignment === NowDock.Types.Right)
 
             AnchorChanges {
                 target: mainLayout
@@ -381,7 +381,7 @@ DragDrop.DropArea {
         },
         State {
             name: "topDouble"
-            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
+            when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.panelAlignment === NowDock.Types.Double)
 
             AnchorChanges {
                 target: mainLayout
@@ -574,10 +574,10 @@ DragDrop.DropArea {
         ///to add applets
         if (plasmoid.immutable) {
             if(root.isHorizontal) {
-                root.Layout.preferredWidth = (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ?
+                root.Layout.preferredWidth = (plasmoid.configuration.panelPosition === NowDock.Types.Double ?
                                                layoutsContainer.width + 0.5*iconMargin : mainLayout.width + iconMargin);
             } else {
-                root.Layout.preferredHeight = (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double ?
+                root.Layout.preferredHeight = (plasmoid.configuration.panelPosition === NowDock.Types.Double ?
                                                layoutsContainer.height + 0.5*iconMargin : mainLayout.height + iconMargin);
             }
         } else {
@@ -1053,7 +1053,7 @@ DragDrop.DropArea {
 
         onExited: {
             if (plasmoid.immutable && magicWin && !magicWin.isHovered
-                    && ((magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) || magicWin.isDockWindowType) ) {
+                    && ((magicWin.panelVisibility === NowDock.Types.AutoHide) || magicWin.isDockWindowType) ) {
                 hideMagicWindowInAutoHide.start();
             }
         }
@@ -1064,7 +1064,7 @@ DragDrop.DropArea {
 
         function showWindow() {
             if (plasmoid.immutable && magicWin
-                    && ((magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) || magicWin.isDockWindowType) ) {
+                    && ((magicWin.panelVisibility === NowDock.Types.AutoHide) || magicWin.isDockWindowType) ) {
                 magicWin.updateMaskArea();
                 magicWin.mustBeRaised();
             } else {
@@ -1084,21 +1084,21 @@ DragDrop.DropArea {
 
         signal updateScale(int delegateIndex, real newScale, real step)
       //  property bool parentMagicWinFlag: plasmoid.immutable && magicWin && !root.inStartup && windowSystem.compositingActive
-        //&& !(root.inStartup && magicWin.panelVisibility === NowDock.PanelWindow.AutoHide)
+        //&& !(root.inStartup && magicWin.panelVisibility === NowDock.Types.AutoHide)
 
         property int allCount: root.nowDock ? mainLayout.count-1+nowDock.tasksCount : mainLayout.count
         property int currentSpot: -1000
         property int hoveredIndex: -1
 
-       /* x: (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) && root.isHorizontal
+       /* x: (plasmoid.configuration.panelPosition === NowDock.Types.Double) && root.isHorizontal
            && plasmoid.immutable && windowSystem.compositingActive ?
                (magicWin.width/2) - (magicWin.maximumLength/2): 0
-        y: (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) && root.isVertical
+        y: (plasmoid.configuration.panelPosition === NowDock.Types.Double) && root.isVertical
            && plasmoid.immutable && windowSystem.compositingActive ?
                (magicWin.height/2) - (magicWin.maximumLength/2): 0
-        width: (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) && root.isHorizontal && plasmoid.immutable ?
+        width: (plasmoid.configuration.panelPosition === NowDock.Types.Double) && root.isHorizontal && plasmoid.immutable ?
                    magicWin.maximumLength : parent.width
-        height: (plasmoid.configuration.panelPosition === NowDock.PanelWindow.Double) && root.isVertical && plasmoid.immutable ?
+        height: (plasmoid.configuration.panelPosition === NowDock.Types.Double) && root.isVertical && plasmoid.immutable ?
                     magicWin.maximumLength : parent.height*/
 
         x: 0
@@ -1199,7 +1199,7 @@ DragDrop.DropArea {
             states:[
                 State {
                     name: "bottom"
-                    when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
+                    when: (plasmoid.location === PlasmaCore.Types.BottomEdge)&&(root.panelAlignment === NowDock.Types.Double)
 
                     AnchorChanges {
                         target: secondLayout
@@ -1212,7 +1212,7 @@ DragDrop.DropArea {
                 },
                 State {
                     name: "left"
-                    when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
+                    when: (plasmoid.location === PlasmaCore.Types.LeftEdge)&&(root.panelAlignment === NowDock.Types.Double)
 
                     AnchorChanges {
                         target: secondLayout
@@ -1225,7 +1225,7 @@ DragDrop.DropArea {
                 },
                 State {
                     name: "right"
-                    when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
+                    when: (plasmoid.location === PlasmaCore.Types.RightEdge)&&(root.panelAlignment === NowDock.Types.Double)
 
                     AnchorChanges {
                         target: secondLayout
@@ -1238,7 +1238,7 @@ DragDrop.DropArea {
                 },
                 State {
                     name: "top"
-                    when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.panelAlignment === NowDock.PanelWindow.Double)
+                    when: (plasmoid.location === PlasmaCore.Types.TopEdge)&&(root.panelAlignment === NowDock.Types.Double)
 
                     AnchorChanges {
                         target: secondLayout
@@ -1270,7 +1270,7 @@ DragDrop.DropArea {
             }
 
           /*  if (plasmoid.immutable && magicWin && !magicWin.isHovered && !wholeArea.containsMouse
-                    && ((magicWin.panelVisibility === NowDock.PanelWindow.AutoHide) || magicWin.isDockWindowType) ) {
+                    && ((magicWin.panelVisibility === NowDock.Types.AutoHide) || magicWin.isDockWindowType) ) {
                 magicWin.mustBeLowered();
             } */
         }

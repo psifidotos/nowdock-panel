@@ -19,6 +19,7 @@ set(nowdock_SRCS
     windowsystem.cpp
     xwindowinterface.cpp
     abstractinterface.cpp
+    types.cpp
 )
     
 add_library(nowdockplugin SHARED ${nowdock_SRCS})

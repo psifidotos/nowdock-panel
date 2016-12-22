@@ -65,28 +65,28 @@ PlasmaCore.FrameSvgItem {
 
 
                 function updatePanelPositionVisual(){
-                    if((panelPosition == NowDock.PanelWindow.Left)||(panelPosition == NowDock.PanelWindow.Top)){
+                    if((panelPosition == NowDock.Types.Left)||(panelPosition == NowDock.Types.Top)){
                         firstPosition.checked = true;
                         centerPosition.checked = false;
                         lastPosition.checked = false;
                         splitTwoPosition.checked = false;
                         removeInternalViewSplitter();
                     }
-                    else if(panelPosition == NowDock.PanelWindow.Center){
+                    else if(panelPosition == NowDock.Types.Center){
                         firstPosition.checked = false;
                         centerPosition.checked = true;
                         lastPosition.checked = false;
                         splitTwoPosition.checked = false;
                         removeInternalViewSplitter();
                     }
-                    else if((panelPosition == NowDock.PanelWindow.Right)||(panelPosition == NowDock.PanelWindow.Bottom)){
+                    else if((panelPosition == NowDock.Types.Right)||(panelPosition == NowDock.Types.Bottom)){
                         firstPosition.checked = false;
                         centerPosition.checked = false;
                         lastPosition.checked = true;
                         splitTwoPosition.checked = false;
                         removeInternalViewSplitter();
                     }
-                    else if (panelPosition == NowDock.PanelWindow.Double){
+                    else if (panelPosition == NowDock.Types.Double){
                         firstPosition.checked = false;
                         centerPosition.checked = false;
                         lastPosition.checked = false;
@@ -112,9 +112,9 @@ PlasmaCore.FrameSvgItem {
                     onCheckedChanged: {
                         if(checked && !parent.inStartup){
                             if(panelIsVertical)
-                                plasmoid.configuration.panelPosition = NowDock.PanelWindow.Top
+                                plasmoid.configuration.panelPosition = NowDock.Types.Top
                             else
-                                plasmoid.configuration.panelPosition = NowDock.PanelWindow.Left
+                                plasmoid.configuration.panelPosition = NowDock.Types.Left
                         }
                     }
                     onClicked: checked=true;
@@ -127,7 +127,7 @@ PlasmaCore.FrameSvgItem {
 
                     onCheckedChanged: {
                         if(checked && !parent.inStartup){
-                            plasmoid.configuration.panelPosition = NowDock.PanelWindow.Center
+                            plasmoid.configuration.panelPosition = NowDock.Types.Center
                         }
                     }
                     onClicked: checked=true;
@@ -141,9 +141,9 @@ PlasmaCore.FrameSvgItem {
                     onCheckedChanged: {
                         if(checked && !parent.inStartup){
                             if(panelIsVertical)
-                                plasmoid.configuration.panelPosition = NowDock.PanelWindow.Bottom
+                                plasmoid.configuration.panelPosition = NowDock.Types.Bottom
                             else
-                                plasmoid.configuration.panelPosition = NowDock.PanelWindow.Right
+                                plasmoid.configuration.panelPosition = NowDock.Types.Right
                         }
                     }
                     onClicked: checked=true;
@@ -157,7 +157,7 @@ PlasmaCore.FrameSvgItem {
 
                     onCheckedChanged: {
                         if(checked && !parent.inStartup){
-                            plasmoid.configuration.panelPosition = NowDock.PanelWindow.Double;
+                            plasmoid.configuration.panelPosition = NowDock.Types.Double;
                         }
                     }
                     onClicked: checked=true;
