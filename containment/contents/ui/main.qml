@@ -90,7 +90,6 @@ DragDrop.DropArea {
     property Item toolBox
     property Item nowDockContainer
     property Item nowDock
-    property Item nowDockConfiguration
 
     // TO BE DELETED, if not needed: property int counter:0;
 
@@ -486,7 +485,6 @@ DragDrop.DropArea {
         containmentSizeSyncTimer.restart();
         plasmoid.action("configure").visible = !plasmoid.immutable;
         plasmoid.action("configure").enabled = !plasmoid.immutable;
-        updateNowDockConfiguration();
 
         if (!plasmoid.immutable) {
             inStartup = false;
@@ -566,7 +564,6 @@ DragDrop.DropArea {
         plasmoid.action("configure").enabled = !plasmoid.immutable;
 
         updateLayouts();
-        updateNowDockConfiguration();
 
         ///Set Preferred Sizes///
         ///Notice: they are set here because if they are set with a binding
@@ -952,36 +949,6 @@ DragDrop.DropArea {
 
         updateIndexes();
     }
-
-    function updateNowDockConfiguration(){
-        ///BEGIN of Now Dock Configuration Panel
-        console.log("Now Dock Configuration 1");
-        if (plasmoid.immutable) {
-            console.log("Now Dock Configuration 2");
-            if (nowDockConfiguration){
-                console.log("Now Dock Configuration 3");
-                nowDockConfiguration.destroy();
-            }
-            return;
-        }
-
-        console.log("Now Dock Configuration 5");
-        if (!nowDockConfiguration){
-            var component = Qt.createComponent("NowDockConfiguration.qml");
-            if (component.status == Component.Ready) {
-                nowDockConfiguration = component.createObject(root);
-            //    nowDockConfiguration.updateThickness.connect(magicWin.updateTransientThickness);
-
-            } else {
-                console.log("Could not create NowDockConfiguration.qml");
-                console.log(component.errorString());
-            }
-            component.destroy();
-        }
-        nowDockConfiguration.visible = true;
-        ///END of Now Dock Configuration Panel
-    }
-
     //END functions
 
 

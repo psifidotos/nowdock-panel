@@ -1,4 +1,4 @@
-project(nowdockpanel)
+project(nowdock)
 cmake_minimum_required(VERSION 2.8.12 FATAL_ERROR)
 set (CMAKE_CXX_STANDARD 11)
 
@@ -22,11 +22,11 @@ IF(NOT GETTEXT_MSGFMT_EXECUTABLE)
 ------")
 ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
 
-        SET(catalogname plasma_applet_org.kde.store.nowdock.panel)
+        SET(catalogname plasma_applet_org.kde.nowdock.containment)
 
         ADD_CUSTOM_TARGET(translations ALL)
 
-        FILE(GLOB PO_FILES po/nowdockpanel/*.po)
+        FILE(GLOB PO_FILES po/containment/*.po)
 
         FOREACH(_poFile ${PO_FILES})
                 GET_FILENAME_COMPONENT(_poFileName ${_poFile} NAME)
@@ -35,7 +35,7 @@ ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
 
                 IF( _langCode )
                         GET_FILENAME_COMPONENT(_lang ${_poFile} NAME_WE)
-                        SET(_gmoFile ${CMAKE_CURRENT_BINARY_DIR}/nowdockpanel/${_lang}.gmo)
+                        SET(_gmoFile ${CMAKE_CURRENT_BINARY_DIR}/containment/${_lang}.gmo)
 
                         ADD_CUSTOM_COMMAND(TARGET translations
                                 COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} --check -o ${_gmoFile} ${_poFile}
@@ -68,8 +68,8 @@ ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
 ENDIF(NOT GETTEXT_MSGFMT_EXECUTABLE) 
 
 add_subdirectory(libnowdock)
-add_subdirectory(nowdockpanel)
-plasma_install_package(build/nowdockpanel/release org.kde.store.nowdock.panel) 
+add_subdirectory(containment)
+plasma_install_package(build/containment/release org.kde.nowdock.containment) 
 add_subdirectory(nowdockplasmoid)
 plasma_install_package(build/nowdockplasmoid/release org.kde.store.nowdock.plasmoid) 
 

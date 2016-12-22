@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
-"POT-Creation-Date: 2016-12-09 21:13+0200\n"
+"POT-Creation-Date: 2016-12-22 18:06+0200\n"
 "PO-Revision-Date: 2016-09-25 04:15+0300\n"
 "Last-Translator: Viorel-Cătălin Răpițeanu <rapiteanu DOT catalin AT gmail "
 "DOT com>\n"
@@ -19,114 +19,116 @@ msgstr ""
 "2:1));\n"
 "X-Generator: Poedit 1.8.9\n"
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:172
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:172
 msgid "Applets Alignment"
 msgstr "Alinierea miniaplicațiilor"
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:186
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:186
 msgid "ver: "
 msgstr ""
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:243
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:289
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:243
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:289
 msgid "Top"
 msgstr "Sus"
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:243
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:289
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:243
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:289
 msgid "Left"
 msgstr "Stânga"
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:259
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:259
 msgid "Center"
 msgstr "Centru"
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:272
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:289
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:272
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:289
 msgid "Bottom"
 msgstr "Jos"
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:272
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:289
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:272
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:289
 msgid "Right"
 msgstr "Dreapta"
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:315
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:315
 msgid "Visibility"
 msgstr ""
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:371
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:371
 msgid "Below Active"
 msgstr ""
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:384
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:384
 msgid "Below Maximized"
 msgstr ""
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:397
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:397
 msgid "Let Windows Cover"
 msgstr ""
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:411
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:411
 msgid "Windows Go Below"
 msgstr ""
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:425
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:425
 msgid "Auto Hide"
 msgstr ""
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:438
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:438
 msgid "Always Visible"
 msgstr ""
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:458
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:479
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:458
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:479
 msgid "Applets Size"
 msgstr "Dimensiunea miniaplicațiilor"
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:526
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:526
 msgid "Zoom On Hover"
 msgstr "Panoramează la trecerea peste"
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:545
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:545
 msgid "Zoom Factor"
 msgstr "Factor de panoramare"
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:594
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:594
 msgid "Background"
 msgstr "Fundal"
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:600
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:600
 msgid "Show Panel Background"
 msgstr "Arată fundalul panoului"
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:630
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:630
 msgid "Size"
 msgstr "Dimensiune"
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:676
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:676
 msgid "Shadows"
 msgstr ""
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:714
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:714
 msgid "None"
 msgstr ""
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:719
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:719
 msgid "Only for locked applets"
 msgstr ""
 
-#: ../../nowdockpanel/contents/ui/NowDockConfiguration.qml.cmake:724
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:724
 #, fuzzy
 msgid "All applets"
 msgstr "Dimensiunea miniaplicațiilor"
 
 #: rc.cpp:1
-msgid "Now Dock Panel"
+#, fuzzy
+msgid "Now Dock"
 msgstr "Panou Now Dock"
 
 #: rc.cpp:2
-msgid "A plasma panel that tries to animate its plasmoid on hovering"
+#, fuzzy
+msgid "A dock for Plasma that tries to animate its plasmoids on hovering"
 msgstr ""
 "Un panou plasma care încearcă să animeze miniaplicațiile la trecerea peste"
 

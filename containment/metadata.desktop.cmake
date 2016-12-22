@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
-_Name=Now Dock Panel
-_Comment=A plasma panel that tries to animate its plasmoid on hovering
+Name=Now Dock
+Comment=A dock for Plasma that tries to animate its plasmoids on hovering
 
 Type=Service
 Keywords=
@@ -9,7 +9,7 @@ NoDisplay=true
 
 X-KDE-PluginInfo-Author=@AUTHOR@
 X-KDE-PluginInfo-Email=@EMAIL@
-X-KDE-PluginInfo-Name=org.kde.store.nowdock.panel
+X-KDE-PluginInfo-Name=org.kde.nowdock.containment
 X-KDE-PluginInfo-Version=@VERSION@
 X-KDE-PluginInfo-Website=@WEBSITE@
 X-KDE-PluginInfo-Category=

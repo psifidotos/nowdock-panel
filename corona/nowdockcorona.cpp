@@ -159,7 +159,7 @@ void NowDockCorona::loadDefaultLayout()
     setImmutability(Plasma::Types::Mutable);
     
     QVariantList args;
-    auto defaultContainment = createContainmentDelayed("org.kde.store.nowdock.panel", args);
+    auto defaultContainment = createContainmentDelayed("org.kde.nowdock.containment", args);
     //auto defaultContainment = createContainmentDelayed("org.kde.panel", args);
     defaultContainment->setContainmentType(Plasma::Types::PanelContainment);
     defaultContainment->init();

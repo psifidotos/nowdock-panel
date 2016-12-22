@@ -1,12 +1,12 @@
 #!/bin/sh
 
 BASEDIR="../.." # root of translatable sources
-PROJECT="plasma_applet_org.kde.store.nowdock.panel" # project name
-PROJECTPATH="../../nowdockpanel" # project path
+PROJECT="plasma_applet_org.kde.nowdock.containment" # project name
+PROJECTPATH="../../containment" # project path
 BUGADDR="https://github.com/psifidotos/nowdock-panel/" # MSGID-Bugs
 DEFAULTLAYOUT="../../layout-templates/org.kde.store.nowdock.defaultPanel"
 EMPTYLAYOUT="../../layout-templates/org.kde.store.nowdock.emptyPanel"
-WDIR="`pwd`/nowdockpanel" # working dir
+WDIR="`pwd`/containment" # working dir
 
 PROJECTPLASMOID="plasma_applet_org.kde.store.nowdock.plasmoid" # project name
 PROJECTPATHPLASMOID="../../nowdockplasmoid" # project path
@@ -14,7 +14,7 @@ WDIRPLASMOID="`pwd`/nowdockplasmoid" # working di
 
 echo "Preparing rc files for panel"
 
-cd nowdockpanel
+cd containment
 
 # we use simple sorting to make sure the lines do not jump around too much from system to system
 find "${PROJECTPATH}" -name '*.rc' -o -name '*.ui' -o -name '*.kcfg' | sort > "${WDIR}/rcfiles.list"
@@ -24,15 +24,15 @@ xargs --arg-file="${WDIR}/rcfiles.list" extractrc > "${WDIR}/rc.cpp"
 # echo 'i18nc("NAME OF TRANSLATORS","Your names");' >> "${WDIR}/rc.cpp"
 # echo 'i18nc("EMAIL OF TRANSLATORS","Your emails");' >> "${WDIR}/rc.cpp"
 
-intltool-extract --quiet --type=gettext/ini ../../nowdockpanel.metadata.desktop.template
+intltool-extract --quiet --type=gettext/ini ../../containment.metadata.desktop.template
 intltool-extract --quiet --type=gettext/ini ../../defaultLayout.metadata.desktop.template
 intltool-extract --quiet --type=gettext/ini ../../emptyLayout.metadata.desktop.template
 
-cat ../../nowdockpanel.metadata.desktop.template.h >> ${WDIR}/rc.cpp
+cat ../../containment.metadata.desktop.template.h >> ${WDIR}/rc.cpp
 cat ../../defaultLayout.metadata.desktop.template.h >> ${WDIR}/rc.cpp
 cat ../../emptyLayout.metadata.desktop.template.h >> ${WDIR}/rc.cpp
 
-rm ../../nowdockpanel.metadata.desktop.template.h
+rm ../../containment.metadata.desktop.template.h
 rm ../../defaultLayout.metadata.desktop.template.h
 rm ../../emptyLayout.metadata.desktop.template.h
 
@@ -58,7 +58,7 @@ for cat in $catalogs; do
 	mv "$cat.new" "$cat"
 done
 
-intltool-merge --quiet --desktop-style . ../../nowdockpanel.metadata.desktop.template "${PROJECTPATH}"/metadata.desktop.cmake
+intltool-merge --quiet --desktop-style . ../../containment.metadata.desktop.template "${PROJECTPATH}"/metadata.desktop.cmake
 intltool-merge --quiet --desktop-style . ../../defaultLayout.metadata.desktop.template "${DEFAULTLAYOUT}"/metadata.desktop.cmake
 intltool-merge --quiet --desktop-style . ../../emptyLayout.metadata.desktop.template "${EMPTYLAYOUT}"/metadata.desktop.cmake
 

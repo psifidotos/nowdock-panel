@@ -1,0 +1,135 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
+"POT-Creation-Date: 2016-12-22 18:06+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:172
+msgid "Applets Alignment"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:186
+msgid "ver: "
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:243
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:289
+msgid "Top"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:243
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:289
+msgid "Left"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:259
+msgid "Center"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:272
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:289
+msgid "Bottom"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:272
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:289
+msgid "Right"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:315
+msgid "Visibility"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:371
+msgid "Below Active"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:384
+msgid "Below Maximized"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:397
+msgid "Let Windows Cover"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:411
+msgid "Windows Go Below"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:425
+msgid "Auto Hide"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:438
+msgid "Always Visible"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:458
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:479
+msgid "Applets Size"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:526
+msgid "Zoom On Hover"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:545
+msgid "Zoom Factor"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:594
+msgid "Background"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:600
+msgid "Show Panel Background"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:630
+msgid "Size"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:676
+msgid "Shadows"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:714
+msgid "None"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:719
+msgid "Only for locked applets"
+msgstr ""
+
+#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:724
+msgid "All applets"
+msgstr ""
+
+#: rc.cpp:1
+msgid "Now Dock"
+msgstr ""
+
+#: rc.cpp:2
+msgid "A dock for Plasma that tries to animate its plasmoids on hovering"
+msgstr ""
+
+#: rc.cpp:3
+msgid "Now Dock Default Panel"
+msgstr ""
+
+#: rc.cpp:4
+msgid "Empty Now Dock Panel"
+msgstr ""

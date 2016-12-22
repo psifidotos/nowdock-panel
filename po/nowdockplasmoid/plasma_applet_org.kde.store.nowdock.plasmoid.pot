@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
-"POT-Creation-Date: 2016-12-09 21:13+0200\n"
+"POT-Creation-Date: 2016-12-22 18:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,59 +29,59 @@ msgstr ""
 msgid "Interaction"
 msgstr ""
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:68
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:68
 msgid "Icon size: "
 msgstr ""
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:156
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:156
 msgid "ver: "
 msgstr ""
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:163
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:163
 msgid "Enable shadows for icons"
 msgstr ""
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:169
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:169
 msgid "Show glow around windows points"
 msgstr ""
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:175
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:175
 msgid "Different color for minimized windows"
 msgstr ""
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:181
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:181
 msgid "Dots on active window"
 msgstr ""
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:187
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:187
 msgid "Reverse position for lines and dots"
 msgstr ""
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:205
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:205
 msgid "Animations: "
 msgstr ""
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:223
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:223
 msgid "duration"
 msgstr ""
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:223
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:223
 msgid "disabled"
 msgstr ""
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:235
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:235
 msgid "Zoom"
 msgstr ""
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:249
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:249
 msgid "Level: "
 msgstr ""
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:293
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:293
 msgid "Show a red line on the limit needed for animations"
 msgstr ""
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:323
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:323
 #: ../../nowdockplasmoid/contents/ui/ConfigPanel.qml:169
 msgid ""
 "For the disabled settings you should use the Now Dock Panel Configuration "

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
-"POT-Creation-Date: 2016-12-09 21:13+0200\n"
+"POT-Creation-Date: 2016-12-22 18:06+0200\n"
 "PO-Revision-Date: 2016-11-26 17:34+0800\n"
 "Last-Translator: Jeff Huang <s8321414@gmail.com>\n"
 "Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
@@ -29,59 +29,59 @@ msgstr "面板"
 msgid "Interaction"
 msgstr "反應"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:68
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:68
 msgid "Icon size: "
 msgstr "圖示大小："
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:156
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:156
 msgid "ver: "
 msgstr "版本："
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:163
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:163
 msgid "Enable shadows for icons"
 msgstr "啟用圖示陰影"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:169
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:169
 msgid "Show glow around windows points"
 msgstr "在視窗點周圍顯示光暈"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:175
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:175
 msgid "Different color for minimized windows"
 msgstr "最小化視窗使用不同的顏色"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:181
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:181
 msgid "Dots on active window"
 msgstr "作用中的視窗顯示點"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:187
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:187
 msgid "Reverse position for lines and dots"
 msgstr "線與點位置反轉"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:205
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:205
 msgid "Animations: "
 msgstr "動畫："
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:223
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:223
 msgid "duration"
 msgstr "期間"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:223
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:223
 msgid "disabled"
 msgstr "已停用"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:235
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:235
 msgid "Zoom"
 msgstr "縮放"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:249
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:249
 msgid "Level: "
 msgstr "等級："
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:293
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:293
 msgid "Show a red line on the limit needed for animations"
 msgstr "在需要限制的動畫上顯示紅線"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml:323
+#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:323
 #: ../../nowdockplasmoid/contents/ui/ConfigPanel.qml:169
 msgid ""
 "For the disabled settings you should use the Now Dock Panel Configuration "
