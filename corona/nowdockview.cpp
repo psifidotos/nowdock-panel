@@ -133,7 +133,6 @@ void NowDockView::init()
     rootContext()->setContextProperty(QStringLiteral("panel"), this);
     setSource(corona()->kPackage().filePath("nowdockui"));
     qDebug() << "SOURCE:" << source();
-
     updateDockPosition();
 }
 
@@ -358,7 +357,7 @@ inline void NowDockView::updateDockPosition()
     position = {0, 0};
     m_maxLength = screenGeometry.width();
 
-    /*    switch (location()) {
+    switch (location()) {
         case Plasma::Types::TopEdge:
             containment()->setFormFactor(Plasma::Types::Horizontal);
             position = {screenGeometry.x(), screenGeometry.y()};
@@ -386,7 +385,7 @@ inline void NowDockView::updateDockPosition()
         default:
             qWarning() << "wrong location, couldn't update the panel position"
                        << location();
-    }*/
+    }
     
     emit maxLengthChanged();
     setPosition(position);
