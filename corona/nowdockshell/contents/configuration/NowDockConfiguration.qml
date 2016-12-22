@@ -1,366 +1,599 @@
-/*
-*  Copyright 2016  Smith AR <audoban@openmailbox.org>
-*
-*  This file is part of Candil-Dock
-*
-*  Candil-Dock is free software; you can redistribute it and/or
-*  modify it under the terms of the GNU General Public License as
-*  published by the Free Software Foundation; either version 3 of
-*  the License, or (at your option) any later version.
-*
-*  Candil-Dock is distributed in the hope that it will be useful,
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*  GNU General Public License for more details.
-*
-*  You should have received a copy of the GNU General Public License
-*  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-import QtQuick 2.5
-import QtQuick.Window 2.2
+import QtQuick 2.0
 import QtQuick.Controls 1.4
-import QtQuick.Controls.Styles.Plasma 2.0 as Styles
-import QtQuick.Layouts 1.1
+import QtQuick.Layouts 1.3
+import QtGraphicalEffects 1.0
 
-import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.extras 2.0 as PlasmaExtras
 
-//import org.candildock.shell 1.0
+import org.kde.plasma.plasmoid 2.0
 
-//import "../controls" as Controls
+import org.kde.nowdock 0.1 as NowDock
 
 PlasmaCore.FrameSvgItem {
-    id: root
-
     imagePath: "dialogs/background"
 
-    Component.onCompleted: {
-        console.log("showing candil dock configuration")
-    }
-    
-    property Item dock;
+    width: Math.max(420,noneShadow.width + lockedAppletsShadow.width + allAppletsShadow.width)
+    height: mainColumn.height+10
 
-    width: content.width + units.largeSpacing * 2
-    height: content.height + units.smallSpacing * 2
+    property bool panelIsVertical: plasmoid.formFactor === PlasmaCore.Types.Vertical
 
+    signal updateThickness();
+    signal removeInternalViewSplitter();
+    signal addInternalViewSplitter();
 
-    //! BEGIN: UI Components
-    GridLayout {
-        id: content
+    Column{
+        id:mainColumn
+        anchors.horizontalCenter: parent.horizontalCenter
+        spacing: 1.5*theme.defaultFont.pointSize
+        width: parent.width - 10
 
-        anchors.centerIn: parent
-        width: implicitWidth
-        height: implicitHeight
-        Layout.minimumWidth: width
-        Layout.minimumHeight: height
+        Column{
+            width:parent.width
+            spacing: 0.8*theme.defaultFont.pointSize
 
-        rowSpacing: units.smallSpacing
-        columnSpacing: units.largeSpacing
+            RowLayout{
+                width: parent.width
+                PlasmaComponents.Label{
+                    text: i18n("Applets Alignment")
+                    font.pointSize: 1.5 * theme.defaultFont.pointSize
+                    Layout.alignment: Qt.AlignLeft
+                }
 
-        columns: 2
+                PlasmaComponents.Label{
+                    font.pointSize: theme.defaultFont.pointSize
+                    font.italic: true
+                    opacity: 0.6
 
-        PlasmaExtras.Heading {
-            id: appearanceHeading
-            Layout.columnSpan: 2
-            Layout.fillWidth: true
-            text: i18nc("@title:group config ui", "Appearance")
-            level: 2
-        }
+                    Layout.alignment: Qt.AlignRight
+                    horizontalAlignment: Text.AlignRight
+                    // width: parent.width
 
-        //! BEGIN: Location
-        PlasmaComponents.Label {
-            Layout.row: 1
-            Layout.alignment: Qt.AlignRight
-            text: i18nc("@label:listbox config ui", "Location:")
-        }
+                    text: i18n("ver: ") +"@VERSION@"
 
-        PlasmaComponents.ButtonRow {
-            Layout.fillWidth: true
-            spacing: 1
-            exclusive: true
-            PlasmaComponents.ToolButton {
-                text: i18nc("@item:inlistbox config ui, location", "Top")
-                flat: false
-                checked: dock.location === edge
-                checkable: true
-                property int edge: PlasmaCore.Types.TopEdge
+                }
             }
-            PlasmaComponents.ToolButton {
-                text: i18nc("@item:inlistbox config ui, location", "Bottom")
-                flat: false
-                checked: dock.location === edge
-                checkable: true
-                property int edge: PlasmaCore.Types.BottomEdge
-            }
-            PlasmaComponents.ToolButton {
-                text: i18nc("@item:inlistbox config ui, location", "Left")
-                flat: false
-                checked: dock.location === edge
-                checkable: true
-                property int edge: PlasmaCore.Types.LeftEdge
-            }
-            PlasmaComponents.ToolButton {
-                text: i18nc("@item:inlistbox config ui, location", "Right")
-                flat: false
-                checked: dock.location === edge
-                checkable: true
-                property int edge: PlasmaCore.Types.RightEdge
-            }
-            onCheckedButtonChanged: {
-                dock.location = checkedButton.edge
-            }
-        }
-        //! END: Location
 
-        //! BEGIN: Alignment
-        PlasmaComponents.Label {
-            Layout.row: 2
-            Layout.alignment: Qt.AlignRight
-            text: i18nc("@label:listbox config ui", "Alignment:")
-        }
+            //user set Panel Positions
+            // 0-Center, 1-Left, 2-Right, 3-Top, 4-Bottom
+            Flow{
+                width: parent.width
+                spacing: 2
 
-        PlasmaComponents.ButtonRow {
-            Layout.fillWidth: true
-            spacing: 1
-            exclusive: true
-            PlasmaComponents.ToolButton {
-                text: i18nc("@item:inlistbox config ui, alignment", "Begin")
-                flat: false
-                checked: dock.alignment === align
-                checkable: true
-                property int align: Dock.Begin
-            }
-            PlasmaComponents.ToolButton {
-                text: i18nc("@item:inlistbox config ui, alignment", "Center")
-                flat: false
-                checked: dock.alignment === align
-                checkable: true
-                property int align: Dock.Center
-            }
-            PlasmaComponents.ToolButton {
-                text: i18nc("@item:inlistbox config ui, alignment", "End")
-                flat: false
-                checked: dock.alignment === align
-                checkable: true
-                property int align: Dock.End
-            }
-            PlasmaComponents.ToolButton {
-                text: i18nc("@item:inlistbox config ui, alignment", "Fill")
-                flat: false
-                checked: dock.alignment === align
-                checkable: true
-                property int align: Dock.Fill
-            }
-            onCheckedButtonChanged: {
-                dock.alignment = checkedButton.align
-            }
-        }
+                property bool inStartup: true
+                property int panelPosition: plasmoid.configuration.panelPosition
 
-        PlasmaComponents.Label {
-            Layout.row: 3
-            Layout.alignment: Qt.AlignRight
-            text: i18nc("@label:slider config ui, align icons",
-                        "Alignment of icons:")
-        }
 
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: units.largeSpacing
+                function updatePanelPositionVisual(){
+                    if((panelPosition == NowDock.PanelWindow.Left)||(panelPosition == NowDock.PanelWindow.Top)){
+                        firstPosition.checked = true;
+                        centerPosition.checked = false;
+                        lastPosition.checked = false;
+                        splitTwoPosition.checked = false;
+                        removeInternalViewSplitter();
+                    }
+                    else if(panelPosition == NowDock.PanelWindow.Center){
+                        firstPosition.checked = false;
+                        centerPosition.checked = true;
+                        lastPosition.checked = false;
+                        splitTwoPosition.checked = false;
+                        removeInternalViewSplitter();
+                    }
+                    else if((panelPosition == NowDock.PanelWindow.Right)||(panelPosition == NowDock.PanelWindow.Bottom)){
+                        firstPosition.checked = false;
+                        centerPosition.checked = false;
+                        lastPosition.checked = true;
+                        splitTwoPosition.checked = false;
+                        removeInternalViewSplitter();
+                    }
+                    else if (panelPosition == NowDock.PanelWindow.Double){
+                        firstPosition.checked = false;
+                        centerPosition.checked = false;
+                        lastPosition.checked = false;
+                        splitTwoPosition.checked = true;
+                        //add the splitter visual
+                        addInternalViewSplitter(-1);
+                    }
+                }
 
-            readonly property int maxOffset: (dock.maxLength - dock.length) / 2
-
-            PlasmaComponents.Slider {
-                id: alignmentSlider
-                Layout.fillWidth: true
-                enabled: dock.alignment === Dock.Center
-                maximumValue: 200
-                minimumValue: 0
-                stepSize: 2
+                onPanelPositionChanged: updatePanelPositionVisual();
 
                 Component.onCompleted: {
-                    value = 100 * (dock.offset / parent.maxOffset + 1)
-                    dock.offset = Qt.binding(function () {
-                        return parent.maxOffset * (value / 100 - 1)
-                    })
+                    updatePanelPositionVisual();
+                    inStartup = false;
                 }
 
-                updateValueWhileDragging: true
-            }
-            PlasmaComponents.Label {
-                Layout.alignment: Qt.AlignLeft
-                Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
-                Layout.maximumWidth: Layout.minimumWidth
+                PlasmaComponents.Button{
+                    id: firstPosition
+                    checkable: true
+                    text: panelIsVertical ? i18n("Top") : i18n("Left")
+                    width: (parent.width / 3) - 1
 
-                horizontalAlignment: Text.AlignLeft
-                text: i18nc("@label:slider percent", "%1%", (100 * dock.offset / parent.maxOffset) | 0)
-            }
-        }
-        //! END: Alignment
-
-        //! BEGIN: Icons
-        PlasmaComponents.Label {
-            Layout.row: 4
-            Layout.alignment: Qt.AlignRight
-            text: i18nc("@label:spinbox config ui, size icons", "Size icons:")
-        }
-
-        RowLayout {
-            Layout.fillWidth: true
-            spacing: units.largeSpacing
-
-        /*    Controls.SpinBox {
-                suffix: i18nc(
-                            "@item:spinbox config ui, size icons, suffix in pixels",
-                            " pixels")
-                maximumValue: 128
-                minimumValue: 48
-                stepSize: 2
-                value: dock.iconSize
-
-                onValueChanged: {
-                    dock.iconSize = value
+                    onCheckedChanged: {
+                        if(checked && !parent.inStartup){
+                            if(panelIsVertical)
+                                plasmoid.configuration.panelPosition = NowDock.PanelWindow.Top
+                            else
+                                plasmoid.configuration.panelPosition = NowDock.PanelWindow.Left
+                        }
+                    }
+                    onClicked: checked=true;
                 }
-            }*/
+                PlasmaComponents.Button{
+                    id: centerPosition
+                    checkable: true
+                    text: i18n("Center")
+                    width: (parent.width / 3) - 1
 
-            PlasmaComponents.Label {
-                text: i18nc("@label:slider config ui, icons zoom", "Zoom:")
-                Layout.alignment: Qt.AlignRight
+                    onCheckedChanged: {
+                        if(checked && !parent.inStartup){
+                            plasmoid.configuration.panelPosition = NowDock.PanelWindow.Center
+                        }
+                    }
+                    onClicked: checked=true;
+                }
+                PlasmaComponents.Button{
+                    id: lastPosition
+                    checkable: true
+                    text: panelIsVertical ? i18n("Bottom") : i18n("Right")
+                    width: (parent.width / 3) - 2
+
+                    onCheckedChanged: {
+                        if(checked && !parent.inStartup){
+                            if(panelIsVertical)
+                                plasmoid.configuration.panelPosition = NowDock.PanelWindow.Bottom
+                            else
+                                plasmoid.configuration.panelPosition = NowDock.PanelWindow.Right
+                        }
+                    }
+                    onClicked: checked=true;
+                }
+
+                PlasmaComponents.Button{
+                    id: splitTwoPosition
+                    checkable: true
+                    text: panelIsVertical ? i18n("Top")+ " | "+ i18n("Bottom") : i18n("Left") +" | "+ i18n("Right")
+                    width: parent.width
+
+                    onCheckedChanged: {
+                        if(checked && !parent.inStartup){
+                            plasmoid.configuration.panelPosition = NowDock.PanelWindow.Double;
+                        }
+                    }
+                    onClicked: checked=true;
+                }
+            }
+        }
+
+
+        //  BelowActive = 0, /** always visible except if ovelaps with the active window, no area reserved */
+        //  BelowMaximized, /** always visible except if ovelaps with an active maximize window, no area reserved */
+        //  LetWindowsCover, /** always visible, windows will go over the panel, no area reserved */
+        //  WindowsGoBelow, /** default, always visible, windows will go under the panel, no area reserved */
+        //  AutoHide, /** the panel will be shownn only if the mouse cursor is on screen edges */
+        //  AlwaysVisible,  /** always visible panel, "Normal" plasma panel, accompanies plasma's "Always Visible"  */
+        /**********  Panel Visibility ****************/
+
+        Column{
+            width:parent.width
+            spacing: 0.8*theme.defaultFont.pointSize
+            PlasmaComponents.Label{
+                text: i18n("Visibility")
+                font.pointSize: 1.5 * theme.defaultFont.pointSize
             }
 
-            PlasmaComponents.Slider {
-                Layout.fillWidth: true
-                value: 100
-                maximumValue: 200
-                minimumValue: 100
-                stepSize: 1
-                updateValueWhileDragging: true
+            //user set Panel Visibility
+            // 0-BelowActive, 1-BelowMaximized, 2-LetWindowsCover, 3-WindowsGoBelow, 4-AutoHide, 5-AlwaysVisible
+            Flow{
+                width: parent.width
+                spacing: 2
+
+                property bool inStartup: true
+                property int panelVisibility: plasmoid.configuration.panelVisibility
+
+
+                function updatePanelVisibilityVisual(){
+                    if (panelVisibility === 0)
+                        firstState.checked = true;
+                    else
+                        firstState.checked = false;
+
+                    if (panelVisibility === 1)
+                        secondState.checked = true;
+                    else
+                        secondState.checked = false;
+
+                    if (panelVisibility === 2)
+                        thirdState.checked = true;
+                    else
+                        thirdState.checked = false;
+
+                    if (panelVisibility === 3)
+                        fourthState.checked = true;
+                    else
+                        fourthState.checked = false;
+
+                    if (panelVisibility === 4)
+                        fifthState.checked = true;
+                    else
+                        fifthState.checked = false;
+
+                    if (panelVisibility === 5)
+                        sixthState.checked = true;
+                    else
+                        sixthState.checked = false;
+                }
+
+                onPanelVisibilityChanged: updatePanelVisibilityVisual();
 
                 Component.onCompleted: {
-                    value = (dock.zoomFactor * 100) | 0
-                    dock.zoomFactor = Qt.binding(function(){
-                        return value / 100
-                    })
+                    updatePanelVisibilityVisual();
+                    inStartup = false;
+                }
+
+                PlasmaComponents.Button{
+                    id: firstState
+                    checkable: true
+                    text: i18n("Below Active")
+                    width: (parent.width / 2) - 1
+
+                    onCheckedChanged: {
+                        if(checked && !parent.inStartup){
+                            plasmoid.configuration.panelVisibility = 0
+                        }
+                    }
+                    onClicked: checked=true;
+                }
+                PlasmaComponents.Button{
+                    id: secondState
+                    checkable: true
+                    text: i18n("Below Maximized")
+                    width: (parent.width / 2) - 1
+
+                    onCheckedChanged: {
+                        if(checked && !parent.inStartup){
+                            plasmoid.configuration.panelVisibility = 1
+                        }
+                    }
+                    onClicked: checked=true;
+                }
+                PlasmaComponents.Button{
+                    id: thirdState
+                    checkable: true
+                    text: i18n("Let Windows Cover")
+                    width: (parent.width / 2) - 1
+
+                    onCheckedChanged: {
+                        if(checked && !parent.inStartup){
+                            plasmoid.configuration.panelVisibility = 2
+                        }
+                    }
+                    onClicked: checked=true;
+                }
+
+                PlasmaComponents.Button{
+                    id: fourthState
+                    checkable: true
+                    text: i18n("Windows Go Below")
+                    width: (parent.width/2) - 1
+
+                    onCheckedChanged: {
+                        if(checked && !parent.inStartup){
+                            plasmoid.configuration.panelVisibility = 3
+                        }
+                    }
+                    onClicked: checked=true;
+                }
+
+                PlasmaComponents.Button{
+                    id: fifthState
+                    checkable: true
+                    text: i18n("Auto Hide")
+                    width: (parent.width/2) - 1
+
+                    onCheckedChanged: {
+                        if(checked && !parent.inStartup){
+                            plasmoid.configuration.panelVisibility = 4
+                        }
+                    }
+                    onClicked: checked=true;
+                }
+                PlasmaComponents.Button{
+                    id: sixthState
+                    checkable: true
+                    text: i18n("Always Visible")
+                    width: (parent.width/2) - 1
+
+                    onCheckedChanged: {
+                        if(checked && !parent.inStartup){
+                            plasmoid.configuration.panelVisibility = 5
+                        }
+                    }
+                    onClicked: checked=true;
                 }
             }
         }
-        //! END: Icons
-        PlasmaExtras.Heading {
-            Layout.row: 5
-            Layout.columnSpan: 2
-            Layout.fillWidth: true
-            text: i18nc("@title:group config ui", "Behavior")
-            level: 2
-        }
-        //! BEGIN: Visibility
-        PlasmaComponents.Label {
-            Layout.row: 6
-            Layout.alignment: Qt.AlignRight
-            text: i18nc("@label:listbox config ui", "Visibility:")
-        }
 
-        PlasmaComponents.ComboBox {
-            Layout.fillWidth: true
-            model: [i18nc("@item:inlistbox config ui, visibility",
-                          "Normal"), i18nc(
-                    "@item:inlistbox config ui, visibility",
-                    "Auto hide"), i18nc(
-                    "@item:inlistbox config ui, visibility",
-                    "Dodge active window"), i18nc(
-                    "@item:inlistbox config ui, visibility", "Dodge windows")]
-            currentIndex: dock.visibility.mode
-            onActivated: {
-                dock.visibility.mode = index
+        //////////////// Applets Size
+
+        Column{
+            width:parent.width
+            spacing: 0.8*theme.defaultFont.pointSize
+
+            PlasmaComponents.Label{
+                text: i18n("Applets Size")
+                font.pointSize: 1.5 * theme.defaultFont.pointSize
             }
-        }
 
-        RowLayout {
-            Layout.row: 7
-            Layout.column: 1
-            Layout.fillWidth: true
-            spacing: units.largeSpacing
+            RowLayout{
+                width: parent.width
 
-            PlasmaComponents.Label {
-                Layout.fillWidth: false
-                horizontalAlignment: Text.AlignRight
-                text: i18nc("@label:spinbox config ui, timers",
-                            "Delay in show:")
-            }
-         /*   Controls.SpinBox {
-                enabled: dock.visibility.mode !== Dock.Normal
-                Layout.fillWidth: false
-                Layout.maximumWidth: implicitWidth
-                maximumValue: 3000
-                minimumValue: 0
-                value: dock.visibility.timerShow
-                stepSize: 100
+                property int step: 8
 
-                onValueChanged: {
-                    dock.visibility.timerShow = value
+                PlasmaComponents.Button{
+                    text:"-"
+
+                    Layout.preferredWidth: parent.height
+                    Layout.preferredHeight: parent.height
+
+                    onClicked: appletsSizeSlider.value -= parent.step
                 }
 
-                suffix: i18nc(
-                            "@item:spinbox config ui, suffix in milliseconds",
-                            " ms")
-            }*/
-            PlasmaComponents.Label {
-                Layout.fillWidth: true
-                horizontalAlignment: Text.AlignRight
-                text: i18nc("@label:spinbox config ui, timers",
-                            "Delay in hidding:")
-            }
-         /*   Controls.SpinBox {
-                enabled: dock.visibility.mode !== Dock.Normal
-                Layout.fillWidth: false
-                Layout.maximumWidth: implicitWidth
-                maximumValue: 3000
-                minimumValue: 0
-                value: dock.visibility.timerHide
-                stepSize: 100
+                PlasmaComponents.Slider{
+                    id:appletsSizeSlider
 
-                onValueChanged: {
-                    dock.visibility.timerHide = value
-                }
+                    valueIndicatorText: i18n("Applets Size")
+                    valueIndicatorVisible: true
 
-                suffix: i18nc(
-                            "@item:spinbox config ui, suffix in milliseconds",
-                            " ms")
-            }*/
-        }
+                    minimumValue: 16
+                    maximumValue: 128
 
-        RowLayout {
-            Layout.row: 8
-            Layout.column: 1
-            Layout.fillWidth: true
-            spacing: units.largeSpacing
+                    stepSize: parent.step
 
-            PlasmaComponents.Label {
-                text: i18nc("@option:check config ui", "Show in all screens:")
-                Layout.alignment: Qt.AlignRight
-            }
-            Switch {
-                id: switchScreen
-                // TODO: Show on all screens
-                style: Styles.SwitchStyle {
-                    property bool checked: switchScreen.checked
-                }
-            }
-            PlasmaComponents.ComboBox {
-                Layout.fillWidth: true
-                Component.onCompleted: {
-                    var screens = []
+                    Layout.fillWidth:true
 
-                    for (var i = 0; i < dock.screens.length; i++) {
-                        screens.push(dock.screens[i].name)
+                    property bool inStartup:true
+
+                    Component.onCompleted: {
+                        value = plasmoid.configuration.iconSize;
+                        inStartup = false;
                     }
 
-                    model = screens
+                    onValueChanged:{
+                        if(!inStartup){
+                            plasmoid.configuration.iconSize = value;
+                            updateThickness();
+                        }
+                    }
+                }
+
+                PlasmaComponents.Button{
+                    text:"+"
+
+                    Layout.preferredWidth: parent.height
+                    Layout.preferredHeight: parent.height
+
+                    onClicked: appletsSizeSlider.value += parent.step;
+                }
+
+                PlasmaComponents.Label{
+                    text: plasmoid.configuration.iconSize + " px."
                 }
             }
         }
-        //! END: Visibility
+
+
+
+        /**********  Zoom On Hover ****************/
+        Column{
+            width: parent.width
+            spacing: 0.8*theme.defaultFont.pointSize
+            PlasmaComponents.Label{
+                text: i18n("Zoom On Hover")
+                font.pointSize: 1.5 * theme.defaultFont.pointSize
+            }
+
+            RowLayout{
+                width: parent.width
+
+                PlasmaComponents.Button{
+                    text:"-"
+
+                    Layout.preferredWidth: parent.height
+                    Layout.preferredHeight: parent.height
+
+                    onClicked: zoomSlider.value -= 0.05
+                }
+
+                PlasmaComponents.Slider{
+                    id:zoomSlider
+
+                    valueIndicatorText: i18n("Zoom Factor")
+                    valueIndicatorVisible: true
+
+                    minimumValue: 1
+                    maximumValue: 2
+
+                    stepSize: 0.05
+
+                    Layout.fillWidth:true
+
+                    property bool inStartup:true
+
+                    Component.onCompleted: {
+                        value = Number(1 + plasmoid.configuration.zoomLevel/20).toFixed(2)
+                        inStartup = false;
+                        //  console.log("Slider:"+value);
+                    }
+
+                    onValueChanged:{
+                        if(!inStartup){
+                            var result = Math.round((value - 1)*20)
+                            plasmoid.configuration.zoomLevel = result
+                            //    console.log("Store:"+result);
+                        }
+                    }
+                }
+
+                PlasmaComponents.Button{
+                    text:"+"
+
+                    Layout.preferredWidth: parent.height
+                    Layout.preferredHeight: parent.height
+
+                    onClicked: zoomSlider.value += 0.05
+                }
+
+                PlasmaComponents.Label{
+                    enabled: showBackground.checked
+                    text: " "+Number(zoomSlider.value).toFixed(2)
+                }
+
+            }
+        }
+
+
+        Column{
+            width: parent.width
+            spacing: 0.8*theme.defaultFont.pointSize
+            PlasmaComponents.Label{
+                text: i18n("Background")
+                font.pointSize: 1.5 * theme.defaultFont.pointSize
+            }
+
+            PlasmaComponents.CheckBox{
+                id: showBackground
+                text: i18n("Show Panel Background")
+
+                property bool inStartup: true
+                onCheckedChanged:{
+                    if(!inStartup)
+                        plasmoid.configuration.useThemePanel = checked;
+                }
+
+                Component.onCompleted: {
+                    checked = plasmoid.configuration.useThemePanel;
+                    inStartup = false;
+                }
+            }
+
+            RowLayout{
+                width: parent.width
+
+                PlasmaComponents.Button{
+                    enabled: showBackground.checked
+                    text:"-"
+
+                    Layout.preferredWidth: parent.height
+                    Layout.preferredHeight: parent.height
+
+                    onClicked: panelSizeSlider.value -= 2
+                }
+
+                PlasmaComponents.Slider{
+                    id:panelSizeSlider
+                    enabled: showBackground.checked
+                    valueIndicatorText: i18n("Size")
+                    valueIndicatorVisible: true
+
+                    minimumValue: 0
+                    maximumValue: 256
+
+                    stepSize: 2
+
+                    Layout.fillWidth:true
+
+                    property bool inStartup: true
+
+                    Component.onCompleted: {
+                        value = plasmoid.configuration.panelSize
+                        inStartup = false;
+                    }
+
+                    onValueChanged: {
+                        if(!inStartup)
+                            plasmoid.configuration.panelSize = value;
+                    }
+                }
+
+                PlasmaComponents.Button{
+                    enabled: showBackground.checked
+                    text:"+"
+
+                    Layout.preferredWidth: parent.height
+                    Layout.preferredHeight: parent.height
+
+                    onClicked: panelSizeSlider.value += 2
+                }
+
+
+                PlasmaComponents.Label{
+                    enabled: showBackground.checked
+                    text: panelSizeSlider.value + " px."
+                }
+
+            }
+        }
+
+        Column{
+            width: parent.width
+            spacing: 0.8*theme.defaultFont.pointSize
+            PlasmaComponents.Label{
+                text: i18n("Shadows")
+                font.pointSize: 1.5 * theme.defaultFont.pointSize
+            }
+
+            RowLayout {
+                width: parent.width
+
+                ExclusiveGroup {
+                    id: shadowsGroup
+                    property bool inStartup: true
+
+                    onCurrentChanged: {
+                        if (!inStartup) {
+                            if (current === noneShadow){
+                                plasmoid.configuration.shadows = 0; /*No Shadows*/
+                            } else if (current === lockedAppletsShadow){
+                                plasmoid.configuration.shadows = 1; /*Locked Applets Shadows*/
+                            } else if (current === allAppletsShadow){
+                                plasmoid.configuration.shadows = 2; /*All Applets Shadows*/
+                            }
+                        }
+                    }
+
+                    Component.onCompleted: {
+                        if (plasmoid.configuration.shadows === 0 /*No Shadows*/){
+                            noneShadow.checked = true;
+                        } else if (plasmoid.configuration.shadows === 1 /*Locked Applets*/) {
+                            lockedAppletsShadow.checked = true;
+                        } else if (plasmoid.configuration.shadows === 2 /*All Applets*/) {
+                            allAppletsShadow.checked = true;
+                        }
+
+                        inStartup = false;
+                    }
+                }
+
+                PlasmaComponents.RadioButton {
+                    id: noneShadow
+                    text: i18n("None")
+                    exclusiveGroup: shadowsGroup
+                }
+                PlasmaComponents.RadioButton {
+                    id: lockedAppletsShadow
+                    text: i18n("Only for locked applets")
+                    exclusiveGroup: shadowsGroup
+                }
+                PlasmaComponents.RadioButton {
+                    id: allAppletsShadow
+                    text: i18n("All applets")
+                    exclusiveGroup: shadowsGroup
+                }
+
+            }
+        }
     }
-    //! END: UI Components
 }
+
+
