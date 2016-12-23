@@ -73,4 +73,6 @@ plasma_install_package(build/containment/release org.kde.nowdock.containment)
 add_subdirectory(nowdockplasmoid)
 plasma_install_package(build/nowdockplasmoid/release org.kde.store.nowdock.plasmoid) 
 
+plasma_install_package(shell org.kde.nowdock.shell shells shell)
+
 add_subdirectory(layout-templates)

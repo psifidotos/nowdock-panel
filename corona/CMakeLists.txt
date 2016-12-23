@@ -64,4 +64,3 @@ target_link_libraries(
 install(TARGETS nowdock ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 #even if hidden, the desktop file is needed anyways for kdbusservice::unique
 install(FILES nowdock.desktop DESTINATION ${KDE_INSTALL_APPDIR})
-plasma_install_package(nowdockshell org.kde.nowdock.shell shells shell)
