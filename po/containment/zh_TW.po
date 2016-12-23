@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
-"POT-Creation-Date: 2016-12-22 18:06+0200\n"
+"POT-Creation-Date: 2016-12-23 15:15+0200\n"
 "PO-Revision-Date: 2016-11-26 17:31+0800\n"
 "Last-Translator: Jeff Huang <s8321414@gmail.com>\n"
 "Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
@@ -16,107 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 2.0\n"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:172
-msgid "Applets Alignment"
-msgstr "小程式對齊"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:186
-msgid "ver: "
-msgstr "版本："
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:243
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:289
-msgid "Top"
-msgstr "頂部"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:243
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:289
-msgid "Left"
-msgstr "左邊"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:259
-msgid "Center"
-msgstr "置中"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:272
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:289
-msgid "Bottom"
-msgstr "底部"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:272
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:289
-msgid "Right"
-msgstr "右邊"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:315
-msgid "Visibility"
-msgstr "可見度"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:371
-msgid "Below Active"
-msgstr "在作用中的視窗後"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:384
-msgid "Below Maximized"
-msgstr "在最大化的視窗後"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:397
-msgid "Let Windows Cover"
-msgstr " 讓視窗蓋過"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:411
-msgid "Windows Go Below"
-msgstr "視窗在下面"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:425
-msgid "Auto Hide"
-msgstr "自動隱藏"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:438
-msgid "Always Visible"
-msgstr "永遠可見"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:458
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:479
-msgid "Applets Size"
-msgstr "小程式大小"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:526
-msgid "Zoom On Hover"
-msgstr "滑鼠游標置於其上時縮放"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:545
-msgid "Zoom Factor"
-msgstr "縮放係數"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:594
-msgid "Background"
-msgstr "背景"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:600
-msgid "Show Panel Background"
-msgstr "顯示面板背景"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:630
-msgid "Size"
-msgstr "大小"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:676
-msgid "Shadows"
-msgstr "陰影"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:714
-msgid "None"
-msgstr "無"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:719
-msgid "Only for locked applets"
-msgstr "僅鎖定小程式"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:724
-msgid "All applets"
-msgstr "所有小程式"
 
 #: rc.cpp:1
 #, fuzzy
@@ -128,13 +27,83 @@ msgstr "Now Dock 面板"
 msgid "A dock for Plasma that tries to animate its plasmoids on hovering"
 msgstr "一個嘗試讓滑鼠游標停在上面時會讓它的 plasmoid 產生動畫的 plasma 面板"
 
-#: rc.cpp:3
-msgid "Now Dock Default Panel"
-msgstr "Now Dock 預設面板"
+#~ msgid "Applets Alignment"
+#~ msgstr "小程式對齊"
 
-#: rc.cpp:4
-msgid "Empty Now Dock Panel"
-msgstr "空的 Now Dock 面板"
+#~ msgid "ver: "
+#~ msgstr "版本："
+
+#~ msgid "Top"
+#~ msgstr "頂部"
+
+#~ msgid "Left"
+#~ msgstr "左邊"
+
+#~ msgid "Center"
+#~ msgstr "置中"
+
+#~ msgid "Bottom"
+#~ msgstr "底部"
+
+#~ msgid "Right"
+#~ msgstr "右邊"
+
+#~ msgid "Visibility"
+#~ msgstr "可見度"
+
+#~ msgid "Below Active"
+#~ msgstr "在作用中的視窗後"
+
+#~ msgid "Below Maximized"
+#~ msgstr "在最大化的視窗後"
+
+#~ msgid "Let Windows Cover"
+#~ msgstr " 讓視窗蓋過"
+
+#~ msgid "Windows Go Below"
+#~ msgstr "視窗在下面"
+
+#~ msgid "Auto Hide"
+#~ msgstr "自動隱藏"
+
+#~ msgid "Always Visible"
+#~ msgstr "永遠可見"
+
+#~ msgid "Applets Size"
+#~ msgstr "小程式大小"
+
+#~ msgid "Zoom On Hover"
+#~ msgstr "滑鼠游標置於其上時縮放"
+
+#~ msgid "Zoom Factor"
+#~ msgstr "縮放係數"
+
+#~ msgid "Background"
+#~ msgstr "背景"
+
+#~ msgid "Show Panel Background"
+#~ msgstr "顯示面板背景"
+
+#~ msgid "Size"
+#~ msgstr "大小"
+
+#~ msgid "Shadows"
+#~ msgstr "陰影"
+
+#~ msgid "None"
+#~ msgstr "無"
+
+#~ msgid "Only for locked applets"
+#~ msgstr "僅鎖定小程式"
+
+#~ msgid "All applets"
+#~ msgstr "所有小程式"
+
+#~ msgid "Now Dock Default Panel"
+#~ msgstr "Now Dock 預設面板"
+
+#~ msgid "Empty Now Dock Panel"
+#~ msgstr "空的 Now Dock 面板"
 
 #~ msgid "Automatic"
 #~ msgstr "自動"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
-"POT-Creation-Date: 2016-12-22 18:06+0200\n"
+"POT-Creation-Date: 2016-12-23 15:15+0200\n"
 "PO-Revision-Date: 2016-11-25 00:08+0200\n"
 "Last-Translator: Michail Vοurlakos <mvourlakos@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-doc@kde.org>\n"
@@ -16,107 +16,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 2.0\n"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:172
-msgid "Applets Alignment"
-msgstr "Στοίχιση Εφαρμογών"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:186
-msgid "ver: "
-msgstr "εκδ: "
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:243
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:289
-msgid "Top"
-msgstr "Πάνω"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:243
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:289
-msgid "Left"
-msgstr "Αριστερά"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:259
-msgid "Center"
-msgstr "Κέντρο"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:272
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:289
-msgid "Bottom"
-msgstr "Κάτω"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:272
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:289
-msgid "Right"
-msgstr "Δεξιά"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:315
-msgid "Visibility"
-msgstr "Ορατότητα"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:371
-msgid "Below Active"
-msgstr "Κάτω από Ενεργό"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:384
-msgid "Below Maximized"
-msgstr "Κάτω από Μεγιστοποίηση"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:397
-msgid "Let Windows Cover"
-msgstr "Παράθυρα από Πάνω"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:411
-msgid "Windows Go Below"
-msgstr "Παράθυρα από Κάτω"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:425
-msgid "Auto Hide"
-msgstr "Αυτόματη Απόκρυψη"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:438
-msgid "Always Visible"
-msgstr "Πάντα Ορατό"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:458
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:479
-msgid "Applets Size"
-msgstr "Μέγεθος Εφαρμογών"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:526
-msgid "Zoom On Hover"
-msgstr "Εστίαση"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:545
-msgid "Zoom Factor"
-msgstr "Συντελεστής Εστίασης"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:594
-msgid "Background"
-msgstr "Παρασκήνιο"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:600
-msgid "Show Panel Background"
-msgstr "Εμφάνιση Παρασκηνίου"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:630
-msgid "Size"
-msgstr "Μέγεθος"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:676
-msgid "Shadows"
-msgstr "Σκιές"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:714
-msgid "None"
-msgstr "Καμία"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:719
-msgid "Only for locked applets"
-msgstr "Μόνο κλειδωμένες εφαρμογές"
-
-#: ../../containment/contents/ui/NowDockConfiguration.qml.cmake:724
-msgid "All applets"
-msgstr "Παντού"
 
 #: rc.cpp:1
 #, fuzzy
@@ -129,13 +28,83 @@ msgid "A dock for Plasma that tries to animate its plasmoids on hovering"
 msgstr ""
 "Ένας πίνακας του Plasma που χρησιμοποιεί ποικίλα εφέ για τις εφαρμογές του"
 
-#: rc.cpp:3
-msgid "Now Dock Default Panel"
-msgstr "Προκαθορισμένος Now Dock"
+#~ msgid "Applets Alignment"
+#~ msgstr "Στοίχιση Εφαρμογών"
 
-#: rc.cpp:4
-msgid "Empty Now Dock Panel"
-msgstr "Κενός Now Dock"
+#~ msgid "ver: "
+#~ msgstr "εκδ: "
+
+#~ msgid "Top"
+#~ msgstr "Πάνω"
+
+#~ msgid "Left"
+#~ msgstr "Αριστερά"
+
+#~ msgid "Center"
+#~ msgstr "Κέντρο"
+
+#~ msgid "Bottom"
+#~ msgstr "Κάτω"
+
+#~ msgid "Right"
+#~ msgstr "Δεξιά"
+
+#~ msgid "Visibility"
+#~ msgstr "Ορατότητα"
+
+#~ msgid "Below Active"
+#~ msgstr "Κάτω από Ενεργό"
+
+#~ msgid "Below Maximized"
+#~ msgstr "Κάτω από Μεγιστοποίηση"
+
+#~ msgid "Let Windows Cover"
+#~ msgstr "Παράθυρα από Πάνω"
+
+#~ msgid "Windows Go Below"
+#~ msgstr "Παράθυρα από Κάτω"
+
+#~ msgid "Auto Hide"
+#~ msgstr "Αυτόματη Απόκρυψη"
+
+#~ msgid "Always Visible"
+#~ msgstr "Πάντα Ορατό"
+
+#~ msgid "Applets Size"
+#~ msgstr "Μέγεθος Εφαρμογών"
+
+#~ msgid "Zoom On Hover"
+#~ msgstr "Εστίαση"
+
+#~ msgid "Zoom Factor"
+#~ msgstr "Συντελεστής Εστίασης"
+
+#~ msgid "Background"
+#~ msgstr "Παρασκήνιο"
+
+#~ msgid "Show Panel Background"
+#~ msgstr "Εμφάνιση Παρασκηνίου"
+
+#~ msgid "Size"
+#~ msgstr "Μέγεθος"
+
+#~ msgid "Shadows"
+#~ msgstr "Σκιές"
+
+#~ msgid "None"
+#~ msgstr "Καμία"
+
+#~ msgid "Only for locked applets"
+#~ msgstr "Μόνο κλειδωμένες εφαρμογές"
+
+#~ msgid "All applets"
+#~ msgstr "Παντού"
+
+#~ msgid "Now Dock Default Panel"
+#~ msgstr "Προκαθορισμένος Now Dock"
+
+#~ msgid "Empty Now Dock Panel"
+#~ msgstr "Κενός Now Dock"
 
 #~ msgid "Automatic"
 #~ msgstr "Αυτόματα"

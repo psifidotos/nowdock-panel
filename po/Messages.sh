@@ -4,8 +4,6 @@ BASEDIR="../.." # root of translatable sources
 PROJECT="plasma_applet_org.kde.nowdock.containment" # project name
 PROJECTPATH="../../containment" # project path
 BUGADDR="https://github.com/psifidotos/nowdock-panel/" # MSGID-Bugs
-DEFAULTLAYOUT="../../layout-templates/org.kde.store.nowdock.defaultPanel"
-EMPTYLAYOUT="../../layout-templates/org.kde.store.nowdock.emptyPanel"
 WDIR="`pwd`/containment" # working dir
 
 PROJECTPLASMOID="plasma_applet_org.kde.store.nowdock.plasmoid" # project name
@@ -25,16 +23,10 @@ xargs --arg-file="${WDIR}/rcfiles.list" extractrc > "${WDIR}/rc.cpp"
 # echo 'i18nc("EMAIL OF TRANSLATORS","Your emails");' >> "${WDIR}/rc.cpp"
 
 intltool-extract --quiet --type=gettext/ini ../../containment.metadata.desktop.template
-intltool-extract --quiet --type=gettext/ini ../../defaultLayout.metadata.desktop.template
-intltool-extract --quiet --type=gettext/ini ../../emptyLayout.metadata.desktop.template
 
 cat ../../containment.metadata.desktop.template.h >> ${WDIR}/rc.cpp
-cat ../../defaultLayout.metadata.desktop.template.h >> ${WDIR}/rc.cpp
-cat ../../emptyLayout.metadata.desktop.template.h >> ${WDIR}/rc.cpp
 
 rm ../../containment.metadata.desktop.template.h
-rm ../../defaultLayout.metadata.desktop.template.h
-rm ../../emptyLayout.metadata.desktop.template.h
 
 echo "Done preparing rc files for panel"
 echo "Extracting messages for panel"
@@ -59,8 +51,6 @@ for cat in $catalogs; do
 done
 
 intltool-merge --quiet --desktop-style . ../../containment.metadata.desktop.template "${PROJECTPATH}"/metadata.desktop.cmake
-intltool-merge --quiet --desktop-style . ../../defaultLayout.metadata.desktop.template "${DEFAULTLAYOUT}"/metadata.desktop.cmake
-intltool-merge --quiet --desktop-style . ../../emptyLayout.metadata.desktop.template "${EMPTYLAYOUT}"/metadata.desktop.cmake
 
 echo "Done merging translations for panel"
 echo "Cleaning up"
