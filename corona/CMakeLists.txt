@@ -1,26 +1,3 @@
-project(nowdock)
-set(PROJECT_VERSION "0.1")
-set(PROJECT_VERSION_MAJOR 0)
-
-set(CMAKE_CXX_STANDARD 14)
-
-cmake_minimum_required(VERSION 3.0 FATAL_ERROR)
-
-set(QT_MIN_VERSION "5.6.0")
-set(KF5_MIN_VERSION "5.26.0")
-
-set(CMAKE_INSTALL_PREFIX "/usr")
-
-find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS
-     Quick QuickWidgets)
-
-find_package(ECM 1.8.0 REQUIRED NO_MODULE)
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
-
-find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
-    Plasma PlasmaQuick WindowSystem Declarative
-    I18n CoreAddons XmlGui DBusAddons Notifications)
-
 
 include(KDEInstallDirs)
 include(KDECMakeSettings)
