@@ -21,8 +21,7 @@
 
 #include "nowdockview.h"
 #include "nowdockconfigview.h"
-//#include "visibilitymanager.h"
-//#include "dockconfigview.h"
+#include "visibilitymanager.h"
 
 #include <QQmlContext>
 #include <QQuickItem>
@@ -63,28 +62,25 @@ NowDockView::NowDockView(Plasma::Corona *corona, QScreen *targetScreen)
     m_timerGeometry.setInterval(100);
 
     setThickness(100);
+
+   // m_visibility = new VisibilityManager(this);
     
-    /*   connect(this, &NowDockView::containmentChanged
+    connect(this, &NowDockView::containmentChanged
     , this, [&]() {
         if (!containment())
             return;
             
         if (!m_visibility) {
-            m_visibility = new VisibilityManager(containment());
-            m_visibility->setWinId(winId());
-            connect(m_visibility.data(), &VisibilityManager::visibilityChanged
-                    , this, &DockView::visibilityChanged);
-                    
+            m_visibility = new VisibilityManager(this);
+            //m_visibility->setWinId(winId());
         }
         
         m_visibility->setContainment(containment());
-        auto config = containment()->config();
-        const int alignment = config.readEntry("alignment", (int)(Dock::Center));
-        setAlignment(static_cast<Dock::Alignment>(alignment));
+    //    auto config = containment()->config();
+   //     const int alignment = config.readEntry("alignment", (int)(Dock::Center));
+    //    setAlignment(static_cast<Dock::Alignment>(alignment));
         
-    }, Qt::DirectConnection);*/
-    
-    
+    }, Qt::DirectConnection);
 }
 
 NowDockView::~NowDockView()
@@ -534,18 +530,20 @@ bool NowDockView::event(QEvent *e)
     } */
 
     //return QQuickWindow::event(e);
-
+    if (m_visibility) {
+        m_visibility->event(e);
+    }
     return ContainmentView::event(e);
 }
 
-void NowDockView::showEvent(QShowEvent *ev)
+/*void NowDockView::showEvent(QShowEvent *ev)
 {
     KWindowSystem::setType(winId(), NET::Dock);
     KWindowSystem::setOnAllDesktops(winId(), true);
 
     //QQuickWindow::showEvent(ev);
     ContainmentView::showEvent(ev);
-}
+}*/
 
 bool NowDockView::containmentContainsPosition(const QPointF &point) const
 {

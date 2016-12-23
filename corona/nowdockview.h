@@ -26,6 +26,7 @@
 
 #include "plasmaquick/configview.h"
 #include "plasmaquick/containmentview.h"
+#include "visibilitymanager.h"
 
 #include <QQuickView>
 #include <QQmlListProperty>
@@ -106,7 +107,7 @@ protected slots:
     
 protected:
     bool event(QEvent *ev) override;
-    void showEvent(QShowEvent *ev) override;
+//    void showEvent(QShowEvent *ev) override;
     
 signals:
  //   void visibilityChanged();
@@ -130,12 +131,12 @@ private:
     QRect m_dockGeometry;
     QRect m_mask;
     QPointer<PlasmaQuick::ConfigView> m_configView;
-  //  QPointer<Candil::VisibilityManager> m_visibility;
- //   Dock::Alignment m_alignment{Dock::Begin};
+
     QTimer m_timerGeometry;
     Plasma::Theme *theme{nullptr};
     Plasma::Corona *m_corona;
 
+    QPointer<VisibilityManager> m_visibility;
 };
 
 #endif

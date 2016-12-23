@@ -5,6 +5,8 @@
 #include <QMetaEnum>
 #include <QMetaType>
 
+namespace NowDock{
+
 class Types {
     Q_GADGET
 
@@ -47,4 +49,5 @@ public:
     Q_ENUM(VisibilityState)
 };
 
+}//end of namespace
 #endif

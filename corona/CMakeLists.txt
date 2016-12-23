@@ -12,10 +12,14 @@ include(KDEPackageAppTemplates)
 
 
 set(nowdock-app_SRCS
-    nowdockcorona.cpp
-    nowdockview.cpp
+    ../libnowdock/types.cpp
+    abstractinterface.cpp
+    xwindowinterface.cpp
+    visibilitymanager.cpp
     nowdockconfigview.cpp
+    nowdockview.cpp
     packageplugins/shell/nowdockpackage.cpp
+    nowdockcorona.cpp
     main.cpp
 )
 
