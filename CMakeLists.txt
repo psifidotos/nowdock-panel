@@ -47,7 +47,7 @@ ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
         SET(catalogname2 plasma_applet_org.kde.store.nowdock.plasmoid)
         ADD_CUSTOM_TARGET(translations2 ALL)
 
-        FILE(GLOB PO_FILES2 po/nowdockplasmoid/*.po)
+        FILE(GLOB PO_FILES2 po/plasmoid/*.po)
         
         FOREACH(_poFile ${PO_FILES2})
                 GET_FILENAME_COMPONENT(_poFileName ${_poFile} NAME)
@@ -56,7 +56,7 @@ ELSE(NOT GETTEXT_MSGFMT_EXECUTABLE)
 
                 IF( _langCode )
                         GET_FILENAME_COMPONENT(_lang ${_poFile} NAME_WE)
-                        SET(_gmoFile ${CMAKE_CURRENT_BINARY_DIR}/nowdockplasmoid/${_lang}.gmo)
+                        SET(_gmoFile ${CMAKE_CURRENT_BINARY_DIR}/plasmoid/${_lang}.gmo)
 
                         ADD_CUSTOM_COMMAND(TARGET translations2
                                 COMMAND ${GETTEXT_MSGFMT_EXECUTABLE} --check -o ${_gmoFile} ${_poFile}
@@ -70,8 +70,8 @@ ENDIF(NOT GETTEXT_MSGFMT_EXECUTABLE)
 add_subdirectory(libnowdock)
 add_subdirectory(containment)
 plasma_install_package(build/containment/release org.kde.nowdock.containment) 
-add_subdirectory(nowdockplasmoid)
-plasma_install_package(build/nowdockplasmoid/release org.kde.store.nowdock.plasmoid) 
+add_subdirectory(plasmoid)
+plasma_install_package(build/plasmoid/release org.kde.store.nowdock.plasmoid) 
 
 plasma_install_package(shell org.kde.nowdock.shell shells shell)
 

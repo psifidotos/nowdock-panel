@@ -7,8 +7,8 @@ BUGADDR="https://github.com/psifidotos/nowdock-panel/" # MSGID-Bugs
 WDIR="`pwd`/containment" # working dir
 
 PROJECTPLASMOID="plasma_applet_org.kde.store.nowdock.plasmoid" # project name
-PROJECTPATHPLASMOID="../../nowdockplasmoid" # project path
-WDIRPLASMOID="`pwd`/nowdockplasmoid" # working di
+PROJECTPATHPLASMOID="../../plasmoid" # project path
+WDIRPLASMOID="`pwd`/plasmoid" # working di
 
 echo "Preparing rc files for panel"
 
@@ -66,15 +66,15 @@ echo "Done translations for panel"
 #BASEDIR=".." # root of translatable sources
 
 echo "Preparing rc files for plasmoid"
-cd ../nowdockplasmoid
+cd ../plasmoid
 
 # we use simple sorting to make sure the lines do not jump around too much from system to system
 find "${PROJECTPATHPLASMOID}" -name '*.rc' -o -name '*.ui' -o -name '*.kcfg' | sort > "${WDIRPLASMOID}/rcfiles.list"
 xargs --arg-file="${WDIRPLASMOID}/rcfiles.list" extractrc > "${WDIRPLASMOID}/rc.cpp"
 
-intltool-extract --quiet --type=gettext/ini ../../nowdockplasmoid.metadata.desktop.template
-cat ../../nowdockplasmoid.metadata.desktop.template.h >> ${WDIRPLASMOID}/rc.cpp
-rm ../../nowdockplasmoid.metadata.desktop.template.h
+intltool-extract --quiet --type=gettext/ini ../../plasmoid.metadata.desktop.template
+cat ../../plasmoid.metadata.desktop.template.h >> ${WDIRPLASMOID}/rc.cpp
+rm ../../plasmoid.metadata.desktop.template.h
 
 echo "Done preparing rc files for plasmoid"
 echo "Extracting messages for plasmoid"
@@ -99,7 +99,7 @@ for cat in $catalogs; do
 	mv "$cat.new" "$cat"
 done
 
-intltool-merge --quiet --desktop-style . ../../nowdockplasmoid.metadata.desktop.template "${PROJECTPATHPLASMOID}"/metadata.desktop.cmake
+intltool-merge --quiet --desktop-style . ../../plasmoid.metadata.desktop.template "${PROJECTPATHPLASMOID}"/metadata.desktop.cmake
 
 echo "Done merging translations for plasmoid"
 echo "Cleaning up for plasmoid"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://github.com/psifidotos/nowdock-panel/\n"
-"POT-Creation-Date: 2016-12-23 15:15+0200\n"
+"POT-Creation-Date: 2016-12-23 15:19+0200\n"
 "PO-Revision-Date: 2016-11-25 00:01+0200\n"
 "Last-Translator: Michail Vοurlakos <mvourlakos@gmail.com>\n"
 "Language-Team: Greek <kde-i18n-doc@kde.org>\n"
@@ -17,72 +17,72 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 2.0\n"
 
-#: ../../nowdockplasmoid/contents/config/config.qml:26
+#: ../../plasmoid/contents/config/config.qml:26
 msgid "Appearance"
 msgstr "Εμφάνιση"
 
-#: ../../nowdockplasmoid/contents/config/config.qml:31
+#: ../../plasmoid/contents/config/config.qml:31
 msgid "Panel"
 msgstr "Πίνακας"
 
-#: ../../nowdockplasmoid/contents/config/config.qml:36
+#: ../../plasmoid/contents/config/config.qml:36
 msgid "Interaction"
 msgstr "Αλληλεπίδραση"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:68
+#: ../../plasmoid/contents/ui/ConfigAppearance.qml.cmake:68
 msgid "Icon size: "
 msgstr "Μέγεθος: "
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:156
+#: ../../plasmoid/contents/ui/ConfigAppearance.qml.cmake:156
 msgid "ver: "
 msgstr "εκδ: "
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:163
+#: ../../plasmoid/contents/ui/ConfigAppearance.qml.cmake:163
 msgid "Enable shadows for icons"
 msgstr "Σκιές στα εικονίδια"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:169
+#: ../../plasmoid/contents/ui/ConfigAppearance.qml.cmake:169
 msgid "Show glow around windows points"
 msgstr "Λάμψη στα σημεία κατάστασης των παραθύρων"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:175
+#: ../../plasmoid/contents/ui/ConfigAppearance.qml.cmake:175
 msgid "Different color for minimized windows"
 msgstr "Διαφορετικό χρώμα για ελαχιστοποιημένα παράθυρα"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:181
+#: ../../plasmoid/contents/ui/ConfigAppearance.qml.cmake:181
 msgid "Dots on active window"
 msgstr "Τελείες στο ενεργό παράθυρο"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:187
+#: ../../plasmoid/contents/ui/ConfigAppearance.qml.cmake:187
 msgid "Reverse position for lines and dots"
 msgstr "Αντίστροφη θέση για γραμμές και τελείες"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:205
+#: ../../plasmoid/contents/ui/ConfigAppearance.qml.cmake:205
 msgid "Animations: "
 msgstr "Εφέ: "
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:223
+#: ../../plasmoid/contents/ui/ConfigAppearance.qml.cmake:223
 msgid "duration"
 msgstr "διάρκεια"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:223
+#: ../../plasmoid/contents/ui/ConfigAppearance.qml.cmake:223
 msgid "disabled"
 msgstr "ανενεργό"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:235
+#: ../../plasmoid/contents/ui/ConfigAppearance.qml.cmake:235
 msgid "Zoom"
 msgstr "Εστίαση"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:249
+#: ../../plasmoid/contents/ui/ConfigAppearance.qml.cmake:249
 msgid "Level: "
 msgstr "Επίπεδο:"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:293
+#: ../../plasmoid/contents/ui/ConfigAppearance.qml.cmake:293
 msgid "Show a red line on the limit needed for animations"
 msgstr "Εμφάνιση κόκκινης γραμμής στο όριο των εφέ"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigAppearance.qml.cmake:323
-#: ../../nowdockplasmoid/contents/ui/ConfigPanel.qml:169
+#: ../../plasmoid/contents/ui/ConfigAppearance.qml.cmake:323
+#: ../../plasmoid/contents/ui/ConfigPanel.qml:169
 msgid ""
 "For the disabled settings you should use the Now Dock Panel Configuration "
 "Window"
@@ -90,267 +90,267 @@ msgstr ""
 "Για τις ανενεργές ρυθμίσεις πρέπει να χρησιμοποιήσετε το Παράθυρο Ρυθμίσεων "
 "του Πίνακα Now Dock"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigInteraction.qml:58
+#: ../../plasmoid/contents/ui/ConfigInteraction.qml:58
 msgid "Cycle through tasks with mouse wheel"
 msgstr "Περιήγηση στις εργασίες με τη ροδέλα του ποντικιού"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigInteraction.qml:65
+#: ../../plasmoid/contents/ui/ConfigInteraction.qml:65
 msgid "Preview windows on hovering"
 msgstr "Προεπισκοπήσεις παραθύρων"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigInteraction.qml:71
+#: ../../plasmoid/contents/ui/ConfigInteraction.qml:71
 msgid "Highlight windows on hovering"
 msgstr "Τονισμός παραθύρων"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigInteraction.qml:77
+#: ../../plasmoid/contents/ui/ConfigInteraction.qml:77
 msgid "Show window actions in the context menu"
 msgstr "Ενέργειες παραθύρου στο μενού επιλογών"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigInteraction.qml:83
+#: ../../plasmoid/contents/ui/ConfigInteraction.qml:83
 msgid "Show progress information in task buttons"
 msgstr "Εμφάνιση προόδου εργασιών"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigInteraction.qml:88
+#: ../../plasmoid/contents/ui/ConfigInteraction.qml:88
 msgid "On middle-click:"
 msgstr "Στο μεσαίο κλικ:"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigInteraction.qml:94
+#: ../../plasmoid/contents/ui/ConfigInteraction.qml:94
 msgctxt "The click action"
 msgid "None"
 msgstr "Καμία"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigInteraction.qml:94
+#: ../../plasmoid/contents/ui/ConfigInteraction.qml:94
 msgid "Close Window or Group"
 msgstr "Κλείσιμο παραθύρου ή ομάδας"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigInteraction.qml:94
+#: ../../plasmoid/contents/ui/ConfigInteraction.qml:94
 msgid "New Instance"
 msgstr "Νέο στιγμιότυπο"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigInteraction.qml:94
+#: ../../plasmoid/contents/ui/ConfigInteraction.qml:94
 msgid "Minimize/Restore Window or Group"
 msgstr "Ελαχιστοποίηση/Επαναφορά παραθύρου ή ομάδας"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigInteraction.qml:106
+#: ../../plasmoid/contents/ui/ConfigInteraction.qml:106
 msgid "Filters"
 msgstr "Φίλτρα"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigInteraction.qml:117
+#: ../../plasmoid/contents/ui/ConfigInteraction.qml:117
 msgid "Show only tasks from the current screen"
 msgstr "Εμφάνιση εργασιών μόνο της τρέχουσας οθόνης"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigInteraction.qml:122
+#: ../../plasmoid/contents/ui/ConfigInteraction.qml:122
 msgid "Show only tasks from the current desktop"
 msgstr "Εμφάνιση εργασιών μόνο της τρέχουσας επιφάνειας εργασίας"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigInteraction.qml:127
+#: ../../plasmoid/contents/ui/ConfigInteraction.qml:127
 msgid "Show only tasks from the current activity"
 msgstr "Εμφάνιση εργασιών μόνο της τρέχουσας δραστηριότητας"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigPanel.qml:58
+#: ../../plasmoid/contents/ui/ConfigPanel.qml:58
 msgid "Position: "
 msgstr "Θέση: "
 
-#: ../../nowdockplasmoid/contents/ui/ConfigPanel.qml:66
+#: ../../plasmoid/contents/ui/ConfigPanel.qml:66
 msgid "Center"
 msgstr "Κέντρο"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigPanel.qml:66
+#: ../../plasmoid/contents/ui/ConfigPanel.qml:66
 msgid "Left"
 msgstr "Αριστερά"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigPanel.qml:66
+#: ../../plasmoid/contents/ui/ConfigPanel.qml:66
 msgid "Right"
 msgstr "Δεξιά"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigPanel.qml:66
+#: ../../plasmoid/contents/ui/ConfigPanel.qml:66
 msgid "Top"
 msgstr "Πάνω"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigPanel.qml:66
+#: ../../plasmoid/contents/ui/ConfigPanel.qml:66
 msgid "Bottom"
 msgstr "Κάτω"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigPanel.qml:74
+#: ../../plasmoid/contents/ui/ConfigPanel.qml:74
 msgid "Show bar line for tasks"
 msgstr "Εμφάνιση υποβάθρου για τις εργασίες"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigPanel.qml:81
+#: ../../plasmoid/contents/ui/ConfigPanel.qml:81
 msgid "Use plasma theme panel"
 msgstr "Πίνακας από το θέμα του Plasma"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigPanel.qml:88
+#: ../../plasmoid/contents/ui/ConfigPanel.qml:88
 msgid "Use transparency in the panel"
 msgstr "Πίνακας με διαφάνεια"
 
-#: ../../nowdockplasmoid/contents/ui/ConfigPanel.qml:95
+#: ../../plasmoid/contents/ui/ConfigPanel.qml:95
 msgid "Size: "
 msgstr "Μέγεθος: "
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:115
+#: ../../plasmoid/contents/ui/ContextMenu.qml:115
 msgctxt "Play previous track"
 msgid "Previous Track"
 msgstr "Προηγούμενο"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:128
+#: ../../plasmoid/contents/ui/ContextMenu.qml:128
 msgctxt "Pause playback"
 msgid "Pause"
 msgstr "Παύση"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:128
+#: ../../plasmoid/contents/ui/ContextMenu.qml:128
 msgctxt "Start playback"
 msgid "Play"
 msgstr "Έναρξη"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:139
+#: ../../plasmoid/contents/ui/ContextMenu.qml:139
 msgctxt "Stop playback"
 msgid "Stop"
 msgstr "Διακοπή"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:147
+#: ../../plasmoid/contents/ui/ContextMenu.qml:147
 msgctxt "Play next track"
 msgid "Next Track"
 msgstr "Επόμενο"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:163
+#: ../../plasmoid/contents/ui/ContextMenu.qml:163
 msgctxt "Quit media player app"
 msgid "Quit"
 msgstr "Έξοδος"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:178
+#: ../../plasmoid/contents/ui/ContextMenu.qml:178
 msgctxt "Open or bring to the front window of media player app"
 msgid "Restore"
 msgstr "Επαναφορά"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:223
+#: ../../plasmoid/contents/ui/ContextMenu.qml:223
 msgid "Move To Desktop"
 msgstr "Στην Επιφάνεια Εργασίας"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:245
+#: ../../plasmoid/contents/ui/ContextMenu.qml:245
 msgid "Move To Current Desktop"
 msgstr "Στην Τρέχουσα Επιφάνεια Εργασίας"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:254
+#: ../../plasmoid/contents/ui/ContextMenu.qml:254
 msgid "All Desktops"
 msgstr "Όλες οι Επιφάνειες Εργασίας"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:283
+#: ../../plasmoid/contents/ui/ContextMenu.qml:283
 msgid "New Desktop"
 msgstr "Νέα Επιφάνεια Εργασίας"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:303
+#: ../../plasmoid/contents/ui/ContextMenu.qml:303
 msgid "Move To &Activity"
 msgstr "Δραστηριότητες"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:324
+#: ../../plasmoid/contents/ui/ContextMenu.qml:324
 msgid "Add To Current Activity"
 msgstr "Στην Τρέχουσα Δραστηριότητα"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:334
+#: ../../plasmoid/contents/ui/ContextMenu.qml:334
 msgid "All Activities"
 msgstr "Όλες τις Δραστηριότητες"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:403
+#: ../../plasmoid/contents/ui/ContextMenu.qml:403
 msgid "Minimize"
 msgstr "Ελαχιστοποίηση"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:419
+#: ../../plasmoid/contents/ui/ContextMenu.qml:419
 msgid "Maximize"
 msgstr "Μεγιστοποίηση"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:434
+#: ../../plasmoid/contents/ui/ContextMenu.qml:434
 msgid "More Actions"
 msgstr "Περισσότερες ενέργειες"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:442
+#: ../../plasmoid/contents/ui/ContextMenu.qml:442
 msgid "Move"
 msgstr "Μετακίνηση"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:451
+#: ../../plasmoid/contents/ui/ContextMenu.qml:451
 msgid "Resize"
 msgstr "Αλλαγή μεγέθους"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:460
+#: ../../plasmoid/contents/ui/ContextMenu.qml:460
 msgid "Keep Above Others"
 msgstr "Διατήρηση πάνω από τα άλλα"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:470
+#: ../../plasmoid/contents/ui/ContextMenu.qml:470
 msgid "Keep Below Others"
 msgstr "Διατήρηση κάτω από τα άλλα"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:482
+#: ../../plasmoid/contents/ui/ContextMenu.qml:482
 msgid "Fullscreen"
 msgstr "Πλήρης οθόνη"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:494
+#: ../../plasmoid/contents/ui/ContextMenu.qml:494
 msgid "Shade"
 msgstr "Τύλιγμα"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:509
+#: ../../plasmoid/contents/ui/ContextMenu.qml:509
 msgid "Allow this program to be grouped"
 msgstr "Να επιτρέπεται η ομαδοποίηση του προγράμματος"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:522
+#: ../../plasmoid/contents/ui/ContextMenu.qml:522
 msgid "Start New Instance"
 msgstr "Νέο Στιγμιότυπο"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:544
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:577
+#: ../../plasmoid/contents/ui/ContextMenu.qml:544
+#: ../../plasmoid/contents/ui/ContextMenu.qml:577
 msgid "Show Launcher On All Activities"
 msgstr "Εκκινητής σε Όλες τις Δραστηριότητες"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:561
+#: ../../plasmoid/contents/ui/ContextMenu.qml:561
 msgid "Show Launcher When Not Running"
 msgstr "Εκκινητής όταν δεν είναι Ενεργό"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:588
+#: ../../plasmoid/contents/ui/ContextMenu.qml:588
 msgid "Remove Launcher"
 msgstr "Αφαίρεση Εκκινητή"
 
-#: ../../nowdockplasmoid/contents/ui/ContextMenu.qml:619
+#: ../../plasmoid/contents/ui/ContextMenu.qml:619
 msgid "Close"
 msgstr "Κλείσιμο"
 
-#: ../../nowdockplasmoid/contents/ui/TaskDelegate.qml:773
+#: ../../plasmoid/contents/ui/TaskDelegate.qml:773
 msgid "On %1"
 msgstr "Σε %1"
 
-#: ../../nowdockplasmoid/contents/ui/TaskDelegate.qml:782
+#: ../../plasmoid/contents/ui/TaskDelegate.qml:782
 msgctxt "Which virtual desktop a window is currently on"
 msgid "Available on all activities"
 msgstr "Σε όλες τις δραστηριότητες"
 
-#: ../../nowdockplasmoid/contents/ui/TaskDelegate.qml:801
+#: ../../plasmoid/contents/ui/TaskDelegate.qml:801
 msgctxt "Activities a window is currently on (apart from the current one)"
 msgid "Also available on %1"
 msgstr "Διαθέσιμο επίσης σε %1"
 
-#: ../../nowdockplasmoid/contents/ui/TaskDelegate.qml:805
+#: ../../plasmoid/contents/ui/TaskDelegate.qml:805
 msgctxt "Which activities a window is currently on"
 msgid "Available on %1"
 msgstr "Διαθέσιμο σε %1"
 
-#: ../../nowdockplasmoid/contents/ui/ToolTipDelegate.qml:356
+#: ../../plasmoid/contents/ui/ToolTipDelegate.qml:356
 msgctxt "Go to previous song"
 msgid "Previous"
 msgstr "Προηγούμενο"
 
-#: ../../nowdockplasmoid/contents/ui/ToolTipDelegate.qml:365
+#: ../../plasmoid/contents/ui/ToolTipDelegate.qml:365
 msgctxt "Pause player"
 msgid "Pause"
 msgstr "Παύση"
 
-#: ../../nowdockplasmoid/contents/ui/ToolTipDelegate.qml:365
+#: ../../plasmoid/contents/ui/ToolTipDelegate.qml:365
 msgctxt "Start player"
 msgid "Play"
 msgstr "Έναρξη"
 
-#: ../../nowdockplasmoid/contents/ui/ToolTipDelegate.qml:373
+#: ../../plasmoid/contents/ui/ToolTipDelegate.qml:373
 msgctxt "Go to next song"
 msgid "Next"
 msgstr "Επόμενο"
 
-#: ../../nowdockplasmoid/contents/ui/ToolTipWindowMouseArea.qml:57
+#: ../../plasmoid/contents/ui/ToolTipWindowMouseArea.qml:57
 msgctxt "close this window"
 msgid "Close"
 msgstr "Κλείσιμο"
