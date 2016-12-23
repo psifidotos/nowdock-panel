@@ -6,6 +6,8 @@
 
 #include "../libnowdock/types.h"
 
+#include <QDebug>
+
 #include <Plasma/Containment>
 
 VisibilityManager::VisibilityManager(PlasmaQuick::ContainmentView *view) :
@@ -415,7 +417,6 @@ bool VisibilityManager::event(QEvent *event)
         m_updateStateTimer.stop();
         setIsHovered(true);
 
-
         if ((m_panelVisibility == NowDock::Types::AutoHide) || (m_isDockWindowType)) {
             if (m_isAutoHidden) {
                 emit mustBeRaised();
@@ -429,7 +430,8 @@ bool VisibilityManager::event(QEvent *event)
         if ( (m_panelVisibility != NowDock::Types::WindowsGoBelow)
              && (m_panelVisibility != NowDock::Types::AlwaysVisible) ) {
             m_updateStateTimer.start();
-        }    }
+        }
+    }
 
-//    return QQuickWindow::event(event);
+    return true;
 }

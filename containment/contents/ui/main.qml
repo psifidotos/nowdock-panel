@@ -857,16 +857,18 @@ DragDrop.DropArea {
     }
 
     function updateAutomaticIconSize() {
-     /*   if (magicWin && magicWin.normalState && !animatedLengthTimer.running && plasmoid.immutable
+        if (visibilityManager.normalState && !animatedLengthTimer.running && plasmoid.immutable
                 && (iconSize===plasmoid.configuration.iconSize || iconSize === automaticIconSizeBasedSize) ) {
             var layoutLength;
-            var maxLength = magicWin.maximumLength;
+            var maxLength = dockView.maxLength;
             // console.log("------Entered check-----");
 
             if (root.isVertical) {
-                layoutLength = (plasmoid.configuration.panelPosition === 10) ? mainLayout.height+secondLayout.height : mainLayout.height
+                layoutLength = (plasmoid.configuration.panelPosition === NowDock.Types.Double) ?
+                            mainLayout.height+secondLayout.height : mainLayout.height
             } else {
-                layoutLength = (plasmoid.configuration.panelPosition === 10) ? mainLayout.width+secondLayout.width : mainLayout.width
+                layoutLength = (plasmoid.configuration.panelPosition === NowDock.Types.Double) ?
+                            mainLayout.width+secondLayout.width : mainLayout.width
             }
 
             var toShrinkLimit = maxLength-(zoomFactor*(iconSize+2*iconMargin));
@@ -912,7 +914,7 @@ DragDrop.DropArea {
                     //     console.log("Step 4 - did not found...");
                 }
             }
-        }*/
+        }
     }
 
     function updateLayouts(){
@@ -1055,14 +1057,14 @@ DragDrop.DropArea {
 
         x: (plasmoid.configuration.panelPosition === NowDock.Types.Double) && root.isHorizontal
            && plasmoid.immutable && windowSystem.compositingActive ?
-               (dockView.width/2) - (dockView.visibility.maximumLength/2): 0
+               (dockView.width/2) - (dockView.visibility.maxLength/2): 0
         y: (plasmoid.configuration.panelPosition === NowDock.Types.Double) && root.isVertical
            && plasmoid.immutable && windowSystem.compositingActive ?
-               (dockView.height/2) - (dockView.visibility.maximumLength/2): 0
+               (dockView.height/2) - (dockView.visibility.maxLength/2): 0
         width: (plasmoid.configuration.panelPosition === NowDock.Types.Double) && root.isHorizontal && plasmoid.immutable ?
-                   dockView.visibility.maximumLength : parent.width
+                   dockView.visibility.maxLength : parent.width
         height: (plasmoid.configuration.panelPosition === NowDock.Types.Double) && root.isVertical && plasmoid.immutable ?
-                    dockView.visibility.maximumLength : parent.height
+                    dockView.visibility.maxLength : parent.height
 
         Component.onCompleted: {
             if(plasmoid.immutable) {
