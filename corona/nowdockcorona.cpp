@@ -171,7 +171,7 @@ void NowDockCorona::loadDefaultLayout()
     
     auto config = defaultContainment->config();
     
-   // config.writeEntry("visibility", (int)Dock::Normal);
+    config.writeEntry("dock", "initial");
    // config.writeEntry("alignment", (int)Dock::Center);
    //  config.deleteEntry("wallpaperplugin");
     
@@ -179,8 +179,11 @@ void NowDockCorona::loadDefaultLayout()
     
     auto cfg = defaultContainment->config();
     defaultContainment->save(cfg);
-    
+
     addDock(defaultContainment);
+
+    defaultContainment->createApplet(QStringLiteral("org.kde.store.nowdock.plasmoid"));
+    defaultContainment->createApplet(QStringLiteral("org.kde.plasma.analogclock"));
 }
 
 inline void NowDockCorona::qmlRegisterTypes() const

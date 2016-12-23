@@ -398,13 +398,11 @@ inline void NowDockView::updateDockPosition()
 
 int NowDockView::maxThickness() const
 {
-    // the thickness per space reserved for animations
-    int thickness = std::min(m_thickness, m_length);
-    
-    if (KWindowSystem::compositingActive())
-        return thickness * 1.6;
-
-    return thickness;
+    if (containment()->formFactor() == Plasma::Types::Vertical ) {
+        return m_maskArea.isNull() ? width() : m_maskArea.width();
+    } else {
+        return m_maskArea.isNull() ? height() : m_maskArea.height();
+    }
 }
 
 bool NowDockView::compositing() const
