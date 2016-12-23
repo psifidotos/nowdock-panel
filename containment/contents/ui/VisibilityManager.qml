@@ -140,7 +140,7 @@ Item{
                 && (!mainLayout.animatedLength)
 
         // debug maskArea criteria
-        //console.log(root.nowDockHoveredIndex + ", " + layoutsContainer.hoveredIndex + ", "
+        // console.log(root.nowDockHoveredIndex + ", " + layoutsContainer.hoveredIndex + ", "
         //         + root.appletsAnimations+ ", "
         //         + root.animationsNeedBothAxis + ", " + root.animationsNeedLength + ", " + root.animationsNeedThickness +", "
         //         + mainLayout.animatedLength);
@@ -279,10 +279,10 @@ Item{
             }
 
             Rectangle{
-                x: maskArea.x
-                y: maskArea.y
-                height: window.maskArea.height
-                width: window.maskArea.width
+                x: window ? window.maskArea.x : 0
+                y: window ? window.maskArea.y : 0
+                height: window ? window.maskArea.height : -1
+                width: window ? window.maskArea.width : -1
 
                 border.color: "green"
                 border.width: 1

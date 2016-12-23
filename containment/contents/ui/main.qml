@@ -1039,21 +1039,16 @@ DragDrop.DropArea {
         property int currentSpot: -1000
         property int hoveredIndex: -1
 
-       /* x: (plasmoid.configuration.panelPosition === NowDock.Types.Double) && root.isHorizontal
+        x: (plasmoid.configuration.panelPosition === NowDock.Types.Double) && root.isHorizontal
            && plasmoid.immutable && windowSystem.compositingActive ?
-               (magicWin.width/2) - (magicWin.maximumLength/2): 0
+               (dockView.width/2) - (dockView.visibility.maximumLength/2): 0
         y: (plasmoid.configuration.panelPosition === NowDock.Types.Double) && root.isVertical
            && plasmoid.immutable && windowSystem.compositingActive ?
-               (magicWin.height/2) - (magicWin.maximumLength/2): 0
+               (dockView.height/2) - (dockView.visibility.maximumLength/2): 0
         width: (plasmoid.configuration.panelPosition === NowDock.Types.Double) && root.isHorizontal && plasmoid.immutable ?
-                   magicWin.maximumLength : parent.width
+                   dockView.visibility.maximumLength : parent.width
         height: (plasmoid.configuration.panelPosition === NowDock.Types.Double) && root.isVertical && plasmoid.immutable ?
-                    magicWin.maximumLength : parent.height*/
-
-        x: 0
-        y: 0
-        width: parent.width
-        height: parent.height
+                    dockView.visibility.maximumLength : parent.height
 
         Component.onCompleted: {
             if(plasmoid.immutable) {
@@ -1112,17 +1107,17 @@ DragDrop.DropArea {
             property bool animatedLength: false
             property int count: children.length
 
-          /*  onHeightChanged: {
-                if (root.isVertical && magicWin && plasmoid.immutable) {
+            onHeightChanged: {
+                if (root.isVertical && plasmoid.immutable) {
                     checkLayoutsAnimatedLength();
                 }
             }
 
             onWidthChanged: {
-                if (root.isHorizontal && magicWin && plasmoid.immutable) {
+                if (root.isHorizontal && plasmoid.immutable) {
                     checkLayoutsAnimatedLength();
                 }
-            }*/
+            }
 
         }
 
