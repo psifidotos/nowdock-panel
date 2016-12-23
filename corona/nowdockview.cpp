@@ -24,6 +24,7 @@
 #include "visibilitymanager.h"
 
 #include <QQmlContext>
+#include <QQmlProperty>
 #include <QQuickItem>
 #include <QMetaEnum>
 //#include <QtX11Extras/QX11Info>
@@ -128,6 +129,13 @@ void NowDockView::init()
 
     rootContext()->setContextProperty(QStringLiteral("panel"), this);
     setSource(corona()->kPackage().filePath("nowdockui"));
+
+  /*  QQuickItem *dockLayout = rootObject()->findChild<QQuickItem*>("dockLayoutView");
+    if (dockLayout) {
+        QVariant link = qVariantFromValue((void *) this);
+        QQmlProperty::write(dockLayout, "dockView", link);
+    }*/
+
     qDebug() << "SOURCE:" << source();
     updateDockPosition();
 }
@@ -388,22 +396,6 @@ inline void NowDockView::updateDockPosition()
     qDebug() << "shell position:" << position;
 }
 
-QRect NowDockView::dockMask() const
-{
-    if (mask().rectCount() >= 1)
-        return mask().rects()[0];
-
-    return QRect();
-}
-
-void NowDockView::setDockMask(QRect mask)
-{
-    qDebug() << "setting dock mask:" << mask;
-    
-    setMask(mask);
-    emit maskChanged();
-}
-
 int NowDockView::maxThickness() const
 {
     // the thickness per space reserved for animations
@@ -473,6 +465,26 @@ void NowDockView::setMaxLength(int maxLength)
     emit maxLengthChanged();
 }
 
+
+QRect NowDockView::maskArea() const
+{
+    return m_maskArea;
+}
+
+void NowDockView::setMaskArea(QRect area)
+{
+    if (m_maskArea == area) {
+        return;
+    }
+
+    m_maskArea = area;
+    m_visibility->setMaskArea(area);
+
+    setMask(m_maskArea);
+
+    emit maskAreaChanged();
+}
+
 /*Dock::Alignment NowDockView::alignment() const
 {
     return m_alignment;
@@ -517,6 +529,10 @@ void NowDockView::updateOffset()
     emit offsetChanged();
 }
 
+VisibilityManager *NowDockView::visibility()
+{
+    return m_visibility;
+}
 
 bool NowDockView::event(QEvent *e)
 {
@@ -533,6 +549,7 @@ bool NowDockView::event(QEvent *e)
     if (m_visibility) {
         m_visibility->event(e);
     }
+
     return ContainmentView::event(e);
 }
 

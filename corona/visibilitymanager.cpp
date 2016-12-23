@@ -165,6 +165,11 @@ void VisibilityManager::setIsHovered(bool state)
     emit isHoveredChanged();
 }
 
+void VisibilityManager::setMaskArea(QRect area)
+{
+    m_interface->setMaskArea(area);
+}
+
 /*******************************/
 
 void VisibilityManager::initialize()

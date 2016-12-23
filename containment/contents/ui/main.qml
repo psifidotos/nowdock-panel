@@ -32,6 +32,7 @@ import "LayoutManager.js" as LayoutManager
 
 DragDrop.DropArea {
     id: root
+    objectName: "dockLayoutView"
 
     //// BEGIN SIGNALS
     signal clearZoomSignal();
@@ -46,8 +47,9 @@ DragDrop.DropArea {
     property bool inStartup: true
     property bool isHorizontal: plasmoid.formFactor == PlasmaCore.Types.Horizontal
     property bool isVertical: !isHorizontal
-    property bool isHovered: nowDock ? ((nowDockHoveredIndex !== -1) && (layoutsContainer.hoveredIndex !== -1)) || wholeArea.containsMouse
+    property bool isHovered: nowDock ? ((nowDockHoveredIndex !== -1) && (layoutsContainer.hoveredIndex !== -1)) //|| wholeArea.containsMouse
                                      : (layoutsContainer.hoveredIndex !== -1) || wholeArea.containsMouse
+    property bool normalState : false
     property bool onlyAddingStarup: true //is used for the initialization phase in startup where there arent removals, this variable provides a way to grow icon size
     //FIXME: possibly this is going to be the default behavior, this user choice
     //has been dropped from the Dock Configuration Window
@@ -90,6 +92,7 @@ DragDrop.DropArea {
     property Item toolBox
     property Item nowDockContainer
     property Item nowDock
+    property QtObject dockView
 
     // TO BE DELETED, if not needed: property int counter:0;
 
@@ -402,7 +405,7 @@ DragDrop.DropArea {
     //// END OF Behaviors
 
     //////////////START OF CONNECTIONS
-  //  onAppletsAnimationsChanged: magicWin.updateMaskArea();
+    onAppletsAnimationsChanged: updateMaskArea();
 
     onDragEnter: {
         if (plasmoid.immutable) {
@@ -435,11 +438,11 @@ DragDrop.DropArea {
         containmentSizeSyncTimer.restart();
     }
 
-   /* onIsHoveredChanged: {
+    onIsHoveredChanged: {
         if (isHovered){
-            magicWin.showOnTopCheck();
+            dockView.visibility.showOnTopCheck();
         }
-    }*/
+    }
 
     onHeightChanged: {
         containmentSizeSyncTimer.restart()
@@ -456,8 +459,6 @@ DragDrop.DropArea {
             nowDock.signalDraggingState.connect(slotDisableHiding);
         }
     }
-
-    //  onNowDockAnimationsChanged: magicWin.updateMaskArea();
 
     onToolBoxChanged: {
         containmentSizeSyncTimer.restart();
@@ -736,20 +737,21 @@ DragDrop.DropArea {
             animatedLengthTimer.start();
         }
 
-      /*  if (!magicWin.isHovered && (root.animationsNeedBothAxis === 0) && (root.animationsNeedLength===0) && (root.appletsAnimations === 0)) {
+        if (!dockView.visibility.isHovered && (root.animationsNeedBothAxis === 0)
+                && (root.animationsNeedLength===0) && (root.appletsAnimations === 0)) {
             mainLayout.animatedLength = true;
         } else {
             mainLayout.animatedLength = false;
         }
 
-        magicWin.updateMaskArea(); */
+        updateMaskArea();
     }
 
     function clearZoom(){
         //console.log("Panel clear....");
-       /* if (magicWin.disableHiding) {
+        if (dockView.visibility.disableHiding) {
             return;
-        }*/
+        }
 
         layoutsContainer.currentSpot = -1000;
         layoutsContainer.hoveredIndex = -1;
@@ -835,7 +837,7 @@ DragDrop.DropArea {
         }
 
         animationsNeedBothAxis = value;
-       // magicWin.updateMaskArea();
+        updateMaskArea();
     }
 
     function slotAnimationsNeedLength(value) {
@@ -844,7 +846,7 @@ DragDrop.DropArea {
         }
 
         animationsNeedLength = value;
-      //  magicWin.updateMaskArea();
+        updateMaskArea();
     }
 
     function slotAnimationsNeedThickness(value) {
@@ -853,11 +855,11 @@ DragDrop.DropArea {
         }
 
         animationsNeedThickness = value;
-       // magicWin.updateMaskArea();
+        updateMaskArea();
     }
 
     function slotDisableHiding(value) {
-      //  magicWin.disableHiding = value;
+        dockView.visibility.disableHiding = value;
     }
 
     function updateAutomaticIconSize() {
@@ -953,7 +955,7 @@ DragDrop.DropArea {
 
 
     ////BEGIN interfaces
-    NowDock.WindowSystem{
+    NowDock.WindowSystem {
         id:windowSystem
     }
 
@@ -1233,13 +1235,15 @@ DragDrop.DropArea {
         onTriggered: {
             if (forcedDisableHiding) {
                 forcedDisableHiding = false;
-             //   magicWin.disableHiding = false;
+                dockView.visibility.disableHiding = false;
             }
 
-          /*  if (plasmoid.immutable && magicWin && !magicWin.isHovered && !wholeArea.containsMouse
-                    && ((magicWin.panelVisibility === NowDock.Types.AutoHide) || magicWin.isDockWindowType) ) {
-                magicWin.mustBeLowered();
-            } */
+            var visibility = dockView.visibility;
+
+            if (plasmoid.immutable && magicWin && !visibility.isHovered //&& !wholeArea.containsMouse
+                    && ((visibility.panelVisibility === NowDock.Types.AutoHide) || visibility.isDockWindowType) ) {
+                visibility.mustBeLowered();
+            }
         }
     }
 
@@ -1298,4 +1302,143 @@ DragDrop.DropArea {
 
     ///////////////END TIMER elements
 
+    ///test maskArea
+
+    function updateMaskArea() {
+        if (!windowSystem.compositingActive) {
+            return;
+        }
+
+        var localX = 0;
+        var localY = 0;
+
+        normalState = (root.nowDockHoveredIndex === -1) && (layoutsContainer.hoveredIndex === -1)
+                && (root.appletsAnimations === 0)
+                && (root.animationsNeedBothAxis === 0) && (root.animationsNeedLength === 0)
+                && (!mainLayout.animatedLength)
+
+        // debug maskArea criteria
+        //console.log(root.nowDockHoveredIndex + ", " + layoutsContainer.hoveredIndex + ", "
+        //         + root.appletsAnimations+ ", "
+        //         + root.animationsNeedBothAxis + ", " + root.animationsNeedLength + ", " + root.animationsNeedThickness +", "
+        //         + mainLayout.animatedLength);
+
+        var tempLength = root.isHorizontal ? width : height;
+        var tempThickness = root.isHorizontal ? height : width;
+
+        var space = root.panelEdgeSpacing + 10;
+
+        if (normalState) {
+            //count panel length
+            if(root.isHorizontal) {
+                tempLength = plasmoid.configuration.panelPosition === NowDock.Types.Double ? layoutsContainer.width + 0.5*space : mainLayout.width + space;
+            } else {
+                tempLength = plasmoid.configuration.panelPosition === NowDock.Types.Double ? layoutsContainer.height + 0.5*space : mainLayout.height + space;
+            }
+
+            tempThickness = thicknessNormalOriginal;
+
+            if (root.animationsNeedThickness > 0) {
+                tempThickness = thicknessMidOriginal;
+            }
+
+            if (dockView.isAutoHidden && ((panelVisibility === NowDock.Types.AutoHide) || dockView.isDockWindowType)) {
+                tempThickness = thicknessAutoHidden;
+            }
+
+            if (!immutable) {
+                tempThickness = 2;
+            }
+
+            //configure x,y based on plasmoid position and root.panelAlignment(Alignment)
+            if ((plasmoid.location === PlasmaCore.Types.BottomEdge) || (plasmoid.location === PlasmaCore.Types.TopEdge)) {
+                if (plasmoid.location === PlasmaCore.Types.BottomEdge) {
+                    localY = dockView.height - tempThickness;
+                } else if (plasmoid.location === PlasmaCore.Types.TopEdge) {
+                    localY = 0;
+                }
+
+                if (plasmoid.configuration.panelPosition === NowDock.Types.Double) {
+                    localX = (dockView.width/2) - (layoutsContainer.width/2) - 0.25*space;
+                } else if (root.panelAlignment === NowDock.Types.Left) {
+                    localX = 0;
+                } else if (root.panelAlignment === NowDock.Types.Center) {
+                    localX = (dockView.width/2) - (mainLayout.width/2) - (space/2);
+                } else if (root.panelAlignment === NowDock.Types.Right) {
+                    localX = dockView.width - mainLayout.width - (space/2);
+                }
+            } else if ((plasmoid.location === PlasmaCore.Types.LeftEdge) || (plasmoid.location === PlasmaCore.Types.RightEdge)){
+                if (plasmoid.location === PlasmaCore.Types.LeftEdge) {
+                    localX = 0;
+                } else if (plasmoid.location === PlasmaCore.Types.RightEdge) {
+                    localX = dockView.width - tempThickness;
+                }
+
+                if (plasmoid.configuration.panelPosition === NowDock.Types.Double) {
+                    localY = (dockView.height/2) - (layoutsContainer.height/2) - 0.25*space;
+                } else if (root.panelAlignment === NowDock.Types.Top) {
+                    localY = 0;
+                } else if (root.panelAlignment === NowDock.Types.Center) {
+                    localY = (dockView.height/2) - (mainLayout.height/2) - (space/2);
+                } else if (root.panelAlignment === NowDock.Types.Bottom) {
+                    localY = dockView.height - mainLayout.height - (space/2);
+                }
+            }
+        } else {
+            if(root.isHorizontal)
+                tempLength = Screen.width; //screenGeometry.width;
+            else
+                tempLength = Screen.height; //screenGeometry.height;
+
+            //grow only on length and not thickness
+            if(mainLayout.animatedLength) {
+                tempThickness = thicknessNormalOriginal;
+
+                if (root.animationsNeedThickness > 0) {
+                    tempThickness = thicknessMidOriginal;
+                }
+
+                //configure the x,y position based on thickness
+                if(plasmoid.location === PlasmaCore.Types.RightEdge)
+                    localX = dockView.width - tempThickness;
+                else if(plasmoid.location === PlasmaCore.Types.BottomEdge)
+                    localY = dockView.height - tempThickness;
+            } else{
+                //use all thickness space
+                tempThickness = thicknessZoomOriginal;
+            }
+        }
+        var maskArea = dockView.maskArea
+
+        var maskLength = maskArea.width; //in Horizontal
+        if (root.isVertical) {
+            maskLength = maskArea.height;
+        }
+
+        var maskThickness = maskArea.height; //in Horizontal
+        if (root.isVertical) {
+            maskThickness = maskArea.width;
+        }
+
+        // console.log("Not updating mask...");
+        if( maskArea.x !== localX || maskArea.y !== localY
+                || maskLength !== tempLength || maskThickness !== tempThickness) {
+
+            // console.log("Updating mask...");
+            var newMaskArea = Qt.rect(-1,-1,0,0);
+            newMaskArea.x = localX;
+            newMaskArea.y = localY;
+
+            if (isHorizontal) {
+                newMaskArea.width = tempLength;
+                newMaskArea.height = tempThickness;
+            } else {
+                newMaskArea.width = tempThickness;
+                newMaskArea.height = tempLength;
+            }
+
+            dockView.maskArea = newMaskArea;
+        }
+
+    }
 }

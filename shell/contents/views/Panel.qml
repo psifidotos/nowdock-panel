@@ -24,21 +24,20 @@ import org.kde.plasma.core 2.0 as PlasmaCore
 PlasmaCore.FrameSvgItem {
     id: root
 
-   // width: 400
-   // height: 400
     //imagePath: containment && containment.backgroundHints === PlasmaCore.Types.NoBackground ? "" : "widgets/panel-background"
-    imagePath: "widgets/panel-background"
-    //imagePath: ""
+    //imagePath: "widgets/panel-background"
+    imagePath: ""
     prefix:""
-   // onRepaintNeeded: adjustPrefix();
+    // onRepaintNeeded: adjustPrefix();
 
     //enabledBorders: panel.enabledBorders
 
     property Item containment
+    property Item dockLayout
 
     readonly property bool verticalPanel: containment && containment.formFactor === PlasmaCore.Types.Vertical
 
-  /*  Rectangle{
+    /*  Rectangle{
         anchors.fill: parent
         color: "transparent"
         border.color: "blue"
@@ -82,6 +81,13 @@ PlasmaCore.FrameSvgItem {
         containment.anchors.fill = containmentParent;
         containment.locationChanged.connect(adjustPrefix);
         adjustPrefix();
+
+        for(var i=0; i<containment.children.length; ++i){
+            if (containment.children[i].objectName === "dockLayoutView") {
+                dockLayout = containment.children[i];
+                dockLayout.dockView = panel;
+            }
+        }
     }
 
     Binding {
@@ -100,7 +106,7 @@ PlasmaCore.FrameSvgItem {
         }
     }
 
-  /*  Binding {
+    /*  Binding {
         target: panel
         property: "backgroundHints"
         when: containment
@@ -109,7 +115,7 @@ PlasmaCore.FrameSvgItem {
                 return;
             }
 
-            return containment.backgroundHints; 
+            return containment.backgroundHints;
         }
     }    */
 

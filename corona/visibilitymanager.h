@@ -41,6 +41,7 @@ public:
 
     NowDock::Types::Visibility panelVisibility() const;
     void setContainment(Plasma::Containment *contaiment);
+    void setMaskArea(QRect area);
     void setPanelVisibility(NowDock::Types::Visibility state);
 
 public slots:

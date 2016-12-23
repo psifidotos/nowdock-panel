@@ -50,14 +50,16 @@ class VisibilityManager;
 class NowDockView : public PlasmaQuick::ContainmentView {
     Q_OBJECT
     
-  //  Q_PROPERTY(Candil::VisibilityManager *visibility READ visibility NOTIFY visibilityChanged)
+    Q_PROPERTY(VisibilityManager *visibility READ visibility NOTIFY visibilityChanged)
  //   Q_PROPERTY(Candil::Dock::Alignment alignment READ alignment WRITE setAlignment NOTIFY alignmentChanged)
     Q_PROPERTY(int thickness READ thickness WRITE setThickness NOTIFY thicknessChanged)
     Q_PROPERTY(int length READ length WRITE setLength NOTIFY lengthChanged)
     Q_PROPERTY(int maxLength READ maxLength WRITE setMaxLength NOTIFY maxLengthChanged)
     Q_PROPERTY(int offset READ offset WRITE setOffset NOTIFY offsetChanged)
+    Q_PROPERTY(int width READ width NOTIFY widthChanged)
+    Q_PROPERTY(int height READ height NOTIFY heightChanged)
     Q_PROPERTY(bool compositing READ compositing NOTIFY compositingChanged)
-    Q_PROPERTY(QRect mask READ dockMask WRITE setDockMask NOTIFY maskChanged)
+    Q_PROPERTY(QRect maskArea READ maskArea WRITE setMaskArea NOTIFY maskAreaChanged)
     Q_PROPERTY(QQmlListProperty<QScreen> screens READ screens)
     
 public:
@@ -70,10 +72,13 @@ public:
     
     int thickness() const;
     void setThickness(int thickness);
-    
+
     int length() const;
     void setLength(int length);
     
+    QRect maskArea() const;
+    void setMaskArea(QRect area);
+
     int maxLength() const;
     void setMaxLength(int maxLength);
     
@@ -85,9 +90,8 @@ public:
     
     void updateOffset();
     
-    QRect dockMask() const;
-    void setDockMask(QRect mask);
-    
+    VisibilityManager *visibility();
+
     void resizeWindow();
     void restoreConfig();
     void saveConfig();
@@ -111,13 +115,16 @@ protected:
     
 signals:
  //   void visibilityChanged();
-    void thicknessChanged();
-    void lengthChanged();
-    void maxLengthChanged();
     void alignmentChanged();
-    void offsetChanged();
-    void maskChanged();
     void compositingChanged();
+    void heightChanged();
+    void lengthChanged();
+    void maskAreaChanged();
+    void maxLengthChanged();
+    void offsetChanged();
+    void thicknessChanged();
+    void visibilityChanged();
+    void widthChanged();
     
 private:
     bool containmentContainsPosition(const QPointF &point) const;
@@ -129,7 +136,7 @@ private:
     int m_maxLength{INT_MAX};
     
     QRect m_dockGeometry;
-    QRect m_mask;
+    QRect m_maskArea;
     QPointer<PlasmaQuick::ConfigView> m_configView;
 
     QTimer m_timerGeometry;
