@@ -42,6 +42,13 @@ Item{
         value: plasmoid.configuration.panelVisibility
     }
 
+    Binding{
+        target: window
+        property:"maxThickness"
+        when: window
+        value: thicknessZoomOriginal
+    }
+
     onWindowChanged: {
         if(window) {
             window.visibility.onDisableHidingChanged.connect(slotDisableHidingChanged);
@@ -68,6 +75,8 @@ Item{
             root.updateAutomaticIconSize();
         }
     }
+
+    onThicknessZoomOriginalChanged: updateMaskArea();
 
 
     function slotDisableHidingChanged() {
@@ -150,7 +159,7 @@ Item{
 
         var space = root.panelEdgeSpacing + 10;
 
-        if (normalState) {
+        if (normalState && plasmoid.immutable) {
             //count panel length
             if(root.isHorizontal) {
                 tempLength = plasmoid.configuration.panelPosition === NowDock.Types.Double ? layoutsContainer.width + 0.5*space : mainLayout.width + space;
@@ -166,10 +175,6 @@ Item{
 
             if (window.isAutoHidden && ((panelVisibility === NowDock.Types.AutoHide) || window.isDockWindowType)) {
                 tempThickness = thicknessAutoHidden;
-            }
-
-            if (!immutable) {
-                tempThickness = 2;
             }
 
             //configure x,y based on plasmoid position and root.panelAlignment(Alignment)
@@ -213,7 +218,7 @@ Item{
                 tempLength = Screen.height; //screenGeometry.height;
 
             //grow only on length and not thickness
-            if(mainLayout.animatedLength) {
+            if(mainLayout.animatedLength || !plasmoid.immutable) {
                 tempThickness = thicknessNormalOriginal;
 
                 if (root.animationsNeedThickness > 0) {
@@ -230,7 +235,7 @@ Item{
                 tempThickness = thicknessZoomOriginal;
             }
         }
-        var maskArea = window.maskArea
+        var maskArea = window.maskArea;
 
         var maskLength = maskArea.width; //in Horizontal
         if (root.isVertical) {
@@ -342,11 +347,11 @@ Item{
         }
 
         function init(raise, immediate) {
-         //   if(window.visible) {
-                raiseFlag = raise;
-                immediateShow = immediate;
-                start();
-          //  }
+            //   if(window.visible) {
+            raiseFlag = raise;
+            immediateShow = immediate;
+            start();
+            //  }
         }
     }
     //////////////// Auto Hide Animations - Slide In - Out
@@ -384,7 +389,7 @@ Item{
 
         onStopped: {
             if (!plasmoid.immutable) {
-               // updateTransientThickness();
+                // updateTransientThickness();
             }
         }
 

@@ -50,16 +50,20 @@ class VisibilityManager;
 class NowDockView : public PlasmaQuick::ContainmentView {
     Q_OBJECT
     
-    Q_PROPERTY(VisibilityManager *visibility READ visibility NOTIFY visibilityChanged)
- //   Q_PROPERTY(Candil::Dock::Alignment alignment READ alignment WRITE setAlignment NOTIFY alignmentChanged)
-    Q_PROPERTY(int thickness READ thickness WRITE setThickness NOTIFY thicknessChanged)
+
+    Q_PROPERTY(bool compositing READ compositing NOTIFY compositingChanged)
+
+    Q_PROPERTY(int height READ height NOTIFY heightChanged)
     Q_PROPERTY(int length READ length WRITE setLength NOTIFY lengthChanged)
     Q_PROPERTY(int maxLength READ maxLength WRITE setMaxLength NOTIFY maxLengthChanged)
+    Q_PROPERTY(int maxThickness READ maxThickness WRITE setMaxThickness NOTIFY maxThicknessChanged)
     Q_PROPERTY(int offset READ offset WRITE setOffset NOTIFY offsetChanged)
     Q_PROPERTY(int width READ width NOTIFY widthChanged)
-    Q_PROPERTY(int height READ height NOTIFY heightChanged)
-    Q_PROPERTY(bool compositing READ compositing NOTIFY compositingChanged)
+
     Q_PROPERTY(QRect maskArea READ maskArea WRITE setMaskArea NOTIFY maskAreaChanged)
+
+    Q_PROPERTY(VisibilityManager *visibility READ visibility NOTIFY visibilityChanged)
+
     Q_PROPERTY(QQmlListProperty<QScreen> screens READ screens)
     
 public:
@@ -70,8 +74,8 @@ public:
     
    // Candil::VisibilityManager *visibility();
     
-    int thickness() const;
-    void setThickness(int thickness);
+    int maxThickness() const;
+    void setMaxThickness(int thickness);
 
     int length() const;
     void setLength(int length);
@@ -92,19 +96,19 @@ public:
     
     VisibilityManager *visibility();
 
-    void resizeWindow();
-    void restoreConfig();
-    void saveConfig();
-    void updateDockPosition();
-    void updateDockGeometry();
-    int maxThickness() const;
     bool compositing() const;
-    
+    int currentThickness() const;
+
     void adaptToScreen(QScreen *screen);
     
     QQmlListProperty<QScreen> screens();
     static int countScreens(QQmlListProperty<QScreen> *property);
     static QScreen *atScreens(QQmlListProperty<QScreen> *property, int index);
+
+    void resizeWindow();
+    void restoreConfig();
+    void saveConfig();
+    void updateDockPosition();
     
 protected slots:
     void showConfigurationInterface(Plasma::Applet *applet) override;
@@ -122,7 +126,7 @@ signals:
     void maskAreaChanged();
     void maxLengthChanged();
     void offsetChanged();
-    void thicknessChanged();
+    void maxThicknessChanged();
     void visibilityChanged();
     void widthChanged();
     
@@ -131,7 +135,7 @@ private:
     QPointF positionAdjustedForContainment(const QPointF &point) const;
 
     int m_offset{0};
-    int m_thickness{0};
+    int m_maxThickness{24};
     int m_length{0};
     int m_maxLength{INT_MAX};
     

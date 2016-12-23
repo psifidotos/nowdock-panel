@@ -93,10 +93,10 @@ void NowDockConfigView::syncGeometry()
             
             if (location == Plasma::Types::TopEdge) {
                 setPosition(sGeometry.center().x() - size.width() / 2
-                            , m_dockView->maxThickness());
+                            , m_dockView->currentThickness());
             } else if (location == Plasma::Types::BottomEdge) {
                 setPosition(sGeometry.center().x() - size.width() / 2
-                            , sGeometry.height() - m_dockView->maxThickness() - size.height());
+                            , sGeometry.height() - m_dockView->currentThickness() - size.height());
             }
         }
         break;
@@ -108,10 +108,10 @@ void NowDockConfigView::syncGeometry()
             resize(size);
             
             if (location == Plasma::Types::LeftEdge) {
-                setPosition(m_dockView->maxThickness()
+                setPosition(m_dockView->currentThickness()
                             , sGeometry.center().y() - size.height() / 2);
             } else if (location == Plasma::Types::RightEdge) {
-                setPosition(sGeometry.width() - m_dockView->maxThickness() - size.width()
+                setPosition(sGeometry.width() - m_dockView->currentThickness() - size.width()
                             , sGeometry.center().y() - size.height() / 2);
             }
         }

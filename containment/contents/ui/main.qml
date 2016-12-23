@@ -566,6 +566,20 @@ DragDrop.DropArea {
             }
         }
 
+        if (plasmoid.immutable) {
+            if (windowSystem.compositingActive) {
+             //   magicWin.initialize();
+            }
+
+            dockView.visibility.disableHiding = false;
+        } else {
+            dockView.visibility.disableHiding = true;
+            dockView.visibility.mustBeRaised();
+        }
+
+
+        visibilityManager.updateMaskArea();
+
         //  console.log(magicWin.visible + " - "+magicWin.x+" - " + magicWin.y+" - "+magicWin.width+" - "+magicWin.height);
        /* if (magicWin) {
             if (plasmoid.immutable) {

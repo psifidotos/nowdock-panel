@@ -62,8 +62,6 @@ NowDockView::NowDockView(Plasma::Corona *corona, QScreen *targetScreen)
     m_timerGeometry.setSingleShot(true);
     m_timerGeometry.setInterval(100);
 
-    setThickness(100);
-
    // m_visibility = new VisibilityManager(this);
     
     connect(this, &NowDockView::containmentChanged
@@ -73,14 +71,9 @@ NowDockView::NowDockView(Plasma::Corona *corona, QScreen *targetScreen)
             
         if (!m_visibility) {
             m_visibility = new VisibilityManager(this);
-            //m_visibility->setWinId(winId());
         }
         
-        m_visibility->setContainment(containment());
-    //    auto config = containment()->config();
-   //     const int alignment = config.readEntry("alignment", (int)(Dock::Center));
-    //    setAlignment(static_cast<Dock::Alignment>(alignment));
-        
+        m_visibility->setContainment(containment());        
     }, Qt::DirectConnection);
 }
 
@@ -90,14 +83,13 @@ NowDockView::~NowDockView()
 
 void NowDockView::init()
 {
-    /*   connect(this, &NowDockView::screenChanged
+    connect(this, &NowDockView::screenChanged
             , this, &NowDockView::adaptToScreen
             , Qt::QueuedConnection);
             
     connect(&m_timerGeometry, &QTimer::timeout, [&]() {
         updateDockPosition();
         resizeWindow();
-        updateDockGeometry();
     });
     
     connect(this, &NowDockView::locationChanged, [&]() {
@@ -105,36 +97,19 @@ void NowDockView::init()
         setMask(geometry());
         m_timerGeometry.start();
     });
-    */
-    /*  connect(this, &DockView::alignmentChanged , [&]() {
-        //! avoid glitches
-        //setMask(geometry());
-        m_timerGeometry.start();
-    });*/
     
     connect(KWindowSystem::self(), &KWindowSystem::compositingChanged
             , this, [&]() {
-        updateDockGeometry();
         emit compositingChanged();
-    }
-    , Qt::QueuedConnection);
+    } , Qt::QueuedConnection);
     
     connect(this, &NowDockView::screenGeometryChanged
-            , this, &NowDockView::updateDockGeometry
+            , this, &NowDockView::updateDockPosition
             , Qt::QueuedConnection);
-
-    //Plasma::Theme *theme = new Plasma::Theme(this);
-    //theme->setUseGlobalSettings(false);
-    //theme->setThemeName("air");
 
     rootContext()->setContextProperty(QStringLiteral("panel"), this);
     setSource(corona()->kPackage().filePath("nowdockui"));
 
-  /*  QQuickItem *dockLayout = rootObject()->findChild<QQuickItem*>("dockLayoutView");
-    if (dockLayout) {
-        QVariant link = qVariantFromValue((void *) this);
-        QQmlProperty::write(dockLayout, "dockView", link);
-    }*/
 
     qDebug() << "SOURCE:" << source();
     updateDockPosition();
@@ -220,132 +195,21 @@ void NowDockView::resizeWindow()
 
     QSize screenSize = screen()->size();
     
-    /*if (formFactor() == Plasma::Types::Vertical) {
+    if (formFactor() == Plasma::Types::Vertical) {
         const QSize size{maxThickness(), screenSize.height()};
         setMinimumSize(size);
         setMaximumSize(size);
         resize(size);
+
+        qDebug() << "shell size:" << size;
     } else {
         const QSize size{screenSize.width(), maxThickness()};
         setMinimumSize(size);
         setMaximumSize(size);
         resize(size);
-    }*/
-    const QSize size{140, screenSize.height()};
-    setMinimumSize(size);
-    setMaximumSize(size);
-    resize(size);
-    
-    qDebug() << "shell size:" << size;
-}
 
-void NowDockView::updateDockGeometry()
-{
-    if (!containment())
-        return;
-
-    if (!containment()->isUserConfiguring())
-        updateOffset();
-
-    const QRect screenGeometry = screen()->geometry();
-    // topLeft or x/y position
-    QPoint position;
-    
-    int length = m_length;
-    //length = screenGeometry.width();
-    length = 500;
-    position = {0, 0};
-    
-    /*switch (location()) {
-        case Plasma::Types::TopEdge:
-            switch (m_alignment) {
-                case Dock::Fill:
-                    length = screenGeometry.width();
-                    
-                case Dock::Begin:
-                    position = {screenGeometry.x(), screenGeometry.y()};
-                    break;
-                case Dock::Center:
-                    position = {screenGeometry.center().x() - m_length / 2 + m_offset, screenGeometry.y()};
-                    break;
-                case Dock::End:
-                    position = {screenGeometry.width() - m_length, screenGeometry.y()};
-                    break;
-            }
-            
-            break;
-            
-        case Plasma::Types::BottomEdge:
-            switch (m_alignment) {
-                case Dock::Fill:
-                    length = screenGeometry.width();
-                    
-                case Dock::Begin:
-                    position = {screenGeometry.x(), screenGeometry.height() - m_thickness};
-                    break;
-                case Dock::Center:
-                    position = {screenGeometry.center().x() - m_length / 2 + m_offset, screenGeometry.height() - m_thickness};
-                    break;
-                case Dock::End:
-                    position = {screenGeometry.width() - m_length, screenGeometry.height() - m_thickness};
-                    break;
-            }
-            
-            break;
-            
-        case Plasma::Types::LeftEdge:
-            switch (m_alignment) {
-                case Dock::Fill:
-                    length = screenGeometry.height();
-                    
-                case Dock::Begin:
-                    position = {screenGeometry.x(), screenGeometry.y()};
-                    break;
-                case Dock::Center:
-                    position = {screenGeometry.x(), screenGeometry.center().y() - m_length / 2 + m_offset};
-                    break;
-                case Dock::End:
-                    position = {screenGeometry.x(), screenGeometry.height() - m_length};
-                    break;
-            }
-            
-            break;
-            
-        case Plasma::Types::RightEdge:
-            switch (m_alignment) {
-                case Dock::Fill:
-                    length = screenGeometry.height();
-                    
-                case Dock::Begin:
-                    position = {screenGeometry.width() - m_thickness, screenGeometry.y()};
-                    break;
-                case Dock::Center:
-                    position = {screenGeometry.width() - m_thickness, screenGeometry.center().y() - m_length / 2 + m_offset};
-                    break;
-                case Dock::End:
-                    position = {screenGeometry.width() - m_thickness, screenGeometry.height() - m_length};
-                    break;
-            }
-            
-            break;
-            
-        default:
-            qWarning() << "wrong location:" << qEnumToStr(containment()->location());
-    }*/
-    
-    m_dockGeometry.setTopLeft(position);
-    
-    if (containment()->formFactor() == Plasma::Types::Vertical)
-        m_dockGeometry.setSize({m_thickness, length});
-    else
-        m_dockGeometry.setSize({length, m_thickness});
-
-    qDebug() << "updating dock rect:" << m_dockGeometry;
-    
-    updateDockPosition();
-    resizeWindow();
-
-    //  m_visibility->updateDockRect(m_dockGeometry);
+        qDebug() << "shell size:" << size;
+    }
 }
 
 inline void NowDockView::updateDockPosition()
@@ -357,7 +221,6 @@ inline void NowDockView::updateDockPosition()
     QPoint position;
     
     containment()->setFormFactor(Plasma::Types::Horizontal);
-    //position = {screenGeometry.x(), screenGeometry.height() - maxThickness()};
     position = {0, 0};
     m_maxLength = screenGeometry.width();
 
@@ -370,13 +233,13 @@ inline void NowDockView::updateDockPosition()
             
         case Plasma::Types::BottomEdge:
             containment()->setFormFactor(Plasma::Types::Horizontal);
-            position = {screenGeometry.x(), screenGeometry.height() - maxThickness()};
+            position = {screenGeometry.x(), screenGeometry.y()+screenGeometry.height() - height()};
             m_maxLength = screenGeometry.width();
             break;
             
         case Plasma::Types::RightEdge:
             containment()->setFormFactor(Plasma::Types::Vertical);
-            position = {screenGeometry.width() - maxThickness(), screenGeometry.y()};
+            position = {screenGeometry.x()+screenGeometry.width() - width(), screenGeometry.y()};
             m_maxLength = screenGeometry.height();
             break;
             
@@ -396,7 +259,7 @@ inline void NowDockView::updateDockPosition()
     qDebug() << "shell position:" << position;
 }
 
-int NowDockView::maxThickness() const
+int NowDockView::currentThickness() const
 {
     if (containment()->formFactor() == Plasma::Types::Vertical ) {
         return m_maskArea.isNull() ? width() : m_maskArea.width();
@@ -415,19 +278,19 @@ bool NowDockView::compositing() const
     return  m_visibility.data();
 }*/
 
-int NowDockView::thickness() const
+int NowDockView::maxThickness() const
 {
-    return m_thickness;
+    return m_maxThickness;
 }
 
-void NowDockView::setThickness(int thickness)
+void NowDockView::setMaxThickness(int thickness)
 {
-    if (m_thickness == thickness)
+    if (m_maxThickness == thickness)
         return;
 
-    m_thickness = thickness;
+    m_maxThickness = thickness;
     m_timerGeometry.start();
-    emit thicknessChanged();
+    emit maxThicknessChanged();
 }
 
 int NowDockView::length() const
@@ -623,8 +486,6 @@ void NowDockView::restoreConfig()
   //  setZoomFactor(readEntry("zoomFactor", 1.0).toFloat());
   //  setAlignment(static_cast<Dock::Alignment>(readEntry("alignment", Dock::Center).toInt()));
 }
-
-
 
 //!END SLOTS
 
