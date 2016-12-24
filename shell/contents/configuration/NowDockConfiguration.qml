@@ -593,6 +593,13 @@ PlasmaCore.FrameSvgItem {
 
             }
         }
+
+        PlasmaComponents.Button{
+            enabled: true
+            text: i18n("Add New Dock")
+
+            onClicked: dock.addNewDock();
+        }
     }
 }
 

@@ -24,8 +24,11 @@
 //#include "visibilitymanager.h"
 #include "packageplugins/shell/nowdockpackage.h"
 
+#include <QAction>
 #include <QScreen>
 #include <QDebug>
+
+#include <KActionCollection>
 #include <KPluginMetaData>
 
 #include <Plasma>
@@ -52,8 +55,21 @@ NowDockCorona::NowDockCorona(QObject *parent)
     setKPackage(package);
     qmlRegisterTypes();
     connect(this, &Corona::containmentAdded, this, &NowDockCorona::addDock);
-    // loadDefaultLayout();
+
     loadLayout();
+
+    /*QAction *addDock = actions()->add<QAction>(QStringLiteral("add dock"));
+    connect(addDock, &QAction::triggered, this, &NowDockCorona::loadDefaultLayout);
+    addDock->setText(i18n("Add New Dock"));
+    addDock->setAutoRepeat(true);
+    addDock->setStatusTip(tr("Adds a new dock in the environment"));
+    addDock->setVisible(true);
+    addDock->setEnabled(true);
+
+    addDock->setIcon(QIcon::fromTheme(QStringLiteral("object-locked")));
+    addDock->setData(Plasma::Types::ControlAction);
+    addDock->setShortcut(QKeySequence(QStringLiteral("alt+d, l")));
+    addDock->setShortcutContext(Qt::ApplicationShortcut);*/
 }
 
 NowDockCorona::~NowDockCorona()
@@ -139,7 +155,7 @@ void NowDockCorona::addDock(Plasma::Containment *containment)
         qWarning() << "the requested containment plugin can not be located or loaded";
         return;
     }
-    
+
     qWarning() << "Adding dock for container...";
     
     auto dockView = new NowDockView(this);
@@ -174,8 +190,24 @@ void NowDockCorona::loadDefaultLayout()
     config.writeEntry("dock", "initial");
     // config.writeEntry("alignment", (int)Dock::Center);
     //  config.deleteEntry("wallpaperplugin");
-    
-    defaultContainment->setLocation(Plasma::Types::LeftEdge);
+
+    switch (containments().size()) {
+        case 0:
+            defaultContainment->setLocation(Plasma::Types::LeftEdge);
+            break;
+
+        case 1:
+            defaultContainment->setLocation(Plasma::Types::RightEdge);
+            break;
+
+        case 2:
+            defaultContainment->setLocation(Plasma::Types::TopEdge);
+            break;
+
+        default:
+            defaultContainment->setLocation(Plasma::Types::BottomEdge);
+            break;
+    }
     
     auto cfg = defaultContainment->config();
     defaultContainment->save(cfg);
@@ -188,12 +220,12 @@ void NowDockCorona::loadDefaultLayout()
 
 inline void NowDockCorona::qmlRegisterTypes() const
 {
-    /*constexpr auto uri = "audoban.shell.candil";
-    constexpr auto vMajor = 2;
-    constexpr auto vMinor = 0;
+    constexpr auto uri = "org.kde.nowdock.shell";
+    constexpr auto vMajor = 0;
+    constexpr auto vMinor = 2;
     
-    qmlRegisterUncreatableType<Candil::Dock>(uri, vMajor, vMinor, "Dock", "class Dock uncreatable");
-    qmlRegisterUncreatableType<Candil::VisibilityManager>(uri, vMajor, vMinor, "VisibilityManager", "class VisibilityManager uncreatable");
-    qmlRegisterUncreatableType<Candil::DockView>(uri, vMajor, vMinor, "DockView", "class DockView uncreatable");*/
+//    qmlRegisterUncreatableType<Candil::Dock>(uri, vMajor, vMinor, "Dock", "class Dock uncreatable");
+//    qmlRegisterUncreatableType<Candil::VisibilityManager>(uri, vMajor, vMinor, "VisibilityManager", "class VisibilityManager uncreatable");
+//    qmlRegisterUncreatableType<NowDockView>(uri, vMajor, vMinor, "DockView", "class DockView uncreatable");
     qmlRegisterType<QScreen>();
 }

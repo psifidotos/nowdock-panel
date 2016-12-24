@@ -106,6 +106,7 @@ public:
     static QScreen *atScreens(QQmlListProperty<QScreen> *property, int index);
     
 public slots:
+    Q_INVOKABLE void addNewDock();
     Q_INVOKABLE void initialize();
     void resizeWindow();
     void restoreConfig();

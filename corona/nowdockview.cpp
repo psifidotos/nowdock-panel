@@ -180,6 +180,15 @@ void NowDockView::adaptToScreen(QScreen *screen)
     m_timerGeometry.start();
 }
 
+void NowDockView::addNewDock()
+{
+    NowDockCorona *corona = dynamic_cast<NowDockCorona *>(m_corona);
+
+    if (corona) {
+        corona->loadDefaultLayout();
+    }
+}
+
 QQmlListProperty<QScreen> NowDockView::screens()
 {
     return QQmlListProperty<QScreen>(this, nullptr, &countScreens, &atScreens);
