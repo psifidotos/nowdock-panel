@@ -41,6 +41,7 @@ NowDockView::NowDockView(Plasma::Corona *corona, QScreen *targetScreen)
     : PlasmaQuick::ContainmentView(corona),
       m_corona(corona)
 {
+    setVisible(false);
     setTitle(corona->kPackage().metadata().name());
     setIcon(QIcon::fromTheme(corona->kPackage().metadata().iconName()));
 
@@ -146,6 +147,7 @@ void NowDockView::initWindow()
     if(m_secondInitPass) {
         m_timerGeometry.start();
         m_secondInitPass = false;
+        setVisible(true);
     }
 }
 
@@ -261,7 +263,7 @@ inline void NowDockView::updateDockPosition()
     const QRect screenGeometry = screen()->geometry();
     QPoint position;
     
-    containment()->setFormFactor(Plasma::Types::Horizontal);
+   // containment()->setFormFactor(Plasma::Types::Horizontal);
     position = {0, 0};
     m_maxLength = screenGeometry.width();
 
@@ -296,7 +298,9 @@ inline void NowDockView::updateDockPosition()
     }
     
     emit maxLengthChanged();
-    setPosition(position);
+    setX(position.x());
+    setY(position.y());
+    //setPosition(position);
     qDebug() << "dock position:" << position;
 }
 
