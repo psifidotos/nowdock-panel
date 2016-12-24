@@ -14,7 +14,7 @@ VisibilityManager::VisibilityManager(PlasmaQuick::ContainmentView *view) :
     QObject(view),
     m_disableHiding(false),
     m_isAutoHidden(false),
-    m_isDockWindowType(false),
+    m_isDockWindowType(true),
     m_isHovered(false),
     m_secondInitPass(false),
     m_windowIsInAttention(false),

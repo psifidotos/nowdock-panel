@@ -26,7 +26,7 @@ Item{
     property int iconMarginOriginal: 0.12*plasmoid.configuration.iconSize
     property int statesLineSizeOriginal: root.nowDock ? Math.ceil( plasmoid.configuration.iconSize/13 ) : 0
 
-    property int thicknessAutoHidden: 8
+    property int thicknessAutoHidden: 2
     property int thicknessMid: root.statesLineSize + (1 + (0.65 * (root.zoomFactor-1)))*(root.iconSize+root.iconMargin) //needed in some animations
     property int thicknessNormal: root.statesLineSize + root.iconSize + root.iconMargin + 1
     property int thicknessZoom: root.statesLineSize + ((root.iconSize+root.iconMargin) * root.zoomFactor) + 2
@@ -175,7 +175,7 @@ Item{
                 tempThickness = thicknessMidOriginal;
             }
 
-            if (window.isAutoHidden && ((panelVisibility === NowDock.Types.AutoHide) || window.isDockWindowType)) {
+            if (window.visibility.isAutoHidden && ((window.visibility.panelVisibility === NowDock.Types.AutoHide) || window.visibility.isDockWindowType)) {
                 tempThickness = thicknessAutoHidden;
             }
 
