@@ -5,15 +5,15 @@
 #include <QMetaEnum>
 #include <QMetaType>
 
-namespace NowDock{
+namespace NowDock {
 
 class Types {
     Q_GADGET
-
+    
 public:
     Types() = delete;
     ~Types() {}
-
+    
     enum Visibility {
         BelowActive = 0, /** always visible except if ovelaps with the active window, no area reserved */
         BelowMaximized, /** always visible except if ovelaps with an active maximize window, no area reserved */
@@ -23,24 +23,24 @@ public:
         AlwaysVisible,  /** always visible panel, "Normal" plasma panel, accompanies plasma's "Always Visible"  */
     };
     Q_ENUM(Visibility)
-
+    
     enum Alignment {
         Center = 0,
         Left,
         Right,
         Top,
         Bottom,
-        Double=10
+        Double = 10
     };
     Q_ENUM(Alignment)
-
-
+    
+    
     enum VisibilityState {
         /*!
          * @brief the dock is visible
          */
         Visible = 1,
-
+        
         /*!
          * @brief the dock is hidden
          */

@@ -7,7 +7,7 @@
 
 class NowDockPackage : public KPackage::PackageStructure {
     Q_OBJECT
-    
+
 public:
     explicit NowDockPackage(QObject *parent = 0, const QVariantList &args = QVariantList());
     

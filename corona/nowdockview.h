@@ -50,20 +50,20 @@ class VisibilityManager;
 class NowDockView : public PlasmaQuick::ContainmentView {
     Q_OBJECT
     
-
+    
     Q_PROPERTY(bool compositing READ compositing NOTIFY compositingChanged)
-
+    
     Q_PROPERTY(int height READ height NOTIFY heightChanged)
     Q_PROPERTY(int length READ length WRITE setLength NOTIFY lengthChanged)
     Q_PROPERTY(int maxLength READ maxLength WRITE setMaxLength NOTIFY maxLengthChanged)
     Q_PROPERTY(int maxThickness READ maxThickness WRITE setMaxThickness NOTIFY maxThicknessChanged)
     Q_PROPERTY(int offset READ offset WRITE setOffset NOTIFY offsetChanged)
     Q_PROPERTY(int width READ width NOTIFY widthChanged)
-
+    
     Q_PROPERTY(QRect maskArea READ maskArea WRITE setMaskArea NOTIFY maskAreaChanged)
-
+    
     Q_PROPERTY(VisibilityManager *visibility READ visibility NOTIFY visibilityChanged)
-
+    
     Q_PROPERTY(QQmlListProperty<QScreen> screens READ screens)
     
 public:
@@ -72,22 +72,22 @@ public:
     
     void init();
     
-   // Candil::VisibilityManager *visibility();
+    // Candil::VisibilityManager *visibility();
     
     int maxThickness() const;
     void setMaxThickness(int thickness);
-
+    
     int length() const;
     void setLength(int length);
     
     QRect maskArea() const;
     void setMaskArea(QRect area);
-
+    
     int maxLength() const;
     void setMaxLength(int maxLength);
     
-  //  Dock::Alignment alignment() const;
-  //  void setAlignment(Dock::Alignment align);
+    //  Dock::Alignment alignment() const;
+    //  void setAlignment(Dock::Alignment align);
     
     int offset() const;
     void setOffset(int offset);
@@ -95,16 +95,16 @@ public:
     void updateOffset();
     
     VisibilityManager *visibility();
-
+    
     bool compositing() const;
     int currentThickness() const;
-
+    
     void adaptToScreen(QScreen *screen);
     
     QQmlListProperty<QScreen> screens();
     static int countScreens(QQmlListProperty<QScreen> *property);
     static QScreen *atScreens(QQmlListProperty<QScreen> *property, int index);
-
+    
 public slots:
     Q_INVOKABLE void initialize();
     void resizeWindow();
@@ -118,9 +118,9 @@ protected slots:
 protected:
     bool event(QEvent *ev) override;
 //    void showEvent(QShowEvent *ev) override;
-    
+
 signals:
- //   void visibilityChanged();
+//   void visibilityChanged();
     void alignmentChanged();
     void compositingChanged();
     void heightChanged();
@@ -134,10 +134,10 @@ signals:
     
 public Q_SLOTS:
     void updateDockPositionSlot();
-
+    
 private:
     bool m_secondInitPass;
-
+    
     int m_offset{0};
     int m_maxThickness{24};
     int m_length{0};
@@ -146,14 +146,14 @@ private:
     QRect m_dockGeometry;
     QRect m_maskArea;
     QPointer<PlasmaQuick::ConfigView> m_configView;
-
+    
     QTimer m_timerGeometry;
     QTimer m_lockGeometry;
     Plasma::Theme *theme{nullptr};
     Plasma::Corona *m_corona;
-
+    
     QPointer<VisibilityManager> m_visibility;
-
+    
     bool containmentContainsPosition(const QPointF &point) const;
     QPointF positionAdjustedForContainment(const QPointF &point) const;
     void initWindow();

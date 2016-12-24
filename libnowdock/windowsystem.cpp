@@ -2,8 +2,7 @@
 
 #include <KWindowSystem>
 
-namespace NowDock
-{
+namespace NowDock {
 
 WindowSystem::WindowSystem(QObject *parent) :
     QObject(parent)

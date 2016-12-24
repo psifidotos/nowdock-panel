@@ -119,7 +119,7 @@ void NowDockConfigView::syncGeometry()
         
         default:
             qWarning() << "no sync geometry, wrong formFactor";
-                       //<< qEnumToStr(m_containment->formFactor());
+            //<< qEnumToStr(m_containment->formFactor());
             break;
     }
 }
@@ -150,7 +150,7 @@ void NowDockConfigView::syncSlideEffect()
             
         default:
             qDebug() << staticMetaObject.className() << "wrong location";// << qEnumToStr(m_containment->location());
-        break;
+            break;
     }
     
     KWindowEffects::slideWindow(winId(), slideLocation, -1);
@@ -170,8 +170,8 @@ void NowDockConfigView::showEvent(QShowEvent *ev)
     if (m_containment)
         m_containment->setUserConfiguring(true);
         
-  //  m_dockView->visibility()->forceShow(true);
-  //  m_dockView->visibility()->showImmediately();
+    //  m_dockView->visibility()->forceShow(true);
+    //  m_dockView->visibility()->showImmediately();
     m_screenSyncTimer.start();
     m_deleterTimer.stop();
     ConfigView::showEvent(ev);
@@ -179,8 +179,8 @@ void NowDockConfigView::showEvent(QShowEvent *ev)
 
 void NowDockConfigView::hideEvent(QHideEvent *ev)
 {
-  //  m_dockView->visibility()->forceShow(false);
-  //  m_dockView->visibility()->restore();
+    //  m_dockView->visibility()->forceShow(false);
+    //  m_dockView->visibility()->restore();
     m_deleterTimer.start();
     
     if (m_containment) {

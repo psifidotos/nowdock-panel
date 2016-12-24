@@ -52,7 +52,7 @@ NowDockCorona::NowDockCorona(QObject *parent)
     setKPackage(package);
     qmlRegisterTypes();
     connect(this, &Corona::containmentAdded, this, &NowDockCorona::addDock);
-   // loadDefaultLayout();
+    // loadDefaultLayout();
     loadLayout();
 }
 
@@ -141,7 +141,7 @@ void NowDockCorona::addDock(Plasma::Containment *containment)
     }
     
     qWarning() << "Adding dock for container...";
-
+    
     auto dockView = new NowDockView(this);
     dockView->init();
     dockView->setContainment(containment);
@@ -172,16 +172,16 @@ void NowDockCorona::loadDefaultLayout()
     auto config = defaultContainment->config();
     
     config.writeEntry("dock", "initial");
-   // config.writeEntry("alignment", (int)Dock::Center);
-   //  config.deleteEntry("wallpaperplugin");
+    // config.writeEntry("alignment", (int)Dock::Center);
+    //  config.deleteEntry("wallpaperplugin");
     
     defaultContainment->setLocation(Plasma::Types::LeftEdge);
     
     auto cfg = defaultContainment->config();
     defaultContainment->save(cfg);
-
+    
     addDock(defaultContainment);
-
+    
     defaultContainment->createApplet(QStringLiteral("org.kde.store.nowdock.plasmoid"));
     defaultContainment->createApplet(QStringLiteral("org.kde.plasma.analogclock"));
 }
@@ -197,4 +197,3 @@ inline void NowDockCorona::qmlRegisterTypes() const
     qmlRegisterUncreatableType<Candil::DockView>(uri, vMajor, vMinor, "DockView", "class DockView uncreatable");*/
     qmlRegisterType<QScreen>();
 }
-

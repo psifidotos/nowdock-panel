@@ -69,7 +69,7 @@ int main(int argc, char **argv)
                            "%{if-warning}\n%{backtrace depth=" DEPTH " separator=\"\n\"}%{endif}"
                            "%{if-critical}\n%{backtrace depth=" DEPTH " separator=\"\n\"}%{endif}" CNORMAL));
                            
-  //  qputenv("QT_QUICK_CONTROLS_1_STYLE", "Desktop");
+    //  qputenv("QT_QUICK_CONTROLS_1_STYLE", "Desktop");
     NowDockCorona corona;
     
     return app.exec();

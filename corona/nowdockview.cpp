@@ -43,18 +43,18 @@ NowDockView::NowDockView(Plasma::Corona *corona, QScreen *targetScreen)
 {
     KWindowSystem::setType(winId(), NET::Dock);
     KWindowSystem::setState(winId(), NET::SkipTaskbar | NET::SkipPager);
-
+    
     setVisible(false);
     setTitle(corona->kPackage().metadata().name());
     setIcon(QIcon::fromTheme(corona->kPackage().metadata().iconName()));
-
+    
     setResizeMode(QuickViewSharedEngine::SizeRootObjectToView);
     setClearBeforeRendering(true);
-  /* setFlags(Qt::FramelessWindowHint
-             | Qt::WindowStaysOnTopHint
-             | Qt::NoDropShadowWindowHint
-             | Qt::WindowDoesNotAcceptFocus);*/
-
+    /* setFlags(Qt::FramelessWindowHint
+               | Qt::WindowStaysOnTopHint
+               | Qt::NoDropShadowWindowHint
+               | Qt::WindowDoesNotAcceptFocus);*/
+    
     //    NETWinInfo winfo(QX11Info::connection(), winId(), winId(), 0, 0);
     //   winfo.setAllowedActions(NET::ActionChangeDesktop);
     
@@ -62,10 +62,10 @@ NowDockView::NowDockView(Plasma::Corona *corona, QScreen *targetScreen)
         adaptToScreen(targetScreen);
     else
         adaptToScreen(qGuiApp->primaryScreen());
-
+        
     m_timerGeometry.setSingleShot(true);
     m_timerGeometry.setInterval(400);
-
+    
     m_lockGeometry.setSingleShot(true);
     m_lockGeometry.setInterval(700);
     
@@ -78,7 +78,7 @@ NowDockView::NowDockView(Plasma::Corona *corona, QScreen *targetScreen)
             m_visibility = new VisibilityManager(this);
         }
         
-        m_visibility->setContainment(containment());        
+        m_visibility->setContainment(containment());
     }, Qt::DirectConnection);
 }
 
@@ -91,8 +91,8 @@ void NowDockView::init()
     connect(this, &NowDockView::screenChanged
             , this, &NowDockView::adaptToScreen
             , Qt::QueuedConnection);
-
-
+            
+            
     connect(&m_timerGeometry, &QTimer::timeout, [&]() {
         initWindow();
     });
@@ -103,30 +103,30 @@ void NowDockView::init()
     });
     
     connect(KWindowSystem::self(), &KWindowSystem::compositingChanged
-            , this, [&]() {
+    , this, [&]() {
         emit compositingChanged();
     } , Qt::QueuedConnection);
     
     connect(this, &NowDockView::screenGeometryChanged
             , this, &NowDockView::updateDockPosition
             , Qt::QueuedConnection);
-
-    connect(this,SIGNAL(widthChanged(int)), this, SIGNAL(widthChanged()));
-    connect(this,SIGNAL(heightChanged(int)), this, SIGNAL(heightChanged()));
-
+            
+    connect(this, SIGNAL(widthChanged(int)), this, SIGNAL(widthChanged()));
+    connect(this, SIGNAL(heightChanged(int)), this, SIGNAL(heightChanged()));
+    
     rootContext()->setContextProperty(QStringLiteral("panel"), this);
     setSource(corona()->kPackage().filePath("nowdockui"));
-
-
+    
+    
     connect(this, SIGNAL(xChanged(int)), this, SLOT(updateDockPositionSlot()));
     connect(this, SIGNAL(yChanged(int)), this, SLOT(updateDockPositionSlot()));
-
+    
     connect(&m_lockGeometry, &QTimer::timeout, [&]() {
         updateDockPosition();
     });
-
+    
     qDebug() << "SOURCE:" << source();
-
+    
     initialize();
 }
 
@@ -139,15 +139,15 @@ void NowDockView::initialize()
 
 void NowDockView::initWindow()
 {
-  //  m_visibility->updateVisibilityFlags();
-
+    //  m_visibility->updateVisibilityFlags();
+    
     updateDockPosition();
     resizeWindow();
-
+    
     // The initialization phase makes two passes because
     // changing the window style and type wants a small delay
     // and afterwards the second pass positions them correctly
-    if(m_secondInitPass) {
+    if (m_secondInitPass) {
         m_timerGeometry.start();
         m_secondInitPass = false;
         setVisible(true);
@@ -170,13 +170,13 @@ void NowDockView::adaptToScreen(QScreen *screen)
         m_maxLength = screen->size().height();
     else
         m_maxLength = screen->size().width();
+        
+//   KWindowSystem::setOnAllDesktops(winId(), true);
+//   KWindowSystem::setType(winId(), NET::Dock);
 
- //   KWindowSystem::setOnAllDesktops(winId(), true);
- //   KWindowSystem::setType(winId(), NET::Dock);
-    
     if (containment())
         containment()->reactToScreenChange();
-
+        
     m_timerGeometry.start();
 }
 
@@ -238,7 +238,7 @@ void NowDockView::showConfigurationInterface(Plasma::Applet *applet)
 void NowDockView::resizeWindow()
 {
     setVisible(true);
-
+    
     QSize screenSize = screen()->size();
     
     if (formFactor() == Plasma::Types::Vertical) {
@@ -246,14 +246,14 @@ void NowDockView::resizeWindow()
         setMinimumSize(size);
         setMaximumSize(size);
         resize(size);
-
+        
         qDebug() << "dock size:" << size;
     } else {
         const QSize size{screenSize.width(), maxThickness()};
         setMinimumSize(size);
         setMaximumSize(size);
         resize(size);
-
+        
         qDebug() << "dock size:" << size;
     }
 }
@@ -262,16 +262,16 @@ inline void NowDockView::updateDockPosition()
 {
     if (!containment())
         return;
-
+        
     const QRect screenGeometry = screen()->geometry();
     QPoint position;
-
-    qDebug() << "current dock geometry: "<<geometry();
     
-   // containment()->setFormFactor(Plasma::Types::Horizontal);
+    qDebug() << "current dock geometry: " << geometry();
+    
+    // containment()->setFormFactor(Plasma::Types::Horizontal);
     position = {0, 0};
     m_maxLength = screenGeometry.width();
-
+    
     switch (location()) {
         case Plasma::Types::TopEdge:
             containment()->setFormFactor(Plasma::Types::Horizontal);
@@ -281,13 +281,13 @@ inline void NowDockView::updateDockPosition()
             
         case Plasma::Types::BottomEdge:
             containment()->setFormFactor(Plasma::Types::Horizontal);
-            position = {screenGeometry.x(), screenGeometry.y()+screenGeometry.height() - height()};
+            position = {screenGeometry.x(), screenGeometry.y() + screenGeometry.height() - height()};
             m_maxLength = screenGeometry.width();
             break;
             
         case Plasma::Types::RightEdge:
             containment()->setFormFactor(Plasma::Types::Vertical);
-            position = {screenGeometry.x()+screenGeometry.width() - width(), screenGeometry.y()};
+            position = {screenGeometry.x() + screenGeometry.width() - width(), screenGeometry.y()};
             m_maxLength = screenGeometry.height();
             break;
             
@@ -311,7 +311,7 @@ inline void NowDockView::updateDockPosition()
 
 int NowDockView::currentThickness() const
 {
-    if (containment()->formFactor() == Plasma::Types::Vertical ) {
+    if (containment()->formFactor() == Plasma::Types::Vertical) {
         return m_maskArea.isNull() ? width() : m_maskArea.width();
     } else {
         return m_maskArea.isNull() ? height() : m_maskArea.height();
@@ -337,7 +337,7 @@ void NowDockView::setMaxThickness(int thickness)
 {
     if (m_maxThickness == thickness)
         return;
-
+        
     m_maxThickness = thickness;
     m_timerGeometry.start();
     emit maxThicknessChanged();
@@ -352,12 +352,12 @@ void NowDockView::setLength(int length)
 {
     if (m_length == length)
         return;
-
+        
     if (length > m_maxLength)
         m_length = m_maxLength;
     else
         m_length = length;
-
+        
     m_timerGeometry.start();
     emit lengthChanged();
 }
@@ -371,7 +371,7 @@ void NowDockView::setMaxLength(int maxLength)
 {
     if (m_maxLength == maxLength)
         return;
-
+        
     m_maxLength = maxLength;
     emit maxLengthChanged();
 }
@@ -387,12 +387,12 @@ void NowDockView::setMaskArea(QRect area)
     if (m_maskArea == area) {
         return;
     }
-
+    
     m_maskArea = area;
     m_visibility->setMaskArea(area);
-
+    
     setMask(m_maskArea);
-
+    
     //qDebug() << "dock mask set:" << m_maskArea;
     emit maskAreaChanged();
 }
@@ -406,7 +406,7 @@ void NowDockView::setAlignment(Dock::Alignment align)
 {
     if (m_alignment == align)
         return;
-        
+
     m_alignment = align;
     emit alignmentChanged();
 }
@@ -420,7 +420,7 @@ void NowDockView::setOffset(int offset)
 {
     if (m_offset == offset)
         return;
-
+        
     m_offset = offset;
     m_timerGeometry.start();
     emit offsetChanged();
@@ -430,13 +430,13 @@ void NowDockView::updateOffset()
 {
     if (!containment())
         return;
-
+        
     const float offsetPercent = containment()->config().readEntry("offset").toFloat();
     const int offset = offsetPercent * (m_maxLength - m_length) / 2;
     
     if (offset == m_offset)
         return;
-
+        
     m_offset = offset;
     emit offsetChanged();
 }
@@ -449,19 +449,19 @@ VisibilityManager *NowDockView::visibility()
 bool NowDockView::event(QEvent *e)
 {
 
-   /* if (ev->type() == QEvent::Enter) {
-        m_visibility->show();
-        emit entered();
-    } else if (ev->type() == QEvent::Leave) {
-        m_visibility->restore();
-        emit exited();
-    } */
-
+    /* if (ev->type() == QEvent::Enter) {
+         m_visibility->show();
+         emit entered();
+     } else if (ev->type() == QEvent::Leave) {
+         m_visibility->restore();
+         emit exited();
+     } */
+    
     //return QQuickWindow::event(e);
     if (m_visibility) {
         m_visibility->event(e);
     }
-
+    
     return ContainmentView::event(e);
 }
 
@@ -477,24 +477,24 @@ bool NowDockView::event(QEvent *e)
 bool NowDockView::containmentContainsPosition(const QPointF &point) const
 {
     QQuickItem *containmentItem = containment()->property("_plasma_graphicObject").value<QQuickItem *>();
-
+    
     if (!containmentItem) {
         return false;
     }
-
-    return QRectF(containmentItem->mapToScene(QPoint(0,0)), QSizeF(containmentItem->width(), containmentItem->height())).contains(point);
+    
+    return QRectF(containmentItem->mapToScene(QPoint(0, 0)), QSizeF(containmentItem->width(), containmentItem->height())).contains(point);
 }
 
 QPointF NowDockView::positionAdjustedForContainment(const QPointF &point) const
 {
     QQuickItem *containmentItem = containment()->property("_plasma_graphicObject").value<QQuickItem *>();
-
+    
     if (!containmentItem) {
         return point;
     }
-
-    QRectF containmentRect(containmentItem->mapToScene(QPoint(0,0)), QSizeF(containmentItem->width(), containmentItem->height()));
-
+    
+    QRectF containmentRect(containmentItem->mapToScene(QPoint(0, 0)), QSizeF(containmentItem->width(), containmentItem->height()));
+    
     return QPointF(qBound(containmentRect.left() + 2, point.x(), containmentRect.right() - 2),
                    qBound(containmentRect.top() + 2, point.y(), containmentRect.bottom() - 2));
 }
@@ -505,37 +505,37 @@ void NowDockView::saveConfig()
 {
     if (!containment())
         return;
-
+        
     const auto writeEntry = [&](const char *entry, const QVariant & value) {
         containment()->config().writeEntry(entry, value);
     };
-
+    
     //! convert offset to percent, range [-1,1] 0 is Centered
     //! offsetPercent = offset * 2 / (maxLength - length)
-  //  const float offsetPercent = m_offset * 2.0f / (m_maxLength - m_length);
-  //  writeEntry("offset", offsetPercent);
-  //  writeEntry("iconSize", m_iconSize);
-  //  writeEntry("zoomFactor", m_zoomFactor);
-  //  writeEntry("alignment", static_cast<int>(m_alignment));
+    //  const float offsetPercent = m_offset * 2.0f / (m_maxLength - m_length);
+    //  writeEntry("offset", offsetPercent);
+    //  writeEntry("iconSize", m_iconSize);
+    //  writeEntry("zoomFactor", m_zoomFactor);
+    //  writeEntry("alignment", static_cast<int>(m_alignment));
 }
 
 void NowDockView::restoreConfig()
 {
     if (!containment())
         return;
-
+        
     const auto readEntry = [&](const char *entry, QVariant defaultValue) -> QVariant {
         return containment()->config().readEntry(entry, defaultValue);
     };
     //! convert offset-percent to pixels
     //! offset = offsetPercent * (maxLength - length) / 2
- //   const float offsetPercent {readEntry("offset", 0).toFloat()};
-  //  const int offset {static_cast<int>(offsetPercent * (m_maxLength - m_length) / 2)};
-  //  setOffset(offset);
-
-  //  setIconSize(readEntry("iconSize", 32).toInt());
-  //  setZoomFactor(readEntry("zoomFactor", 1.0).toFloat());
-  //  setAlignment(static_cast<Dock::Alignment>(readEntry("alignment", Dock::Center).toInt()));
+//   const float offsetPercent {readEntry("offset", 0).toFloat()};
+    //  const int offset {static_cast<int>(offsetPercent * (m_maxLength - m_length) / 2)};
+    //  setOffset(offset);
+    
+    //  setIconSize(readEntry("iconSize", 32).toInt());
+    //  setZoomFactor(readEntry("zoomFactor", 1.0).toFloat());
+    //  setAlignment(static_cast<Dock::Alignment>(readEntry("alignment", Dock::Center).toInt()));
 }
 
 //!END SLOTS

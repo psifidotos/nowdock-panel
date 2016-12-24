@@ -11,7 +11,6 @@ NowDockPackage::NowDockPackage(QObject *parent, const QVariantList &args)
 
 NowDockPackage::~NowDockPackage()
 {
-
 }
 
 void NowDockPackage::initPackage(KPackage::Package *package)
