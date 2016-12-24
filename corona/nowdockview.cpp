@@ -60,9 +60,10 @@ NowDockView::NowDockView(Plasma::Corona *corona, QScreen *targetScreen)
         adaptToScreen(qGuiApp->primaryScreen());
 
     m_timerGeometry.setSingleShot(true);
-    m_timerGeometry.setInterval(100);
+    m_timerGeometry.setInterval(400);
 
-   // m_visibility = new VisibilityManager(this);
+    m_lockGeometry.setSingleShot(true);
+    m_lockGeometry.setInterval(400);
     
     connect(this, &NowDockView::containmentChanged
     , this, [&]() {
@@ -86,15 +87,14 @@ void NowDockView::init()
     connect(this, &NowDockView::screenChanged
             , this, &NowDockView::adaptToScreen
             , Qt::QueuedConnection);
-            
+
+
     connect(&m_timerGeometry, &QTimer::timeout, [&]() {
-        updateDockPosition();
-        resizeWindow();
+        initWindow();
     });
     
     connect(this, &NowDockView::locationChanged, [&]() {
         //! avoid glitches
-        setMask(geometry());
         m_timerGeometry.start();
     });
     
@@ -107,12 +107,53 @@ void NowDockView::init()
             , this, &NowDockView::updateDockPosition
             , Qt::QueuedConnection);
 
+    connect(this,SIGNAL(widthChanged(int)), this, SIGNAL(widthChanged()));
+    connect(this,SIGNAL(heightChanged(int)), this, SIGNAL(heightChanged()));
+
     rootContext()->setContextProperty(QStringLiteral("panel"), this);
     setSource(corona()->kPackage().filePath("nowdockui"));
 
 
+    connect(this, SIGNAL(xChanged(int)), this, SLOT(updateDockPositionSlot()));
+    connect(this, SIGNAL(yChanged(int)), this, SLOT(updateDockPositionSlot()));
+
+    connect(&m_lockGeometry, &QTimer::timeout, [&]() {
+        updateDockPosition();
+    });
+
     qDebug() << "SOURCE:" << source();
+
+    initialize();
+}
+
+
+void NowDockView::initialize()
+{
+    m_secondInitPass = true;
+    m_timerGeometry.start();
+}
+
+void NowDockView::initWindow()
+{
+    m_visibility->updateVisibilityFlags();
+
     updateDockPosition();
+    resizeWindow();
+
+    // The initialization phase makes two passes because
+    // changing the window style and type wants a small delay
+    // and afterwards the second pass positions them correctly
+    if(m_secondInitPass) {
+        m_timerGeometry.start();
+        m_secondInitPass = false;
+    }
+}
+
+void NowDockView::updateDockPositionSlot()
+{
+    if (!m_lockGeometry.isActive()) {
+        m_lockGeometry.start();
+    }
 }
 
 //!BEGIN SLOTS
@@ -125,8 +166,8 @@ void NowDockView::adaptToScreen(QScreen *screen)
     else
         m_maxLength = screen->size().width();
 
-    KWindowSystem::setOnAllDesktops(winId(), true);
-    KWindowSystem::setType(winId(), NET::Dock);
+ //   KWindowSystem::setOnAllDesktops(winId(), true);
+ //   KWindowSystem::setType(winId(), NET::Dock);
     
     if (containment())
         containment()->reactToScreenChange();
@@ -201,14 +242,14 @@ void NowDockView::resizeWindow()
         setMaximumSize(size);
         resize(size);
 
-        qDebug() << "shell size:" << size;
+        qDebug() << "dock size:" << size;
     } else {
         const QSize size{screenSize.width(), maxThickness()};
         setMinimumSize(size);
         setMaximumSize(size);
         resize(size);
 
-        qDebug() << "shell size:" << size;
+        qDebug() << "dock size:" << size;
     }
 }
 
@@ -256,7 +297,7 @@ inline void NowDockView::updateDockPosition()
     
     emit maxLengthChanged();
     setPosition(position);
-    qDebug() << "shell position:" << position;
+    qDebug() << "dock position:" << position;
 }
 
 int NowDockView::currentThickness() const
@@ -343,6 +384,7 @@ void NowDockView::setMaskArea(QRect area)
 
     setMask(m_maskArea);
 
+    //qDebug() << "dock mask set:" << m_maskArea;
     emit maskAreaChanged();
 }
 

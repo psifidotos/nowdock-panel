@@ -52,6 +52,7 @@ public slots:
     Q_INVOKABLE void showOnBottom();
     bool event(QEvent *event);
     void setWindowInAttention(bool state);
+    void updateVisibilityFlags();
 
 Q_SIGNALS:
     void disableHidingChanged();
@@ -72,7 +73,6 @@ private Q_SLOTS:
     void setIsHovered(bool state);
     //void screenChanged(QScreen *screen);
     //void setScreenGeometry(QRect geometry);
-    void updateVisibilityFlags();
     //void updateWindowPosition();
 
 private:

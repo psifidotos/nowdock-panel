@@ -105,6 +105,8 @@ public:
     static int countScreens(QQmlListProperty<QScreen> *property);
     static QScreen *atScreens(QQmlListProperty<QScreen> *property, int index);
 
+public slots:
+    Q_INVOKABLE void initialize();
     void resizeWindow();
     void restoreConfig();
     void saveConfig();
@@ -125,14 +127,16 @@ signals:
     void lengthChanged();
     void maskAreaChanged();
     void maxLengthChanged();
-    void offsetChanged();
     void maxThicknessChanged();
+    void offsetChanged();
     void visibilityChanged();
     void widthChanged();
     
+public Q_SLOTS:
+    void updateDockPositionSlot();
+
 private:
-    bool containmentContainsPosition(const QPointF &point) const;
-    QPointF positionAdjustedForContainment(const QPointF &point) const;
+    bool m_secondInitPass;
 
     int m_offset{0};
     int m_maxThickness{24};
@@ -144,10 +148,15 @@ private:
     QPointer<PlasmaQuick::ConfigView> m_configView;
 
     QTimer m_timerGeometry;
+    QTimer m_lockGeometry;
     Plasma::Theme *theme{nullptr};
     Plasma::Corona *m_corona;
 
     QPointer<VisibilityManager> m_visibility;
+
+    bool containmentContainsPosition(const QPointF &point) const;
+    QPointF positionAdjustedForContainment(const QPointF &point) const;
+    void initWindow();
 };
 
 #endif

@@ -11,6 +11,8 @@ import org.kde.nowdock 0.1 as NowDock
 Item{
     id: manager
 
+    anchors.fill: parent
+
     property QtObject window
 
     property bool inStartup: root.inStartup
@@ -136,7 +138,7 @@ Item{
 
     ///test maskArea
     function updateMaskArea() {
-        if (!windowSystem.compositingActive) {
+        if (!windowSystem.compositingActive || !window) {
             return;
         }
 
