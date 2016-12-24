@@ -29,7 +29,7 @@ VisibilityManager::VisibilityManager(PlasmaQuick::ContainmentView *view) :
     connect(m_interface, SIGNAL(activeWindowChanged()), this, SLOT(activeWindowChanged()));
     m_interface->setDockToAllDesktops();
     //fixes a bug in plasma-framework with wrong popups placement
-    m_interface->setDockNumber(1);
+    m_interface->setDockNumber(2);
 
 //    connect(this, SIGNAL(screenChanged(QScreen *)), this, SLOT(screenChanged(QScreen *)));
 //    setPanelScreen(screen());

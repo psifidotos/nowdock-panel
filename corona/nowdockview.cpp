@@ -41,16 +41,19 @@ NowDockView::NowDockView(Plasma::Corona *corona, QScreen *targetScreen)
     : PlasmaQuick::ContainmentView(corona),
       m_corona(corona)
 {
+    KWindowSystem::setType(winId(), NET::Dock);
+    KWindowSystem::setState(winId(), NET::SkipTaskbar | NET::SkipPager);
+
     setVisible(false);
     setTitle(corona->kPackage().metadata().name());
     setIcon(QIcon::fromTheme(corona->kPackage().metadata().iconName()));
 
     setResizeMode(QuickViewSharedEngine::SizeRootObjectToView);
     setClearBeforeRendering(true);
-    setFlags(Qt::FramelessWindowHint
+  /* setFlags(Qt::FramelessWindowHint
              | Qt::WindowStaysOnTopHint
              | Qt::NoDropShadowWindowHint
-             | Qt::WindowDoesNotAcceptFocus);
+             | Qt::WindowDoesNotAcceptFocus);*/
 
     //    NETWinInfo winfo(QX11Info::connection(), winId(), winId(), 0, 0);
     //   winfo.setAllowedActions(NET::ActionChangeDesktop);
