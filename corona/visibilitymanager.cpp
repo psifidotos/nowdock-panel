@@ -44,7 +44,7 @@ VisibilityManager::VisibilityManager(PlasmaQuick::ContainmentView *view) :
 
     connect(this, SIGNAL(panelVisibilityChanged()), this, SLOT(updateVisibilityFlags()));
     setPanelVisibility(NowDock::Types::BelowActive);
-    updateVisibilityFlags();
+ //   updateVisibilityFlags();
 
 //    connect(this, SIGNAL(locationChanged()), this, SLOT(updateWindowPosition()));
     connect(this, SIGNAL(windowInAttentionChanged()), this, SLOT(updateState()));
@@ -183,6 +183,7 @@ void VisibilityManager::initialize()
 void VisibilityManager::initWindow()
 {
     updateVisibilityFlags();
+
  //   updateWindowPosition();
 
     // The initialization phase makes two passes because

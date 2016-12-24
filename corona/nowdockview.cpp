@@ -64,7 +64,7 @@ NowDockView::NowDockView(Plasma::Corona *corona, QScreen *targetScreen)
     m_timerGeometry.setInterval(400);
 
     m_lockGeometry.setSingleShot(true);
-    m_lockGeometry.setInterval(400);
+    m_lockGeometry.setInterval(700);
     
     connect(this, &NowDockView::containmentChanged
     , this, [&]() {
@@ -136,7 +136,7 @@ void NowDockView::initialize()
 
 void NowDockView::initWindow()
 {
-    m_visibility->updateVisibilityFlags();
+  //  m_visibility->updateVisibilityFlags();
 
     updateDockPosition();
     resizeWindow();
@@ -262,6 +262,8 @@ inline void NowDockView::updateDockPosition()
 
     const QRect screenGeometry = screen()->geometry();
     QPoint position;
+
+    qDebug() << "current dock geometry: "<<geometry();
     
    // containment()->setFormFactor(Plasma::Types::Horizontal);
     position = {0, 0};
